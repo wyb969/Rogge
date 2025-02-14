@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://d37ch1eyj5n5i"]
+
+[ext_resource type="Script" path="res://script/weapon.gd" id="1_d466i"]
+[ext_resource type="Texture2D" uid="uid://xybxcbbonked" path="res://assest/weaponR1.png" id="1_iqy87"]
+[ext_resource type="PackedScene" uid="uid://cxtaq1i3u3wnm" path="res://scenes/bullet.tscn" id="2_pr5e5"]
+
+[node name="Weapon" type="Node2D"]
+position = Vector2(506, 309)
+script = ExtResource("1_d466i")
+bullet = ExtResource("2_pr5e5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.05, 0.046)
+texture = ExtResource("1_iqy87")
+region_enabled = true
+region_rect = Rect2(430.937, 1105.46, 1328.82, 728.35)
+
+[node name="FirePoint" type="Node2D" parent="Sprite2D"]
+position = Vector2(720, -43.478)
+scale = Vector2(20, 21.7391)
+
+[node name="CoolDownTimer" type="Timer" parent="."]
+wait_time = 0.1
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 2
+lifetime = 0.6
+one_shot = true
+direction = Vector2(0, -1)
+initial_velocity_min = 125.37
+initial_velocity_max = 200.0
+scale_amount_min = 2.0
+scale_amount_max = 6.0
+color = Color(0.421023, 0.661914, 0.8759, 1)
+
+[connection signal="timeout" from="CoolDownTimer" to="." method="_on_cool_down_timer_timeout"]

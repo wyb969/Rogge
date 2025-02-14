@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://bjm6048cqooax"]
+
+[ext_resource type="Script" path="res://script/game.gd" id="1_2dfbb"]
+[ext_resource type="PackedScene" uid="uid://cvchcpf82x874" path="res://scenes/player.tscn" id="1_jtwvx"]
+[ext_resource type="PackedScene" uid="uid://of6d2re1dw5d" path="res://scenes/enemy.tscn" id="2_8rv8n"]
+[ext_resource type="PackedScene" uid="uid://cg1c6lfw3naeu" path="res://scenes/electirc.tscn" id="3_xm781"]
+[ext_resource type="PackedScene" uid="uid://wn4fuyawug3j" path="res://scenes/dino_enemy.tscn" id="5_73t4b"]
+
+[node name="main" type="Node2D"]
+script = ExtResource("1_2dfbb")
+
+[node name="Player" parent="." instance=ExtResource("1_jtwvx")]
+position = Vector2(-176, -99)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(2, 2)
+position_smoothing_enabled = true
+
+[node name="Enemy" parent="." instance=ExtResource("2_8rv8n")]
+position = Vector2(105.5, -31)
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="Electirc" parent="." instance=ExtResource("3_xm781")]
+position = Vector2(-71, -202.5)
+
+[node name="DinoEnemy" parent="." instance=ExtResource("5_73t4b")]
+position = Vector2(-267.982, -182.62)
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

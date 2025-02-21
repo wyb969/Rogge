@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d37ch1eyj5n5i"]
+[gd_scene load_steps=10 format=3 uid="uid://d37ch1eyj5n5i"]
 
 [ext_resource type="Script" path="res://script/weapon.gd" id="1_d466i"]
 [ext_resource type="Texture2D" uid="uid://xybxcbbonked" path="res://assest/weaponR1.png" id="1_iqy87"]
@@ -62,6 +62,14 @@ _data = {
 "shoot": SubResource("Animation_5duhf")
 }
 
+[sub_resource type="Curve" id="Curve_dfsp3"]
+_data = [Vector2(0.00392157, 0.678779), 0.0, 0.0, 0, 0, Vector2(0.990196, 0.267805), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_2sme0"]
+offsets = PackedFloat32Array(0, 0.559574, 1)
+colors = PackedColorArray(0.913725, 0, 0, 1, 1, 0.984314, 0.317647, 1, 0.329412, 1, 1, 1)
+
 [node name="Weapon" type="Node2D"]
 script = ExtResource("1_d466i")
 bullet = ExtResource("2_pr5e5")
@@ -107,5 +115,11 @@ wait_time = 0.16
 libraries = {
 "": SubResource("AnimationLibrary_r3m6l")
 }
+
+[node name="Line2D" type="Line2D" parent="."]
+top_level = true
+width = 4.0
+width_curve = SubResource("Curve_dfsp3")
+gradient = SubResource("Gradient_2sme0")
 
 [connection signal="timeout" from="CoolDownTimer" to="." method="_on_cool_down_timer_timeout"]

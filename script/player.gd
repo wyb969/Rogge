@@ -6,12 +6,15 @@ extends CharacterBody2D
 @onready var can_dasing_timer: Timer = $Can_Dasing_Timer
 @onready var dashing_timer: Timer = $Dashing_Timer
 @onready var shadow_timer: Timer = $ShadowTimer
+@onready var line_2d: Line2D = $Line2D
 
 const SPEED = 100.0
 const DASH_SPEED = 400.0
 var dashing:bool = false
 var can_dash:bool = true
 
+func _ready() -> void:
+	pass
 
 func _physics_process(delta: float) -> void:
 	get_input()

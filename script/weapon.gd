@@ -6,15 +6,16 @@ extends Node2D
 @onready var muzzle_flash: CPUParticles2D = $Sprite2D/MuzzleFlash
 @onready var bullet_shell: CPUParticles2D = $Sprite2D/BulletShell
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var line_2d: Line2D = $Line2D
 
 var cool_down:bool = true
 const BULLET_SPEED = 10
 var demage:int = 8
+var line_count = 10
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-
-	pass # Replace with function body.
+	line_2d.clear_points()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -30,8 +31,9 @@ func _process(delta: float) -> void:
 	
 	if Input.is_action_pressed("click"):
 		shoot()
-	
-	
+	line_2d.add_point(fire_point.global_position)
+	if (line_2d.get_point_count()>40):
+		line_2d.remove_point(0)
 	
 func shoot()->void:
 	if(!cool_down): 

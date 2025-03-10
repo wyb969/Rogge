@@ -1,7 +1,7 @@
 [gd_scene load_steps=31 format=3 uid="uid://cvchcpf82x874"]
 
 [ext_resource type="Texture2D" uid="uid://biaex73wpcem0" path="res://assest/Small-8-Direction-Characters_by_AxulArt.png" id="1_2ugwy"]
-[ext_resource type="Script" path="res://script/player.gd" id="1_ebg41"]
+[ext_resource type="Script" uid="uid://b622h2id1268x" path="res://script/player.gd" id="1_ebg41"]
 [ext_resource type="PackedScene" uid="uid://d37ch1eyj5n5i" path="res://scenes/weapon.tscn" id="3_mmhgr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0la3m"]
@@ -226,6 +226,7 @@ point_count = 4
 position = Vector2(2, 0)
 collision_layer = 2
 collision_mask = 11
+motion_mode = 1
 script = ExtResource("1_ebg41")
 
 [node name="Weapon" parent="." instance=ExtResource("3_mmhgr")]

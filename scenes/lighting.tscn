@@ -1,6 +1,6 @@
 [gd_scene load_steps=17 format=3 uid="uid://gkytyomuppyx"]
 
-[ext_resource type="Script" path="res://script/lighting.gd" id="1_tmwaa"]
+[ext_resource type="Script" uid="uid://bfkyqbrduube5" path="res://script/lighting.gd" id="1_tmwaa"]
 [ext_resource type="Texture2D" uid="uid://c4nysp3xkelcy" path="res://assest/effect/vfx_free_pack_1-Sheet.png" id="1_xrdwq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7y71m"]

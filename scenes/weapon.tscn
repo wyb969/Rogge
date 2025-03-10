@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://d37ch1eyj5n5i"]
 
-[ext_resource type="Script" path="res://script/weapon.gd" id="1_d466i"]
+[ext_resource type="Script" uid="uid://bjigymqnd04dk" path="res://script/weapon.gd" id="1_d466i"]
 [ext_resource type="Texture2D" uid="uid://xybxcbbonked" path="res://assest/weaponR1.png" id="1_iqy87"]
 [ext_resource type="PackedScene" uid="uid://cxtaq1i3u3wnm" path="res://scenes/bullet.tscn" id="2_pr5e5"]
 [ext_resource type="Texture2D" uid="uid://dpurwmvhjpmmw" path="res://assest/muzzle.png" id="4_s7ojo"]
@@ -58,8 +58,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_r3m6l"]
 _data = {
-"RESET": SubResource("Animation_e4mdo"),
-"shoot": SubResource("Animation_5duhf")
+&"RESET": SubResource("Animation_e4mdo"),
+&"shoot": SubResource("Animation_5duhf")
 }
 
 [sub_resource type="Curve" id="Curve_dfsp3"]
@@ -88,9 +88,9 @@ scale = Vector2(20, 21.7391)
 position = Vector2(800, -43.4779)
 emitting = false
 amount = 1
+texture = ExtResource("4_s7ojo")
 lifetime = 0.06
 one_shot = true
-texture = ExtResource("4_s7ojo")
 gravity = Vector2(0, 0)
 scale_amount_min = 0.01
 scale_amount_max = 0.01
@@ -113,7 +113,7 @@ wait_time = 0.16
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_r3m6l")
+&"": SubResource("AnimationLibrary_r3m6l")
 }
 
 [node name="Line2D" type="Line2D" parent="."]

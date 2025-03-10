@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://4oba66mvxq4p"]
+[gd_scene load_steps=6 format=3 uid="uid://4oba66mvxq4p"]
 
-[ext_resource type="Script" path="res://script/demage_text.gd" id="1_s4fjd"]
+[ext_resource type="Script" uid="uid://lyikby5ix2m5" path="res://script/demage_text.gd" id="1_s4fjd"]
+[ext_resource type="FontFile" uid="uid://baixhmparrg2p" path="res://assest/fonts/PixelOperator8.ttf" id="2_qs5by"]
 
 [sub_resource type="Animation" id="Animation_480kc"]
 length = 0.001
@@ -90,8 +91,8 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_v0cye"]
 _data = {
-"RESET": SubResource("Animation_480kc"),
-"show_number": SubResource("Animation_u105c")
+&"RESET": SubResource("Animation_480kc"),
+&"show_number": SubResource("Animation_u105c")
 }
 
 [node name="DemageText" type="Node2D"]
@@ -99,7 +100,7 @@ script = ExtResource("1_s4fjd")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_v0cye")
+&"": SubResource("AnimationLibrary_v0cye")
 }
 
 [node name="LabelContainer" type="Node2D" parent="."]
@@ -108,4 +109,5 @@ libraries = {
 offset_right = 30.0
 offset_bottom = 23.0
 theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_qs5by")
 text = "100"

@@ -1,5 +1,5 @@
 extends Area2D
-const SPEED = 300
+const SPEED = 1200
 var bullet_demage:int = 10
 @onready var cpu_particles_2d: CPUParticles2D = $CPUParticles2D
 @onready var sprite_2d: Sprite2D = $Sprite2D
@@ -13,7 +13,10 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	global_position = global_position + velocity
+	pass
+
+func _physics_process(delta: float) -> void:
+	global_position = global_position + velocity.normalized() * SPEED * delta
 
 func setVelocity(v:Vector2)->void:
 	velocity = v

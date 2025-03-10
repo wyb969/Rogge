@@ -1,6 +1,6 @@
 [gd_scene load_steps=32 format=3 uid="uid://cg1c6lfw3naeu"]
 
-[ext_resource type="Script" path="res://script/electirc.gd" id="1_hd8g2"]
+[ext_resource type="Script" uid="uid://1tebb7sqafw4" path="res://script/electirc.gd" id="1_hd8g2"]
 [ext_resource type="Texture2D" uid="uid://skv2ancb0jsw" path="res://assest/effect/vfx_energy-Sheet.png" id="1_tucd3"]
 [ext_resource type="PackedScene" uid="uid://gkytyomuppyx" path="res://scenes/lighting.tscn" id="3_5t2pw"]
 

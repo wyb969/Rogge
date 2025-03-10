@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bjm6048cqooax"]
 
-[ext_resource type="Script" path="res://script/game.gd" id="1_2dfbb"]
+[ext_resource type="Script" uid="uid://18ebx7talf74" path="res://script/game.gd" id="1_2dfbb"]
 [ext_resource type="PackedScene" uid="uid://cvchcpf82x874" path="res://scenes/player.tscn" id="1_jtwvx"]
 [ext_resource type="PackedScene" uid="uid://of6d2re1dw5d" path="res://scenes/enemy.tscn" id="2_8rv8n"]
 [ext_resource type="PackedScene" uid="uid://cg1c6lfw3naeu" path="res://scenes/electirc.tscn" id="3_xm781"]
@@ -13,13 +13,14 @@ script = ExtResource("1_2dfbb")
 position = Vector2(-176, -99)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-zoom = Vector2(2, 2)
+zoom = Vector2(2.8, 2.8)
 position_smoothing_enabled = true
 
 [node name="Enemy" parent="." instance=ExtResource("2_8rv8n")]
 position = Vector2(105.5, -31)
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 4.0
 autostart = true
 
 [node name="Electirc" parent="." instance=ExtResource("3_xm781")]

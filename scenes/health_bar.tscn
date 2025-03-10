@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://pcli3eanw4ax"]
 
-[ext_resource type="Script" path="res://script/health_bar.gd" id="1_yjbje"]
+[ext_resource type="Script" uid="uid://b02ebagagy26s" path="res://script/health_bar.gd" id="1_yjbje"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0xhhv"]
 

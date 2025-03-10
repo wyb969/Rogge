@@ -12,8 +12,12 @@ config_version=5
 
 config/name="rogge"
 run/main_scene="res://scenes/game.tscn"
-config/features=PackedStringArray("4.3", "Forward Plus")
+config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+mouse_cursor/custom_image="res://assest/tile_0056.png"
 
 [input]
 

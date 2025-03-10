@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3 uid="uid://of6d2re1dw5d"]
 
 [ext_resource type="Texture2D" uid="uid://dstndgyhke56f" path="res://assest/slime_green.png" id="1_ap3e3"]
-[ext_resource type="Script" path="res://script/enemy.gd" id="1_mkr3h"]
+[ext_resource type="Script" uid="uid://dulxjesm38ig2" path="res://script/enemy.gd" id="1_mkr3h"]
 [ext_resource type="PackedScene" uid="uid://pcli3eanw4ax" path="res://scenes/health_bar.tscn" id="3_jk1gx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_plwk0"]
@@ -202,13 +202,14 @@ tracks/4/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_82uqh"]
 _data = {
-"RESET": SubResource("Animation_73uad"),
-"death": SubResource("Animation_3sh85")
+&"RESET": SubResource("Animation_73uad"),
+&"death": SubResource("Animation_3sh85")
 }
 
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 8
-collision_mask = 6
+collision_mask = 14
+motion_mode = 1
 script = ExtResource("1_mkr3h")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
@@ -248,7 +249,7 @@ position = Vector2(0, 3)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_82uqh")
+&"": SubResource("AnimationLibrary_82uqh")
 }
 
 [node name="HealthBar" parent="." instance=ExtResource("3_jk1gx")]

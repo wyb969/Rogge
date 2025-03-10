@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ls8nlby553fl"]
 
-[ext_resource type="Script" path="res://script/shadow.gd" id="1_e23bd"]
+[ext_resource type="Script" uid="uid://re7he5oiknnw" path="res://script/shadow.gd" id="1_e23bd"]
 
 [node name="Shadow" type="Sprite2D"]
 script = ExtResource("1_e23bd")

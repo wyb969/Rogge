@@ -17,6 +17,8 @@ config/icon="res://icon.svg"
 
 [display]
 
+window/size/viewport_width=900
+window/size/viewport_height=600
 mouse_cursor/custom_image="res://assest/tile_0056.png"
 
 [input]

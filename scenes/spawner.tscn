@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfmc3o7psvogd"]
+
+[ext_resource type="FontFile" uid="uid://b5d0qdmbof32m" path="res://assest/fonts/PixelOperator8-Bold.ttf" id="1_2vbf6"]
+[ext_resource type="Script" uid="uid://jskvibkeq0xc" path="res://script/spawner.gd" id="1_ik2nu"]
+
+[node name="Spawner" type="Node2D"]
+script = ExtResource("1_ik2nu")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI"]
+offset_left = 624.0
+offset_top = 64.0
+offset_right = 786.0
+offset_bottom = 104.0
+
+[node name="Label" type="Label" parent="UI/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_2vbf6")
+text = "Time:"
+
+[node name="Mintue" type="Label" parent="UI/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_2vbf6")
+text = "00"
+
+[node name="Label2" type="Label" parent="UI/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_2vbf6")
+text = ":"
+
+[node name="Second" type="Label" parent="UI/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_2vbf6")
+text = "00"
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="Pattern" type="Timer" parent="."]
+wait_time = 10.0
+autostart = true
+
+[node name="Elite" type="Timer" parent="."]
+wait_time = 9.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

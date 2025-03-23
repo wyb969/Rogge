@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://wn4fuyawug3j"]
+[gd_scene load_steps=14 format=3 uid="uid://wn4fuyawug3j"]
 
 [ext_resource type="Script" uid="uid://c13g6vykidrq" path="res://script/dino_enemy.gd" id="1_6h3n1"]
 [ext_resource type="Texture2D" uid="uid://dph567w8vkxi2" path="res://assest/DinoSprites - doux.png" id="1_urd5k"]
 [ext_resource type="PackedScene" uid="uid://pcli3eanw4ax" path="res://scenes/health_bar.tscn" id="2_ua1ue"]
 [ext_resource type="Script" uid="uid://bodldvb3l61gu" path="res://script/StateMachines.gd" id="4_l04gg"]
 [ext_resource type="Script" uid="uid://pv6o0sff7m35" path="res://script/dino_idle_state.gd" id="5_drxwe"]
+[ext_resource type="Script" uid="uid://brgleif1poua" path="res://script/dino_chase_state.gd" id="6_tyuug"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_orkoq"]
 size = Vector2(17, 19)
@@ -125,10 +126,15 @@ autoplay = "idle"
 
 [node name="State_Machines" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("4_l04gg")
-initial_state = NodePath("dino_idle_state")
+initial_state = NodePath("dino_chase_state")
 metadata/_custom_type_script = "uid://bodldvb3l61gu"
 
 [node name="dino_idle_state" type="Node" parent="State_Machines" node_paths=PackedStringArray("dino_player")]
 script = ExtResource("5_drxwe")
 dino_player = NodePath("../..")
 metadata/_custom_type_script = "uid://pv6o0sff7m35"
+
+[node name="dino_chase_state" type="Node" parent="State_Machines" node_paths=PackedStringArray("dino")]
+script = ExtResource("6_tyuug")
+dino = NodePath("../..")
+metadata/_custom_type_script = "uid://brgleif1poua"

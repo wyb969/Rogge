@@ -11,6 +11,7 @@ const SPEED = 100.0
 const DASH_SPEED = 400.0
 var dashing:bool = false
 var can_dash:bool = true
+var animation_directions = ["right", "right_down", "down","left_down","left","left_up","up","right_up"]
 
 func _ready() -> void:
 	pass
@@ -41,25 +42,9 @@ func get_input():
 func playAnimation(direction:Vector2):
 	direction = direction.normalized()
 	var angle = rad_to_deg(direction.angle())
-	var snap = snappedf(direction.angle(),PI/6)
-	if angle>=-30 and angle<=30:
-		animated_sprite_2d.play("right")
-	elif angle>=30 and angle<=60:
-		animated_sprite_2d.play("right_down")
-	elif angle>=60 and angle<=120:
-		animated_sprite_2d.play("down")
-	elif angle>=120 and angle<=150:
-		animated_sprite_2d.play("left_down")
-	elif angle>=150 and angle<=180:
-		animated_sprite_2d.play("left")
-	elif angle>=-180 and angle<=-150:
-		animated_sprite_2d.play("left")
-	elif angle>=-60 and angle<=-30:
-		animated_sprite_2d.play("right_up")
-	elif  angle>=-120 and angle<=-60:
-		animated_sprite_2d.play("up")
-	elif angle>=-150 and angle<=-120:
-		animated_sprite_2d.play("left_up")
+	var snap = snappedf(direction.angle(),PI/4)/ (PI/4)
+	var index = wrapi(int(snap), 0, 8)
+	animated_sprite_2d.play(animation_directions[index])
 
 
 func _on_shadow_timer_timeout() -> void:

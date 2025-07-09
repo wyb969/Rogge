@@ -56,7 +56,6 @@ func take_damge(damge:float):
 		health_bar.set_health(int(health))
 
 func death():
-	print("death---")
 	animated_sprite_2d.stop();
 	animation_player.play("death")
 	
@@ -65,4 +64,5 @@ func spawn_coin():
 	var main = get_tree().current_scene
 	var instance = coin.instantiate()
 	instance.global_position = global_position 
+	instance.connect("coin_collected", Callable(main, "on_coin_collected"))
 	main.call_deferred("add_child",instance)

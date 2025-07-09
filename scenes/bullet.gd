@@ -1,6 +1,6 @@
 extends Area2D
 const SPEED = 1200
-var bullet_demage:int = 10
+var bullet_demage:int = 100
 @onready var cpu_particles_2d: CPUParticles2D = $CPUParticles2D
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D

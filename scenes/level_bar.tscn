@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://dajh6exgsdyc5"]
+
+[ext_resource type="FontFile" uid="uid://baixhmparrg2p" path="res://assest/fonts/PixelOperator8.ttf" id="1_ai1tc"]
+[ext_resource type="Script" uid="uid://dm2s63oy70u6w" path="res://scenes/level_bar.gd" id="1_keqlg"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_keqlg")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI"]
+offset_right = 446.0
+offset_bottom = 130.0
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="UI/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_ai1tc")
+theme_override_font_sizes/font_size = 15
+text = "Level: 0  "
+
+[node name="ProgressBar" type="ProgressBar" parent="UI/HBoxContainer"]
+modulate = Color(1, 0.0470588, 0.470588, 1)
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4

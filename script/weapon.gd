@@ -10,7 +10,7 @@ extends Node2D
 
 var cool_down:bool = true
 const BULLET_SPEED = 10
-var demage:int = 8
+var demage:int = 90
 var line_count = 10
 
 # Called when the node enters the scene tree for the first time.
@@ -47,7 +47,7 @@ func shoot()->void:
 	instance.global_position = fire_point.global_position 
 	var v = Vector2.RIGHT.rotated(sprite_2d.global_rotation) * BULLET_SPEED
 	instance.setVelocity(v)
-	instance.setBulletDemage(demage + randi_range(1,10))
+	instance.setBulletDemage(demage + randi_range(5,15))
 	var rotation_rad = v.angle()
 	muzzle_flash.angle_min = rad_to_deg(-rotation_rad)
 	muzzle_flash.angle_max = rad_to_deg(-rotation_rad)

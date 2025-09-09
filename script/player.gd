@@ -6,6 +6,13 @@ extends CharacterBody2D
 @onready var can_dasing_timer: Timer = $Can_Dasing_Timer
 @onready var dashing_timer: Timer = $Dashing_Timer
 @onready var shadow_timer: Timer = $ShadowTimer
+@onready var health_bar: ProgressBar = $HealthBar
+
+
+var max_speed: float = 100.0  
+var acceleration: float = 1000.0  
+var friction: float = 600.0   
+var player_health = 500.0
 
 const SPEED = 100.0
 const DASH_SPEED = 400.0
@@ -14,11 +21,11 @@ var can_dash:bool = true
 var animation_directions = ["right", "right_down", "down","left_down","left","left_up","up","right_up"]
 
 func _ready() -> void:
+	health_bar.init_health(player_health)
 	pass
 
 func _physics_process(delta: float) -> void:
-	get_input()
-	
+	get_input(delta)
 	if Input.is_action_just_pressed("roll") and can_dash:
 		can_dash = false
 		dashing = true
@@ -27,17 +34,29 @@ func _physics_process(delta: float) -> void:
 		shadow_timer.start()
 	move_and_slide()
 	
-func get_input():
+func get_input(delta: float):
 	var input_direction = Input.get_vector("left", "right", "up", "down")
 	var direction = get_global_mouse_position() - global_position
 	playAnimation(direction)
+	
 	if dashing:
-		velocity = input_direction * DASH_SPEED
+		max_speed = DASH_SPEED
+		acceleration = 1600
 	else:
-		velocity = input_direction * SPEED		
+		max_speed = SPEED
+		acceleration = 400
 
+	input_direction = input_direction.normalized()
+	
+	if input_direction != Vector2.ZERO:
+		velocity = velocity.move_toward(input_direction * max_speed, acceleration * delta)
+	else:
+		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 	if velocity.x!=0 || velocity.y!=0:
 		cpu_particles_2d.emitting = true
+	
+	if velocity.length() <= SPEED:
+		shadow_timer.stop()
 	
 func playAnimation(direction:Vector2):
 	direction = direction.normalized()
@@ -68,8 +87,31 @@ func _on_shadow_timer_timeout() -> void:
 
 func _on_dashing_timer_timeout() -> void:
 	dashing = false
-	shadow_timer.stop()
 
 
 func _on_can_dasing_timer_timeout() -> void:
 	can_dash = true
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	get_hit()
+
+func get_hit()->void:
+	play_hit_tween()
+	player_health = player_health - 60
+	player_health = max(0,player_health)
+	health_bar.set_health(player_health)
+	if(player_health<=0):
+		die()
+	
+func play_hit_tween()->void:
+	var tween = get_tree().create_tween()
+	tween.set_loops(3)
+	tween.tween_property(animated_sprite_2d, "modulate", Color.RED, 0.2)	
+	tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.1)	
+	tween.tween_property(animated_sprite_2d, "scale",Vector2(2.2,2.2), 0.2)	
+	tween.tween_property(animated_sprite_2d, "scale",Vector2(1.68, 1.68), 0.1)	
+
+func die()->void:
+	var current_scene = get_tree().current_scene
+	get_tree().reload_current_scene()

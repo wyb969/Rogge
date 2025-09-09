@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var health_bar: ProgressBar = $HealthBar
 @onready var demage_point: Node2D = $DemagePoint
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 
 @onready var demage_text = preload("res://scenes/demage_text.tscn")
 @onready var coin = preload("res://scenes/coin.tscn")
@@ -58,7 +59,7 @@ func take_damge(damge:float):
 func death():
 	animated_sprite_2d.stop();
 	animation_player.play("death")
-	
+	collision_shape_2d.set_disabled(true)
 	
 func spawn_coin():
 	var main = get_tree().current_scene

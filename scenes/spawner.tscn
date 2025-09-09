@@ -9,9 +9,9 @@ script = ExtResource("1_ik2nu")
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI"]
-offset_left = 624.0
+offset_left = 672.0
 offset_top = 64.0
-offset_right = 786.0
+offset_right = 834.0
 offset_bottom = 104.0
 
 [node name="Label" type="Label" parent="UI/HBoxContainer"]

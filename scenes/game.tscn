@@ -1,8 +1,7 @@
-[gd_scene load_steps=16 format=4 uid="uid://bjm6048cqooax"]
+[gd_scene load_steps=15 format=4 uid="uid://bjm6048cqooax"]
 
 [ext_resource type="Script" uid="uid://18ebx7talf74" path="res://script/game.gd" id="1_2dfbb"]
 [ext_resource type="PackedScene" uid="uid://cvchcpf82x874" path="res://scenes/player.tscn" id="1_jtwvx"]
-[ext_resource type="PackedScene" uid="uid://of6d2re1dw5d" path="res://scenes/enemy.tscn" id="2_8rv8n"]
 [ext_resource type="Texture2D" uid="uid://dnnuyi3pk5087" path="res://assest/sprites/Tiles/Tileset.png" id="2_p57ef"]
 [ext_resource type="Texture2D" uid="uid://dhl3djy8ovebv" path="res://assest/sprites/Decorations/Decorations.png" id="3_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://cg1c6lfw3naeu" path="res://scenes/electirc.tscn" id="3_xm781"]
@@ -147,7 +146,6 @@ position = Vector2(-267.982, -182.62)
 
 [node name="Spawner" parent="." node_paths=PackedStringArray("player") instance=ExtResource("8_gee14")]
 player = NodePath("../Player")
-enemy = ExtResource("2_8rv8n")
 
 [node name="LevelManager" parent="." instance=ExtResource("9_0tnpc")]
 

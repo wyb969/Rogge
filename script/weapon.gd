@@ -10,7 +10,7 @@ extends Node2D
 
 var cool_down:bool = true
 const BULLET_SPEED = 10
-var demage:int = 90
+var demage:int = 15
 var line_count = 10
 
 # Called when the node enters the scene tree for the first time.

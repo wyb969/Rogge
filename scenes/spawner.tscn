@@ -10,7 +10,7 @@
 [ext_resource type="Resource" uid="uid://5yaevxu8ig2i" path="res://resource/Enemy_4.tres" id="6_m1kbb"]
 [ext_resource type="Resource" uid="uid://bk4s06sc2x81a" path="res://resource/Enemy_5.tres" id="7_q0apd"]
 
-[node name="Spawner" type="Node2D"]
+[node name="Spawner" type="Node2D" groups=["EnemyGroup"]]
 script = ExtResource("1_ik2nu")
 enemy = ExtResource("2_e3f8v")
 enemy_array = Array[ExtResource("2_tx2ig")]([ExtResource("3_p5s3f"), ExtResource("4_e3f8v"), ExtResource("5_3rx28"), ExtResource("6_m1kbb"), ExtResource("7_q0apd")])

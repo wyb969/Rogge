@@ -32,10 +32,11 @@ func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	cpu_particles_2d.emitting = true
 	sprite_2d.visible = false
-	velocity = Vector2.ZERO
-	collision_shape_2d.set_deferred("set_disabled",true)
+
 	if body.has_method("get_hit"):
 		body.get_hit(velocity.normalized(),bullet_demage)
+	velocity = Vector2.ZERO
+	collision_shape_2d.set_deferred("set_disabled",true)
 
 func _on_cpu_particles_2d_finished() -> void:
 	queue_free()

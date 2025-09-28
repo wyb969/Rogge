@@ -6,7 +6,8 @@ extends Node2D
  
 
 var distance: float = 200
- 
+var max_enmey_count:  int = 20
+var max_distance: float = 300
 
 var minute: int:
 	set(value):
@@ -22,11 +23,19 @@ var second: int:
 			minute +=1
 		%Second.text = str(second).lpad(2,'0')
 
+
+func _process(delta: float) -> void:
+	remove_far_enemy()	
+
 func spawn(pos:Vector2, elite:bool):
+	if get_tree().get_nodes_in_group("EnemyGroup").size() >= max_enmey_count:
+		return
 	var enemy_instance = enemy.instantiate()
 	enemy_instance.position = pos
 	enemy_instance.set_player_ref(player)
-	enemy_instance.set_enemy_data(enemy_array[min(minute,enemy_array.size()-1)])
+	enemy_instance.set_enemy_data(enemy_array[min(minute%enemy_array.size(),enemy_array.size()-1)])
+	enemy_instance.add_to_group("Enemies")
+ 
 	if elite:
 		enemy_instance.set_elite_status()
 	get_tree().current_scene.add_child(enemy_instance)
@@ -48,3 +57,12 @@ func _on_timer_timeout() -> void:
 
 func _on_elite_timeout() -> void:
 	spawn(get_random_position(),true)
+
+
+func remove_far_enemy()->void:
+	for enemy in get_tree().get_nodes_in_group("Enemies"):
+		var dis = player.global_position.distance_to(enemy.global_position)
+		if dis >= max_distance:
+			get_tree().current_scene.remove_child(enemy)
+			enemy.queue_free()
+ 

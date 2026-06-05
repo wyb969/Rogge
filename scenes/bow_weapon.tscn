@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cob6c0rb0m83q"]
+
+[ext_resource type="Texture2D" uid="uid://i1edx4brx0at" path="res://assest/#2 - Transparent Icons & Drop Shadow.png" id="1_27dxc"]
+
+[node name="BowWeapon" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 0.7853982
+texture = ExtResource("1_27dxc")
+region_enabled = true
+region_rect = Rect2(128, 192, 32, 32)

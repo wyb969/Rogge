@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://btiwdvuhitc7v"]
+
+[ext_resource type="Texture2D" uid="uid://i1edx4brx0at" path="res://assest/#2 - Transparent Icons & Drop Shadow.png" id="1_620x5"]
+[ext_resource type="Script" uid="uid://ovooj1sm7qlj" path="res://script/hand_weapon.gd" id="1_eyfmx"]
+[ext_resource type="Material" uid="uid://qmm1vy8xaud6" path="res://shaders/rainbow_outline.tres" id="2_pprca"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_620x5"]
+size = Vector2(29, 28)
+
+[node name="HandWeapon" type="Node2D"]
+scale = Vector2(0.6, 0.6)
+script = ExtResource("1_eyfmx")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 1
+y_sort_enabled = true
+material = ExtResource("2_pprca")
+texture = ExtResource("1_620x5")
+region_enabled = true
+region_rect = Rect2(352, 160, 32, 32)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-0.5, 1)
+shape = SubResource("RectangleShape2D_620x5")
+
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]

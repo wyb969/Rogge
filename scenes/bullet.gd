@@ -1,9 +1,15 @@
 extends Area2D
 const SPEED = 1200
 var bullet_demage:int = 100
+var enable_lighting:bool = true:
+	set(value):
+		enable_lighting = value
+
 @onready var cpu_particles_2d: CPUParticles2D = $CPUParticles2D
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
+@onready var lighting_chain: Node2D = $LightingChain
+
 
 var velocity:Vector2 = Vector2(10,0)
 # Called when the node enters the scene tree for the first time.
@@ -25,6 +31,7 @@ func setVelocity(v:Vector2)->void:
 func setBulletDemage(d:int)->void:
 	bullet_demage = d 
 
+
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 	queue_free() # Replace with function body.
 
@@ -37,6 +44,8 @@ func _on_body_entered(body: Node2D) -> void:
 		body.get_hit(velocity.normalized(),bullet_demage)
 	velocity = Vector2.ZERO
 	collision_shape_2d.set_deferred("set_disabled",true)
+	var enemies = get_tree().get_nodes_in_group("EnemyGroup")
+	lighting_chain.cast_lightning(global_position, enemies)
 
 func _on_cpu_particles_2d_finished() -> void:
 	queue_free()

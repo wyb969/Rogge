@@ -34,7 +34,13 @@ func set_enemy_data(data:EnemyData)->void:
 	
 func set_elite_status()->void:
 	$Sprite2D.material = load("res://shaders/rainbow_outline.tres")
-	scale = Vector2(1.25,1.25)
+	scale = Vector2(1.55,1.55)
+
+func setHealth(hp:float)->void:
+	health = hp
+
+func setDemage(dg:float)->void:
+	demage = dg
 
 func set_player_ref(player_ref:CharacterBody2D)->void:
 	player_reference = player_ref
@@ -59,6 +65,14 @@ func get_hit(direction:Vector2, demage:float):
 	take_demage(demage)
 
 func play_hit_tween(direction:Vector2):
+	if not is_inside_tree():
+		return
+
+	if sprite_2d == null or not is_instance_valid(sprite_2d):
+		return
+
+	if hurt_tween != null and hurt_tween.is_valid():
+		hurt_tween.kill()
 	hurt_tween = get_tree().create_tween()
 	hurt_tween.set_trans(Tween.TRANS_ELASTIC)
 	hurt_tween.set_ease(Tween.EASE_OUT)
@@ -74,6 +88,7 @@ func take_demage(demage:float)->void:
 	health -= demage
 	if(health<=0):
 		spaw_icon()
+		remove_from_group("EnemyGroup")
 		queue_free()
 
 func show_demage_text(demage:float)->void:
@@ -81,7 +96,7 @@ func show_demage_text(demage:float)->void:
 	get_tree().root.add_child(d)
 	
 	d.position = self.position
-	d.show_demage(str(demage),self.global_position,randf_range(0,0),randf_range(0,1))
+	d.show_demage(str(floor(demage)),self.global_position,randf_range(0,0),randf_range(0,1))
 	
 	
 func spaw_icon()->void:

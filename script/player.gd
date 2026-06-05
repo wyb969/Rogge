@@ -14,7 +14,7 @@ var acceleration: float = 1000.0
 var friction: float = 600.0   
 var player_health = 500.0
 
-const SPEED = 100.0
+var SPEED = 100.0
 const DASH_SPEED = 400.0
 var dashing:bool = false
 var can_dash:bool = true
@@ -23,6 +23,9 @@ var animation_directions = ["right", "right_down", "down","left_down","left","le
 func _ready() -> void:
 	health_bar.init_health(player_health)
 	pass
+
+func speed_up(val:float):
+	SPEED += val
 
 func _physics_process(delta: float) -> void:
 	get_input(delta)

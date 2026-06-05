@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cmrvuaxdo4ja6"]
+[gd_scene format=3 uid="uid://cmrvuaxdo4ja6"]
 
 [ext_resource type="Script" uid="uid://bgldnqt2ejgyh" path="res://script/enemy_shell.gd" id="1_gyavf"]
 
@@ -7,13 +7,13 @@ size = Vector2(20, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gyavf"]
 
-[node name="EnemyShell" type="CharacterBody2D"]
+[node name="EnemyShell" type="CharacterBody2D" unique_id=1315381551]
 collision_layer = 8
 collision_mask = 8
 script = ExtResource("1_gyavf")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=559692751]
 texture = SubResource("PlaceholderTexture2D_gyavf")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1365968813]
 shape = SubResource("RectangleShape2D_gyavf")

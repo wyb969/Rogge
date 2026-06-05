@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cfmc3o7psvogd"]
+[gd_scene format=3 uid="uid://cfmc3o7psvogd"]
 
 [ext_resource type="FontFile" uid="uid://b5d0qdmbof32m" path="res://assest/fonts/PixelOperator8-Bold.ttf" id="1_2vbf6"]
 [ext_resource type="Script" uid="uid://jskvibkeq0xc" path="res://script/spawner.gd" id="1_ik2nu"]
@@ -10,49 +10,50 @@
 [ext_resource type="Resource" uid="uid://5yaevxu8ig2i" path="res://resource/Enemy_4.tres" id="6_m1kbb"]
 [ext_resource type="Resource" uid="uid://bk4s06sc2x81a" path="res://resource/Enemy_5.tres" id="7_q0apd"]
 
-[node name="Spawner" type="Node2D" groups=["EnemyGroup"]]
+[node name="Spawner" type="Node2D" unique_id=320286520]
 script = ExtResource("1_ik2nu")
 enemy = ExtResource("2_e3f8v")
 enemy_array = Array[ExtResource("2_tx2ig")]([ExtResource("3_p5s3f"), ExtResource("4_e3f8v"), ExtResource("5_3rx28"), ExtResource("6_m1kbb"), ExtResource("7_q0apd")])
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=25225548]
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI" unique_id=1544618488]
 offset_left = 672.0
 offset_top = 64.0
 offset_right = 834.0
 offset_bottom = 104.0
 
-[node name="Label" type="Label" parent="UI/HBoxContainer"]
+[node name="Label" type="Label" parent="UI/HBoxContainer" unique_id=265826103]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_2vbf6")
 text = "Time:"
 
-[node name="Mintue" type="Label" parent="UI/HBoxContainer"]
+[node name="Mintue" type="Label" parent="UI/HBoxContainer" unique_id=481674846]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_2vbf6")
 text = "00"
 
-[node name="Label2" type="Label" parent="UI/HBoxContainer"]
+[node name="Label2" type="Label" parent="UI/HBoxContainer" unique_id=1459106181]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_2vbf6")
 text = ":"
 
-[node name="Second" type="Label" parent="UI/HBoxContainer"]
+[node name="Second" type="Label" parent="UI/HBoxContainer" unique_id=720411709]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_2vbf6")
 text = "00"
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=2001005239]
+wait_time = 0.1
 autostart = true
 
-[node name="Pattern" type="Timer" parent="."]
+[node name="Pattern" type="Timer" parent="." unique_id=1282296431]
 wait_time = 10.0
 autostart = true
 
-[node name="Elite" type="Timer" parent="."]
+[node name="Elite" type="Timer" parent="." unique_id=1104372921]
 wait_time = 9.0
 autostart = true
 

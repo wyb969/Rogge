@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://dobh4rb6edd2n"]
+
+[ext_resource type="Script" uid="uid://djc7uhn2uglq7" path="res://script/pasue_menu.gd" id="1_bp7ru"]
+[ext_resource type="PackedScene" uid="uid://c4xmcc8su3h8g" path="res://scenes/UpgradeCard.tscn" id="2_bsdfi"]
+
+[node name="Node2D" type="CanvasLayer" unique_id=363020718]
+script = ExtResource("1_bp7ru")
+card_scene = ExtResource("2_bsdfi")
+
+[node name="Panel" type="Panel" parent="." unique_id=1430391073]
+process_mode = 2
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -303.0
+offset_right = 447.0
+offset_bottom = 296.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Button" type="Button" parent="Panel" unique_id=713536826]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -39.5
+offset_top = -15.5
+offset_right = 39.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Continue"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel" unique_id=1341975459]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -445.5
+offset_top = -293.5
+offset_right = 444.5
+offset_bottom = 296.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://cvchcpf82x874"]
+[gd_scene format=3 uid="uid://cvchcpf82x874"]
 
 [ext_resource type="Texture2D" uid="uid://biaex73wpcem0" path="res://assest/Small-8-Direction-Characters_by_AxulArt.png" id="1_2ugwy"]
 [ext_resource type="Script" uid="uid://b622h2id1268x" path="res://script/player.gd" id="1_ebg41"]
@@ -225,37 +225,38 @@ animations = [{
 _data = [Vector2(0.0313316, 0.967337), 0.0, 0.0, 0, 0, Vector2(0.436031, 0.144221), 0.0, 0.0, 0, 0, Vector2(0.725849, 0.615422), 0.0, 0.0, 0, 0, Vector2(0.992167, 0.703686), 0.0, 0.0, 0, 0]
 point_count = 4
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1731525376 groups=["player"]]
 position = Vector2(2, 0)
 collision_layer = 2
 collision_mask = 11
 motion_mode = 1
 script = ExtResource("1_ebg41")
 
-[node name="PickShape" type="CollisionShape2D" parent="."]
+[node name="PickShape" type="CollisionShape2D" parent="." unique_id=274861343]
 position = Vector2(0, 2)
 shape = SubResource("CircleShape2D_dqkch")
+debug_color = Color(0.89733845, 0.2303895, 0.55137455, 0.41960785)
 
-[node name="Weapon" parent="." instance=ExtResource("3_mmhgr")]
+[node name="Weapon" parent="." unique_id=1901393703 instance=ExtResource("3_mmhgr")]
 z_index = 1
 position = Vector2(1, 7)
 scale = Vector2(0.4, 0.4)
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=1130076144]
 position = Vector2(1, 2)
 collision_layer = 2
 collision_mask = 9
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1114483032]
 position = Vector2(-3, -1)
 shape = SubResource("RectangleShape2D_qlg0r")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1733510104]
 scale = Vector2(1.68, 1.68)
 sprite_frames = SubResource("SpriteFrames_7nk0e")
 animation = &"right_down"
 
-[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+[node name="CPUParticles2D" type="CPUParticles2D" parent="." unique_id=1828352369]
 position = Vector2(-1, 16)
 emitting = false
 amount = 4
@@ -270,18 +271,18 @@ scale_amount_min = 6.0
 scale_amount_max = 7.0
 scale_amount_curve = SubResource("Curve_2v2ik")
 
-[node name="ShadowTimer" type="Timer" parent="."]
+[node name="ShadowTimer" type="Timer" parent="." unique_id=1541594562]
 wait_time = 0.08
 
-[node name="Dashing_Timer" type="Timer" parent="."]
+[node name="Dashing_Timer" type="Timer" parent="." unique_id=462666918]
 wait_time = 0.6
 one_shot = true
 
-[node name="Can_Dasing_Timer" type="Timer" parent="."]
+[node name="Can_Dasing_Timer" type="Timer" parent="." unique_id=1504091772]
 wait_time = 4.0
 one_shot = true
 
-[node name="HealthBar" parent="." instance=ExtResource("4_dqkch")]
+[node name="HealthBar" parent="." unique_id=9668729 instance=ExtResource("4_dqkch")]
 offset_left = -14.0
 offset_top = -16.0
 offset_right = 12.0

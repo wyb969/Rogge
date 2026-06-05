@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bg160musro4lw"]
+
+[ext_resource type="Script" uid="uid://b2ct14cue5dyb" path="res://script/circle_weapon.gd" id="1_32jp0"]
+
+[node name="CircleWeapon" type="Node2D" unique_id=1236141846]
+script = ExtResource("1_32jp0")

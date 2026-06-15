@@ -1,4 +1,6 @@
 extends CharacterBody2D
+class_name Enemy
+
 @export var player:Node2D
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var health_bar: ProgressBar = $HealthBar
@@ -12,6 +14,8 @@ extends CharacterBody2D
 var health:float = 100.0
 const SPEED = 30.0
 var tween:Tween
+
+
 
 func _ready() -> void:
 	health_bar.init_health(health)

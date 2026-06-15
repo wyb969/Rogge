@@ -24,6 +24,12 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
+[node name="Icon" type="TextureRect" parent="VBoxContainer" unique_id=1036949776]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
 [node name="TitleLabel" type="Label" parent="VBoxContainer" unique_id=1898035639]
 layout_mode = 2
 size_flags_horizontal = 4

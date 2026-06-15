@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://b622h2id1268x" path="res://script/player.gd" id="1_ebg41"]
 [ext_resource type="PackedScene" uid="uid://d37ch1eyj5n5i" path="res://scenes/weapon.tscn" id="3_mmhgr"]
 [ext_resource type="PackedScene" uid="uid://pcli3eanw4ax" path="res://scenes/health_bar.tscn" id="4_dqkch"]
+[ext_resource type="Texture2D" uid="uid://buvqnm8kwtc6u" path="res://assest/bullet.png" id="5_qlg0r"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dqkch"]
 radius = 45.01111
@@ -238,8 +239,8 @@ shape = SubResource("CircleShape2D_dqkch")
 debug_color = Color(0.89733845, 0.2303895, 0.55137455, 0.41960785)
 
 [node name="Weapon" parent="." unique_id=1901393703 instance=ExtResource("3_mmhgr")]
-z_index = 1
-position = Vector2(1, 7)
+z_index = 5
+position = Vector2(25, 3.0000002)
 scale = Vector2(0.4, 0.4)
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1130076144]
@@ -252,6 +253,7 @@ position = Vector2(-3, -1)
 shape = SubResource("RectangleShape2D_qlg0r")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1733510104]
+z_index = 4
 scale = Vector2(1.68, 1.68)
 sprite_frames = SubResource("SpriteFrames_7nk0e")
 animation = &"right_down"
@@ -287,6 +289,11 @@ offset_left = -14.0
 offset_top = -16.0
 offset_right = 12.0
 offset_bottom = -11.0
+
+[node name="player_ring" type="Sprite2D" parent="." unique_id=15386112]
+position = Vector2(-1, 19.000002)
+scale = Vector2(0.022, 0.012)
+texture = ExtResource("5_qlg0r")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="timeout" from="ShadowTimer" to="." method="_on_shadow_timer_timeout"]

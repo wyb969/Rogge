@@ -13,6 +13,7 @@ var health: float = 10
 var demage: float = 2
 var tween:Tween
 var hurt_tween:Tween
+signal death_signal
 
 func _ready() -> void:
 	tween = create_tween()
@@ -89,6 +90,7 @@ func take_demage(demage:float)->void:
 	if(health<=0):
 		spaw_icon()
 		remove_from_group("EnemyGroup")
+		death_signal.emit()
 		queue_free()
 
 func show_demage_text(demage:float)->void:

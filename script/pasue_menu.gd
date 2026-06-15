@@ -9,17 +9,20 @@ var upgrade_options := [
 	{
 		"id": "axe_up",
 		"title": "斧头 +1级",
-		"desc": "提高斧头攻击力"
+		"desc": "提高斧头攻击力",
+		"icon":"res://assest/sprites/axe.png"
 	},
 	{
 		"id": "circle_up",
 		"title": "书本 +1级",
-		"desc": "提高书本旋转速度"
+		"desc": "提高书本旋转速度",
+		"icon":"res://assest/sprites/book.png"
 	},
 	{
 		"id": "speed_up",
 		"title": "移速 +10%",
-		"desc": "提高移动速度"
+		"desc": "提高移动速度",
+		"icon":"res://assest/sprites/Speedup.png"
 	}
 ]
 

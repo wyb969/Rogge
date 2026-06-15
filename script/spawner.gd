@@ -5,10 +5,11 @@ extends Node2D
 @export var enemy_array:Array[EnemyData]
  
 
-var distance: float = 200
+var distance: float = 800
 var max_enmey_count:  int = 800
-var max_distance: float = 300
+var max_distance: float = 900
 var current_level: int = 0
+var enemy_killed_num:int = 0
 
 var minute: int:
 	set(value):
@@ -39,6 +40,7 @@ func spawn(pos:Vector2, elite:bool):
 	enemy_instance.add_to_group("EnemyGroup")
 	enemy_instance.setHealth(enemy_instance.health * (1.0 + 0.12 * current_level + 0.015 * current_level * current_level))
 	enemy_instance.setDemage(enemy_instance.demage * (1.0 + 0.12 * current_level + 0.015 * current_level * current_level))
+	enemy_instance.death_signal.connect(on_enemy_killed)
 	if elite:
 		enemy_instance.set_elite_status()
 	get_tree().current_scene.add_child(enemy_instance)
@@ -52,6 +54,8 @@ func amount_spawn(num:int=1):
 		spawn(get_random_position(),false)
 		
 
+func on_enemy_killed()->void:
+	enemy_killed_num += 1
 
 func _on_timer_timeout() -> void:
 	second+=1

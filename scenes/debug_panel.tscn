@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cvm1ulmjouj68"]
+
+[ext_resource type="Script" uid="uid://b33uyowbyfbar" path="res://script/debug_panel.gd" id="1_7of2g"]
+
+[node name="DebugPanel" type="CanvasLayer" unique_id=2116137223]
+process_mode = 3
+script = ExtResource("1_7of2g")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1855001745]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 1.0
+grow_vertical = 2
+
+[node name="DebugLabel" type="Label" parent="PanelContainer" unique_id=885249050]
+layout_mode = 2
+size_flags_horizontal = 0

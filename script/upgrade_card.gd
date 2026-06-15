@@ -6,6 +6,7 @@ var hover_tween:Tween
 
 @onready var title_label: Label = $VBoxContainer/TitleLabel
 @onready var desc_label: Label = $VBoxContainer/DescLabel
+@onready var icon: TextureRect = $VBoxContainer/Icon
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(160, 220)
@@ -20,7 +21,7 @@ func setup(data:Dictionary):
 	upgrade_id = data["id"]
 	title_label.text = data["title"]
 	desc_label.text = data["desc"]
-
+	icon.texture = load(data["icon"])
 
 func _on_selected_pressed():
 	selected.emit(upgrade_id)
@@ -31,12 +32,12 @@ func _gui_input(event: InputEvent) -> void:
 			selected.emit(upgrade_id)
 
 func _on_mouse_enter()->void:
-	play_hover_tween(Vector2(1.1,1.1),0.5)
+	play_hover_tween(Vector2(1.1,1.1),Color(1.2,1.2,1.2),0.12)
 
 func _on_mouse_exited()->void:
-	play_hover_tween(Vector2(1.0,1.0),0.5)
+	play_hover_tween(Vector2(1.0,1.0),Color.WHITE,0.12)
 
-func play_hover_tween(target_scale: Vector2, duration: float):
+func play_hover_tween(target_scale: Vector2,target_color: Color, duration: float):
 	if hover_tween != null and hover_tween.is_valid():
 		hover_tween.kill()
 
@@ -44,6 +45,11 @@ func play_hover_tween(target_scale: Vector2, duration: float):
 	hover_tween.set_trans(Tween.TRANS_BACK)
 	hover_tween.set_ease(Tween.EASE_OUT)
 	hover_tween.tween_property(self, "scale", target_scale, duration)
-
+	hover_tween.parallel().tween_property(
+		self,
+		"modulate",
+		target_color,
+		duration
+	)
 func _init_pivot():
 	pivot_offset = size / 2

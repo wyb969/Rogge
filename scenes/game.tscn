@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bg160musro4lw" path="res://scenes/circle_weapon.tscn" id="9_vtaks"]
 [ext_resource type="PackedScene" uid="uid://b8vt03vumge1y" path="res://scenes/circle_unit.tscn" id="10_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://dobh4rb6edd2n" path="res://scenes/PasueMenu.tscn" id="11_kvpfn"]
+[ext_resource type="PackedScene" uid="uid://cvm1ulmjouj68" path="res://scenes/debug_panel.tscn" id="12_dinhu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_u5sy4"]
 texture = ExtResource("2_p57ef")
@@ -161,5 +162,8 @@ rotation_speed = 2.0
 player = NodePath("../Player")
 
 [node name="Node2D" parent="." unique_id=363020718 instance=ExtResource("11_kvpfn")]
+
+[node name="DebugPanel" parent="." unique_id=2116137223 node_paths=PackedStringArray("player") instance=ExtResource("12_dinhu")]
+player = NodePath("../Player")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

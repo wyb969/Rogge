@@ -7,12 +7,15 @@ extends CharacterBody2D
 @onready var dashing_timer: Timer = $Dashing_Timer
 @onready var shadow_timer: Timer = $ShadowTimer
 @onready var health_bar: ProgressBar = $HealthBar
+@onready var player_ring: Sprite2D = $player_ring
 
+var ring_tween :Tween
 
-var max_speed: float = 100.0  
-var acceleration: float = 1000.0  
-var friction: float = 600.0   
+var max_speed: float = 100.0
+var acceleration: float = 1000.0
+var friction: float = 600.0
 var player_health = 500.0
+var max_player_health = 500.0
 
 var SPEED = 100.0
 const DASH_SPEED = 400.0
@@ -22,7 +25,8 @@ var animation_directions = ["right", "right_down", "down","left_down","left","le
 
 func _ready() -> void:
 	health_bar.init_health(player_health)
-	pass
+	max_player_health = player_health
+	play_ring_tween()
 
 func speed_up(val:float):
 	SPEED += val
@@ -36,12 +40,12 @@ func _physics_process(delta: float) -> void:
 		dashing_timer.start()
 		shadow_timer.start()
 	move_and_slide()
-	
+
 func get_input(delta: float):
 	var input_direction = Input.get_vector("left", "right", "up", "down")
 	var direction = get_global_mouse_position() - global_position
 	playAnimation(direction)
-	
+
 	if dashing:
 		max_speed = DASH_SPEED
 		acceleration = 1600
@@ -50,17 +54,17 @@ func get_input(delta: float):
 		acceleration = 400
 
 	input_direction = input_direction.normalized()
-	
+
 	if input_direction != Vector2.ZERO:
 		velocity = velocity.move_toward(input_direction * max_speed, acceleration * delta)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 	if velocity.x!=0 || velocity.y!=0:
 		cpu_particles_2d.emitting = true
-	
+
 	if velocity.length() <= SPEED:
 		shadow_timer.stop()
-	
+
 func playAnimation(direction:Vector2):
 	direction = direction.normalized()
 	var angle = rad_to_deg(direction.angle())
@@ -80,7 +84,7 @@ func _on_shadow_timer_timeout() -> void:
 	var weapon_shadow = shadow.instantiate()
 	get_tree().root.add_child(weapon_shadow)
 	weapon_shadow.texture = weapon.get_texture()
-	weapon_shadow.global_position = weapon.sprite_2d.global_position	
+	weapon_shadow.global_position = weapon.sprite_2d.global_position
 	weapon_shadow.scale = weapon.sprite_2d.scale * weapon.scale
 	weapon_shadow.rotation = weapon.sprite_2d.rotation
 	weapon_shadow.flip_v = weapon.sprite_2d.flip_v
@@ -106,15 +110,58 @@ func get_hit()->void:
 	health_bar.set_health(player_health)
 	if(player_health<=0):
 		die()
-	
+
 func play_hit_tween()->void:
 	var tween = get_tree().create_tween()
 	tween.set_loops(3)
-	tween.tween_property(animated_sprite_2d, "modulate", Color.RED, 0.2)	
-	tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.1)	
-	tween.tween_property(animated_sprite_2d, "scale",Vector2(2.2,2.2), 0.2)	
-	tween.tween_property(animated_sprite_2d, "scale",Vector2(1.68, 1.68), 0.1)	
+	tween.tween_property(animated_sprite_2d, "modulate", Color.RED, 0.2)
+	tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.1)
+	tween.tween_property(animated_sprite_2d, "scale",Vector2(2.2,2.2), 0.2)
+	tween.tween_property(animated_sprite_2d, "scale",Vector2(1.68, 1.68), 0.1)
 
 func die()->void:
 	var current_scene = get_tree().current_scene
 	get_tree().reload_current_scene()
+
+func play_ring_tween()->void:
+	if player_ring == null:
+		return
+
+	if ring_tween != null and ring_tween.is_valid():
+		ring_tween.kill()
+	var ring_base_scale = player_ring.scale
+	player_ring.scale = ring_base_scale
+	player_ring.modulate = Color(1, 1, 1, 0.85)
+
+	ring_tween = create_tween()
+	ring_tween.set_loops()
+	ring_tween.set_trans(Tween.TRANS_SINE)
+	ring_tween.set_ease(Tween.EASE_IN_OUT)
+
+	ring_tween.tween_property(
+		player_ring,
+		"scale",
+		ring_base_scale * 1.18,
+		0.45
+	)
+
+	ring_tween.parallel().tween_property(
+		player_ring,
+		"modulate",
+		Color(1, 1, 1, 0.55),
+		0.45
+	)
+
+	ring_tween.tween_property(
+		player_ring,
+		"scale",
+		ring_base_scale,
+		0.45
+	)
+
+	ring_tween.parallel().tween_property(
+		player_ring,
+		"modulate",
+		Color(1, 1, 1, 0.85),
+		0.45
+	)

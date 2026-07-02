@@ -2,12 +2,11 @@
 
 [ext_resource type="Texture2D" uid="uid://biaex73wpcem0" path="res://assest/Small-8-Direction-Characters_by_AxulArt.png" id="1_2ugwy"]
 [ext_resource type="Script" uid="uid://b622h2id1268x" path="res://script/player.gd" id="1_ebg41"]
-[ext_resource type="PackedScene" uid="uid://d37ch1eyj5n5i" path="res://scenes/weapon.tscn" id="3_mmhgr"]
 [ext_resource type="PackedScene" uid="uid://pcli3eanw4ax" path="res://scenes/health_bar.tscn" id="4_dqkch"]
 [ext_resource type="Texture2D" uid="uid://buvqnm8kwtc6u" path="res://assest/bullet.png" id="5_qlg0r"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dqkch"]
-radius = 45.01111
+radius = 72.06247
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qlg0r"]
 
@@ -237,11 +236,6 @@ script = ExtResource("1_ebg41")
 position = Vector2(0, 2)
 shape = SubResource("CircleShape2D_dqkch")
 debug_color = Color(0.89733845, 0.2303895, 0.55137455, 0.41960785)
-
-[node name="Weapon" parent="." unique_id=1901393703 instance=ExtResource("3_mmhgr")]
-z_index = 5
-position = Vector2(25, 3.0000002)
-scale = Vector2(0.4, 0.4)
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1130076144]
 position = Vector2(1, 2)

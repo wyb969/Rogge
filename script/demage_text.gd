@@ -13,7 +13,7 @@ func _process(delta: float) -> void:
 		queue_free()
 
 
-func show_demage(text:String,startPos:Vector2,height:float,spread:float):
+func show_damage(text:String,startPos:Vector2,height:float,spread:float):
 	label.text = text
 	#animation_player.play("show_number")
 	tween = get_tree().create_tween()

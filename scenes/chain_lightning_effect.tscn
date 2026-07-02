@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cajqq2jsyjytj"]
+
+[ext_resource type="Script" uid="uid://boxlm0ytnksv" path="res://script/chain_lightning_effect.gd" id="1_p24l5"]
+
+[node name="ChainLightningEffect" type="Node2D" unique_id=706814074]
+script = ExtResource("1_p24l5")

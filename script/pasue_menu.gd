@@ -19,10 +19,10 @@ var upgrade_options := [
 		"icon":"res://assest/sprites/book.png"
 	},
 	{
-		"id": "speed_up",
-		"title": "移速 +10%",
-		"desc": "提高移动速度",
-		"icon":"res://assest/sprites/Speedup.png"
+		"id": "gun_up",
+		"title": "枪支 +1级",
+		"desc": "提高枪支属性",
+		"icon":"res://assest/weaponR1.png"
 	}
 ]
 

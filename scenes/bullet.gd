@@ -1,15 +1,22 @@
 extends Area2D
 const SPEED = 1200
-var bullet_demage:int = 100
-var enable_lighting:bool = true:
+var bullet_damage:int = 100
+var has_lightning :bool = true:
 	set(value):
-		enable_lighting = value
+		has_lightning  = value
 
 @onready var cpu_particles_2d: CPUParticles2D = $CPUParticles2D
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 @onready var lighting_chain: Node2D = $LightingChain
 
+@export var chain_lightning_scene: PackedScene
+var lightning_damage := 10.0
+var lightning_chain_count := 3
+var lightning_range := 160.0
+
+var pierce := 0
+var hit_enemies := {}
 
 var velocity:Vector2 = Vector2(10,0)
 # Called when the node enters the scene tree for the first time.
@@ -29,7 +36,7 @@ func setVelocity(v:Vector2)->void:
 	global_rotation = velocity.angle()
 
 func setBulletDemage(d:int)->void:
-	bullet_demage = d 
+	bullet_damage = d
 
 
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
@@ -37,15 +44,48 @@ func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 
 
 func _on_body_entered(body: Node2D) -> void:
-	cpu_particles_2d.emitting = true
-	sprite_2d.visible = false
+	if not body.is_in_group("EnemyGroup"):
+		return
 
-	if body.has_method("get_hit"):
-		body.get_hit(velocity.normalized(),bullet_demage)
-	velocity = Vector2.ZERO
-	collision_shape_2d.set_deferred("set_disabled",true)
+	if hit_enemies.has(body):
+		return
+	hit_enemies[body] = true
+	if pierce <= 0:
+		queue_free()
+	else:
+		pierce -= 1
+	cpu_particles_2d.emitting = true
+
+	if body.has_method("apply_hit"):
+		body.apply_hit({
+			"damage": bullet_damage,
+			"direction":velocity.normalized(),
+			"effect": "lightning",
+			"lightning_damage": bullet_damage * 0.5,
+			"chain_count": 3,
+			"chain_range": 180.0,
+			"duration": 3.0,
+			"source": self
+	})
+
 	var enemies = get_tree().get_nodes_in_group("EnemyGroup")
-	lighting_chain.cast_lightning(global_position, enemies)
+	#lighting_chain.cast_lightning(global_position, enemies)
+	if has_lightning:
+		spawn_chain_lightning(body)
+
+func spawn_chain_lightning(first_enemy: Node2D) -> void:
+	print(" chain lightning start ")
+	if chain_lightning_scene == null:
+		return
+	var effect = chain_lightning_scene.instantiate()
+	get_tree().current_scene.add_child(effect)
+
+	effect.start_chain(first_enemy,{
+		"damage": lightning_damage,
+		"chain_count": lightning_chain_count,
+		"chain_range": lightning_range,
+		"enemy_group": "EnemyGroup"
+	})
 
 func _on_cpu_particles_2d_finished() -> void:
 	queue_free()

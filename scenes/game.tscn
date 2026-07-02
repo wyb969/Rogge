@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://btiwdvuhitc7v" path="res://scenes/hand_weapon.tscn" id="8_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://cfmc3o7psvogd" path="res://scenes/spawner.tscn" id="8_gee14"]
 [ext_resource type="PackedScene" uid="uid://dajh6exgsdyc5" path="res://scenes/level_bar.tscn" id="9_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://d37ch1eyj5n5i" path="res://scenes/weapon.tscn" id="9_kvuet"]
 [ext_resource type="PackedScene" uid="uid://bg160musro4lw" path="res://scenes/circle_weapon.tscn" id="9_vtaks"]
 [ext_resource type="PackedScene" uid="uid://b8vt03vumge1y" path="res://scenes/circle_unit.tscn" id="10_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://dobh4rb6edd2n" path="res://scenes/PasueMenu.tscn" id="11_kvpfn"]
@@ -160,6 +161,12 @@ position = Vector2(-90.63861, 17.993988)
 weapon_scene = ExtResource("10_kvpfn")
 rotation_speed = 2.0
 player = NodePath("../Player")
+
+[node name="Weapon" parent="." unique_id=782294834 node_paths=PackedStringArray("player") instance=ExtResource("9_kvuet")]
+position = Vector2(48.97811, -1.2091255)
+scale = Vector2(0.6, 0.6)
+player = NodePath("../Player")
+relative_pos = Vector2(20, 20)
 
 [node name="Node2D" parent="." unique_id=363020718 instance=ExtResource("11_kvpfn")]
 

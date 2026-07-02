@@ -2,7 +2,7 @@ extends CharacterBody2D
 @export var player_reference:CharacterBody2D
 @onready var sprite_2d: Sprite2D = $Sprite2D
 
-@onready var demage_text = preload("res://scenes/demage_text.tscn")
+@onready var damage_text = preload("res://scenes/damage_text.tscn")
 @onready var coin = preload("res://scenes/coin.tscn")
 
 var direction:Vector2
@@ -10,7 +10,7 @@ var speed : float = 50
 var knockback: Vector2 = Vector2.ZERO
 var knockback_decay: float = 10.0  # 衰减速度
 var health: float = 10
-var demage: float = 2
+var damage: float = 2
 var tween:Tween
 var hurt_tween:Tween
 signal death_signal
@@ -28,7 +28,7 @@ func set_enemy_data(data:EnemyData)->void:
 	var desired_size := Vector2(20, 20)
 	$Sprite2D.texture = data.sprite
 	health = data.health 
-	demage = data.demage
+	damage = data.damage
 	var tex_size = data.sprite.get_size()         
 	if tex_size.x > 0 and tex_size.y > 0:    
 		$Sprite2D.scale = desired_size / tex_size
@@ -40,8 +40,8 @@ func set_elite_status()->void:
 func setHealth(hp:float)->void:
 	health = hp
 
-func setDemage(dg:float)->void:
-	demage = dg
+func setDamage(dg:float)->void:
+	damage = dg
 
 func set_player_ref(player_ref:CharacterBody2D)->void:
 	player_reference = player_ref
@@ -60,10 +60,44 @@ func _physics_process(delta: float) -> void:
 			knockback = dir * 10.0   # 击退力度
  
 
-func get_hit(direction:Vector2, demage:float):
+func receive_hit(direction:Vector2, damage:float):
 	play_hit_tween(direction)
-	show_demage_text(demage)
-	take_demage(demage)
+	show_damage_text(damage)
+	take_damage(damage)
+
+func apply_hit(hit_data: Dictionary) -> void:
+	var damage_value = hit_data.get("damage", 0)
+	var damage_dir: Vector2 = hit_data.get("direction", Vector2.ZERO)
+	receive_hit(damage_dir,damage_value)
+	var effect_type = hit_data.get("effect", "")
+	match effect_type:
+		"burn":
+			apply_burn(hit_data)
+		"freeze":
+			apply_freeze(hit_data)
+		"shock":
+			apply_shock(hit_data)
+		"lightning":
+			apply_lightning(hit_data)
+
+func  apply_lightning(hit_data: Dictionary) -> void:
+	var source = hit_data.get("source", null)
+	if source == null:
+		return
+	print("trigger lighting")
+	if not source.has_method("trigger_chain_lightning"):
+		return
+	source.trigger_chain_lightning(self, hit_data)
+
+
+func apply_burn(hit_data: Dictionary) -> void:
+	pass
+
+func apply_freeze(hit_data: Dictionary) -> void:
+	pass
+
+func apply_shock(hit_data: Dictionary) -> void:
+	pass
 
 func play_hit_tween(direction:Vector2):
 	if not is_inside_tree():
@@ -85,20 +119,20 @@ func play_hit_tween(direction:Vector2):
 	hurt_tween.tween_property(sprite_2d, "modulate", Color.WHITE, 0.1)	
  
 
-func take_demage(demage:float)->void:
-	health -= demage
+func take_damage(damage:float)->void:
+	health -= damage
 	if(health<=0):
 		spaw_icon()
 		remove_from_group("EnemyGroup")
 		death_signal.emit()
 		queue_free()
 
-func show_demage_text(demage:float)->void:
-	var d = demage_text.instantiate()
+func show_damage_text(damage:float)->void:
+	var d = damage_text.instantiate()
 	get_tree().root.add_child(d)
 	
 	d.position = self.position
-	d.show_demage(str(floor(demage)),self.global_position,randf_range(0,0),randf_range(0,1))
+	d.show_damage(str(floor(damage)),self.global_position,randf_range(0,0),randf_range(0,1))
 	
 	
 func spaw_icon()->void:

@@ -8,13 +8,13 @@ class_name Enemy
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 
-@onready var demage_text = preload("res://scenes/demage_text.tscn")
+@onready var demage_text = preload("res://scenes/damage_text.tscn")
 @onready var coin = preload("res://scenes/coin.tscn")
 
 var health:float = 100.0
 const SPEED = 30.0
 var tween:Tween
-
+var is_death:bool = false
 
 
 func _ready() -> void:
@@ -56,6 +56,7 @@ func set_player(body:Node2D):
 func take_damge(damge:float):
 	health-=damge
 	if health<=0:
+		is_death = true
 		death()
 	if health_bar:
 		health_bar.set_health(int(health))

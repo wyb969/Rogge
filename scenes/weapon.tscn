@@ -120,4 +120,7 @@ width = 4.0
 width_curve = SubResource("Curve_dfsp3")
 gradient = SubResource("Gradient_2sme0")
 
+[node name="AutoAttackTimer" type="Timer" parent="." unique_id=132689857]
+
 [connection signal="timeout" from="CoolDownTimer" to="." method="_on_cool_down_timer_timeout"]
+[connection signal="timeout" from="AutoAttackTimer" to="." method="_on_auto_attack_timer_timeout"]

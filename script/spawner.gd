@@ -39,7 +39,7 @@ func spawn(pos:Vector2, elite:bool):
 	enemy_instance.set_enemy_data(enemy_array[min(minute%enemy_array.size(),enemy_array.size()-1)])
 	enemy_instance.add_to_group("EnemyGroup")
 	enemy_instance.setHealth(enemy_instance.health * (1.0 + 0.12 * current_level + 0.015 * current_level * current_level))
-	enemy_instance.setDemage(enemy_instance.demage * (1.0 + 0.12 * current_level + 0.015 * current_level * current_level))
+	enemy_instance.setDamage(enemy_instance.damage * (1.0 + 0.12 * current_level + 0.015 * current_level * current_level))
 	enemy_instance.death_signal.connect(on_enemy_killed)
 	if elite:
 		enemy_instance.set_elite_status()

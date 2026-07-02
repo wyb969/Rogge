@@ -21,5 +21,11 @@ func setLevel(lev:int):
 	weapon_demage = weapon_demage  * (1.0 + 0.12 * current_level + 0.015 * current_level * current_level)
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	if body and body.has_method("get_hit"):
-		body.get_hit((body.global_position -global_position).normalized(),weapon_demage)
+	if body.has_method("apply_hit"):
+		body.apply_hit({
+			"damage": weapon_demage,
+			"direction":(body.global_position -global_position).normalized(),
+			"effect": "burn",
+			"duration": 3.0,
+			"source": self
+	})

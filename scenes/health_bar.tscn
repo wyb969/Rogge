@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://pcli3eanw4ax"]
+[gd_scene format=3 uid="uid://pcli3eanw4ax"]
 
 [ext_resource type="Script" uid="uid://b02ebagagy26s" path="res://script/health_bar.gd" id="1_yjbje"]
 
@@ -19,7 +19,7 @@ shadow_offset = Vector2(0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_644n7"]
 bg_color = Color(0.957879, 0.405162, 0.172389, 1)
 
-[node name="HealthBar" type="ProgressBar"]
+[node name="HealthBar" type="ProgressBar" unique_id=1995488687]
 z_index = 1
 offset_right = 20.0
 offset_bottom = 4.0
@@ -29,7 +29,7 @@ value = 60.0
 show_percentage = false
 script = ExtResource("1_yjbje")
 
-[node name="DemageBar" type="ProgressBar" parent="."]
+[node name="DemageBar" type="ProgressBar" parent="." unique_id=1325632462]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -42,7 +42,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_644n7")
 value = 80.0
 show_percentage = false
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=2055384719]
 wait_time = 0.45
 one_shot = true
 

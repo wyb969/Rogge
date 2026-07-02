@@ -4,6 +4,8 @@ extends Node2D
 @onready var hand_weapon: Node2D = $HandWeapon
 @onready var circle_weapon: Node2D = $CircleWeapon
 @onready var pause_menu: CanvasLayer = $Node2D
+@onready var gun_weapon: Node2D = $Weapon
+
 var current_level:int = 1
 
 # Called when the node enters the scene tree for the first time.
@@ -39,6 +41,10 @@ func _on_upgrade_selected(upgrade_id: String):
 		"speed_up":
 			player.speed_up(20)
 			print("移速升级")
+
+		"gun_up":
+			gun_weapon.upgrade()
+			print("枪支升级")
 
 func on_coin_collected():
 	level_manager.add_coin(1)

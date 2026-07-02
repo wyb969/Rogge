@@ -2,7 +2,7 @@ extends CharacterBody2D
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var cpu_particles_2d: CPUParticles2D = $CPUParticles2D
 @onready var shadow = preload("res://scenes/shadow.tscn")
-@onready var weapon: Node2D = $Weapon
+
 @onready var can_dasing_timer: Timer = $Can_Dasing_Timer
 @onready var dashing_timer: Timer = $Dashing_Timer
 @onready var shadow_timer: Timer = $ShadowTimer
@@ -81,14 +81,14 @@ func _on_shadow_timer_timeout() -> void:
 	sh.texture = animated_sprite_2d.sprite_frames.get_frame_texture(animated_sprite_2d.animation, animated_sprite_2d.frame)
 	sh.global_position = animated_sprite_2d.global_position
 	sh.scale =animated_sprite_2d.scale
-	var weapon_shadow = shadow.instantiate()
-	get_tree().root.add_child(weapon_shadow)
-	weapon_shadow.texture = weapon.get_texture()
-	weapon_shadow.global_position = weapon.sprite_2d.global_position
-	weapon_shadow.scale = weapon.sprite_2d.scale * weapon.scale
-	weapon_shadow.rotation = weapon.sprite_2d.rotation
-	weapon_shadow.flip_v = weapon.sprite_2d.flip_v
-	weapon_shadow.start_tween()
+	#var weapon_shadow = shadow.instantiate()
+	#get_tree().root.add_child(weapon_shadow)
+	#weapon_shadow.texture = weapon.get_texture()
+	#weapon_shadow.global_position = weapon.sprite_2d.global_position
+	#weapon_shadow.scale = weapon.sprite_2d.scale * weapon.scale
+	#weapon_shadow.rotation = weapon.sprite_2d.rotation
+	#weapon_shadow.flip_v = weapon.sprite_2d.flip_v
+	#weapon_shadow.start_tween()
 	sh.start_tween()
 
 

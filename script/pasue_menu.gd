@@ -23,6 +23,12 @@ var upgrade_options := [
 		"title": "枪支 +1级",
 		"desc": "提高枪支属性",
 		"icon":"res://assest/weaponR1.png"
+	},
+	{
+		"id": "pickup_up",
+		"title": "拾取 +1级",
+		"desc": "提高拾取范围",
+		"icon":"res://assest/bullet.png"
 	}
 ]
 

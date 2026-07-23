@@ -114,6 +114,7 @@ collision_mask = 2
 script = ExtResource("1_kxblr")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1457732444]
+z_index = 1
 sprite_frames = SubResource("SpriteFrames_bmlra")
 animation = &"collect"
 autoplay = "default"

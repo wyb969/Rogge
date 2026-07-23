@@ -80,7 +80,8 @@ func find_nearest_enemy(from_pos: Vector2, search_range: float, enemy_group: Str
 
 func draw_line_between(start_pos: Vector2, end_pos: Vector2) -> void:
 	var line := Line2D.new()
-	get_tree().current_scene.add_child(line)
+	var container := get_tree().get_first_node_in_group("effect_container")
+	container.add_child(line)
 
 	line.global_position = Vector2.ZERO
 	line.z_index = 999

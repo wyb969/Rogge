@@ -173,4 +173,10 @@ relative_pos = Vector2(20, 20)
 [node name="DebugPanel" parent="." unique_id=2116137223 node_paths=PackedStringArray("player") instance=ExtResource("12_dinhu")]
 player = NodePath("../Player")
 
+[node name="PickupContainer" type="Node2D" parent="." unique_id=39785325 groups=["pickup_container"]]
+z_index = 3
+
+[node name="EffectContainer" type="Node2D" parent="." unique_id=410339352 groups=["effect_container"]]
+z_index = 5
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

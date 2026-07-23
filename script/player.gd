@@ -8,6 +8,9 @@ extends CharacterBody2D
 @onready var shadow_timer: Timer = $ShadowTimer
 @onready var health_bar: ProgressBar = $HealthBar
 @onready var player_ring: Sprite2D = $player_ring
+@onready var pick_shape: CollisionShape2D = $PickShape
+
+signal player_died()
 
 var ring_tween :Tween
 
@@ -23,13 +26,26 @@ var dashing:bool = false
 var can_dash:bool = true
 var animation_directions = ["right", "right_down", "down","left_down","left","left_up","up","right_up"]
 
+var pickup_range :float
+
 func _ready() -> void:
 	health_bar.init_health(player_health)
 	max_player_health = player_health
 	play_ring_tween()
+	var circle_shape := pick_shape.shape as CircleShape2D
+	if circle_shape != null:
+		pickup_range = circle_shape.radius
 
 func speed_up(val:float):
 	SPEED += val
+
+func pick_up_upgrade(scale:float):
+	var circle_shape := pick_shape.shape as CircleShape2D
+	if circle_shape == null:
+		return
+	pickup_range = pickup_range * scale
+	print(" raduis:  ",pickup_range)
+	circle_shape.radius = pickup_range
 
 func _physics_process(delta: float) -> void:
 	get_input(delta)
@@ -104,6 +120,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 	get_hit()
 
 func get_hit()->void:
+	AudioManager.play_hit()
 	play_hit_tween()
 	player_health = player_health - 60
 	player_health = max(0,player_health)
@@ -120,8 +137,9 @@ func play_hit_tween()->void:
 	tween.tween_property(animated_sprite_2d, "scale",Vector2(1.68, 1.68), 0.1)
 
 func die()->void:
-	var current_scene = get_tree().current_scene
-	get_tree().reload_current_scene()
+	player_died.emit()
+	#var current_scene = get_tree().current_scene
+	#get_tree().reload_current_scene()
 
 func play_ring_tween()->void:
 	if player_ring == null:

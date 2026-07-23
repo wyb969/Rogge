@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bmedi2skeg2yl"]
+
+[ext_resource type="Script" uid="uid://bpq08oe76nkfc" path="res://script/main.gd" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://blijgmqawg5pt" path="res://scenes/game_end_ui.tscn" id="3_sugp2"]
+
+[node name="main" type="Node2D" unique_id=1765235295]
+script = ExtResource("1_0wfyh")
+
+[node name="GameRoot" type="Node" parent="." unique_id=1309067047]
+
+[node name="mainUI" type="CanvasLayer" parent="." unique_id=1711144628]
+process_mode = 3
+
+[node name="Control" type="Control" parent="mainUI" unique_id=130298803]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -54.0
+offset_bottom = 54.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="mainUI/Control" unique_id=1309560024]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.5
+offset_top = -46.5
+offset_right = 48.5
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="mainUI/Control/VBoxContainer" unique_id=1256842799]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Game Rogge"
+
+[node name="StartButton" type="Button" parent="mainUI/Control/VBoxContainer" unique_id=669121202]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Start"
+
+[node name="SettingButton" type="Button" parent="mainUI/Control/VBoxContainer" unique_id=1703502888]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Settings"
+
+[node name="GameEndUI" parent="." unique_id=776507437 instance=ExtResource("3_sugp2")]
+
+[connection signal="pressed" from="mainUI/Control/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="mainUI/Control/VBoxContainer/SettingButton" to="." method="_on_setting_button_pressed"]
+[connection signal="main_menu_pressed" from="GameEndUI" to="." method="_on_game_end_ui_main_menu_pressed"]
+[connection signal="retry_pressed" from="GameEndUI" to="." method="_on_game_end_ui_retry_pressed"]

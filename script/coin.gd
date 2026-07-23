@@ -79,6 +79,7 @@ func bezier2(p0: Vector2, p1: Vector2, p2: Vector2, t: float) -> Vector2:
 
 
 func _on_body_entered(body: Node2D) -> void:
+	print("start pick up")
 	player_body = body
 	start_pickup()
 
@@ -107,7 +108,7 @@ func start_pickup() -> void:
 func collect_coin() -> void:
 	if is_collecting:
 		return
-
+	AudioManager.play_pickup()
 	is_collecting = true
 	start_pick = false
 

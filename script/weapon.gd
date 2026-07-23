@@ -53,6 +53,7 @@ func _process(delta: float) -> void:
 		line_2d.remove_point(0)
 
 func shoot()->void:
+	AudioManager.play_shoot()
 	if(!cool_down):
 		return
 	cool_down = false

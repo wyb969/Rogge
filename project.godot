@@ -15,9 +15,13 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="rogge"
-run/main_scene="res://scenes/game.tscn"
+run/main_scene="uid://bmedi2skeg2yl"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+AudioManager="*uid://c2wk8mvxmn002"
 
 [display]
 

@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://blijgmqawg5pt"]
+
+[ext_resource type="Script" uid="uid://ct2a4ue640vmw" path="res://script/game_end_ui.gd" id="1_5p2tu"]
+
+[node name="GameEndUI" type="Node2D" unique_id=776507437]
+script = ExtResource("1_5p2tu")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1859811536]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1503130476]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BoxContainer" type="VBoxContainer" parent="CanvasLayer/Control" unique_id=1433134900]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.5
+offset_top = -60.0
+offset_right = 75.5
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="KillLabel" type="Label" parent="CanvasLayer/Control/BoxContainer" unique_id=711799183]
+layout_mode = 2
+text = "Kill：1000"
+
+[node name="TimeLabel" type="Label" parent="CanvasLayer/Control/BoxContainer" unique_id=949086166]
+layout_mode = 2
+text = "Time： 1min"
+
+[node name="LevelLabel" type="Label" parent="CanvasLayer/Control/BoxContainer" unique_id=547557114]
+layout_mode = 2
+text = "Level: "
+
+[node name="RetryButton" type="Button" parent="CanvasLayer/Control/BoxContainer" unique_id=1895949494]
+layout_mode = 2
+text = "Retry"
+
+[node name="BackToMenu" type="Button" parent="CanvasLayer/Control/BoxContainer" unique_id=414579847]
+layout_mode = 2
+text = "BackToMenu"

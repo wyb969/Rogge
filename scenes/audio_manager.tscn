@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://c2wk8mvxmn002"]
+
+[ext_resource type="Script" uid="uid://diawytdwevvx8" path="res://script/audio_manager.gd" id="1_aoitu"]
+[ext_resource type="AudioStream" uid="uid://cb23ig08x8f07" path="res://assest/sounds/coin.wav" id="1_m6ggh"]
+[ext_resource type="AudioStream" uid="uid://c0mfitid3fqhp" path="res://assest/sounds/power_up.wav" id="2_aoitu"]
+[ext_resource type="AudioStream" uid="uid://o7v26g0ih0rx" path="res://assest/sounds/hurt.wav" id="3_njtn3"]
+[ext_resource type="AudioStream" uid="uid://dgbfm45rhb4v5" path="res://assest/sounds/jump.wav" id="4_kq7b2"]
+[ext_resource type="AudioStream" uid="uid://ddwqhbu6pxjqw" path="res://assest/sounds/game_bgm.mp3" id="6_02gw7"]
+[ext_resource type="AudioStream" uid="uid://n76mkbmoa1rg" path="res://assest/sounds/boss_bgm.mp3" id="7_ujhup"]
+[ext_resource type="AudioStream" uid="uid://7savwj7fwag5" path="res://assest/sounds/menu_bgm.mp3" id="8_064dn"]
+
+[node name="AudioManager" type="Node2D" unique_id=2023769010]
+process_mode = 3
+script = ExtResource("1_aoitu")
+
+[node name="PickCoinAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1074440460]
+stream = ExtResource("1_m6ggh")
+
+[node name="UpgradeAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1813606566]
+stream = ExtResource("2_aoitu")
+
+[node name="HurtAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1722265207]
+stream = ExtResource("3_njtn3")
+
+[node name="ShootAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1883618810]
+stream = ExtResource("4_kq7b2")
+
+[node name="GameAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=2119867240]
+stream = ExtResource("6_02gw7")
+
+[node name="BossAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1631675751]
+stream = ExtResource("7_ujhup")
+
+[node name="MenuAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1439733836]
+stream = ExtResource("8_064dn")

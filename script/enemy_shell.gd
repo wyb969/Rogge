@@ -23,16 +23,16 @@ func _ready() -> void:
 	tween.set_loops()
 	tween.tween_property(self, "scale", Vector2(1.12, 1.12), 0.2)
 	tween.tween_property(self, "scale", Vector2.ONE, 0.4)
-	
+
 func set_enemy_data(data:EnemyData)->void:
 	var desired_size := Vector2(20, 20)
 	$Sprite2D.texture = data.sprite
-	health = data.health 
+	health = data.health
 	damage = data.damage
-	var tex_size = data.sprite.get_size()         
-	if tex_size.x > 0 and tex_size.y > 0:    
+	var tex_size = data.sprite.get_size()
+	if tex_size.x > 0 and tex_size.y > 0:
 		$Sprite2D.scale = desired_size / tex_size
-	
+
 func set_elite_status()->void:
 	$Sprite2D.material = load("res://shaders/rainbow_outline.tres")
 	scale = Vector2(1.55,1.55)
@@ -45,10 +45,10 @@ func setDamage(dg:float)->void:
 
 func set_player_ref(player_ref:CharacterBody2D)->void:
 	player_reference = player_ref
-	
+
 func _physics_process(delta: float) -> void:
 	velocity = (player_reference.position - position).normalized()*speed
-	
+
 	if knockback.length() > 0.1:
 		velocity += knockback
 		knockback = knockback.move_toward(Vector2.ZERO, knockback_decay * delta)
@@ -58,7 +58,7 @@ func _physics_process(delta: float) -> void:
 			var other = collision.get_collider()
 			var dir = (global_position - other.global_position).normalized()
 			knockback = dir * 10.0   # 击退力度
- 
+
 
 func receive_hit(direction:Vector2, damage:float):
 	play_hit_tween(direction)
@@ -115,9 +115,9 @@ func play_hit_tween(direction:Vector2):
 	hurt_tween.bind_node(self)
 	hurt_tween.tween_property(self, "position", global_position + direction *10 , 0.5)
 	hurt_tween.parallel().tween_property(self, "scale", Vector2.ONE, 0.5).from(Vector2(1.5,1.5))
-	hurt_tween.parallel().tween_property(sprite_2d, "modulate", Color.RED, 0.4)	
-	hurt_tween.tween_property(sprite_2d, "modulate", Color.WHITE, 0.1)	
- 
+	hurt_tween.parallel().tween_property(sprite_2d, "modulate", Color.RED, 0.4)
+	hurt_tween.tween_property(sprite_2d, "modulate", Color.WHITE, 0.1)
+
 
 func take_damage(damage:float)->void:
 	health -= damage
@@ -129,15 +129,25 @@ func take_damage(damage:float)->void:
 
 func show_damage_text(damage:float)->void:
 	var d = damage_text.instantiate()
-	get_tree().root.add_child(d)
-	
+	var container := get_tree().get_first_node_in_group("effect_container")
+	container.add_child(d)
+
 	d.position = self.position
 	d.show_damage(str(floor(damage)),self.global_position,randf_range(0,0),randf_range(0,1))
-	
-	
-func spaw_icon()->void:
-	var main = get_tree().current_scene
+
+
+func spaw_icon() -> void:
+	var container := get_tree().get_first_node_in_group("pickup_container")
+
+	var game = get_tree().get_first_node_in_group("game")
+	if container == null || game ==null:
+		print("not find pickup container")
+		return
+
 	var instance = coin.instantiate()
-	instance.global_position = global_position 
-	instance.connect("coin_collected", Callable(main, "on_coin_collected"))
-	main.call_deferred("add_child",instance)
+
+	if instance.has_signal("coin_collected"):
+		instance.connect("coin_collected", Callable(game, "on_coin_collected"))
+
+	container.call_deferred("add_child", instance)
+	instance.global_position = global_position

@@ -23,6 +23,7 @@ shape = SubResource("RectangleShape2D_fhv0p")
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=661344297]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1831457877]
+z_index = 1
 position = Vector2(-1.39202, -9.03279e-06)
 rotation = 1.5708
 scale = Vector2(0.622805, 0.7448)

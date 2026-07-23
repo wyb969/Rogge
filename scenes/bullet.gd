@@ -60,7 +60,7 @@ func _on_body_entered(body: Node2D) -> void:
 		body.apply_hit({
 			"damage": bullet_damage,
 			"direction":velocity.normalized(),
-			"effect": "lightning",
+			"effect": "aws",
 			"lightning_damage": bullet_damage * 0.5,
 			"chain_count": 3,
 			"chain_range": 180.0,
@@ -78,7 +78,8 @@ func spawn_chain_lightning(first_enemy: Node2D) -> void:
 	if chain_lightning_scene == null:
 		return
 	var effect = chain_lightning_scene.instantiate()
-	get_tree().current_scene.add_child(effect)
+	var container := get_tree().get_first_node_in_group("effect_container")
+	container.add_child(effect)
 
 	effect.start_chain(first_enemy,{
 		"damage": lightning_damage,

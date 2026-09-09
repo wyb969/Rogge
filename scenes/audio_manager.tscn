@@ -5,6 +5,7 @@
 [ext_resource type="AudioStream" uid="uid://c0mfitid3fqhp" path="res://assest/sounds/power_up.wav" id="2_aoitu"]
 [ext_resource type="AudioStream" uid="uid://o7v26g0ih0rx" path="res://assest/sounds/hurt.wav" id="3_njtn3"]
 [ext_resource type="AudioStream" uid="uid://dgbfm45rhb4v5" path="res://assest/sounds/jump.wav" id="4_kq7b2"]
+[ext_resource type="AudioStream" uid="uid://cqq5qp6nc6low" path="res://assest/sounds/tap.wav" id="5_ujhup"]
 [ext_resource type="AudioStream" uid="uid://ddwqhbu6pxjqw" path="res://assest/sounds/game_bgm.mp3" id="6_02gw7"]
 [ext_resource type="AudioStream" uid="uid://n76mkbmoa1rg" path="res://assest/sounds/boss_bgm.mp3" id="7_ujhup"]
 [ext_resource type="AudioStream" uid="uid://7savwj7fwag5" path="res://assest/sounds/menu_bgm.mp3" id="8_064dn"]
@@ -21,6 +22,9 @@ stream = ExtResource("2_aoitu")
 
 [node name="HurtAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1722265207]
 stream = ExtResource("3_njtn3")
+
+[node name="EnemyHurtAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=846134851]
+stream = ExtResource("5_ujhup")
 
 [node name="ShootAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1883618810]
 stream = ExtResource("4_kq7b2")

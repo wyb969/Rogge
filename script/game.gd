@@ -62,6 +62,7 @@ func _process(delta: float) -> void:
 
 func on_level_up(level:int) -> void:
 	current_level = level
+	spawner.handle_level_up(current_level)
 	pause_menu.show_upgrade_options()
 
 func _on_timer_timeout() -> void:

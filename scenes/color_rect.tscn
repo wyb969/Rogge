@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://dt017iy8db7ce"]
+
+[ext_resource type="Shader" uid="uid://d0v8nubql4pr4" path="res://scenes/menubackground.gdshader" id="1_pke8b"]
+[ext_resource type="Texture2D" uid="uid://bfqxeh4u6065q" path="res://assest/sprites/2 v1.png" id="2_letgk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sugp2"]
+shader = ExtResource("1_pke8b")
+shader_parameter/g_random_seed = 0.0
+shader_parameter/g_grid_size = Vector2(16, 9)
+shader_parameter/g_cell_offset = Vector2(0, 0)
+shader_parameter/g_speed = Vector2(0, 0)
+shader_parameter/g_draw_size_min = 0.1
+shader_parameter/g_draw_size_max = 0.4
+shader_parameter/tex_draw = ExtResource("2_letgk")
+shader_parameter/g_color_a = Color(0, 0.97166723, 0.97198635, 0)
+shader_parameter/g_color_b = Color(0.79807436, 0.14814216, 0.56108576, 1)
+shader_parameter/g_rot_global_speed = 2.95
+shader_parameter/g_rot_min_speed = 0.3230000153425
+shader_parameter/g_rot_max_speed = 1.0
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_tipki"]
+
+[node name="ColorRect" type="ColorRect" unique_id=116583636]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.47030485, 0.6982792, 0.8889283, 1)
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1752007758]
+material = SubResource("ShaderMaterial_sugp2")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_tipki")

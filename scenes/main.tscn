@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bmedi2skeg2yl"]
 
 [ext_resource type="Script" uid="uid://bpq08oe76nkfc" path="res://script/main.gd" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://dt017iy8db7ce" path="res://scenes/color_rect.tscn" id="2_jyhfs"]
+[ext_resource type="Script" uid="uid://rfhvrtdcoc71" path="res://script/start_button.gd" id="2_sugp2"]
 [ext_resource type="PackedScene" uid="uid://blijgmqawg5pt" path="res://scenes/game_end_ui.tscn" id="3_sugp2"]
 
 [node name="main" type="Node2D" unique_id=1765235295]
@@ -13,17 +15,16 @@ process_mode = 3
 
 [node name="Control" type="Control" parent="mainUI" unique_id=130298803]
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_top = -54.0
-offset_bottom = 54.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+
+[node name="ColorRect" parent="mainUI/Control" unique_id=116583636 instance=ExtResource("2_jyhfs")]
+layout_mode = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="mainUI/Control" unique_id=1309560024]
 layout_mode = 1
@@ -38,6 +39,7 @@ offset_right = 48.5
 offset_bottom = 46.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="TitleLabel" type="Label" parent="mainUI/Control/VBoxContainer" unique_id=1256842799]
@@ -47,13 +49,17 @@ text = "Game Rogge"
 
 [node name="StartButton" type="Button" parent="mainUI/Control/VBoxContainer" unique_id=669121202]
 layout_mode = 2
+offset_transform_enabled = true
 theme_override_font_sizes/font_size = 30
 text = "Start"
+script = ExtResource("2_sugp2")
 
 [node name="SettingButton" type="Button" parent="mainUI/Control/VBoxContainer" unique_id=1703502888]
 layout_mode = 2
+offset_transform_enabled = true
 theme_override_font_sizes/font_size = 30
 text = "Settings"
+script = ExtResource("2_sugp2")
 
 [node name="GameEndUI" parent="." unique_id=776507437 instance=ExtResource("3_sugp2")]
 

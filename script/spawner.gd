@@ -3,13 +3,16 @@ extends Node2D
 @export var player:CharacterBody2D
 @export var enemy:PackedScene
 @export var enemy_array:Array[EnemyData]
- 
+@export var boss_warning_scene: PackedScene
+@onready var timer: Timer = $Timer
+@export var boss:PackedScene
 
 var distance: float = 800
-var max_enmey_count:  int = 800
+var max_enmey_count:  int = 300
 var max_distance: float = 900
 var current_level: int = 0
 var enemy_killed_num:int = 0
+const boss_level:int = 4
 
 var minute: int:
 	set(value):
@@ -59,12 +62,22 @@ func on_enemy_killed()->void:
 
 func _on_timer_timeout() -> void:
 	second+=1
+	if(current_level >=boss_level):
+		timer.stop()
+		boss_show_up()
+		return
 	amount_spawn(second%10)
 
 
 func _on_elite_timeout() -> void:
 	spawn(get_random_position(),true)
 
+
+func boss_show_up()->void:
+	var warning = boss_warning_scene.instantiate()
+	get_tree().current_scene.add_child(warning)
+	await get_tree().create_timer(2.0).timeout
+	spawn_boss()
 
 func remove_far_enemy()->void:
 	for enemy in get_tree().get_nodes_in_group("EnemyGroup"):
@@ -77,3 +90,11 @@ func remove_far_enemy()->void:
 
 func handle_level_up(level:int):
 	current_level = level
+
+func spawn_boss()->void:
+	AudioManager.play_boss_bgm()
+	var boss_instance = boss.instantiate()
+	boss_instance.position = player.position + 150 * Vector2.RIGHT.rotated(randf_range(0,2*PI))
+	boss_instance.set_player(player)
+	boss_instance.add_to_group("EnemyGroup")
+	get_tree().current_scene.add_child(boss_instance)

@@ -55,5 +55,4 @@ func _draw_lightning(from_enemy: Node2D, to_enemy: Node2D):
 	lightning.setup(from_enemy, to_enemy)
 	var container := get_tree().get_first_node_in_group("effect_container")
 	if container!=null:
-		print("add lighting in container")
 		container.add_child(lightning)

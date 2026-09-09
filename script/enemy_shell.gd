@@ -47,6 +47,8 @@ func set_player_ref(player_ref:CharacterBody2D)->void:
 	player_reference = player_ref
 
 func _physics_process(delta: float) -> void:
+	if !is_instance_valid(player_reference):
+		return
 	velocity = (player_reference.position - position).normalized()*speed
 
 	if knockback.length() > 0.1:
@@ -120,6 +122,7 @@ func play_hit_tween(direction:Vector2):
 
 
 func take_damage(damage:float)->void:
+	AudioManager.play_enemy_hurt()
 	health -= damage
 	if(health<=0):
 		spaw_icon()

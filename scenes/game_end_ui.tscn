@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://blijgmqawg5pt"]
 
 [ext_resource type="Script" uid="uid://ct2a4ue640vmw" path="res://script/game_end_ui.gd" id="1_5p2tu"]
+[ext_resource type="Script" uid="uid://rfhvrtdcoc71" path="res://script/start_button.gd" id="2_cleem"]
+[ext_resource type="PackedScene" uid="uid://dt017iy8db7ce" path="res://scenes/color_rect.tscn" id="2_hrl6p"]
 
 [node name="GameEndUI" type="Node2D" unique_id=776507437]
 script = ExtResource("1_5p2tu")
@@ -9,17 +11,15 @@ script = ExtResource("1_5p2tu")
 
 [node name="Control" type="Control" parent="CanvasLayer" unique_id=1503130476]
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="ColorRect" parent="CanvasLayer/Control" unique_id=116583636 instance=ExtResource("2_hrl6p")]
+layout_mode = 0
+anchors_preset = 0
 
 [node name="BoxContainer" type="VBoxContainer" parent="CanvasLayer/Control" unique_id=1433134900]
 layout_mode = 1
@@ -49,8 +49,12 @@ text = "Level: "
 
 [node name="RetryButton" type="Button" parent="CanvasLayer/Control/BoxContainer" unique_id=1895949494]
 layout_mode = 2
+offset_transform_enabled = true
 text = "Retry"
+script = ExtResource("2_cleem")
 
 [node name="BackToMenu" type="Button" parent="CanvasLayer/Control/BoxContainer" unique_id=414579847]
 layout_mode = 2
+offset_transform_enabled = true
 text = "BackToMenu"
+script = ExtResource("2_cleem")

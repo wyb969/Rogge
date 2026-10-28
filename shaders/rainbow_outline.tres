@@ -8,4 +8,4 @@ shader_parameter/line_thickness = 1.0
 shader_parameter/sin_frequency = 0.5
 shader_parameter/sin_offset = 0.0
 shader_parameter/light_offset = 0.5
-shader_parameter/frame_count = Vector2(1, 1)
+shader_parameter/frame_uv_rect = Vector4(0, 0, 0, 0)

@@ -45,6 +45,7 @@ func _setup_health_bar() -> void:
 func _process(_delta: float) -> void:
 	if is_dying:
 		return
+	_sync_outline_frame_uv()
 	if is_charging:
 		velocity = charge_direction * charge_speed
 		move_and_slide()
@@ -136,22 +137,25 @@ func apply_hit(hit_data: Dictionary) -> void:
 		await start_defeat_sequence()
 
 func _apply_phase2_outline() -> void:
-	## Rainbow outline clamped to the current spritesheet frame (avoids vertical seam).
+	## Rainbow outline; samples clamped to the current spritesheet frame UV.
 	if sprite_2d == null:
 		return
-	if sprite_2d.material is ShaderMaterial:
-		var existing: ShaderMaterial = sprite_2d.material
-		existing.set_shader_parameter(
-			"frame_count",
-			Vector2(max(1, sprite_2d.hframes), max(1, sprite_2d.vframes))
-		)
+	if not (sprite_2d.material is ShaderMaterial):
+		sprite_2d.material = load("res://shaders/rainbow_outline.tres").duplicate()
+	_sync_outline_frame_uv()
+
+func _sync_outline_frame_uv() -> void:
+	if sprite_2d == null or not (sprite_2d.material is ShaderMaterial):
 		return
-	var mat: ShaderMaterial = load("res://shaders/rainbow_outline.tres").duplicate()
-	mat.set_shader_parameter(
-		"frame_count",
-		Vector2(max(1, sprite_2d.hframes), max(1, sprite_2d.vframes))
-	)
-	sprite_2d.material = mat
+	var mat: ShaderMaterial = sprite_2d.material
+	var hf := maxi(1, sprite_2d.hframes)
+	var vf := maxi(1, sprite_2d.vframes)
+	var frame := sprite_2d.frame
+	var col := frame % hf
+	var row := int(frame / hf) % vf
+	var fw := 1.0 / float(hf)
+	var fh := 1.0 / float(vf)
+	mat.set_shader_parameter("frame_uv_rect", Vector4(float(col) * fw, float(row) * fh, fw, fh))
 
 func play_hit_feedback(hit_dir: Vector2) -> void:
 	_spawn_hit_particles(hit_dir)

@@ -51,10 +51,13 @@ func set_elite_status() -> void:
 	is_elite = true
 	var sprite: Sprite2D = $Sprite2D
 	var mat: ShaderMaterial = load("res://shaders/rainbow_outline.tres").duplicate()
-	mat.set_shader_parameter(
-		"frame_count",
-		Vector2(max(1, sprite.hframes), max(1, sprite.vframes))
-	)
+	var hf := maxi(1, sprite.hframes)
+	var vf := maxi(1, sprite.vframes)
+	# Single-frame / full-texture elites keep default (0) and use REGION_RECT.
+	if hf > 1 or vf > 1:
+		var fw := 1.0 / float(hf)
+		var fh := 1.0 / float(vf)
+		mat.set_shader_parameter("frame_uv_rect", Vector4(0.0, 0.0, fw, fh))
 	sprite.material = mat
 	scale = Vector2(1.55, 1.55)
 

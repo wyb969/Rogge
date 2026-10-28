@@ -49,33 +49,50 @@ func pick_up_upgrade(scale:float):
 
 func _physics_process(delta: float) -> void:
 	get_input(delta)
-	if Input.is_action_just_pressed("roll") and can_dash:
-		can_dash = false
-		dashing = true
-		can_dasing_timer.start()
-		dashing_timer.start()
-		shadow_timer.start()
+	var want_dash := Input.is_action_just_pressed("roll")
+	if MobileInput.controls_enabled and MobileInput.consume_dash():
+		want_dash = true
+	if want_dash and can_dash:
+		_start_dash()
 	move_and_slide()
+
+func _start_dash() -> void:
+	can_dash = false
+	dashing = true
+	can_dasing_timer.start()
+	dashing_timer.start()
+	shadow_timer.start()
 
 func get_input(delta: float):
 	var input_direction = Input.get_vector("left", "right", "up", "down")
-	var direction = get_global_mouse_position() - global_position
+	if MobileInput.controls_enabled and MobileInput.has_move_input():
+		input_direction = MobileInput.move_vector
+
+	var look_target := get_global_mouse_position()
+	# On touch / web, aim along move or current velocity instead of mouse.
+	if MobileInput.controls_enabled:
+		if input_direction.length_squared() > 0.01:
+			look_target = global_position + input_direction
+		elif velocity.length_squared() > 1.0:
+			look_target = global_position + velocity
+	var direction = look_target - global_position
 	playAnimation(direction)
 
 	if dashing:
 		max_speed = DASH_SPEED
 		acceleration = 1600
+		# Keep dash moving in stick / last move direction when available.
+		if input_direction != Vector2.ZERO:
+			velocity = input_direction.normalized() * DASH_SPEED
 	else:
 		max_speed = SPEED
 		acceleration = 400
+		if input_direction != Vector2.ZERO:
+			velocity = velocity.move_toward(input_direction.normalized() * max_speed, acceleration * delta)
+		else:
+			velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 
-	input_direction = input_direction.normalized()
-
-	if input_direction != Vector2.ZERO:
-		velocity = velocity.move_toward(input_direction * max_speed, acceleration * delta)
-	else:
-		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
-	if velocity.x!=0 || velocity.y!=0:
+	if velocity.length_squared() > 1.0:
 		cpu_particles_2d.emitting = true
 
 	if velocity.length() <= SPEED:

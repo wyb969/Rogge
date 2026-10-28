@@ -1,22 +1,25 @@
 extends CanvasLayer
 ## Always-on fullscreen toggle for web / desktop / phone browsers.
 
-@onready var button: Button = $Root/FullscreenButton
+@onready var button: Button = %FullscreenButton
 
 const UI_FONT := preload("res://assest/fonts/DroidSansFallback.ttf")
 
 func _ready() -> void:
-	layer = 120
+	layer = 128
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = true
-	button.add_theme_font_override("font", UI_FONT)
-	button.add_theme_font_size_override("font_size", 14)
-	button.pressed.connect(_on_pressed)
+	if button == null:
+		button = get_node_or_null("Root/FullscreenButton")
+	if button:
+		button.add_theme_font_override("font", UI_FONT)
+		button.add_theme_font_size_override("font_size", 15)
+		if not button.pressed.is_connected(_on_pressed):
+			button.pressed.connect(_on_pressed)
 	get_viewport().size_changed.connect(_refresh_label)
 	_refresh_label()
 
 func _on_pressed() -> void:
-	# Unlock web audio on the same user gesture when possible.
 	if AudioManager and AudioManager.has_method("unlock_web_audio"):
 		AudioManager.unlock_web_audio()
 
@@ -25,7 +28,7 @@ func _on_pressed() -> void:
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	call_deferred("_refresh_label")
-	var timer := get_tree().create_timer(0.2)
+	var timer := get_tree().create_timer(0.25)
 	timer.timeout.connect(_refresh_label)
 
 func _is_fullscreen() -> bool:

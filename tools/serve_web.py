@@ -20,8 +20,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 	}
 
 	def end_headers(self):
-		self.send_header("Cross-Origin-Opener-Policy", "same-origin")
-		self.send_header("Cross-Origin-Embedder-Policy", "require-corp")
+		# No-threads web export does not need COEP; skipping it avoids some
+		# mobile browsers leaving AudioContext suspended under isolation.
 		self.send_header("Cross-Origin-Resource-Policy", "same-origin")
 		self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
 		self.send_header("Pragma", "no-cache")

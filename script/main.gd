@@ -35,9 +35,12 @@ func _ensure_mobile_controls() -> void:
 
 
 func _ensure_fullscreen_toggle() -> void:
+	# Prefer the scene-embedded instance from main.tscn.
+	fullscreen_toggle = get_node_or_null("FullscreenToggle")
 	if fullscreen_toggle != null and is_instance_valid(fullscreen_toggle):
 		return
 	fullscreen_toggle = FULLSCREEN_TOGGLE_SCENE.instantiate()
+	fullscreen_toggle.name = "FullscreenToggle"
 	add_child(fullscreen_toggle)
 
 

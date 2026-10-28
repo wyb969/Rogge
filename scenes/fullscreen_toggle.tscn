@@ -1,9 +1,26 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://script/fullscreen_toggle.gd" id="1_fs"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fs"]
+bg_color = Color(0.08, 0.14, 0.1, 0.82)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 1.0, 0.6, 0.95)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+
 [node name="FullscreenToggle" type="CanvasLayer"]
-layer = 120
+layer = 128
+process_mode = 3
 script = ExtResource("1_fs")
 
 [node name="Root" type="Control" parent="."]
@@ -16,15 +33,20 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="FullscreenButton" type="Button" parent="Root"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -128.0
-offset_top = 44.0
-offset_right = -12.0
-offset_bottom = 78.0
+offset_left = -148.0
+offset_top = 8.0
+offset_right = -10.0
+offset_bottom = 46.0
 grow_horizontal = 0
 focus_mode = 0
 mouse_filter = 0
+theme_override_colors/font_color = Color(0.85, 1, 0.9, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_fs")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fs")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_fs")
 text = "全屏"

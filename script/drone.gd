@@ -19,6 +19,7 @@ var laser_time_left: float = 0.0
 var laser_tick_left: float = 0.0
 var laser_target: Node2D = null
 var laser_width: float = 3.2
+var _despawning: bool = false
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var laser_line: Line2D = $LaserLine
@@ -35,6 +36,8 @@ func setup(p: Node2D, dmg: float, cd: float, lifetime: float, angle: float) -> v
 	if sprite:
 		sprite.rotation = 0.0
 	_clear_laser()
+	if AudioManager and AudioManager.has_method("play_drone_spawn"):
+		AudioManager.play_drone_spawn()
 
 func _ready() -> void:
 	if laser_line == null:
@@ -52,6 +55,8 @@ func _ready() -> void:
 	laser_line.top_level = true
 
 func _process(delta: float) -> void:
+	if _despawning:
+		return
 	life_left -= delta
 	if life_left <= 0.0:
 		_clear_laser()
@@ -88,6 +93,8 @@ func _start_laser() -> void:
 	laser_target = target
 	laser_time_left = laser_duration
 	laser_tick_left = 0.0
+	if AudioManager and AudioManager.has_method("play_drone_attack"):
+		AudioManager.play_drone_attack()
 	_apply_laser_hit()
 	_draw_laser_to(target.global_position)
 
@@ -162,7 +169,12 @@ func _nearest_enemy_in_range() -> Node2D:
 	return nearest
 
 func _fade_and_free() -> void:
+	if _despawning:
+		return
+	_despawning = true
 	_clear_laser()
+	if AudioManager and AudioManager.has_method("play_drone_despawn"):
+		AudioManager.play_drone_despawn()
 	var tw := create_tween()
 	tw.tween_property(self, "modulate:a", 0.0, 0.18)
 	tw.tween_callback(queue_free)

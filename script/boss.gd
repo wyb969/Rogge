@@ -130,10 +130,28 @@ func apply_hit(hit_data: Dictionary) -> void:
 
 	if boss_current_health <= health_max_value * 0.72:
 		rush_ready_time = 0.25
-		sprite_2d.material = load("res://shaders/rainbow_outline.tres")
+		_apply_phase2_outline()
 
 	if boss_current_health <= 0.0:
 		await start_defeat_sequence()
+
+func _apply_phase2_outline() -> void:
+	## Rainbow outline clamped to the current spritesheet frame (avoids vertical seam).
+	if sprite_2d == null:
+		return
+	if sprite_2d.material is ShaderMaterial:
+		var existing: ShaderMaterial = sprite_2d.material
+		existing.set_shader_parameter(
+			"frame_count",
+			Vector2(max(1, sprite_2d.hframes), max(1, sprite_2d.vframes))
+		)
+		return
+	var mat: ShaderMaterial = load("res://shaders/rainbow_outline.tres").duplicate()
+	mat.set_shader_parameter(
+		"frame_count",
+		Vector2(max(1, sprite_2d.hframes), max(1, sprite_2d.vframes))
+	)
+	sprite_2d.material = mat
 
 func play_hit_feedback(hit_dir: Vector2) -> void:
 	_spawn_hit_particles(hit_dir)

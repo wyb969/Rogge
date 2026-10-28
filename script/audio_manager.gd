@@ -12,6 +12,9 @@ extends Node
 @onready var game_over_audio_player: AudioStreamPlayer = $GameOverAudioPlayer
 @onready var boss_warning_audio_player: AudioStreamPlayer = $BossWarningAudioPlayer
 @onready var boss_alarm_audio_player: AudioStreamPlayer = $BossAlarmAudioPlayer
+@onready var drone_spawn_audio_player: AudioStreamPlayer = $DroneSpawnAudioPlayer
+@onready var drone_attack_audio_player: AudioStreamPlayer = $DroneAttackAudioPlayer
+@onready var drone_despawn_audio_player: AudioStreamPlayer = $DroneDespawnAudioPlayer
 
 enum BgmKind { NONE, MENU, GAME, BOSS }
 
@@ -69,6 +72,30 @@ func play_upgrade() -> void:
 	_ensure_web_ready()
 	upgrade_audio_player.pitch_scale = 1.0
 	upgrade_audio_player.play()
+
+func play_drone_spawn() -> void:
+	_ensure_web_ready()
+	if drone_spawn_audio_player == null:
+		return
+	drone_spawn_audio_player.pitch_scale = randf_range(0.94, 1.08)
+	drone_spawn_audio_player.volume_db = -2.0
+	drone_spawn_audio_player.play()
+
+func play_drone_attack() -> void:
+	_ensure_web_ready()
+	if drone_attack_audio_player == null:
+		return
+	drone_attack_audio_player.pitch_scale = randf_range(0.97, 1.06)
+	drone_attack_audio_player.volume_db = -4.0
+	drone_attack_audio_player.play()
+
+func play_drone_despawn() -> void:
+	_ensure_web_ready()
+	if drone_despawn_audio_player == null:
+		return
+	drone_despawn_audio_player.pitch_scale = randf_range(0.9, 1.05)
+	drone_despawn_audio_player.volume_db = -3.0
+	drone_despawn_audio_player.play()
 
 func play_menu_bgm() -> void:
 	_desired_bgm = BgmKind.MENU

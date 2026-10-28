@@ -1,0 +1,6 @@
+Drone SFX from "The Essential Retro Video Game Sound Effects Collection [512 sounds]"
+by Juhani Junkala — CC0 (public domain).
+Source (OpenGameArt): https://opengameart.org/content/512-sound-effects-8-bit-style
+- drone_spawn.wav   <- sfx_sounds_powerup4.wav
+- drone_attack.wav  <- sfx_wpn_laser2.wav
+- drone_despawn.wav <- sfx_sounds_error4.wav

@@ -13,6 +13,9 @@
 [ext_resource type="AudioStream" uid="uid://niq1m1dqsrvv" path="res://assest/sounds/game_over.mp3" id="10_gameover"]
 [ext_resource type="AudioStream" path="res://assest/sounds/explosion.wav" id="11_explosion"]
 [ext_resource type="AudioStream" uid="uid://c0mfitid3fqhp" path="res://assest/sounds/power_up.wav" id="12_alarm"]
+[ext_resource type="AudioStream" path="res://assest/sounds/drone_spawn.wav" id="13_drone_spawn"]
+[ext_resource type="AudioStream" path="res://assest/sounds/drone_attack.wav" id="14_drone_attack"]
+[ext_resource type="AudioStream" path="res://assest/sounds/drone_despawn.wav" id="15_drone_despawn"]
 
 [node name="AudioManager" type="Node" unique_id=2023769010]
 process_mode = 3
@@ -64,4 +67,16 @@ bus = &"Master"
 
 [node name="BossAlarmAudioPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("12_alarm")
+bus = &"Master"
+
+[node name="DroneSpawnAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_drone_spawn")
+bus = &"Master"
+
+[node name="DroneAttackAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_drone_attack")
+bus = &"Master"
+
+[node name="DroneDespawnAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_drone_despawn")
 bus = &"Master"

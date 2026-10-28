@@ -49,7 +49,13 @@ func set_enemy_data(data: EnemyData) -> void:
 
 func set_elite_status() -> void:
 	is_elite = true
-	$Sprite2D.material = load("res://shaders/rainbow_outline.tres")
+	var sprite: Sprite2D = $Sprite2D
+	var mat: ShaderMaterial = load("res://shaders/rainbow_outline.tres").duplicate()
+	mat.set_shader_parameter(
+		"frame_count",
+		Vector2(max(1, sprite.hframes), max(1, sprite.vframes))
+	)
+	sprite.material = mat
 	scale = Vector2(1.55, 1.55)
 
 func setHealth(hp: float) -> void:

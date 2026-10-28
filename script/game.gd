@@ -10,18 +10,26 @@ extends Node2D
 @onready var spawner: Node2D = $Spawner
 @onready var pickup_container: Node2D = $PickupContainer
 @onready var effect_container: Node2D = $EffectContainer
+@onready var hud_layer: CanvasLayer = $HudLayer
+@onready var dash_cooldown_ring: Node2D = $HudLayer/DashCooldownRing
+@onready var equipment_panel: Control = $HudLayer/EquipmentPanel
+@onready var drone_controller: Node2D = $DroneController
+@onready var molotov_controller: Node2D = $MolotovController
+@onready var freeze_controller: Node2D = $FreezeController
 
-var current_level:int = 1
+var current_level: int = 1
 signal game_over(stats: Dictionary)
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#level_manager.signal_level_up.connect(circle_weapon.handle_level_up)
-	#level_manager.signal_level_up.connect(hand_weapon.handle_level_up)
 	level_manager.signal_level_up.connect(on_level_up)
 	pause_menu.upgrade_selected.connect(_on_upgrade_selected)
 	player.player_died.connect(on_player_died)
-	pass
+	spawner.boss_defeated.connect(on_boss_defeated)
+	if player.has_method("set_dash_cooldown_ui"):
+		player.set_dash_cooldown_ui(dash_cooldown_ring)
+	if equipment_panel and equipment_panel.has_method("reset_equipment"):
+		equipment_panel.reset_equipment()
+	_reset_skill_controllers()
 
 func prepare_game() -> void:
 	visible = false
@@ -32,6 +40,9 @@ func prepare_game() -> void:
 		print(" level ui null")
 	if spawner_ui:
 		spawner_ui.hide()
+	if hud_layer:
+		hud_layer.hide()
+	_reset_skill_controllers()
 
 func start_game() -> void:
 	visible = true
@@ -40,27 +51,44 @@ func start_game() -> void:
 		level_ui.show()
 	if spawner_ui:
 		spawner_ui.show()
+	if hud_layer:
+		hud_layer.show()
+	if player.has_method("set_dash_cooldown_ui"):
+		player.set_dash_cooldown_ui(dash_cooldown_ring)
+	if equipment_panel and equipment_panel.has_method("reset_equipment"):
+		equipment_panel.reset_equipment()
+	_reset_skill_controllers()
 
 func end_game() -> void:
 	clear_run_objects()
+	_reset_skill_controllers()
 	process_mode = Node.PROCESS_MODE_DISABLED
 	if level_ui:
 		level_ui.hide()
 	if spawner_ui:
 		spawner_ui.hide()
+	if hud_layer:
+		hud_layer.hide()
 	clear_enemies()
 	hide()
+
+func _reset_skill_controllers() -> void:
+	if drone_controller and drone_controller.has_method("reset"):
+		drone_controller.reset()
+	if molotov_controller and molotov_controller.has_method("reset"):
+		molotov_controller.reset()
+	if freeze_controller and freeze_controller.has_method("reset"):
+		freeze_controller.reset()
 
 func clear_enemies() -> void:
 	for enemy in get_tree().get_nodes_in_group("EnemyGroup"):
 		if is_instance_valid(enemy):
 			enemy.queue_free()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
-func on_level_up(level:int) -> void:
+func on_level_up(level: int) -> void:
 	current_level = level
 	spawner.handle_level_up(current_level)
 	pause_menu.show_upgrade_options()
@@ -72,41 +100,55 @@ func _on_upgrade_selected(upgrade_id: String):
 	match upgrade_id:
 		"axe_up":
 			hand_weapon.handle_level_up(current_level)
-			print("斧头升级")
-
 		"circle_up":
 			circle_weapon.handle_level_up(current_level)
-			print("书本升级")
-
 		"speed_up":
 			player.speed_up(20)
-			print("移速升级")
-
 		"gun_up":
 			gun_weapon.upgrade()
-			print("枪支升级")
 		"pickup_up":
 			player.pick_up_upgrade(1.2)
-			print("拾取升级")
+		"left_fist":
+			player.upgrade_left_fist()
+		"right_fist":
+			player.upgrade_right_fist()
+		"drone_up":
+			drone_controller.upgrade()
+		"molotov_up":
+			molotov_controller.upgrade()
+		"freeze_up":
+			freeze_controller.upgrade()
 
-func on_coin_collected():
-	level_manager.add_coin(1)
+	if equipment_panel and equipment_panel.has_method("apply_upgrade"):
+		equipment_panel.apply_upgrade(upgrade_id)
+
+func on_coin_collected(amount: int = 2) -> void:
+	level_manager.add_coin(amount)
 
 func on_player_died():
-	print("player died")
-	var stats := {
-		"minutes":spawner.minute,
+	Engine.time_scale = 1.0
+	var stats := _build_run_stats(false)
+	game_over.emit(stats)
+
+func on_boss_defeated() -> void:
+	Engine.time_scale = 1.0
+	clear_enemies()
+	var stats := _build_run_stats(true)
+	game_over.emit(stats)
+
+func _build_run_stats(victory: bool) -> Dictionary:
+	return {
+		"minutes": spawner.minute,
 		"seconds": spawner.second,
 		"kills": spawner.enemy_killed_num,
-		"level": current_level
+		"level": current_level,
+		"victory": victory
 	}
-	game_over.emit(stats)
 
 func clear_container(container: Node) -> void:
 	for child in container.get_children():
 		child.queue_free()
 
 func clear_run_objects() -> void:
-	#clear_container(enemy_container)
 	clear_container(pickup_container)
 	clear_container(effect_container)

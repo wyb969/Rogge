@@ -32,6 +32,7 @@ func _ensure_mobile_controls() -> void:
 
 
 func show_main_menu() -> void:
+	Engine.time_scale = 1.0
 	main_ui.show()
 	game_end_ui.hide_result()
 	AudioManager.play_menu_bgm()
@@ -44,6 +45,7 @@ func show_main_menu() -> void:
 
 
 func start_game() -> void:
+	Engine.time_scale = 1.0
 	AudioManager.play_game_bgm()
 	main_ui.hide()
 	game_end_ui.hide_result()
@@ -66,12 +68,20 @@ func _on_setting_button_pressed() -> void:
 
 
 func on_game_over(stat: Dictionary) -> void:
+	Engine.time_scale = 1.0
+
 	if game and is_instance_valid(game):
 		game.end_game()
 	if mobile_controls:
 		mobile_controls.hide_controls()
 
 	get_tree().paused = true
+
+	if stat.get("victory", false):
+		AudioManager.play_victory()
+	else:
+		AudioManager.play_game_over()
+
 	game_end_ui.show_result(stat)
 
 

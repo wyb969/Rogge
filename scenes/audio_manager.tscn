@@ -9,6 +9,8 @@
 [ext_resource type="AudioStream" uid="uid://ddwqhbu6pxjqw" path="res://assest/sounds/game_bgm.mp3" id="6_02gw7"]
 [ext_resource type="AudioStream" uid="uid://n76mkbmoa1rg" path="res://assest/sounds/boss_bgm.mp3" id="7_ujhup"]
 [ext_resource type="AudioStream" uid="uid://7savwj7fwag5" path="res://assest/sounds/menu_bgm.mp3" id="8_064dn"]
+[ext_resource type="AudioStream" uid="uid://cmcm01it01kmi" path="res://assest/sounds/victory.mp3" id="9_victory"]
+[ext_resource type="AudioStream" uid="uid://niq1m1dqsrvv" path="res://assest/sounds/game_over.mp3" id="10_gameover"]
 
 [node name="AudioManager" type="Node2D" unique_id=2023769010]
 process_mode = 3
@@ -37,3 +39,9 @@ stream = ExtResource("7_ujhup")
 
 [node name="MenuAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1439733836]
 stream = ExtResource("8_064dn")
+
+[node name="VictoryAudioPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_victory")
+
+[node name="GameOverAudioPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_gameover")

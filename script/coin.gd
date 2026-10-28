@@ -1,7 +1,8 @@
 extends Area2D
 
-signal coin_collected
+signal coin_collected(amount: int)
 
+var xp_value: int = 2
 var start_pick: bool = false
 var player_body:Node2D
 var max_speed:int=300
@@ -121,5 +122,5 @@ func collect_coin() -> void:
 
 	await tween.finished
 
-	coin_collected.emit()
+	coin_collected.emit(xp_value)
 	queue_free()

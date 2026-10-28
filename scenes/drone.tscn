@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://script/drone.gd" id="1_drone"]
+[ext_resource type="Texture2D" path="res://assest/sprites/drone.svg" id="2_tex"]
+
+[node name="Drone" type="Node2D"]
+z_index = 6
+script = ExtResource("1_drone")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("2_tex")

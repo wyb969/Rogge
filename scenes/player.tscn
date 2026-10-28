@@ -268,14 +268,14 @@ scale_amount_max = 7.0
 scale_amount_curve = SubResource("Curve_2v2ik")
 
 [node name="ShadowTimer" type="Timer" parent="." unique_id=1541594562]
-wait_time = 0.08
+wait_time = 0.028
 
 [node name="Dashing_Timer" type="Timer" parent="." unique_id=462666918]
-wait_time = 0.6
+wait_time = 0.14
 one_shot = true
 
 [node name="Can_Dasing_Timer" type="Timer" parent="." unique_id=1504091772]
-wait_time = 4.0
+wait_time = 3.0
 one_shot = true
 
 [node name="HealthBar" parent="." unique_id=9668729 instance=ExtResource("4_dqkch")]

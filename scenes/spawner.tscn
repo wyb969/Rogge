@@ -50,7 +50,7 @@ theme_override_fonts/font = ExtResource("1_2vbf6")
 text = "00"
 
 [node name="Timer" type="Timer" parent="." unique_id=2001005239]
-wait_time = 0.1
+wait_time = 1.0
 autostart = true
 
 [node name="Pattern" type="Timer" parent="." unique_id=1282296431]
@@ -58,7 +58,7 @@ wait_time = 10.0
 autostart = true
 
 [node name="Elite" type="Timer" parent="." unique_id=1104372921]
-wait_time = 9.0
+wait_time = 14.0
 autostart = true
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

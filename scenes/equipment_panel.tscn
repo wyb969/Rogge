@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://script/equipment_panel.gd" id="1_equip"]
+
+[node name="EquipmentPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -158.0
+offset_top = 120.0
+offset_right = -18.0
+offset_bottom = 400.0
+grow_horizontal = 0
+mouse_filter = 2
+script = ExtResource("1_equip")
+
+[node name="SlotList" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 140.0
+offset_bottom = 260.0
+theme_override_constants/separation = 10

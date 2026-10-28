@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Right-facing punch fist -->
+  <rect x="22" y="40" width="16" height="18" rx="3" fill="#e89664" stroke="#281914" stroke-width="2"/>
+  <rect x="14" y="18" width="34" height="26" rx="6" fill="#e89664" stroke="#281914" stroke-width="2"/>
+  <rect x="16" y="8" width="7" height="12" rx="2" fill="#d27850" stroke="#281914" stroke-width="2"/>
+  <rect x="24" y="6" width="7" height="14" rx="2" fill="#d27850" stroke="#281914" stroke-width="2"/>
+  <rect x="32" y="6" width="7" height="14" rx="2" fill="#d27850" stroke="#281914" stroke-width="2"/>
+  <rect x="40" y="8" width="7" height="12" rx="2" fill="#d27850" stroke="#281914" stroke-width="2"/>
+  <rect x="8" y="24" width="10" height="14" rx="3" fill="#e89664" stroke="#281914" stroke-width="2"/>
+  <circle cx="52" cy="30" r="3" fill="#ffd090"/>
+</svg>

@@ -144,7 +144,7 @@ func _drone_desc() -> String:
 	var cd := maxf(0.22, 0.9 - float(next) * 0.09)
 	var dmg := 6.0 + float(next) * 4.5
 	var count := 1 + int((next - 1) / 3)
-	return "召唤 %d 架无人机\n存活 %.1fs 射速 %.2fs\n伤害 %.0f" % [count, life, cd, dmg]
+	return "召唤 %d 架伴飞无人机\n激光照射 间隔 %.2fs\n存活 %.1fs 伤害 %.0f" % [count, cd, life, dmg]
 
 
 func _molotov_desc() -> String:

@@ -70,10 +70,12 @@ func get_lifetime() -> float:
 	return 6.0 + float(level) * 1.6
 
 func get_fire_cd() -> float:
-	return maxf(0.22, 0.9 - float(level) * 0.09)
+	# Cooldown between laser bursts.
+	return maxf(0.28, 0.95 - float(level) * 0.08)
 
 func get_damage() -> float:
-	return 6.0 + float(level) * 4.5
+	# Per laser tick while the beam is active.
+	return 4.5 + float(level) * 3.2
 
 func get_drone_count() -> int:
 	return 1 + int((level - 1) / 3)

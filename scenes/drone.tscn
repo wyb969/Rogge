@@ -10,3 +10,11 @@ script = ExtResource("1_drone")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.45, 0.45)
 texture = ExtResource("2_tex")
+
+[node name="LaserLine" type="Line2D" parent="."]
+visible = false
+z_index = 8
+width = 3.2
+default_color = Color(0.45, 0.95, 1, 0.95)
+begin_cap_mode = 2
+end_cap_mode = 2

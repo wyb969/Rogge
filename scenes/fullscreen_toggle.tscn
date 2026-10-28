@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://script/fullscreen_toggle.gd" id="1_fs"]
+
+[node name="FullscreenToggle" type="CanvasLayer"]
+layer = 120
+script = ExtResource("1_fs")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FullscreenButton" type="Button" parent="Root"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -128.0
+offset_top = 44.0
+offset_right = -12.0
+offset_bottom = 78.0
+grow_horizontal = 0
+focus_mode = 0
+mouse_filter = 0
+text = "全屏"

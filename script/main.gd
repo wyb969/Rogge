@@ -6,14 +6,17 @@ extends Node2D
 
 const GAME_SCENE := preload("res://scenes/game.tscn")
 const MOBILE_CONTROLS_SCENE := preload("res://scenes/mobile_controls.tscn")
+const FULLSCREEN_TOGGLE_SCENE := preload("res://scenes/fullscreen_toggle.tscn")
 
 var game: Node = null
 var mobile_controls: CanvasLayer = null
+var fullscreen_toggle: CanvasLayer = null
 
 func _ready() -> void:
 	main_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	game_end_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	_ensure_mobile_controls()
+	_ensure_fullscreen_toggle()
 
 	game_end_ui.hide_result()
 
@@ -31,6 +34,13 @@ func _ensure_mobile_controls() -> void:
 	mobile_controls.hide_controls()
 
 
+func _ensure_fullscreen_toggle() -> void:
+	if fullscreen_toggle != null and is_instance_valid(fullscreen_toggle):
+		return
+	fullscreen_toggle = FULLSCREEN_TOGGLE_SCENE.instantiate()
+	add_child(fullscreen_toggle)
+
+
 func show_main_menu() -> void:
 	Engine.time_scale = 1.0
 	main_ui.show()
@@ -46,6 +56,9 @@ func show_main_menu() -> void:
 
 func start_game() -> void:
 	Engine.time_scale = 1.0
+	# Start is a user gesture — unlock web AudioContext here.
+	if AudioManager.has_method("unlock_web_audio"):
+		AudioManager.unlock_web_audio()
 	AudioManager.play_game_bgm()
 	main_ui.hide()
 	game_end_ui.hide_result()
@@ -59,6 +72,8 @@ func start_game() -> void:
 
 
 func _on_start_button_pressed() -> void:
+	if AudioManager.has_method("unlock_web_audio"):
+		AudioManager.unlock_web_audio()
 	await load_new_game()
 	start_game()
 

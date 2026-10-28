@@ -11,6 +11,8 @@
 [ext_resource type="AudioStream" uid="uid://7savwj7fwag5" path="res://assest/sounds/menu_bgm.mp3" id="8_064dn"]
 [ext_resource type="AudioStream" uid="uid://cmcm01it01kmi" path="res://assest/sounds/victory.mp3" id="9_victory"]
 [ext_resource type="AudioStream" uid="uid://niq1m1dqsrvv" path="res://assest/sounds/game_over.mp3" id="10_gameover"]
+[ext_resource type="AudioStream" path="res://assest/sounds/explosion.wav" id="11_explosion"]
+[ext_resource type="AudioStream" uid="uid://c0mfitid3fqhp" path="res://assest/sounds/power_up.wav" id="12_alarm"]
 
 [node name="AudioManager" type="Node" unique_id=2023769010]
 process_mode = 3
@@ -54,4 +56,12 @@ bus = &"Master"
 
 [node name="GameOverAudioPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_gameover")
+bus = &"Master"
+
+[node name="BossWarningAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_explosion")
+bus = &"Master"
+
+[node name="BossAlarmAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_alarm")
 bus = &"Master"

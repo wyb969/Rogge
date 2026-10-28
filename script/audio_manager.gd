@@ -10,6 +10,8 @@ extends Node
 @onready var enemy_hurt_audio_player: AudioStreamPlayer = $EnemyHurtAudioPlayer
 @onready var victory_audio_player: AudioStreamPlayer = $VictoryAudioPlayer
 @onready var game_over_audio_player: AudioStreamPlayer = $GameOverAudioPlayer
+@onready var boss_warning_audio_player: AudioStreamPlayer = $BossWarningAudioPlayer
+@onready var boss_alarm_audio_player: AudioStreamPlayer = $BossAlarmAudioPlayer
 
 enum BgmKind { NONE, MENU, GAME, BOSS }
 
@@ -90,6 +92,30 @@ func play_boss_bgm() -> void:
 	menu_audio_player.stop()
 	game_audio_player.stop()
 	_play_bgm_player(boss_audio_player)
+
+func play_boss_warning() -> void:
+	## Alarm stinger before the boss appears: boom + rising beeps.
+	_ensure_web_ready()
+	if boss_warning_audio_player:
+		boss_warning_audio_player.pitch_scale = 0.85
+		boss_warning_audio_player.volume_db = 2.0
+		boss_warning_audio_player.play()
+	_play_boss_alarm_pattern()
+
+func _play_boss_alarm_pattern() -> void:
+	if boss_alarm_audio_player == null:
+		return
+	# Three urgent beeps using the existing tap/power-up style SFX.
+	for i in 3:
+		var t := get_tree().create_timer(0.12 + float(i) * 0.22)
+		var pitch := 0.9 + float(i) * 0.18
+		t.timeout.connect(func():
+			if not is_instance_valid(boss_alarm_audio_player):
+				return
+			boss_alarm_audio_player.pitch_scale = pitch
+			boss_alarm_audio_player.volume_db = 1.5
+			boss_alarm_audio_player.play()
+		)
 
 func play_victory() -> void:
 	_desired_bgm = BgmKind.NONE

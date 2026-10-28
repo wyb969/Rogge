@@ -94,7 +94,8 @@ func _on_elite_timeout() -> void:
 func boss_show_up() -> void:
 	var warning = boss_warning_scene.instantiate()
 	get_tree().current_scene.add_child(warning)
-	await get_tree().create_timer(2.0).timeout
+	# Give the banner / shake / alarm enough time before the boss drops in.
+	await get_tree().create_timer(2.2).timeout
 	spawn_boss()
 
 func remove_far_enemy() -> void:

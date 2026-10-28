@@ -5,7 +5,6 @@ var upgrade_id: String = ""
 var hover_tween: Tween
 
 const CARD_SIZE := Vector2(180, 250)
-const UI_FONT := preload("res://assest/fonts/DroidSansFallback.ttf")
 
 @onready var title_label: Label = $VBoxContainer/TitleLabel
 @onready var desc_label: Label = $VBoxContainer/DescLabel
@@ -29,22 +28,21 @@ func _configure_labels() -> void:
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title_label.add_theme_font_override("font", UI_FONT)
-	title_label.add_theme_font_size_override("font_size", 16)
+	UiFonts.apply_to_label(title_label, 16)
 
 	desc_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	desc_label.custom_minimum_size = Vector2(CARD_SIZE.x - 24.0, 0.0)
-	desc_label.add_theme_font_override("font", UI_FONT)
-	desc_label.add_theme_font_size_override("font_size", 13)
+	UiFonts.apply_to_label(desc_label, 13)
 
 	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 
 func setup(data: Dictionary):
 	upgrade_id = data["id"]
-	title_label.text = data["title"]
-	desc_label.text = data["desc"]
+	# Keep numbers as plain ASCII so the pixel font glyph atlas can render them.
+	title_label.text = str(data.get("title", ""))
+	desc_label.text = str(data.get("desc", ""))
 	icon.texture = load(data["icon"])
 	custom_minimum_size = CARD_SIZE
 	size = CARD_SIZE

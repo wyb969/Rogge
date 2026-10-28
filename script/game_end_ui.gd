@@ -14,6 +14,12 @@ signal main_menu_pressed
 func _ready() -> void:
 	root_ui.hide()
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	UiFonts.apply_to_label(result_title, 28, true)
+	UiFonts.apply_to_label(time_label, 16)
+	UiFonts.apply_to_label(kill_label, 16)
+	UiFonts.apply_to_label(level_label, 16)
+	UiFonts.apply_to_button(retry_button, 18)
+	UiFonts.apply_to_button(main_menu_button, 18)
 
 	retry_button.pressed.connect(func(): retry_pressed.emit())
 	main_menu_button.pressed.connect(func(): main_menu_pressed.emit())

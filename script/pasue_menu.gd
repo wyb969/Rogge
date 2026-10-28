@@ -10,61 +10,61 @@ const DRAW_COUNT := 3
 var upgrade_pool := [
 	{
 		"id": "axe_up",
-		"title": "斧头 +1级",
+		"title": "斧头 +1 级",
 		"desc": "提高斧头攻击力",
 		"icon": "res://assest/sprites/axe.png"
 	},
 	{
 		"id": "circle_up",
-		"title": "书本 +1级",
+		"title": "书本 +1 级",
 		"desc": "提高书本旋转速度",
 		"icon": "res://assest/sprites/book.png"
 	},
 	{
 		"id": "gun_up",
-		"title": "枪支 +1级",
+		"title": "枪支 +1 级",
 		"desc": "提高枪支属性",
 		"icon": "res://assest/weaponR1.png"
 	},
 	{
 		"id": "pickup_up",
-		"title": "拾取 +1级",
+		"title": "拾取 +1 级",
 		"desc": "提高拾取范围",
 		"icon": "res://assest/bullet.png"
 	},
 	{
 		"id": "speed_up",
-		"title": "移速 +1级",
+		"title": "移速 +1 级",
 		"desc": "提高移动速度",
 		"icon": "res://assest/sprites/Speedup.png"
 	},
 	{
 		"id": "left_fist",
-		"title": "左拳 +1级",
+		"title": "左拳 +1 级",
 		"desc": "",
 		"icon": "res://assest/sprites/fist_left.svg"
 	},
 	{
 		"id": "right_fist",
-		"title": "右拳 +1级",
+		"title": "右拳 +1 级",
 		"desc": "",
 		"icon": "res://assest/sprites/fist_right.svg"
 	},
 	{
 		"id": "drone_up",
-		"title": "无人机 +1级",
+		"title": "无人机 +1 级",
 		"desc": "",
 		"icon": "res://assest/sprites/drone.svg"
 	},
 	{
 		"id": "molotov_up",
-		"title": "汽油瓶 +1级",
+		"title": "汽油瓶 +1 级",
 		"desc": "",
 		"icon": "res://assest/sprites/molotov.svg"
 	},
 	{
 		"id": "freeze_up",
-		"title": "寒冰 +1级",
+		"title": "寒冰 +1 级",
 		"desc": "",
 		"icon": "res://assest/sprites/freeze.svg"
 	}

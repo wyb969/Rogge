@@ -15,6 +15,9 @@ var fullscreen_toggle: CanvasLayer = null
 func _ready() -> void:
 	main_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	game_end_ui.process_mode = Node.PROCESS_MODE_ALWAYS
+	# Warm web glyph atlases so upgrade card digits never tofu.
+	UiFonts.ui()
+	UiFonts.ui_bold()
 	_ensure_mobile_controls()
 	_ensure_fullscreen_toggle()
 

@@ -2,7 +2,6 @@ extends Control
 
 const SLOT_SIZE := Vector2(48, 48)
 const ICON_SIZE := Vector2(36, 36)
-const UI_FONT := preload("res://assest/fonts/DroidSansFallback.ttf")
 const UI_FONT_SIZE := 15
 const LEVEL_COLOR := Color(0.35, 0.95, 0.45, 1.0)
 
@@ -115,8 +114,7 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 
 	var level_label := Label.new()
 	level_label.text = "Lv.%d" % level
-	level_label.add_theme_font_override("font", UI_FONT)
-	level_label.add_theme_font_size_override("font_size", UI_FONT_SIZE)
+	UiFonts.apply_to_label(level_label, UI_FONT_SIZE)
 	level_label.add_theme_color_override("font_color", LEVEL_COLOR)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 

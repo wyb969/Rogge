@@ -3,8 +3,6 @@ extends CanvasLayer
 
 @onready var button: Button = %FullscreenButton
 
-const UI_FONT := preload("res://assest/fonts/DroidSansFallback.ttf")
-
 func _ready() -> void:
 	layer = 128
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -12,8 +10,7 @@ func _ready() -> void:
 	if button == null:
 		button = get_node_or_null("Root/FullscreenButton")
 	if button:
-		button.add_theme_font_override("font", UI_FONT)
-		button.add_theme_font_size_override("font_size", 15)
+		UiFonts.apply_to_button(button, 15)
 		if not button.pressed.is_connected(_on_pressed):
 			button.pressed.connect(_on_pressed)
 	get_viewport().size_changed.connect(_refresh_label)

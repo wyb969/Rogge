@@ -135,6 +135,8 @@ func _on_upgrade_selected(upgrade_id: String):
 			player.add_regen_level()
 		"lifesteal_up":
 			player.add_lifesteal_level()
+		"shield_up":
+			player.add_shield_level()
 
 	if equipment_panel and equipment_panel.has_method("apply_upgrade"):
 		equipment_panel.apply_upgrade(upgrade_id)
@@ -232,6 +234,8 @@ func _on_rest_reward(reward_id: String) -> void:
 			player.add_regen_level()
 		"lifesteal_up":
 			player.add_lifesteal_level()
+		"shield_up":
+			player.add_shield_level()
 
 func _on_rest_next_stage() -> void:
 	if rest_hub and rest_hub.has_method("close_hub"):

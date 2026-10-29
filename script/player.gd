@@ -59,7 +59,20 @@ const LIFESTEAL_MIN_HIT := 8.0
 var regen_level: int = 0
 var lifesteal_level: int = 0
 var _regen_acc: float = 0.0
+## Kill shield stays at 0 until a card or rest reward is picked.
+const SHIELD_GAIN_BASE := 2.0
+const SHIELD_GAIN_STEP := 1.0
+const SHIELD_IDLE_BASE := 1.25
+const SHIELD_IDLE_STEP := 0.2
+const SHIELD_DECAY_BASE := 4.0
+const SHIELD_DECAY_STEP := 0.6
+const SHIELD_DECAY_MIN := 1.5
+var shield_level: int = 0
+var shield: float = 0.0
+var _shield_idle: float = 0.0
+var shield_gem: Node2D
 const HEAL_TEXT := preload("res://scenes/damage_text.tscn")
+const SHIELD_GEM_SCRIPT := preload("res://script/shield_gem.gd")
 
 func _ready() -> void:
 	health_bar.init_health(player_health)
@@ -73,6 +86,7 @@ func _ready() -> void:
 	var circle_shape := pick_shape.shape as CircleShape2D
 	if circle_shape != null:
 		pickup_range = circle_shape.radius
+	_ensure_shield_gem()
 
 func full_heal() -> void:
 	hurt_lock = 0.0
@@ -107,6 +121,61 @@ func add_regen_level() -> void:
 
 func add_lifesteal_level() -> void:
 	lifesteal_level += 1
+
+func add_shield_level() -> void:
+	shield_level += 1
+
+func shield_gain_for(level: int) -> float:
+	if level <= 0:
+		return 0.0
+	return SHIELD_GAIN_BASE + SHIELD_GAIN_STEP * float(level - 1)
+
+func shield_idle_for(level: int) -> float:
+	if level <= 0:
+		return SHIELD_IDLE_BASE
+	return SHIELD_IDLE_BASE + SHIELD_IDLE_STEP * float(level - 1)
+
+func shield_decay_for(level: int) -> float:
+	if level <= 0:
+		return SHIELD_DECAY_BASE
+	return maxf(SHIELD_DECAY_MIN, SHIELD_DECAY_BASE - SHIELD_DECAY_STEP * float(level - 1))
+
+func notify_enemy_killed() -> void:
+	if shield_level <= 0 or player_health <= 0.0:
+		return
+	shield += shield_gain_for(shield_level)
+	_shield_idle = 0.0
+	_sync_shield_visuals()
+
+func _tick_shield(delta: float) -> void:
+	if shield <= 0.0 or shield_level <= 0 or player_health <= 0.0:
+		return
+	var idle_before := _shield_idle
+	_shield_idle += delta
+	var delay := shield_idle_for(shield_level)
+	if _shield_idle < delay:
+		return
+	var decay_dt := delta
+	if idle_before < delay:
+		decay_dt = _shield_idle - delay
+	shield = maxf(0.0, shield - shield_decay_for(shield_level) * decay_dt)
+	_sync_shield_visuals()
+
+func _ensure_shield_gem() -> void:
+	if shield_gem != null and is_instance_valid(shield_gem):
+		return
+	shield_gem = Node2D.new()
+	shield_gem.name = "ShieldGem"
+	shield_gem.z_index = 3
+	shield_gem.visible = false
+	shield_gem.set_script(SHIELD_GEM_SCRIPT)
+	add_child(shield_gem)
+
+func _sync_shield_visuals() -> void:
+	if health_bar and health_bar.has_method("set_shield"):
+		health_bar.set_shield(shield, float(max_player_health))
+	if shield_gem and is_instance_valid(shield_gem):
+		shield_gem.visible = shield > 0.05 and player_health > 0.0
 
 func regen_amount() -> float:
 	return regen_amount_for(regen_level)
@@ -258,8 +327,9 @@ func set_dash_cooldown_ui(ring: Node2D) -> void:
 	if dash_cooldown_ring and dash_cooldown_ring.has_method("set_progress"):
 		dash_cooldown_ring.set_progress(1.0 if can_dash else 0.0)
 
-func _process(_delta: float) -> void:
-	_tick_regen(_delta)
+func _process(delta: float) -> void:
+	_tick_regen(delta)
+	_tick_shield(delta)
 	_update_dash_cooldown_ui()
 
 func speed_up(val: float):
@@ -396,8 +466,12 @@ func receive_attack(amount: float, _source: Node = null) -> void:
 	AudioManager.play_hit()
 	play_hit_tween()
 	var taken := amount * (1.0 - clampf(damage_reduction, 0.0, 0.6))
-	player_health = max(0.0, player_health - taken)
+	var absorbed := minf(shield, taken)
+	shield -= absorbed
+	var hp_loss := taken - absorbed
+	player_health = max(0.0, player_health - hp_loss)
 	health_bar.set_health(player_health)
+	_sync_shield_visuals()
 	if player_health <= 0.0:
 		die()
 

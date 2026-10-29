@@ -96,6 +96,7 @@ func _build_ui() -> void:
 	_add_reward_button(box, "cooldown", "冷却 -20%  Dash+Gun")
 	_add_reward_button(box, "regen_up", "回复  Regen")
 	_add_reward_button(box, "lifesteal_up", "吸血  Lifesteal")
+	_add_reward_button(box, "shield_up", "玉佩  Shield")
 
 	next_button = Button.new()
 	next_button.name = "NextStage"

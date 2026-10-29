@@ -161,6 +161,7 @@ func _calc_wave_size() -> int:
 
 func on_enemy_killed() -> void:
 	enemy_killed_num += 1
+	_grant_kill_shield()
 
 func _on_timer_timeout() -> void:
 	second += 1
@@ -225,6 +226,7 @@ func spawn_boss() -> void:
 
 func _on_boss_defeated() -> void:
 	enemy_killed_num += 1
+	_grant_kill_shield()
 	_boss_fight_active = false
 	if stage <= 1 and not _stage1_boss_cleared and not _rest_open:
 		_open_rest_gate()
@@ -277,6 +279,10 @@ func _enter_stage(next_stage: int) -> void:
 		elite.start()
 	stage_boss_countdown = STAGE2_BOSS_DELAY
 	_transitioning = false
+
+func _grant_kill_shield() -> void:
+	if player != null and player.has_method("notify_enemy_killed"):
+		player.notify_enemy_killed()
 
 func _clear_minions() -> void:
 	for node in get_tree().get_nodes_in_group("EnemyGroup"):

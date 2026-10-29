@@ -71,6 +71,12 @@ const EQUIP_DEFS := {
 		"icon": "res://assest/sprites/fruit.png",
 		"start_level": 0,
 		"modulate": Color(1.0, 0.45, 0.45, 1)
+	},
+	"shield_up": {
+		"title": "玉佩",
+		"icon": "res://assest/sprites/fruit.png",
+		"start_level": 0,
+		"modulate": Color(0.95, 0.9, 0.28, 1)
 	}
 }
 

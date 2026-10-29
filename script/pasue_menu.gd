@@ -79,6 +79,12 @@ var upgrade_pool := [
 		"title": "吸血 +1 级",
 		"desc": "",
 		"icon": "res://assest/sprites/fruit.png"
+	},
+	{
+		"id": "shield_up",
+		"title": "玉佩 +1 级",
+		"desc": "",
+		"icon": "res://assest/sprites/fruit.png"
 	}
 ]
 
@@ -125,6 +131,8 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 			card_data["desc"] = _regen_desc()
 		"lifesteal_up":
 			card_data["desc"] = _lifesteal_desc()
+		"shield_up":
+			card_data["desc"] = _shield_desc()
 	return card_data
 
 
@@ -197,6 +205,17 @@ func _lifesteal_desc() -> String:
 		var cap := int(player.lifesteal_cap_for(next_level))
 		return "命中回复少量\n约 %d%% +1  上限 %d" % [percent, cap]
 	return "命中回复少量\n约 3% +1  上限 2"
+
+func _shield_desc() -> String:
+	var player := get_tree().get_first_node_in_group("player")
+	var next_level := 1
+	if player != null:
+		next_level = int(player.shield_level) + 1
+	if player != null and player.has_method("shield_gain_for"):
+		var gain := int(player.shield_gain_for(next_level))
+		var decay: float = player.shield_decay_for(next_level)
+		return "击杀护盾 +%d\n停手后每秒 -%.1f" % [gain, decay]
+	return "击杀护盾 +2\n停手后每秒 -4.0"
 
 func _freeze_desc() -> String:
 	var game := _get_game()

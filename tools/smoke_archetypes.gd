@@ -185,6 +185,41 @@ func _run() -> void:
 	for btn in game.rest_hub._buttons:
 		rest_ids[str(btn.get_meta("reward_id"))] = true
 	_expect(rest_ids.has("regen_up") and rest_ids.has("lifesteal_up"), "rest hub offers regen and lifesteal")
+	_expect(pool_ids.has("shield_up") and rest_ids.has("shield_up"), "shield card is in level-up and rest")
+	player.hurt_lock = 0.0
+	player.player_health = 100.0
+	player.notify_enemy_killed()
+	_expect(is_equal_approx(player.shield, 0.0), "no shield before the card")
+	player.add_shield_level()
+	_expect(is_equal_approx(player.shield_gain_for(1), 2.0), "first shield gain is +2")
+	player.notify_enemy_killed()
+	player.notify_enemy_killed()
+	_expect(is_equal_approx(player.shield, 4.0), "kills stack shield with no cap, shield=%s" % player.shield)
+	player._process(player.shield_idle_for(1) - 0.05)
+	_expect(is_equal_approx(player.shield, 4.0), "shield holds while the idle timer is fresh")
+	player.notify_enemy_killed()
+	_expect(is_equal_approx(player.shield, 6.0), "a new kill refreshes the shield")
+	player._process(player.shield_idle_for(1) + 0.5)
+	_expect(player.shield < 6.0 and player.shield > 0.0, "shield decays after kills stop, shield=%s" % player.shield)
+	player.shield = 5.0
+	player._sync_shield_visuals()
+	player.damage_reduction = 0.0
+	player.hurt_lock = 0.0
+	player.player_health = 100.0
+	player.receive_attack(3.0, null)
+	_expect(is_equal_approx(player.player_health, 100.0) and is_equal_approx(player.shield, 2.0), "shield absorbs before hp")
+	player.hurt_lock = 0.0
+	player.receive_attack(10.0, null)
+	_expect(is_equal_approx(player.shield, 0.0) and player.player_health < 100.0, "overflow damage reaches hp, hp=%s" % player.player_health)
+	var fill: Node = player.health_bar.get_node_or_null("ShieldFill")
+	player.shield = 8.0
+	player._sync_shield_visuals()
+	_expect(fill != null and fill.visible and fill.size.x > 1.0, "health bar shows a yellow shield segment")
+	_expect(player.shield_gem != null and player.shield_gem.visible, "diamond shield is visible")
+	player.add_shield_level()
+	_expect(player.shield_gain_for(2) > 2.0 and player.shield_decay_for(2) < player.shield_decay_for(1), "later shield cards gain more and decay slower")
+	player.shield = 0.0
+	player._sync_shield_visuals()
 
 	spawner._on_boss_defeated()
 	_expect(victory["hit"] == true, "second boss clears the run")

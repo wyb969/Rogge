@@ -21,6 +21,29 @@ const boss_level: int = 4
 const MAX_WAVE_SIZE: int = 5
 const MAX_WAVE_SIZE_STAGE2: int = 7
 const STAGE2_BOSS_DELAY: float = 42.0
+## Pressure spiral. Level, time in the current stage, and offense cards
+## raise enemy HP together. Damage follows the same curve more slowly so
+## hits get scarier without deleting a built player. Stage 2 multiplies
+## the result. Knobs:
+## LEVEL_LINEAR / LEVEL_QUAD — shared clock with player level.
+## TIME_PER_MIN — extra bulk per minute since this stage started.
+## CARD_STEP — extra bulk per damage card (axe, gun, fists, drones, ...).
+## DAMAGE_FOLLOW — fraction of the HP growth applied to enemy damage.
+## STAGE_HP / STAGE_DMG — stage 2 step on top of the curve.
+const LEVEL_LINEAR := 0.08
+const LEVEL_QUAD := 0.008
+const TIME_PER_MIN := 0.06
+const CARD_STEP := 0.07
+const DAMAGE_FOLLOW := 0.72
+const STAGE_HP: Array[float] = [1.0, 1.38]
+const STAGE_DMG: Array[float] = [1.0, 1.18]
+const SPAWN_INTERVAL: Array[float] = [1.05, 0.82]
+const SPAWN_INTERVAL_MIN: Array[float] = [0.70, 0.55]
+const SPAWN_INTERVAL_PER_MIN := 0.045
+const ALIVE_CAP: Array[int] = [32, 44]
+const ALIVE_PER_MIN := 2
+const WAVE_PER_MIN := 0.5
+const WAVE_PER_LEVEL := 0.22
 
 var stage: int = 1
 var stage_boss_countdown: float = -1.0
@@ -33,6 +56,8 @@ var _pattern_i: int = 0
 var _pattern_stage: int = -1
 var _buckets: Dictionary = {}
 var _stage_label: Label
+var _stage_seconds: float = 0.0
+var _offense_cards: int = 0
 
 var minute: int:
 	set(value):
@@ -50,6 +75,7 @@ var second: int:
 
 func _ready() -> void:
 	_ensure_stage_label()
+	_apply_spawn_pressure()
 
 func _process(delta: float) -> void:
 	remove_far_enemy()
@@ -71,23 +97,57 @@ func spawn(pos: Vector2, elite: bool):
 	enemy_instance.set_player_ref(player)
 	enemy_instance.set_enemy_data(data)
 	enemy_instance.add_to_group("EnemyGroup")
-	var power := _power_scale()
-	enemy_instance.setHealth(enemy_instance.health * power)
+	var hp_mul := threat_hp_multiplier()
+	var dmg_mul := threat_damage_multiplier()
+	enemy_instance.setHealth(enemy_instance.health * hp_mul)
 	if enemy_instance.has_method("scale_offense"):
-		enemy_instance.scale_offense(power)
+		enemy_instance.scale_offense(dmg_mul)
 	else:
-		enemy_instance.setDamage(enemy_instance.damage * power)
+		enemy_instance.setDamage(enemy_instance.damage * dmg_mul)
 	enemy_instance.death_signal.connect(on_enemy_killed)
 	if elite:
 		enemy_instance.set_elite_status()
 	_world_root().add_child(enemy_instance)
 	enemy_instance.global_position = pos
 
-func _power_scale() -> float:
-	var scale := 1.0 + 0.12 * float(current_level) + 0.015 * float(current_level) * float(current_level)
-	if stage >= 2:
-		scale *= 1.25
-	return scale
+func note_offense_card() -> void:
+	_offense_cards += 1
+
+func threat_hp_multiplier() -> float:
+	return threat_hp_multiplier_for(current_level, _stage_seconds, _offense_cards, stage)
+
+func threat_damage_multiplier() -> float:
+	return threat_damage_multiplier_for(current_level, _stage_seconds, _offense_cards, stage)
+
+func threat_hp_multiplier_for(level: int, stage_seconds: float, cards: int, stage_num: int) -> float:
+	return _pressure(level, stage_seconds, cards) * _stage_row(STAGE_HP, stage_num)
+
+func threat_damage_multiplier_for(level: int, stage_seconds: float, cards: int, stage_num: int) -> float:
+	var raw := _pressure(level, stage_seconds, cards) * _stage_row(STAGE_DMG, stage_num)
+	return 1.0 + (raw - 1.0) * DAMAGE_FOLLOW
+
+func _pressure(level: int, stage_seconds: float, cards: int) -> float:
+	var lv := float(maxi(level, 0))
+	var mins := maxf(stage_seconds, 0.0) / 60.0
+	var from_level := 1.0 + LEVEL_LINEAR * lv + LEVEL_QUAD * lv * lv
+	var from_time := 1.0 + TIME_PER_MIN * mins
+	var from_cards := 1.0 + CARD_STEP * float(maxi(cards, 0))
+	return from_level * from_time * from_cards
+
+func _stage_row(row: Array[float], stage_num: int) -> float:
+	var idx := clampi(stage_num, 1, row.size()) - 1
+	return row[idx]
+
+func _apply_spawn_pressure() -> void:
+	var idx := clampi(stage, 1, SPAWN_INTERVAL.size()) - 1
+	var mins := _stage_seconds / 60.0
+	var interval := maxf(SPAWN_INTERVAL[idx] - SPAWN_INTERVAL_PER_MIN * mins, SPAWN_INTERVAL_MIN[idx])
+	if timer:
+		timer.wait_time = interval
+	max_enmey_count = ALIVE_CAP[idx] + int(mins * float(ALIVE_PER_MIN))
+	var elite := get_node_or_null("Elite")
+	if elite is Timer:
+		elite.wait_time = 14.0 if stage <= 1 else 10.0
 
 func _rebuild_pattern() -> void:
 	_pattern_stage = stage
@@ -154,9 +214,10 @@ func amount_spawn(num: int = 1):
 func _calc_wave_size() -> int:
 	# Slow ramp: early 1-2, mid ~3, late capped. Stage 2 starts denser.
 	var cap := MAX_WAVE_SIZE_STAGE2 if stage >= 2 else MAX_WAVE_SIZE
-	var size := 1 + int(minute / 2) + int(current_level / 3)
+	var mins := _stage_seconds / 60.0
+	var size := 1 + int(mins * WAVE_PER_MIN) + int(float(current_level) * WAVE_PER_LEVEL)
 	if stage >= 2:
-		size += 2
+		size += 1
 	return clampi(size, 1, cap)
 
 func on_enemy_killed() -> void:
@@ -167,6 +228,8 @@ func _on_timer_timeout() -> void:
 	second += 1
 	if _boss_fight_active:
 		return
+	_stage_seconds += 1.0
+	_apply_spawn_pressure()
 	if stage <= 1 and not _stage1_boss_cleared and current_level >= boss_level:
 		boss_show_up()
 		return
@@ -257,10 +320,11 @@ func _enter_stage(next_stage: int) -> void:
 	stage = next_stage
 	_stage1_boss_cleared = true
 	_clear_minions()
-	max_enmey_count = 56
+	_stage_seconds = 0.0
 	max_distance = 980.0
 	distance = 620.0
 	_pattern_stage = -1
+	_apply_spawn_pressure()
 	_refresh_stage_label()
 	stage_advanced.emit(stage)
 	_show_stage_banner(stage)
@@ -270,12 +334,11 @@ func _enter_stage(next_stage: int) -> void:
 	await get_tree().create_timer(1.15).timeout
 	if not is_inside_tree():
 		return
+	_apply_spawn_pressure()
 	if timer:
-		timer.wait_time = 0.85
 		timer.start()
 	var elite := get_node_or_null("Elite")
 	if elite is Timer:
-		elite.wait_time = 9.0
 		elite.start()
 	stage_boss_countdown = STAGE2_BOSS_DELAY
 	_transitioning = false

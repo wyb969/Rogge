@@ -152,6 +152,14 @@ func _run() -> void:
 	bg.apply_stage(1)
 	_expect(bg.stage_grade < 0.01 and bg.tint.b > bg.tint.r, "stage 1 ground stays the cool meadow")
 	bg.apply_stage(2)
+	var calm: float = spawner.threat_hp_multiplier_for(0, 0.0, 0, 1)
+	var built: float = spawner.threat_hp_multiplier_for(4, 120.0, 3, 1)
+	var stage2_hp: float = spawner.threat_hp_multiplier_for(4, 0.0, 3, 2)
+	var stage2_dmg: float = spawner.threat_damage_multiplier_for(4, 0.0, 3, 2)
+	_expect(is_equal_approx(calm, 1.0), "opening pressure is flat, hp=%s" % calm)
+	_expect(built > calm * 1.35, "level, time, and cards raise enemy HP, built=%s" % built)
+	_expect(stage2_hp > built, "stage 2 is bulkier than the same build in stage 1, s2=%s s1=%s" % [stage2_hp, built])
+	_expect(stage2_dmg > 1.0 and stage2_dmg < stage2_hp, "enemy damage trails HP, dmg=%s hp=%s" % [stage2_dmg, stage2_hp])
 
 	await create_timer(1.3).timeout
 	_expect(spawner.stage_boss_countdown > 20.0, "stage 2 boss is scheduled, countdown=%s" % spawner.stage_boss_countdown)

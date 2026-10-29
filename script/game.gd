@@ -138,6 +138,12 @@ func _on_upgrade_selected(upgrade_id: String):
 		"shield_up":
 			player.add_shield_level()
 
+	if spawner and spawner.has_method("note_offense_card") and upgrade_id in [
+		"axe_up", "circle_up", "gun_up", "left_fist", "right_fist",
+		"drone_up", "molotov_up", "freeze_up",
+	]:
+		spawner.note_offense_card()
+
 	if equipment_panel and equipment_panel.has_method("apply_upgrade"):
 		equipment_panel.apply_upgrade(upgrade_id)
 

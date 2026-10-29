@@ -10,13 +10,13 @@ func _run() -> void:
 	root.add_child(main)
 	await process_frame
 	await process_frame
-	_check_menu(main, Vector2i(390, 844), "portrait", failures)
-	_check_menu(main, Vector2i(900, 500), "landscape", failures)
+	await _check_menu(main, Vector2i(390, 844), "portrait", failures)
+	await _check_menu(main, Vector2i(900, 500), "landscape", failures)
 	var end_ui: Node = main.get_node("GameEndUI")
 	end_ui.show_result({"victory": false, "minutes": 1, "seconds": 5, "kills": 3, "level": 2, "stage": 1})
 	await process_frame
-	_check_result(end_ui, Vector2i(390, 844), "portrait", failures)
-	_check_result(end_ui, Vector2i(900, 500), "landscape", failures)
+	await _check_result(end_ui, Vector2i(390, 844), "portrait", failures)
+	await _check_result(end_ui, Vector2i(900, 500), "landscape", failures)
 	await _check_settings(main, failures)
 	_reset_settings()
 	if failures.is_empty():
@@ -38,6 +38,7 @@ func _check_menu(main: Node, size: Vector2i, label: String, failures: Array[Stri
 	var settings: Button = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/SettingButton")
 	var title: Label = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/TitleLabel")
 	var vp := root.get_visible_rect().size
+	_check_background(main.get_node("mainUI/Control/ColorRect/TextureRect"), label, failures)
 	_expect_inside(start, vp, "start %s" % label, failures)
 	_expect_inside(settings, vp, "settings %s" % label, failures)
 	_expect_inside(title, vp, "title %s" % label, failures)
@@ -51,6 +52,7 @@ func _check_result(end_ui: Node, size: Vector2i, label: String, failures: Array[
 	var retry: Button = end_ui.get_node("CanvasLayer/Control/ResultCenter/BoxContainer/RetryButton")
 	var title: Label = end_ui.get_node("CanvasLayer/Control/ResultCenter/BoxContainer/ResultTitle")
 	var vp := root.get_visible_rect().size
+	_check_background(end_ui.get_node("CanvasLayer/Control/ColorRect/TextureRect"), "result " + label, failures)
 	_expect_inside(retry, vp, "retry %s" % label, failures)
 	_expect_inside(title, vp, "result title %s" % label, failures)
 	if retry.custom_minimum_size.y < 48.0:
@@ -165,6 +167,21 @@ func _reset_settings() -> void:
 	store.dash_norm = Vector2(-1, -1)
 	store.save_to_disk()
 	store.apply_audio()
+
+func _check_background(rect: TextureRect, label: String, failures: Array[String]) -> void:
+	if rect.size.y < 1.0:
+		failures.append("background %s has no size" % label)
+		return
+	rect._apply_aspect()
+	var mat := rect.material as ShaderMaterial
+	var aspect := float(mat.get_shader_parameter("g_aspect"))
+	var expected := rect.size.x / rect.size.y
+	if absf(aspect - expected) > 0.04:
+		failures.append("background %s aspect %s expected %s" % [label, aspect, expected])
+	if label.contains("portrait") and aspect > 1.0:
+		failures.append("background %s stayed landscape (%s)" % [label, aspect])
+	if label.contains("landscape") and aspect < 1.0:
+		failures.append("background %s stayed portrait (%s) rect=%s window=%s visible=%s" % [label, aspect, rect.size, root.size, root.get_visible_rect().size])
 
 func _expect_inside(control: Control, vp: Vector2, label: String, failures: Array[String]) -> void:
 	var rect := control.get_global_rect()

@@ -67,6 +67,24 @@ var upgrade_pool := [
 		"title": "寒冰 +1 级",
 		"desc": "",
 		"icon": "res://assest/sprites/freeze.svg"
+	},
+	{
+		"id": "regen_up",
+		"title": "回复 +1 级",
+		"desc": "",
+		"icon": "res://assest/sprites/fruit.png"
+	},
+	{
+		"id": "lifesteal_up",
+		"title": "吸血 +1 级",
+		"desc": "",
+		"icon": "res://assest/sprites/fruit.png"
+	},
+	{
+		"id": "shield_up",
+		"title": "玉佩 +1 级",
+		"desc": "",
+		"icon": "res://assest/sprites/fruit.png"
 	}
 ]
 
@@ -109,6 +127,12 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 			card_data["desc"] = _molotov_desc()
 		"freeze_up":
 			card_data["desc"] = _freeze_desc()
+		"regen_up":
+			card_data["desc"] = _regen_desc()
+		"lifesteal_up":
+			card_data["desc"] = _lifesteal_desc()
+		"shield_up":
+			card_data["desc"] = _shield_desc()
 	return card_data
 
 
@@ -159,6 +183,39 @@ func _molotov_desc() -> String:
 	var chance := mini(0.18 + float(next) * 0.07, 0.65) * 100.0
 	return "投掷汽油瓶\n间隔 %.1fs 燃烧%d层\n击中附燃 %.0f%% DPS%.0f" % [interval, stacks, chance, dps]
 
+
+func _regen_desc() -> String:
+	var player := get_tree().get_first_node_in_group("player")
+	var next_level := 1
+	if player != null:
+		next_level = int(player.regen_level) + 1
+	if player != null and player.has_method("regen_amount_for"):
+		var amount := int(player.regen_amount_for(next_level))
+		var interval: float = player.regen_interval_for(next_level)
+		return "每 %.1f 秒 +%d" % [interval, amount]
+	return "每 3.0 秒 +1"
+
+func _lifesteal_desc() -> String:
+	var player := get_tree().get_first_node_in_group("player")
+	var next_level := 1
+	if player != null:
+		next_level = int(player.lifesteal_level) + 1
+	if player != null and player.has_method("lifesteal_cap_for"):
+		var percent := int(round(player.lifesteal_percent_for(next_level) * 100.0))
+		var cap := int(player.lifesteal_cap_for(next_level))
+		return "命中回复少量\n约 %d%% +1  上限 %d" % [percent, cap]
+	return "命中回复少量\n约 3% +1  上限 2"
+
+func _shield_desc() -> String:
+	var player := get_tree().get_first_node_in_group("player")
+	var next_level := 1
+	if player != null:
+		next_level = int(player.shield_level) + 1
+	if player != null and player.has_method("shield_gain_for"):
+		var gain := int(player.shield_gain_for(next_level))
+		var decay: float = player.shield_decay_for(next_level)
+		return "击杀护盾 +%d\n停手后每秒 -%.1f" % [gain, decay]
+	return "击杀护盾 +2\n停手后每秒 -4.0"
 
 func _freeze_desc() -> String:
 	var game := _get_game()

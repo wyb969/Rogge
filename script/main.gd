@@ -7,12 +7,15 @@ extends Node2D
 const GAME_SCENE := preload("res://scenes/game.tscn")
 const MOBILE_CONTROLS_SCENE := preload("res://scenes/mobile_controls.tscn")
 const FULLSCREEN_TOGGLE_SCENE := preload("res://scenes/fullscreen_toggle.tscn")
+const SETTINGS_PAGE_SCENE := preload("res://scenes/settings_page.tscn")
 
 var game: Node = null
 var mobile_controls: CanvasLayer = null
 var fullscreen_toggle: CanvasLayer = null
+var settings_page: CanvasLayer = null
 
 func _ready() -> void:
+	_ensure_keyboard_actions()
 	main_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	game_end_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	# Warm web glyph atlases so upgrade card digits never tofu.
@@ -28,6 +31,27 @@ func _ready() -> void:
 
 	show_main_menu()
 
+
+func _ensure_keyboard_actions() -> void:
+	_bind_key("up", KEY_W)
+	_bind_key("up", KEY_UP)
+	_bind_key("down", KEY_S)
+	_bind_key("down", KEY_DOWN)
+	_bind_key("left", KEY_A)
+	_bind_key("left", KEY_LEFT)
+	_bind_key("right", KEY_D)
+	_bind_key("right", KEY_RIGHT)
+	_bind_key("roll", KEY_Z)
+
+func _bind_key(action: StringName, keycode: Key) -> void:
+	if not InputMap.has_action(action):
+		InputMap.add_action(action)
+	for event in InputMap.action_get_events(action):
+		if event is InputEventKey and (event as InputEventKey).physical_keycode == keycode:
+			return
+	var key := InputEventKey.new()
+	key.physical_keycode = keycode
+	InputMap.action_add_event(action, key)
 
 func _ensure_mobile_controls() -> void:
 	if mobile_controls != null and is_instance_valid(mobile_controls):
@@ -61,6 +85,7 @@ func show_main_menu() -> void:
 
 
 func start_game() -> void:
+	_dismiss_settings()
 	Engine.time_scale = 1.0
 	# Start is a user gesture — unlock web AudioContext here.
 	if AudioManager.has_method("unlock_web_audio"):
@@ -85,7 +110,32 @@ func _on_start_button_pressed() -> void:
 
 
 func _on_setting_button_pressed() -> void:
-	print("打开设置界面")
+	_ensure_settings_page()
+	_ensure_mobile_controls()
+	settings_page.open_page()
+	if mobile_controls:
+		mobile_controls.begin_layout_edit()
+
+
+func _ensure_settings_page() -> void:
+	if settings_page != null and is_instance_valid(settings_page):
+		return
+	settings_page = SETTINGS_PAGE_SCENE.instantiate()
+	settings_page.name = "SettingsPage"
+	add_child(settings_page)
+	settings_page.closed.connect(_on_settings_closed)
+
+
+func _on_settings_closed() -> void:
+	if mobile_controls and is_instance_valid(mobile_controls):
+		mobile_controls.end_layout_edit()
+
+
+func _dismiss_settings() -> void:
+	if settings_page and is_instance_valid(settings_page):
+		settings_page.visible = false
+	if mobile_controls and is_instance_valid(mobile_controls) and mobile_controls.layout_edit:
+		mobile_controls.end_layout_edit()
 
 
 func on_game_over(stat: Dictionary) -> void:

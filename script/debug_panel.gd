@@ -28,4 +28,5 @@ func update_text()->void:
 		"HP: %s / %s\n" % [player.player_health, player.max_player_health] + \
 		"MoveSpeed: %s\n" % player.SPEED + \
 		"Enemy Killed: %s\n" % spawner.enemy_killed_num + \
-		"Enemy Alive: %s\n" % enemy_count
+		"Enemy Alive: %s\n" % enemy_count + \
+		"Stage: %s\n" % spawner.stage

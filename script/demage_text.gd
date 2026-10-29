@@ -13,6 +13,12 @@ func _process(delta: float) -> void:
 		queue_free()
 
 
+func show_heal(amount_text: String) -> void:
+	if label:
+		label.add_theme_color_override("font_color", Color(0.4, 1.0, 0.48, 1))
+		label.add_theme_color_override("font_outline_color", Color(0.04, 0.22, 0.08, 1))
+	show_damage(amount_text, Vector2.ZERO, 0, 0)
+
 func show_damage(text:String,startPos:Vector2,height:float,spread:float):
 	label.text = text
 	#animation_player.play("show_number")

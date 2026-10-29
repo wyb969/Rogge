@@ -16,10 +16,26 @@ extends Node2D
 var _shader_mat: ShaderMaterial
 var _decor_sprites: Array[Sprite2D] = []
 var _decor_regions: Array[Rect2] = []
+var _decor_modulate: Color = Color(0.78, 0.84, 0.72, 0.95)
+var stage_grade: float = 0.0
+
+## Stage 1 stays the original meadow multiply. Later stages recolor the same tiles.
+const STAGE_TINTS: Array[Color] = [
+	Color(0.227451, 0.321569, 0.415686, 1.0),
+	Color(0.95, 0.42, 0.24, 1.0),
+	Color(0.40, 0.32, 0.82, 1.0),
+]
+const STAGE_GRADES: Array[float] = [0.0, 0.84, 0.84]
+const STAGE_DECORS: Array[Color] = [
+	Color(0.78, 0.84, 0.72, 0.95),
+	Color(1.0, 0.68, 0.40, 0.95),
+	Color(0.68, 0.64, 0.98, 0.95),
+]
 
 func _ready() -> void:
 	z_index = -20
 	_setup_ground()
+	apply_stage(1)
 	_setup_decor_pool()
 	set_process(true)
 	_update_coverage()
@@ -123,13 +139,34 @@ func _update_decorations(center: Vector2, half: Vector2) -> void:
 				float((h >> 7) % 40) - 20.0
 			)
 			spr.global_position = Vector2(float(cx) * decor_cell, float(cy) * decor_cell) + jitter
-			spr.modulate = Color(0.78, 0.84, 0.72, 0.95)
+			spr.modulate = _decor_modulate
 			spr.scale = Vector2.ONE * (0.85 + float((h >> 11) % 40) / 100.0)
 			spr.visible = true
 
 	while idx < _decor_sprites.size():
 		_decor_sprites[idx].visible = false
 		idx += 1
+
+func apply_stage(stage_num: int) -> void:
+	var stage_i := maxi(stage_num, 1)
+	var idx := mini(stage_i, STAGE_TINTS.size()) - 1
+	var next_tint := STAGE_TINTS[idx]
+	var next_grade := STAGE_GRADES[idx]
+	var next_decor := STAGE_DECORS[idx]
+	if stage_i > STAGE_TINTS.size():
+		var shift := 0.18 * float(stage_i - STAGE_TINTS.size())
+		next_tint.h = fposmod(next_tint.h + shift, 1.0)
+		next_decor.h = fposmod(next_decor.h + shift, 1.0)
+	stage_grade = next_grade
+	_decor_modulate = next_decor
+	set_stage_tint(next_tint)
+	if _shader_mat:
+		_shader_mat.set_shader_parameter("grade", stage_grade)
+
+func set_stage_tint(color: Color) -> void:
+	tint = color
+	if _shader_mat:
+		_shader_mat.set_shader_parameter("tint", Vector4(color.r, color.g, color.b, color.a))
 
 func _cell_hash(x: int, y: int) -> int:
 	var n := x * 374761393 + y * 668265263

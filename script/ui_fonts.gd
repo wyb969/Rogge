@@ -9,7 +9,7 @@ const PIXEL_BOLD_PATH := "res://assest/fonts/PixelOperator8-Bold.ttf"
 const CJK_PATH := "res://assest/fonts/DroidSansFallback.ttf"
 
 ## Chars that must never tofu on web (digits / punctuation / level tags).
-const PREWARM_CHARS := "0123456789.+-%:×xXvVlL!?BOSSCOMING /()[]，。！？、·~"
+const PREWARM_CHARS := "0123456789.+-%:×xXvVlL!?BOSSCOMINGSTAGE /()[]，。！？、·~休整选择一项奖励生命减伤移速冷却下一关冲刺枪设置音量按键大小透明度难度简单中等困难拖动摇杆返回玉佩护盾击杀停手每秒方向键移动触屏左侧右侧"
 
 static var _ui: Font
 static var _ui_bold: Font

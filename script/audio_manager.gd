@@ -23,10 +23,8 @@ var _web_audio_unlocked: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	var master_idx := AudioServer.get_bus_index("Master")
-	if master_idx >= 0:
-		AudioServer.set_bus_mute(master_idx, false)
-		AudioServer.set_bus_volume_db(master_idx, 0.0)
+	# Saved master volume. SettingsStore loads before this autoload.
+	SettingsStore.apply_audio()
 	# Web browsers block audio until a real user gesture.
 	set_process_input(OS.has_feature("web"))
 

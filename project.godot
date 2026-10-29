@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+SettingsStore="*res://script/settings_store.gd"
 AudioManager="*res://scenes/audio_manager.tscn"
 MobileInput="*res://script/mobile_input.gd"
 
@@ -30,7 +31,7 @@ window/size/viewport_width=900
 window/size/viewport_height=600
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/handheld/orientation=4
+window/handheld/orientation=6
 mouse_cursor/custom_image="res://assest/tile_0056.png"
 
 

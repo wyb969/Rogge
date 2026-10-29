@@ -4,12 +4,12 @@ signal retry_pressed
 signal main_menu_pressed
 
 @onready var root_ui: Control = $CanvasLayer/Control
-@onready var result_title: Label = $CanvasLayer/Control/BoxContainer/ResultTitle
-@onready var time_label: Label = $CanvasLayer/Control/BoxContainer/TimeLabel
-@onready var kill_label: Label = $CanvasLayer/Control/BoxContainer/KillLabel
-@onready var level_label: Label = $CanvasLayer/Control/BoxContainer/LevelLabel
-@onready var retry_button: Button = $CanvasLayer/Control/BoxContainer/RetryButton
-@onready var main_menu_button: Button = $CanvasLayer/Control/BoxContainer/BackToMenu
+@onready var result_title: Label = $CanvasLayer/Control/ResultCenter/BoxContainer/ResultTitle
+@onready var time_label: Label = $CanvasLayer/Control/ResultCenter/BoxContainer/TimeLabel
+@onready var kill_label: Label = $CanvasLayer/Control/ResultCenter/BoxContainer/KillLabel
+@onready var level_label: Label = $CanvasLayer/Control/ResultCenter/BoxContainer/LevelLabel
+@onready var retry_button: Button = $CanvasLayer/Control/ResultCenter/BoxContainer/RetryButton
+@onready var main_menu_button: Button = $CanvasLayer/Control/ResultCenter/BoxContainer/BackToMenu
 
 func _ready() -> void:
 	root_ui.hide()
@@ -42,7 +42,7 @@ func show_result(stats: Dictionary) -> void:
 
 	time_label.text = "Survived: %02d:%02d" % [minutes, seconds]
 	kill_label.text = "Kills: %d" % stats.get("kills", 0)
-	level_label.text = "Level: %d" % stats.get("level", 1)
+	level_label.text = "Level: %d    Stage: %d" % [stats.get("level", 1), int(stats.get("stage", 1))]
 
 func hide_result() -> void:
 	root_ui.hide()

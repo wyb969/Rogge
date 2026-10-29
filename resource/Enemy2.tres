@@ -5,8 +5,17 @@
 
 [resource]
 script = ExtResource("1_uiy5t")
-title = "enemy2"
+title = "chaser_brute"
 sprite = ExtResource("2_cfobx")
-health = 35.0
-demage = 2.2
+health = 42.0
+damage = 2.2
+archetype = 0
+move_speed = 48.0
+defense = 0.08
+body_scale = 1.12
+tint = Color(0.82, 1.08, 0.82, 1)
+marker_color = Color(0.55, 0.9, 0.55, 1)
+contact_damage = 44.0
+contact_cooldown = 0.85
+contact_radius = 28.0
 metadata/_custom_type_script = "uid://dsf6o758y6et0"

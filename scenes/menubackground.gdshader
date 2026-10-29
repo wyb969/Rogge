@@ -7,7 +7,8 @@ shader_type canvas_item;
 #define USE_COLOR_MODULATION 1
 
 uniform float g_random_seed = 0.0;
-uniform vec2 g_grid_size = vec2(16.0, 9.0); // x=cols, y=rows (16 and 9 are good values for a full screen rect in 16:9 aspect ratio display)
+uniform vec2 g_grid_size = vec2(16.0, 9.0); // design grid for a 16:9 rect; live columns/rows follow g_aspect
+uniform float g_aspect = 1.777778; // width / height of the shaded rect, updated on resize
 uniform vec2 g_cell_offset = vec2(0.0, 0.0);
 uniform vec2 g_speed = vec2(0.0, 0.0);
 uniform float g_draw_size_min : hint_range(0.0, 1.0) = 0.1; // value between 0 and 1 (avoid 0)
@@ -30,6 +31,16 @@ uniform float g_rot_max_speed : hint_range(0.0, 1.0) = 1.0; // value between 0 a
 // returns a pseudo random number
 float random(vec2 xy) {
     return fract(sin(dot(xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+// Keep cells square. A fixed 16x9 grid stretches each cell when the rect is tall.
+vec2 square_grid(vec2 design) {
+	float aspect = max(g_aspect, 0.05);
+	float minor = max(min(design.x, design.y), 1.0);
+	if (aspect >= 1.0) {
+		return vec2(minor * aspect, minor);
+	}
+	return vec2(minor, minor / aspect);
 }
 
 #if USE_ROTATION
@@ -124,7 +135,7 @@ void fragment() {
 		color,
 		g_random_seed,
 		UV,
-		g_grid_size,
+		square_grid(g_grid_size),
 		g_speed,
 		g_cell_offset,
 		g_draw_size_min,

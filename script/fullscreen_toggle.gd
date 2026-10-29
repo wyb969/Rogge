@@ -37,3 +37,12 @@ func _refresh_label() -> void:
 	if button == null:
 		return
 	button.text = "退出全屏" if _is_fullscreen() else "全屏"
+	var vp := get_viewport().get_visible_rect().size
+	if vp.x < 8.0 or vp.y < 8.0:
+		return
+	var h := clampf(vp.y * 0.055, 40.0, 52.0)
+	var w := clampf(vp.x * 0.28, 96.0, 168.0)
+	button.offset_top = 8.0
+	button.offset_right = -10.0
+	button.offset_bottom = 8.0 + h
+	button.offset_left = -10.0 - w

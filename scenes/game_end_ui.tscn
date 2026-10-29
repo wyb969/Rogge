@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://ct2a4ue640vmw" path="res://script/game_end_ui.gd" id="1_5p2tu"]
 [ext_resource type="Script" uid="uid://rfhvrtdcoc71" path="res://script/start_button.gd" id="2_cleem"]
 [ext_resource type="PackedScene" uid="uid://dt017iy8db7ce" path="res://scenes/color_rect.tscn" id="2_hrl6p"]
+[ext_resource type="Script" path="res://script/responsive_stack.gd" id="3_stack"]
 
 [node name="GameEndUI" type="Node2D" unique_id=776507437]
 script = ExtResource("1_5p2tu")
@@ -20,47 +21,46 @@ grow_vertical = 2
 [node name="ColorRect" parent="CanvasLayer/Control" unique_id=116583636 instance=ExtResource("2_hrl6p")]
 layout_mode = 1
 
-[node name="BoxContainer" type="VBoxContainer" parent="CanvasLayer/Control" unique_id=1433134900]
+[node name="ResultCenter" type="CenterContainer" parent="CanvasLayer/Control"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = -90.0
-offset_right = 90.0
-offset_bottom = 90.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_stack")
+
+[node name="BoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/ResultCenter" unique_id=1433134900]
+layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="ResultTitle" type="Label" parent="CanvasLayer/Control/BoxContainer"]
+[node name="ResultTitle" type="Label" parent="CanvasLayer/Control/ResultCenter/BoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "DEFEAT"
 horizontal_alignment = 1
 
-[node name="KillLabel" type="Label" parent="CanvasLayer/Control/BoxContainer" unique_id=711799183]
+[node name="KillLabel" type="Label" parent="CanvasLayer/Control/ResultCenter/BoxContainer" unique_id=711799183]
 layout_mode = 2
 text = "Kill：1000"
 
-[node name="TimeLabel" type="Label" parent="CanvasLayer/Control/BoxContainer" unique_id=949086166]
+[node name="TimeLabel" type="Label" parent="CanvasLayer/Control/ResultCenter/BoxContainer" unique_id=949086166]
 layout_mode = 2
 text = "Time： 1min"
 
-[node name="LevelLabel" type="Label" parent="CanvasLayer/Control/BoxContainer" unique_id=547557114]
+[node name="LevelLabel" type="Label" parent="CanvasLayer/Control/ResultCenter/BoxContainer" unique_id=547557114]
 layout_mode = 2
 text = "Level: "
 
-[node name="RetryButton" type="Button" parent="CanvasLayer/Control/BoxContainer" unique_id=1895949494]
+[node name="RetryButton" type="Button" parent="CanvasLayer/Control/ResultCenter/BoxContainer" unique_id=1895949494]
 layout_mode = 2
 offset_transform_enabled = true
 text = "Retry"
 script = ExtResource("2_cleem")
 
-[node name="BackToMenu" type="Button" parent="CanvasLayer/Control/BoxContainer" unique_id=414579847]
+[node name="BackToMenu" type="Button" parent="CanvasLayer/Control/ResultCenter/BoxContainer" unique_id=414579847]
 layout_mode = 2
 offset_transform_enabled = true
 text = "BackToMenu"

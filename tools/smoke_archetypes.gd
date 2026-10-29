@@ -42,7 +42,8 @@ func _run() -> void:
 	_expect(dasher.base_modulate.r > dasher.base_modulate.b, "dasher tint is warm")
 	_expect(tank.base_modulate.b > tank.base_modulate.r, "tank tint is cool")
 	_expect(dasher.move_wobble_hz() > chaser.move_wobble_hz(), "dasher wobbles faster than a chaser, hz=%s" % dasher.move_wobble_hz())
-	_expect(chaser.move_wobble_hz() > tank.move_wobble_hz() * 1.8, "tank wobbles slower than a chaser, tank=%s chaser=%s" % [tank.move_wobble_hz(), chaser.move_wobble_hz()])
+	_expect(chaser.move_wobble_hz() > tank.move_wobble_hz() * 1.2, "tank wobbles slower than a chaser, tank=%s chaser=%s" % [tank.move_wobble_hz(), chaser.move_wobble_hz()])
+	_expect(dasher.move_wobble_hz() <= 3.4, "fast enemies stay under a manic wobble, hz=%s" % dasher.move_wobble_hz())
 	var body_before: Vector2 = dasher.scale
 	dasher.velocity = Vector2(dasher.speed, 0.0)
 	dasher._apply_move_juice(0.08)

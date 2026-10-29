@@ -311,22 +311,22 @@ func _try_contact(dist: float) -> void:
 func _apply_body_scale() -> void:
 	scale = Vector2(body_scale, body_scale)
 
-## Full-speed wobble in Hz. Small/fast bodies cycle faster; tanks stay slow.
-## speed 56 and body_scale 1 is the chaser baseline (~3.2 Hz).
+## Soft waddle in Hz. A chaser at speed 56 and scale 1 is about 2.4 Hz.
+## Small/fast bodies sit a little higher; tanks stay near the 1.6 Hz floor.
 func move_wobble_hz() -> float:
 	var profile := _juice_profile()
 	var quickness := clampf(speed / 56.0, 0.35, 2.6) / clampf(body_scale, 0.55, 2.2)
-	return clampf(3.2 * quickness * profile.x, 1.05, 7.5)
+	return clampf(2.4 * quickness * profile.x, 1.6, 3.2)
 
 func _juice_profile() -> Vector3:
-	# x frequency, y lean, z squash. Multiplies the speed/size baseline.
+	# x frequency, y lean, z squash. Kept close so a swarm never looks frantic.
 	match archetype:
 		EnemyData.Archetype.DASHER:
-			return Vector3(1.25, 1.05, 1.45)
+			return Vector3(1.12, 0.8, 1.12)
 		EnemyData.Archetype.TANK:
-			return Vector3(0.72, 1.4, 0.8)
+			return Vector3(0.7, 0.65, 1.2)
 		EnemyData.Archetype.RANGED:
-			return Vector3(0.95, 0.9, 0.9)
+			return Vector3(0.95, 0.85, 0.95)
 		_:
 			return Vector3(1.0, 1.0, 1.0)
 
@@ -334,31 +334,29 @@ func _apply_move_juice(delta: float) -> void:
 	if sprite_2d == null:
 		return
 	var cruise := maxf(speed, 8.0)
-	var target := clampf(velocity.length() / cruise, 0.0, 1.45)
-	if is_dashing:
-		target = maxf(target, 1.2)
-	_move_effort = move_toward(_move_effort, target, delta * 7.0)
+	# Cap at a walk so a dash does not fling the sprite around.
+	var target := clampf(velocity.length() / cruise, 0.0, 1.0)
+	_move_effort = move_toward(_move_effort, target, delta * 6.0)
 	_hit_squash = maxf(0.0, _hit_squash - delta * 5.0)
 	var effort := _move_effort
 	_wobble += delta * TAU * move_wobble_hz() * maxf(effort, 0.0)
 	var profile := _juice_profile()
 	var size_factor := clampf(body_scale, 0.55, 2.2)
 	var quickness := clampf(speed / 56.0, 0.35, 2.6) / size_factor
-	# Lean and squash are large enough to read on the small enemy sprites.
-	# Bigger bodies lean less sharply; their lower Hz is what makes them feel heavy.
-	var lean := deg_to_rad(clampf(14.0 + 8.0 / size_factor, 12.0, 26.0) * profile.y) * effort
-	var stretch := clampf(0.14 * quickness * profile.z, 0.1, 0.34) * effort
+	# A few degrees of tilt and a small squish. The bob is the readable part.
+	var lean := deg_to_rad(clampf(2.0 + 1.0 / size_factor, 1.8, 3.6) * profile.y) * effort
+	var stretch := clampf(0.04 * quickness * profile.z, 0.03, 0.07) * effort
 	var step := sin(_wobble)
 	var squash := sin(_wobble * 2.0)
-	var sx := 1.0 + squash * stretch + _hit_squash * 0.28
-	var sy := 1.0 - squash * stretch * 0.9 - _hit_squash * 0.2
+	var sx := 1.0 + squash * stretch + _hit_squash * 0.1
+	var sy := 1.0 - squash * stretch * 0.85 - _hit_squash * 0.07
 	if dash_windup > 0.0 or slam_windup > 0.0 or shot_windup > 0.0:
-		sx *= 1.16
-		sy *= 0.84
+		sx *= 1.05
+		sy *= 0.96
 	sprite_2d.rotation = step * lean
 	sprite_2d.scale = Vector2(_sprite_base_scale.x * sx, _sprite_base_scale.y * sy)
-	var sway := (6.5 / size_factor) * effort
-	sprite_2d.position = Vector2(step * sway, -abs(squash) * (3.5 + stretch * 14.0))
+	var sway := (1.2 / size_factor) * effort
+	sprite_2d.position = Vector2(step * sway, -abs(squash) * (1.1 + stretch * 8.0))
 
 func _face(dir: Vector2) -> void:
 	if sprite_2d == null:

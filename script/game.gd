@@ -248,9 +248,8 @@ func _on_rest_next_stage() -> void:
 func _on_stage_advanced(next_stage: int) -> void:
 	Engine.time_scale = 1.0
 	var bg := get_node_or_null("InfiniteBackground")
-	if bg != null and bg.has_method("set_stage_tint"):
-		if next_stage >= 2:
-			bg.set_stage_tint(Color(0.46, 0.2, 0.24, 1.0))
+	if bg != null and bg.has_method("apply_stage"):
+		bg.apply_stage(next_stage)
 	if AudioManager.has_method("play_game_bgm"):
 		AudioManager.play_game_bgm()
 

@@ -148,7 +148,10 @@ func _run() -> void:
 	_expect(not paused, "combat pause lifts for stage 2")
 	_expect(spawner._stage_label != null and spawner._stage_label.text == "STAGE 2", "HUD reads STAGE 2")
 	var bg := game.get_node("InfiniteBackground")
-	_expect(bg.tint.r > 0.4 and bg.tint.b < 0.35, "stage 2 tints the ground, tint=%s" % bg.tint)
+	_expect(bg.tint.r > 0.8 and bg.tint.g < 0.55 and bg.stage_grade > 0.5, "stage 2 ground is warm, tint=%s grade=%s" % [bg.tint, bg.stage_grade])
+	bg.apply_stage(1)
+	_expect(bg.stage_grade < 0.01 and bg.tint.b > bg.tint.r, "stage 1 ground stays the cool meadow")
+	bg.apply_stage(2)
 
 	await create_timer(1.3).timeout
 	_expect(spawner.stage_boss_countdown > 20.0, "stage 2 boss is scheduled, countdown=%s" % spawner.stage_boss_countdown)

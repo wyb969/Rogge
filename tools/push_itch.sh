@@ -13,7 +13,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 WEB_DIR="${ROOT}/export/web"
-ITCH_TARGET="${ITCH_TARGET:-ybwangrogger/game-of-biubiu:html}"
+ITCH_TARGET="${ITCH_TARGET:-ybwangrogger/rogue-white:html}"
 GODOT_BIN="${GODOT_BIN:-$HOME/godot47/Godot_v4.7.2-stable_linux.x86_64}"
 BUTLER_BIN="${BUTLER_BIN:-$HOME/bin/butler}"
 
@@ -46,4 +46,4 @@ fi
 
 # Godot HTML5 needs these as ThisComputer / HTML / Embeddable on the itch page.
 "$BUTLER_BIN" push "$WEB_DIR" "$ITCH_TARGET" --user="godot-web-$(date -u +%Y%m%d-%H%M%S)"
-echo "Uploaded → https://ybwangrogger.itch.io/game-of-biubiu"
+echo "Uploaded → https://ybwangrogger.itch.io/rogue-white"

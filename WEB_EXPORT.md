@@ -22,11 +22,11 @@ Phone: open the HTTPS tunnel URL, lock landscape, use left stick + right DASH.
 
 ## Publish to itch.io (playable in browser)
 
-Game page: https://ybwangrogger.itch.io/game-of-biubiu
+Game page: https://ybwangrogger.itch.io/rogue-white
 
 ### 1. Authorize butler (one-time)
 
-1. Open https://itch.io/user/settings/api-keys while logged in as `ybwangrogger`
+1. Open https://itch.io/user/settings/api-keys while logged in as `ybwangRogger`
 2. Click **Generate new API key**, copy it
 3. In this Cloud Agent / terminal:
 
@@ -55,7 +55,7 @@ On the game edit page → **Embed options** / Kind of project:
 ./tools/push_itch.sh
 ```
 
-Pushes channel `ybwangrogger/game-of-biubiu:html`. After a minute, refresh the itch page and click **Run game**.
+Pushes channel `ybwangrogger/rogue-white:html`. After a minute, refresh the itch page and click **Run game**.
 
 ### 4. “Every 3 hours” updates
 

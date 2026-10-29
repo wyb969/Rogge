@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+SettingsStore="*res://script/settings_store.gd"
 AudioManager="*res://scenes/audio_manager.tscn"
 MobileInput="*res://script/mobile_input.gd"
 

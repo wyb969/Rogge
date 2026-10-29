@@ -17,6 +17,8 @@ func _run() -> void:
 	await process_frame
 	_check_result(end_ui, Vector2i(390, 844), "portrait", failures)
 	_check_result(end_ui, Vector2i(900, 500), "landscape", failures)
+	await _check_settings(main, failures)
+	_reset_settings()
 	if failures.is_empty():
 		print("MENU LAYOUT OK")
 		quit(0)
@@ -53,6 +55,116 @@ func _check_result(end_ui: Node, size: Vector2i, label: String, failures: Array[
 	_expect_inside(title, vp, "result title %s" % label, failures)
 	if retry.custom_minimum_size.y < 48.0:
 		failures.append("retry %s button is too short" % label)
+
+func _check_settings(main: Node, failures: Array[String]) -> void:
+	var host: Variant = main
+	var store: Variant = root.get_node("SettingsStore")
+	var player: Variant = host.game.get_node("Player")
+	var health_before: float = player.player_health
+	var max_before: float = player.max_player_health
+	store.set_master_linear(0.4)
+	store.set_control_scale(1.3)
+	store.set_control_opacity(0.5)
+	store.set_difficulty(store.DIFF_HARD)
+	store.set_stick_norm(Vector2(0.22, 0.72))
+	store.set_dash_norm(Vector2(0.78, 0.62))
+	store.master_linear = 1.0
+	store.load_from_disk()
+	if absf(store.master_linear - 0.4) > 0.001:
+		failures.append("master volume did not round-trip")
+	if absf(store.control_scale - 1.3) > 0.001:
+		failures.append("control scale did not round-trip")
+	if absf(store.control_opacity - 0.5) > 0.001:
+		failures.append("control opacity did not round-trip")
+	if store.difficulty != store.DIFF_HARD:
+		failures.append("difficulty did not round-trip")
+	if player.player_health != health_before or player.max_player_health != max_before:
+		failures.append("difficulty changed player health")
+	store.apply_audio()
+	var bus := AudioServer.get_bus_index("Master")
+	var db := AudioServer.get_bus_volume_db(bus)
+	if db > -6.0 or db < -10.0:
+		failures.append("master bus db %s is outside the saved 40%% range" % db)
+	await _set_viewport(Vector2i(390, 844))
+	main._on_setting_button_pressed()
+	await process_frame
+	await process_frame
+	var page: Variant = main.get_node("SettingsPage")
+	if not page.visible:
+		failures.append("settings page did not open")
+	var picker: Variant = page.difficulty_button
+	var choices: Variant = page.difficulty_list
+	if choices.get_child_count() != 3:
+		failures.append("difficulty choice count %s" % choices.get_child_count())
+	var easy_label: Variant = choices.get_child(0).get_child(0)
+	var hard_label: Variant = choices.get_child(2).get_child(0)
+	if easy_label.text != "简单  Easy" or hard_label.text != "困难  Hard":
+		failures.append("difficulty labels mismatch")
+	if picker.text != "困难  Hard  v":
+		failures.append("picker did not sync to hard (%s)" % picker.text)
+	var controls: Variant = host.mobile_controls
+	if not controls.visible or not controls.layout_edit:
+		failures.append("layout edit did not show the on-screen buttons")
+	controls.apply_saved_layout()
+	await process_frame
+	var vp := root.get_visible_rect().size
+	var stick_center: Vector2 = controls.stick_base.global_position + controls.stick_base.size * 0.5
+	var expected := Vector2(0.22, 0.72) * vp
+	if stick_center.distance_to(expected) > 6.0:
+		failures.append("stick layout %s expected %s" % [stick_center, expected])
+	var expected_stick := 56.0 * 1.3 * 2.0
+	if absf(controls.stick_base.size.x - expected_stick) > 1.0:
+		failures.append("stick size %s" % controls.stick_base.size)
+	if absf(controls.stick_base.modulate.a - 0.5) > 0.02:
+		failures.append("stick opacity %s" % controls.stick_base.modulate.a)
+	var panel: Control = page._panel
+	var back: Control = page.back_button
+	_expect_inside(panel, vp, "settings portrait panel", failures)
+	_expect_inside(back, vp, "settings portrait back", failures)
+	_expect_inside(picker, vp, "settings portrait difficulty", failures)
+	page._toggle_difficulty_list()
+	await process_frame
+	_expect_inside(choices.get_child(2).get_child(0), vp, "settings portrait hard choice", failures)
+	page._toggle_difficulty_list()
+	await _set_viewport(Vector2i(900, 500))
+	page._fit()
+	controls.apply_saved_layout()
+	await process_frame
+	vp = root.get_visible_rect().size
+	_expect_inside(page._panel, vp, "settings landscape panel", failures)
+	_expect_inside(page.back_button, vp, "settings landscape back", failures)
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = controls.dash_button.global_position + Vector2(8, 8)
+	controls._input(press)
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.pressed = false
+	release.position = Vector2(120, 80)
+	controls._input(release)
+	store.load_from_disk()
+	if not store.has_custom_dash():
+		failures.append("dash drag did not save")
+	if store.dash_norm.x > 0.5 or store.dash_norm.y > 0.5:
+		failures.append("dash drag stayed in the old corner %s" % store.dash_norm)
+	page.close_page()
+	await process_frame
+	if page.visible or controls.visible:
+		failures.append("settings close left the page or buttons up")
+
+func _reset_settings() -> void:
+	var store: Variant = root.get_node_or_null("SettingsStore")
+	if store == null:
+		return
+	store.master_linear = 1.0
+	store.control_scale = 1.0
+	store.control_opacity = 0.85
+	store.difficulty = store.DIFF_MEDIUM
+	store.stick_norm = Vector2(-1, -1)
+	store.dash_norm = Vector2(-1, -1)
+	store.save_to_disk()
+	store.apply_audio()
 
 func _expect_inside(control: Control, vp: Vector2, label: String, failures: Array[String]) -> void:
 	var rect := control.get_global_rect()

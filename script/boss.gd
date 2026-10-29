@@ -144,6 +144,10 @@ func apply_hit(hit_data: Dictionary) -> void:
 	if health_bar:
 		health_bar.visible = true
 		health_bar.set_health(boss_current_health)
+	if not hit_data.get("from_status", false) and damage_value > 0.0:
+		var steal_target: Node = player if is_instance_valid(player) else get_tree().get_first_node_in_group("player")
+		if steal_target != null and steal_target.has_method("notify_damage_dealt"):
+			steal_target.notify_damage_dealt(damage_value)
 
 	play_hit_feedback(damage_dir.normalized())
 

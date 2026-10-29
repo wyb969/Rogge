@@ -342,12 +342,13 @@ func _mitigate(raw: float) -> float:
 		dealt = maxf(dealt, 1.0)
 	return dealt
 
-func receive_hit(direction: Vector2, damage_value: float):
+func receive_hit(direction: Vector2, damage_value: float) -> float:
 	var dealt := _mitigate(damage_value)
 	play_hit_tween(direction)
 	show_damage_text(dealt)
 	AudioManager.play_enemy_hurt()
 	_apply_health_loss(dealt)
+	return dealt
 
 func apply_hit(hit_data: Dictionary) -> void:
 	var damage_value = float(hit_data.get("damage", 0))
@@ -363,7 +364,9 @@ func apply_hit(hit_data: Dictionary) -> void:
 		if fc != null and fc.level > 0:
 			damage_value *= 1.0 + fc.get_frozen_bonus()
 
-	receive_hit(damage_dir, damage_value)
+	var dealt: float = receive_hit(damage_dir, damage_value)
+	if not hit_data.get("from_status", false):
+		_report_lifesteal(dealt)
 
 	var effect_type = hit_data.get("effect", "")
 	match effect_type:
@@ -396,6 +399,13 @@ func _try_passive_procs(game: Node, hit_data: Dictionary) -> void:
 			"freeze_duration": fc.get_freeze_duration(),
 			"slow_factor": fc.get_slow_factor()
 		})
+
+func _report_lifesteal(dealt: float) -> void:
+	if dealt <= 0.0:
+		return
+	var player_node := get_tree().get_first_node_in_group("player")
+	if player_node != null and player_node.has_method("notify_damage_dealt"):
+		player_node.notify_damage_dealt(dealt)
 
 func apply_lightning(hit_data: Dictionary) -> void:
 	var source = hit_data.get("source", null)

@@ -42,6 +42,24 @@ var hurt_lock: float = 0.0
 ## Boss-rest rewards. damage_reduction is a fraction of incoming hit damage.
 var damage_reduction: float = 0.0
 var cooldown_scale: float = 1.0
+## Regen and lifesteal stay at 0 until a card or rest reward is picked.
+const REGEN_BASE_AMOUNT := 1.0
+const REGEN_AMOUNT_STEP := 1.0
+const REGEN_AMOUNT_CAP := 4.0
+const REGEN_BASE_INTERVAL := 3.0
+const REGEN_INTERVAL_STEP := 0.35
+const REGEN_INTERVAL_MIN := 1.2
+const LIFESTEAL_PERCENT_BASE := 0.02
+const LIFESTEAL_PERCENT_STEP := 0.01
+const LIFESTEAL_FLAT := 1.0
+const LIFESTEAL_CAP_BASE := 1.0
+const LIFESTEAL_CAP_STEP := 1.0
+const LIFESTEAL_CAP_MAX := 4.0
+const LIFESTEAL_MIN_HIT := 8.0
+var regen_level: int = 0
+var lifesteal_level: int = 0
+var _regen_acc: float = 0.0
+const HEAL_TEXT := preload("res://scenes/damage_text.tscn")
 
 func _ready() -> void:
 	health_bar.init_health(player_health)
@@ -62,10 +80,121 @@ func full_heal() -> void:
 		dashing = false
 	if hurt_area:
 		hurt_area.set_deferred("monitoring", true)
-	player_health = max_player_health
+	var missing: float = max_player_health - float(player_health)
+	if missing > 0.0:
+		heal(missing)
+	elif health_bar:
+		health_bar.visible = true
+		health_bar.set_health(player_health)
+
+func heal(amount: float) -> float:
+	if amount <= 0.0 or player_health <= 0.0:
+		return 0.0
+	var before: float = player_health
+	player_health = minf(max_player_health, player_health + amount)
+	var gained: float = player_health - before
+	if gained <= 0.0:
+		return 0.0
 	if health_bar:
 		health_bar.visible = true
 		health_bar.set_health(player_health)
+	_spawn_heal_popup(gained)
+	_spawn_heal_spark()
+	return gained
+
+func add_regen_level() -> void:
+	regen_level += 1
+
+func add_lifesteal_level() -> void:
+	lifesteal_level += 1
+
+func regen_amount() -> float:
+	return regen_amount_for(regen_level)
+
+func regen_amount_for(level: int) -> float:
+	if level <= 0:
+		return 0.0
+	return minf(REGEN_AMOUNT_CAP, REGEN_BASE_AMOUNT + REGEN_AMOUNT_STEP * float(level - 1))
+
+func regen_interval() -> float:
+	return regen_interval_for(regen_level)
+
+func regen_interval_for(level: int) -> float:
+	if level <= 0:
+		return REGEN_BASE_INTERVAL
+	return maxf(REGEN_INTERVAL_MIN, REGEN_BASE_INTERVAL - REGEN_INTERVAL_STEP * float(level - 1))
+
+func lifesteal_percent_for(level: int) -> float:
+	return LIFESTEAL_PERCENT_BASE + LIFESTEAL_PERCENT_STEP * float(maxi(level, 1))
+
+func lifesteal_cap_for(level: int) -> float:
+	return minf(LIFESTEAL_CAP_MAX, LIFESTEAL_CAP_BASE + LIFESTEAL_CAP_STEP * float(maxi(level, 1)))
+
+func _tick_regen(delta: float) -> void:
+	if regen_level <= 0 or player_health <= 0.0 or player_health >= max_player_health:
+		return
+	_regen_acc += delta
+	var interval := regen_interval()
+	var ticks := 0
+	while _regen_acc >= interval and ticks < 3 and player_health < max_player_health:
+		_regen_acc -= interval
+		heal(regen_amount())
+		ticks += 1
+
+## Hits under LIFESTEAL_MIN_HIT do not heal (chip hits such as orbiting books).
+## Burn ticks never call this. Direct apply_hit damage does.
+func notify_damage_dealt(dealt: float) -> void:
+	if lifesteal_level <= 0 or dealt < LIFESTEAL_MIN_HIT or player_health <= 0.0:
+		return
+	var percent := lifesteal_percent_for(lifesteal_level)
+	var cap := lifesteal_cap_for(lifesteal_level)
+	var amount := minf(cap, floorf(LIFESTEAL_FLAT + dealt * percent))
+	if amount >= 1.0:
+		heal(amount)
+
+func _spawn_heal_popup(gained: float) -> void:
+	var shown := int(round(gained))
+	if shown < 1:
+		return
+	var text_node := HEAL_TEXT.instantiate()
+	var container := get_tree().get_first_node_in_group("effect_container")
+	if container == null:
+		container = get_tree().current_scene
+	if container == null:
+		text_node.queue_free()
+		return
+	text_node.process_mode = Node.PROCESS_MODE_ALWAYS
+	container.add_child(text_node)
+	text_node.global_position = global_position + Vector2(0, -30)
+	if text_node.has_method("show_heal"):
+		text_node.show_heal("+%d" % shown)
+	else:
+		text_node.show_damage("+%d" % shown, Vector2.ZERO, 0, 0)
+
+func _spawn_heal_spark() -> void:
+	var particles := CPUParticles2D.new()
+	particles.one_shot = true
+	particles.explosiveness = 0.9
+	particles.amount = 6
+	particles.lifetime = 0.32
+	particles.emitting = false
+	particles.direction = Vector2(0, -1)
+	particles.spread = 50.0
+	particles.gravity = Vector2(0, -30)
+	particles.initial_velocity_min = 18.0
+	particles.initial_velocity_max = 46.0
+	particles.scale_amount_min = 1.4
+	particles.scale_amount_max = 2.8
+	particles.color = Color(0.45, 1.0, 0.55, 1)
+	particles.z_index = 12
+	particles.global_position = global_position + Vector2(0, -8)
+	var container := get_tree().get_first_node_in_group("effect_container")
+	if container:
+		container.add_child(particles)
+	else:
+		add_child(particles)
+	particles.emitting = true
+	particles.finished.connect(particles.queue_free)
 
 func apply_rest_max_hp(bonus: float) -> void:
 	max_player_health += bonus
@@ -130,6 +259,7 @@ func set_dash_cooldown_ui(ring: Node2D) -> void:
 		dash_cooldown_ring.set_progress(1.0 if can_dash else 0.0)
 
 func _process(_delta: float) -> void:
+	_tick_regen(_delta)
 	_update_dash_cooldown_ui()
 
 func speed_up(val: float):

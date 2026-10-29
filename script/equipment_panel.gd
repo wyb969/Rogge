@@ -59,6 +59,18 @@ const EQUIP_DEFS := {
 		"title": "寒冰",
 		"icon": "res://assest/sprites/freeze.svg",
 		"start_level": 0
+	},
+	"regen_up": {
+		"title": "回复",
+		"icon": "res://assest/sprites/fruit.png",
+		"start_level": 0,
+		"modulate": Color(0.55, 1.0, 0.6, 1)
+	},
+	"lifesteal_up": {
+		"title": "吸血",
+		"icon": "res://assest/sprites/fruit.png",
+		"start_level": 0,
+		"modulate": Color(1.0, 0.45, 0.45, 1)
 	}
 }
 
@@ -110,6 +122,8 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = load(def["icon"])
+	if def.has("modulate"):
+		icon.modulate = def["modulate"]
 	icon_wrap.add_child(icon)
 
 	var level_label := Label.new()

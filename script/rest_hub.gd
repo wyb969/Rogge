@@ -51,9 +51,9 @@ func _build_ui() -> void:
 	add_child(panel)
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.offset_left = -260.0
-	panel.offset_top = -250.0
+	panel.offset_top = -310.0
 	panel.offset_right = 260.0
-	panel.offset_bottom = 250.0
+	panel.offset_bottom = 310.0
 
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 10)
@@ -75,6 +75,8 @@ func _build_ui() -> void:
 	_add_reward_button(box, "defense", "减伤 15%")
 	_add_reward_button(box, "move_speed", "移速 +35")
 	_add_reward_button(box, "cooldown", "冷却 -20%  Dash+Gun")
+	_add_reward_button(box, "regen_up", "回复  Regen")
+	_add_reward_button(box, "lifesteal_up", "吸血  Lifesteal")
 
 	next_button = Button.new()
 	next_button.name = "NextStage"

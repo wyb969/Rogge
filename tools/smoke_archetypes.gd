@@ -111,6 +111,7 @@ func _run() -> void:
 	paused = false
 	game.pause_menu.visible = false
 
+	player.player_health = 40.0
 	spawner._on_boss_defeated()
 	await process_frame
 	_expect(spawner.stage == 1, "first boss opens rest instead of stage 2, stage=%s" % spawner.stage)
@@ -156,6 +157,34 @@ func _run() -> void:
 	player.receive_attack(100.0, null)
 	_expect(player.player_health > 110.0 and player.player_health < 120.0, "defense reduced 100 damage, hp=%s" % player.player_health)
 	player.full_heal()
+
+	var missing_before: float = player.max_player_health
+	player.player_health = missing_before - 10.0
+	player._process(3.0)
+	_expect(is_equal_approx(player.player_health, missing_before - 10.0), "no regen before the card")
+	player.add_regen_level()
+	_expect(is_equal_approx(player.regen_amount(), 1.0), "first regen is +1")
+	_expect(is_equal_approx(player.regen_interval(), 3.0), "first regen is every 3s")
+	player._process(3.0)
+	_expect(is_equal_approx(player.player_health, missing_before - 9.0), "regen healed 1")
+	player.add_regen_level()
+	_expect(player.regen_amount() > 1.0 and player.regen_interval() < 3.0, "later regen cards get stronger")
+	player.player_health = 100.0
+	player.notify_damage_dealt(40.0)
+	_expect(is_equal_approx(player.player_health, 100.0), "no lifesteal before the card")
+	player.add_lifesteal_level()
+	player.notify_damage_dealt(5.0)
+	_expect(is_equal_approx(player.player_health, 100.0), "chip hits do not lifesteal")
+	player.notify_damage_dealt(40.0)
+	_expect(player.player_health > 100.0 and player.player_health <= 102.0, "lifesteal is small, hp=%s" % player.player_health)
+	var pool_ids := {}
+	for entry in game.pause_menu.upgrade_pool:
+		pool_ids[str(entry["id"])] = true
+	_expect(pool_ids.has("regen_up") and pool_ids.has("lifesteal_up"), "level-up pool has both cards")
+	var rest_ids := {}
+	for btn in game.rest_hub._buttons:
+		rest_ids[str(btn.get_meta("reward_id"))] = true
+	_expect(rest_ids.has("regen_up") and rest_ids.has("lifesteal_up"), "rest hub offers regen and lifesteal")
 
 	spawner._on_boss_defeated()
 	_expect(victory["hit"] == true, "second boss clears the run")

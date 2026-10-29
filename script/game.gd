@@ -131,6 +131,10 @@ func _on_upgrade_selected(upgrade_id: String):
 			molotov_controller.upgrade()
 		"freeze_up":
 			freeze_controller.upgrade()
+		"regen_up":
+			player.add_regen_level()
+		"lifesteal_up":
+			player.add_lifesteal_level()
 
 	if equipment_panel and equipment_panel.has_method("apply_upgrade"):
 		equipment_panel.apply_upgrade(upgrade_id)
@@ -224,6 +228,10 @@ func _on_rest_reward(reward_id: String) -> void:
 			var scale: float = player.apply_rest_cooldown(rest_hub.COOLDOWN_SCALE)
 			if gun_weapon and gun_weapon.has_method("apply_cooldown_scale"):
 				gun_weapon.apply_cooldown_scale(scale)
+		"regen_up":
+			player.add_regen_level()
+		"lifesteal_up":
+			player.add_lifesteal_level()
 
 func _on_rest_next_stage() -> void:
 	if rest_hub and rest_hub.has_method("close_hub"):

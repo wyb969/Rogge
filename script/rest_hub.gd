@@ -12,15 +12,21 @@ const MOVE_SPEED_BONUS := 35.0
 const COOLDOWN_SCALE := 0.8
 
 var _picked: bool = false
+var _built: bool = false
 var _buttons: Array[Button] = []
 var next_button: Button
-var _built: bool = false
+var _panel: PanelContainer
+var _scroll: ScrollContainer
+var _box: VBoxContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 125
 	visible = false
 	_build_ui()
+	if not get_viewport().size_changed.is_connected(_fit_to_viewport):
+		get_viewport().size_changed.connect(_fit_to_viewport)
+	call_deferred("_fit_to_viewport")
 
 func open_hub() -> void:
 	_picked = false
@@ -46,18 +52,31 @@ func _build_ui() -> void:
 	add_child(dim)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 
+	var center := CenterContainer.new()
+	center.name = "Center"
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(center)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
 	var panel := PanelContainer.new()
 	panel.name = "Panel"
-	add_child(panel)
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left = -260.0
-	panel.offset_top = -310.0
-	panel.offset_right = 260.0
-	panel.offset_bottom = 310.0
+	center.add_child(panel)
+	_panel = panel
+
+	var scroll := ScrollContainer.new()
+	scroll.name = "Scroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	panel.add_child(scroll)
+	_scroll = scroll
 
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 10)
-	panel.add_child(box)
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(box)
+	_box = box
 
 	var title := Label.new()
 	title.text = "休整  Rest"
@@ -86,6 +105,33 @@ func _build_ui() -> void:
 	UiFonts.apply_to_button(next_button, 18)
 	next_button.pressed.connect(_on_next_pressed)
 	box.add_child(next_button)
+	_fit_to_viewport()
+
+func _fit_to_viewport() -> void:
+	if _panel == null or _scroll == null or _box == null:
+		return
+	var vp := get_viewport().get_visible_rect().size
+	if vp.x < 8.0 or vp.y < 8.0:
+		return
+	var margin := 20.0
+	var stack_w := clampf(vp.x - margin * 2.0, 220.0, 520.0)
+	var button_h := clampf(vp.y * 0.06, 40.0, 56.0)
+	var title_size := int(clampf(minf(vp.x, vp.y) * 0.055, 22.0, 32.0))
+	for child in _box.get_children():
+		if child is Button:
+			child.custom_minimum_size = Vector2(stack_w - 28.0, button_h)
+		elif child is Label:
+			child.custom_minimum_size.x = stack_w - 28.0
+			child.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			var bold := child == _box.get_child(0)
+			UiFonts.apply_to_label(child, title_size if bold else 15, bold)
+	var content_h := 0.0
+	for child in _box.get_children():
+		content_h += child.get_combined_minimum_size().y
+	content_h += float(maxi(_box.get_child_count() - 1, 0)) * 10.0 + 24.0
+	var stack_h := minf(content_h, vp.y - margin * 2.0)
+	_panel.custom_minimum_size = Vector2(stack_w, stack_h)
+	_scroll.custom_minimum_size = Vector2(stack_w - 16.0, maxf(40.0, stack_h - 16.0))
 
 func _add_reward_button(parent: Node, id: String, label_text: String) -> void:
 	var btn := Button.new()

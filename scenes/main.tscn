@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://rfhvrtdcoc71" path="res://script/start_button.gd" id="2_sugp2"]
 [ext_resource type="PackedScene" uid="uid://blijgmqawg5pt" path="res://scenes/game_end_ui.tscn" id="3_sugp2"]
 [ext_resource type="PackedScene" path="res://scenes/fullscreen_toggle.tscn" id="4_fs"]
+[ext_resource type="Script" path="res://script/responsive_stack.gd" id="5_stack"]
 
 [node name="main" type="Node2D" unique_id=1765235295]
 script = ExtResource("1_0wfyh")
@@ -29,35 +30,34 @@ size_flags_vertical = 4
 [node name="ColorRect" parent="mainUI/Control" unique_id=116583636 instance=ExtResource("2_jyhfs")]
 layout_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="mainUI/Control" unique_id=1309560024]
+[node name="MenuCenter" type="CenterContainer" parent="mainUI/Control"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -48.5
-offset_top = -46.5
-offset_right = 48.5
-offset_bottom = 46.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_stack")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="mainUI/Control/MenuCenter" unique_id=1309560024]
+layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="mainUI/Control/VBoxContainer" unique_id=1256842799]
+[node name="TitleLabel" type="Label" parent="mainUI/Control/MenuCenter/VBoxContainer" unique_id=1256842799]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Game Rogge"
 
-[node name="StartButton" type="Button" parent="mainUI/Control/VBoxContainer" unique_id=669121202]
+[node name="StartButton" type="Button" parent="mainUI/Control/MenuCenter/VBoxContainer" unique_id=669121202]
 layout_mode = 2
 offset_transform_enabled = true
 theme_override_font_sizes/font_size = 30
 text = "Start"
 script = ExtResource("2_sugp2")
 
-[node name="SettingButton" type="Button" parent="mainUI/Control/VBoxContainer" unique_id=1703502888]
+[node name="SettingButton" type="Button" parent="mainUI/Control/MenuCenter/VBoxContainer" unique_id=1703502888]
 layout_mode = 2
 offset_transform_enabled = true
 theme_override_font_sizes/font_size = 30
@@ -66,7 +66,7 @@ script = ExtResource("2_sugp2")
 
 [node name="GameEndUI" parent="." unique_id=776507437 instance=ExtResource("3_sugp2")]
 
-[connection signal="pressed" from="mainUI/Control/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="mainUI/Control/VBoxContainer/SettingButton" to="." method="_on_setting_button_pressed"]
+[connection signal="pressed" from="mainUI/Control/MenuCenter/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="mainUI/Control/MenuCenter/VBoxContainer/SettingButton" to="." method="_on_setting_button_pressed"]
 [connection signal="main_menu_pressed" from="GameEndUI" to="." method="_on_game_end_ui_main_menu_pressed"]
 [connection signal="retry_pressed" from="GameEndUI" to="." method="_on_game_end_ui_retry_pressed"]

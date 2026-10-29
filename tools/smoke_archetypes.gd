@@ -100,11 +100,39 @@ func _run() -> void:
 	spawner.boss_defeated.connect(func() -> void: victory["hit"] = true)
 	var advanced := {"stage": 0}
 	spawner.stage_advanced.connect(func(next_stage: int) -> void: advanced["stage"] = next_stage)
+
+	game.pause_menu.visible = true
+	game._on_rest_requested()
+	_expect(game.rest_hub == null or not game.rest_hub.visible, "rest waits while the level-up menu is open")
+	game._open_rest_after_level_up("speed_up")
+	await process_frame
+	_expect(game.rest_hub != null and game.rest_hub.visible, "rest opens after the level-up card")
+	game.rest_hub.close_hub()
+	paused = false
+	game.pause_menu.visible = false
+
 	spawner._on_boss_defeated()
-	await create_timer(0.2).timeout
-	_expect(spawner.stage == 2, "boss death sets stage 2, got %s" % spawner.stage)
-	_expect(advanced["stage"] == 2, "stage_advanced emitted 2")
+	await process_frame
+	_expect(spawner.stage == 1, "first boss opens rest instead of stage 2, stage=%s" % spawner.stage)
+	_expect(spawner.timer.is_stopped(), "rest stops the spawn timer")
 	_expect(victory["hit"] == false, "first boss does not end the run")
+	_expect(game.rest_hub != null and game.rest_hub.visible, "rest hub is open")
+	_expect(is_equal_approx(player.player_health, player.max_player_health), "rest fully heals")
+	_expect(game.rest_hub.next_button.disabled, "next stage starts locked")
+	var hp_before: float = player.max_player_health
+	game.rest_hub._on_reward_pressed("max_hp")
+	_expect(player.max_player_health > hp_before + 100.0, "max hp reward applied")
+	_expect(is_equal_approx(player.player_health, player.max_player_health), "max hp reward refills")
+	_expect(not game.rest_hub.next_button.disabled, "next stage unlocks after one reward")
+	var def_before: float = player.damage_reduction
+	game.rest_hub._on_reward_pressed("defense")
+	_expect(is_equal_approx(player.damage_reduction, def_before), "second reward is ignored")
+	game.rest_hub._on_next_pressed()
+	await create_timer(0.2).timeout
+	_expect(spawner.stage == 2, "next stage button starts stage 2, got %s" % spawner.stage)
+	_expect(advanced["stage"] == 2, "stage_advanced emitted 2")
+	_expect(game.rest_hub == null or not game.rest_hub.visible, "rest hub closes")
+	_expect(not paused, "combat pause lifts for stage 2")
 	_expect(spawner._stage_label != null and spawner._stage_label.text == "STAGE 2", "HUD reads STAGE 2")
 	var bg := game.get_node("InfiniteBackground")
 	_expect(bg.tint.r > 0.4 and bg.tint.b < 0.35, "stage 2 tints the ground, tint=%s" % bg.tint)
@@ -113,6 +141,21 @@ func _run() -> void:
 	_expect(spawner.stage_boss_countdown > 20.0, "stage 2 boss is scheduled, countdown=%s" % spawner.stage_boss_countdown)
 	_expect(not spawner.timer.is_stopped(), "stage 2 resumes spawns")
 	_expect(spawner.timer.wait_time < 1.0, "stage 2 spawn timer is faster (%s)" % spawner.timer.wait_time)
+
+	var speed_before: float = player.SPEED
+	player.apply_rest_move_speed(35.0)
+	_expect(is_equal_approx(player.SPEED, speed_before + 35.0), "move speed reward")
+	var cd_scale: float = player.apply_rest_cooldown(0.8)
+	_expect(is_equal_approx(player.can_dasing_timer.wait_time, 2.4), "dash cooldown scaled, wait=%s" % player.can_dasing_timer.wait_time)
+	var gun: Node = game.get_node("Weapon")
+	gun.apply_cooldown_scale(cd_scale)
+	_expect(gun.fire_interval < 0.5, "gun fire interval scaled, interval=%s" % gun.fire_interval)
+	player.hurt_lock = 0.0
+	player.player_health = 200.0
+	player.apply_rest_defense(0.15)
+	player.receive_attack(100.0, null)
+	_expect(player.player_health > 110.0 and player.player_health < 120.0, "defense reduced 100 damage, hp=%s" % player.player_health)
+	player.full_heal()
 
 	spawner._on_boss_defeated()
 	_expect(victory["hit"] == true, "second boss clears the run")

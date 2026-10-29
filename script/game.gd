@@ -23,6 +23,8 @@ var current_level: int = 1
 const DEATH_SLOWMO_SCALE := 0.08
 const DEATH_SLOWMO_SEC := 0.45
 var _death_presented: bool = false
+const REST_HUB_SCENE := preload("res://scenes/rest_hub.tscn")
+var rest_hub: CanvasLayer
 signal game_over(stats: Dictionary)
 
 func _ready() -> void:
@@ -32,6 +34,8 @@ func _ready() -> void:
 	spawner.boss_defeated.connect(on_boss_defeated)
 	if spawner.has_signal("stage_advanced"):
 		spawner.stage_advanced.connect(_on_stage_advanced)
+	if spawner.has_signal("rest_requested"):
+		spawner.rest_requested.connect(_on_rest_requested)
 	if player.has_method("set_dash_cooldown_ui"):
 		player.set_dash_cooldown_ui(dash_cooldown_ring)
 	if equipment_panel and equipment_panel.has_method("reset_equipment"):
@@ -69,6 +73,8 @@ func start_game() -> void:
 func end_game() -> void:
 	clear_run_objects()
 	_reset_skill_controllers()
+	if rest_hub and rest_hub.has_method("close_hub"):
+		rest_hub.close_hub()
 	process_mode = Node.PROCESS_MODE_DISABLED
 	if level_ui:
 		level_ui.hide()
@@ -180,6 +186,52 @@ func on_boss_defeated() -> void:
 	clear_enemies()
 	var stats := _build_run_stats(true)
 	game_over.emit(stats)
+
+func _on_rest_requested() -> void:
+	Engine.time_scale = 1.0
+	if pause_menu and pause_menu.visible:
+		if not pause_menu.upgrade_selected.is_connected(_open_rest_after_level_up):
+			pause_menu.upgrade_selected.connect(_open_rest_after_level_up, CONNECT_ONE_SHOT)
+		return
+	_open_rest_hub()
+
+func _open_rest_after_level_up(_upgrade_id: String) -> void:
+	# Level-up unpauses after the signal returns. Open rest on the next frame.
+	call_deferred("_open_rest_hub")
+
+func _open_rest_hub() -> void:
+	if player and player.has_method("full_heal"):
+		player.full_heal()
+	if rest_hub == null or not is_instance_valid(rest_hub):
+		rest_hub = REST_HUB_SCENE.instantiate()
+		rest_hub.reward_picked.connect(_on_rest_reward)
+		rest_hub.next_stage_pressed.connect(_on_rest_next_stage)
+		add_child(rest_hub)
+	rest_hub.open_hub()
+	get_tree().paused = true
+
+func _on_rest_reward(reward_id: String) -> void:
+	if player == null or rest_hub == null:
+		return
+	match reward_id:
+		"max_hp":
+			player.apply_rest_max_hp(rest_hub.MAX_HP_BONUS)
+		"defense":
+			player.apply_rest_defense(rest_hub.DEFENSE_BONUS)
+		"move_speed":
+			player.apply_rest_move_speed(rest_hub.MOVE_SPEED_BONUS)
+		"cooldown":
+			var scale: float = player.apply_rest_cooldown(rest_hub.COOLDOWN_SCALE)
+			if gun_weapon and gun_weapon.has_method("apply_cooldown_scale"):
+				gun_weapon.apply_cooldown_scale(scale)
+
+func _on_rest_next_stage() -> void:
+	if rest_hub and rest_hub.has_method("close_hub"):
+		rest_hub.close_hub()
+	get_tree().paused = false
+	Engine.time_scale = 1.0
+	if spawner and spawner.has_method("begin_next_stage"):
+		spawner.begin_next_stage()
 
 func _on_stage_advanced(next_stage: int) -> void:
 	Engine.time_scale = 1.0

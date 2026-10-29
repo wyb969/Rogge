@@ -39,6 +39,9 @@ var pickup_range: float
 var left_fist_level: int = 0
 var right_fist_level: int = 0
 var hurt_lock: float = 0.0
+## Boss-rest rewards. damage_reduction is a fraction of incoming hit damage.
+var damage_reduction: float = 0.0
+var cooldown_scale: float = 1.0
 
 func _ready() -> void:
 	health_bar.init_health(player_health)
@@ -52,6 +55,37 @@ func _ready() -> void:
 	var circle_shape := pick_shape.shape as CircleShape2D
 	if circle_shape != null:
 		pickup_range = circle_shape.radius
+
+func full_heal() -> void:
+	hurt_lock = 0.0
+	if dashing:
+		dashing = false
+	if hurt_area:
+		hurt_area.set_deferred("monitoring", true)
+	player_health = max_player_health
+	if health_bar:
+		health_bar.visible = true
+		health_bar.set_health(player_health)
+
+func apply_rest_max_hp(bonus: float) -> void:
+	max_player_health += bonus
+	player_health = max_player_health
+	if health_bar:
+		health_bar.visible = true
+		health_bar.init_health(max_player_health)
+
+func apply_rest_defense(amount: float) -> void:
+	damage_reduction = clampf(damage_reduction + amount, 0.0, 0.6)
+
+func apply_rest_move_speed(bonus: float) -> void:
+	SPEED += bonus
+
+## Returns the cumulative scale applied to dash cooldown (1 = unchanged).
+func apply_rest_cooldown(scale: float) -> float:
+	cooldown_scale = clampf(cooldown_scale * scale, 0.45, 1.0)
+	if can_dasing_timer:
+		can_dasing_timer.wait_time = DASH_COOLDOWN * cooldown_scale
+	return cooldown_scale
 
 func upgrade_left_fist() -> void:
 	left_fist_level += 1
@@ -231,7 +265,8 @@ func receive_attack(amount: float, _source: Node = null) -> void:
 	hurt_lock = 0.18
 	AudioManager.play_hit()
 	play_hit_tween()
-	player_health = max(0.0, player_health - amount)
+	var taken := amount * (1.0 - clampf(damage_reduction, 0.0, 0.6))
+	player_health = max(0.0, player_health - taken)
 	health_bar.set_health(player_health)
 	if player_health <= 0.0:
 		die()

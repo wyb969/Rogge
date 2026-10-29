@@ -33,6 +33,8 @@ var bullet_scale := 0.4
 
 var cool_down:bool = true
 var line_count = 10
+var cooldown_scale: float = 1.0
+var _base_shot_lock: float = 0.064
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -40,6 +42,8 @@ func _ready() -> void:
 	if player:
 		global_position = player.global_position + relative_pos
 		gun_base_position = sprite_2d.position
+	if cool_down_timer:
+		_base_shot_lock = cool_down_timer.wait_time
 	visible = false
 	set_process(false)
 	set_physics_process(false)
@@ -189,13 +193,10 @@ func play_recoil(dir: Vector2) -> void:
 func upgrade()->void:
 	level += 1
 	damage = damage + 10 * level
-	# 可选：等级越高，射速越快，但不要无限快
-	fire_interval = max(0.05, base_fire_interval - 0.08 * (level - 1))
 	if level == 1:
 		visible = true
 		set_process(true)
 		set_physics_process(true)
-		auto_attack_timer.wait_time = base_fire_interval
 		auto_attack_timer.start()
 		pierce = 3
 
@@ -203,7 +204,16 @@ func upgrade()->void:
 		pierce = level*1 + 3
 
 	bullet_scale = (level-1)*0.01 + 0.4
+	_sync_cooldown_timers()
 
-	# 如果你用 Timer 控制自动攻击，需要同步 wait_time
+func apply_cooldown_scale(scale: float) -> void:
+	cooldown_scale = clampf(scale, 0.45, 1.0)
+	_sync_cooldown_timers()
+
+func _sync_cooldown_timers() -> void:
+	var scaled_level := float(maxi(level - 1, 0))
+	fire_interval = maxf(0.05, (base_fire_interval - 0.08 * scaled_level) * cooldown_scale)
 	if auto_attack_timer != null:
 		auto_attack_timer.wait_time = fire_interval
+	if cool_down_timer != null:
+		cool_down_timer.wait_time = maxf(0.02, _base_shot_lock * cooldown_scale)

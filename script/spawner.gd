@@ -9,6 +9,7 @@ extends Node2D
 
 signal boss_defeated
 signal stage_advanced(stage: int)
+signal rest_requested
 
 var distance: float = 560
 var max_enmey_count: int = 40
@@ -25,6 +26,7 @@ var stage: int = 1
 var stage_boss_countdown: float = -1.0
 var _boss_fight_active: bool = false
 var _stage1_boss_cleared: bool = false
+var _rest_open: bool = false
 var _transitioning: bool = false
 var _pattern: Array[int] = []
 var _pattern_i: int = 0
@@ -224,10 +226,27 @@ func spawn_boss() -> void:
 func _on_boss_defeated() -> void:
 	enemy_killed_num += 1
 	_boss_fight_active = false
-	if stage <= 1 and not _stage1_boss_cleared:
-		_enter_stage(2)
+	if stage <= 1 and not _stage1_boss_cleared and not _rest_open:
+		_open_rest_gate()
 		return
 	boss_defeated.emit()
+
+func _open_rest_gate() -> void:
+	_rest_open = true
+	stage_boss_countdown = -1.0
+	if timer:
+		timer.stop()
+	var elite := get_node_or_null("Elite")
+	if elite is Timer:
+		elite.stop()
+	_clear_minions()
+	rest_requested.emit()
+
+func begin_next_stage() -> void:
+	if stage >= 2:
+		return
+	_rest_open = false
+	_enter_stage(2)
 
 func _enter_stage(next_stage: int) -> void:
 	if _transitioning or stage >= next_stage:

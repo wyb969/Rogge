@@ -18,8 +18,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ColorRect" parent="CanvasLayer/Control" unique_id=116583636 instance=ExtResource("2_hrl6p")]
-layout_mode = 0
-anchors_preset = 0
+layout_mode = 1
 
 [node name="BoxContainer" type="VBoxContainer" parent="CanvasLayer/Control" unique_id=1433134900]
 layout_mode = 1
@@ -28,12 +27,20 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -75.5
-offset_top = -60.0
-offset_right = 75.5
-offset_bottom = 60.0
+offset_left = -90.0
+offset_top = -90.0
+offset_right = 90.0
+offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="ResultTitle" type="Label" parent="CanvasLayer/Control/BoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "DEFEAT"
+horizontal_alignment = 1
 
 [node name="KillLabel" type="Label" parent="CanvasLayer/Control/BoxContainer" unique_id=711799183]
 layout_mode = 2

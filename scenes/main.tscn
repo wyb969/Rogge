@@ -4,11 +4,14 @@
 [ext_resource type="PackedScene" uid="uid://dt017iy8db7ce" path="res://scenes/color_rect.tscn" id="2_jyhfs"]
 [ext_resource type="Script" uid="uid://rfhvrtdcoc71" path="res://script/start_button.gd" id="2_sugp2"]
 [ext_resource type="PackedScene" uid="uid://blijgmqawg5pt" path="res://scenes/game_end_ui.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" path="res://scenes/fullscreen_toggle.tscn" id="4_fs"]
 
 [node name="main" type="Node2D" unique_id=1765235295]
 script = ExtResource("1_0wfyh")
 
 [node name="GameRoot" type="Node" parent="." unique_id=1309067047]
+
+[node name="FullscreenToggle" parent="." instance=ExtResource("4_fs")]
 
 [node name="mainUI" type="CanvasLayer" parent="." unique_id=1711144628]
 process_mode = 3

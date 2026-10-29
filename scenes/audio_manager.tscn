@@ -9,31 +9,74 @@
 [ext_resource type="AudioStream" uid="uid://ddwqhbu6pxjqw" path="res://assest/sounds/game_bgm.mp3" id="6_02gw7"]
 [ext_resource type="AudioStream" uid="uid://n76mkbmoa1rg" path="res://assest/sounds/boss_bgm.mp3" id="7_ujhup"]
 [ext_resource type="AudioStream" uid="uid://7savwj7fwag5" path="res://assest/sounds/menu_bgm.mp3" id="8_064dn"]
+[ext_resource type="AudioStream" uid="uid://cmcm01it01kmi" path="res://assest/sounds/victory.mp3" id="9_victory"]
+[ext_resource type="AudioStream" uid="uid://niq1m1dqsrvv" path="res://assest/sounds/game_over.mp3" id="10_gameover"]
+[ext_resource type="AudioStream" path="res://assest/sounds/explosion.wav" id="11_explosion"]
+[ext_resource type="AudioStream" uid="uid://c0mfitid3fqhp" path="res://assest/sounds/power_up.wav" id="12_alarm"]
+[ext_resource type="AudioStream" path="res://assest/sounds/drone_spawn.wav" id="13_drone_spawn"]
+[ext_resource type="AudioStream" path="res://assest/sounds/drone_attack.wav" id="14_drone_attack"]
+[ext_resource type="AudioStream" path="res://assest/sounds/drone_despawn.wav" id="15_drone_despawn"]
 
-[node name="AudioManager" type="Node2D" unique_id=2023769010]
+[node name="AudioManager" type="Node" unique_id=2023769010]
 process_mode = 3
 script = ExtResource("1_aoitu")
 
-[node name="PickCoinAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1074440460]
+[node name="PickCoinAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1074440460]
 stream = ExtResource("1_m6ggh")
+bus = &"Master"
 
-[node name="UpgradeAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1813606566]
+[node name="UpgradeAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1813606566]
 stream = ExtResource("2_aoitu")
+bus = &"Master"
 
-[node name="HurtAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1722265207]
+[node name="HurtAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1722265207]
 stream = ExtResource("3_njtn3")
+bus = &"Master"
 
-[node name="EnemyHurtAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=846134851]
+[node name="EnemyHurtAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=846134851]
 stream = ExtResource("5_ujhup")
+bus = &"Master"
 
-[node name="ShootAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1883618810]
+[node name="ShootAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1883618810]
 stream = ExtResource("4_kq7b2")
+bus = &"Master"
 
-[node name="GameAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=2119867240]
+[node name="GameAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=2119867240]
 stream = ExtResource("6_02gw7")
+bus = &"Master"
 
-[node name="BossAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1631675751]
+[node name="BossAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1631675751]
 stream = ExtResource("7_ujhup")
+bus = &"Master"
 
-[node name="MenuAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1439733836]
+[node name="MenuAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1439733836]
 stream = ExtResource("8_064dn")
+bus = &"Master"
+
+[node name="VictoryAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_victory")
+bus = &"Master"
+
+[node name="GameOverAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_gameover")
+bus = &"Master"
+
+[node name="BossWarningAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_explosion")
+bus = &"Master"
+
+[node name="BossAlarmAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_alarm")
+bus = &"Master"
+
+[node name="DroneSpawnAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_drone_spawn")
+bus = &"Master"
+
+[node name="DroneAttackAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_drone_attack")
+bus = &"Master"
+
+[node name="DroneDespawnAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_drone_despawn")
+bus = &"Master"

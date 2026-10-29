@@ -1,0 +1,42 @@
+[remap]
+
+importer="font_data_dynamic"
+type="FontFile"
+uid="uid://cui5wmuqelnkx"
+path="res://.godot/imported/DroidSansFallback.ttf-ac6cbf4f342cc66dbb4f12a9306371fe.fontdata"
+
+[deps]
+
+source_file="res://assest/fonts/DroidSansFallback.ttf"
+dest_files=["res://.godot/imported/DroidSansFallback.ttf-ac6cbf4f342cc66dbb4f12a9306371fe.fontdata"]
+
+[params]
+
+Rendering=null
+antialiasing=1
+generate_mipmaps=false
+disable_embedded_bitmaps=false
+multichannel_signed_distance_field=false
+msdf_pixel_range=8
+msdf_size=48
+allow_system_fallback=true
+force_autohinter=true
+modulate_color_glyphs=false
+hinting=1
+subpixel_positioning=0
+keep_rounding_remainders=true
+oversampling=0.0
+Fallbacks=null
+fallbacks=[]
+Compress=null
+compress=false
+preload=[{
+"chars": " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.+-%:×/()[].,!?'\"~_Lv级架秒伤害存活间隔射速冻移额外附燃击中冰持续",
+"glyphs": [],
+"name": "web_ui",
+"size": 16,
+"variation_embolden": 0.0
+}]
+language_support={}
+script_support={}
+opentype_features={}

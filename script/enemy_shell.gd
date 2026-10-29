@@ -42,7 +42,6 @@ var slam_windup: float = 0.0
 var slam_time_left: float = 0.0
 var slam_dir: Vector2 = Vector2.ZERO
 var marker_color: Color = Color(0.8, 0.8, 0.85, 1)
-var tag_text: String = "MOB"
 
 # --- Status: burn ---
 var burn_stacks: int = 0
@@ -57,7 +56,6 @@ var freeze_slow: float = 0.5
 var base_modulate: Color = Color.WHITE
 
 func _ready() -> void:
-	_build_tag()
 	queue_redraw()
 	var base := Vector2(body_scale, body_scale)
 	scale = base
@@ -77,23 +75,6 @@ func _draw() -> void:
 func deals_own_contact() -> bool:
 	return true
 
-func _build_tag() -> void:
-	if has_node("ArchetypeTag"):
-		return
-	var tag := Label.new()
-	tag.name = "ArchetypeTag"
-	tag.text = ("!" if is_elite else "") + tag_text
-	tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tag.z_index = 30
-	tag.position = Vector2(-22, -32)
-	var inv := 1.0 / maxf(body_scale, 0.2)
-	tag.scale = Vector2(inv, inv)
-	UiFonts.apply_to_label(tag, 12, true)
-	tag.add_theme_color_override("font_color", marker_color)
-	tag.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
-	tag.add_theme_constant_override("outline_size", 4)
-	add_child(tag)
-
 func set_enemy_data(data: EnemyData) -> void:
 	if data == null:
 		return
@@ -111,7 +92,6 @@ func set_enemy_data(data: EnemyData) -> void:
 	body_scale = maxf(data.body_scale, 0.4)
 	base_modulate = data.tint
 	marker_color = data.marker_color
-	tag_text = data.tag_text()
 	contact_damage = data.contact_damage
 	contact_cooldown = data.contact_cooldown
 	contact_radius = data.contact_radius
@@ -140,7 +120,6 @@ func set_elite_status() -> void:
 	health *= 1.75
 	contact_damage *= 1.2
 	projectile_damage *= 1.15
-	tag_text = "!" + tag_text
 
 func setHealth(hp: float) -> void:
 	health = hp

@@ -38,9 +38,9 @@ func _run() -> void:
 	_expect(dasher.body_scale < 0.9, "dasher is small, scale=%s" % dasher.body_scale)
 	_expect(tank.body_scale > 1.6, "tank is large, scale=%s" % tank.body_scale)
 	_expect(dasher.deals_own_contact(), "dasher owns contact so player hurtbox does not double-hit")
-	_expect(_tag(dasher) == "DASH", "dasher tag is %s" % _tag(dasher))
-	_expect(_tag(tank) == "TANK", "tank tag is %s" % _tag(tank))
-	_expect(_tag(ranged) == "SHOT", "ranged tag is %s" % _tag(ranged))
+	_expect(_has_no_nameplate(dasher) and _has_no_nameplate(tank) and _has_no_nameplate(ranged) and _has_no_nameplate(chaser), "enemies have no floating name tags")
+	_expect(dasher.base_modulate.r > dasher.base_modulate.b, "dasher tint is warm")
+	_expect(tank.base_modulate.b > tank.base_modulate.r, "tank tint is cool")
 
 	var tank_hp_before: float = tank.health
 	tank.take_damage(100.0)
@@ -157,11 +157,13 @@ func _spawn(spawner: Node, data: EnemyData, offset: Vector2) -> Node:
 	enemy.global_position = spawner.player.global_position + offset
 	return enemy
 
-func _tag(enemy: Node) -> String:
-	var tag := enemy.get_node_or_null("ArchetypeTag")
-	if tag == null:
-		return ""
-	return str(tag.text)
+func _has_no_nameplate(enemy: Node) -> bool:
+	if enemy.get_node_or_null("ArchetypeTag") != null:
+		return false
+	for child in enemy.get_children():
+		if child is Label:
+			return false
+	return true
 
 func _expect(ok: bool, message: String) -> void:
 	if not ok:

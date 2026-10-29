@@ -24,14 +24,3 @@ enum Archetype { CHASER, DASHER, TANK, RANGED }
 @export var projectile_damage: float = 36.0
 @export var projectile_speed: float = 240.0
 @export var attack_cooldown: float = 1.4
-
-func tag_text() -> String:
-	match archetype:
-		Archetype.DASHER:
-			return "DASH"
-		Archetype.TANK:
-			return "TANK"
-		Archetype.RANGED:
-			return "SHOT"
-		_:
-			return "MOB"

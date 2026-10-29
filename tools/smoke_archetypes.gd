@@ -116,6 +116,22 @@ func _run() -> void:
 
 	spawner._on_boss_defeated()
 	_expect(victory["hit"] == true, "second boss clears the run")
+	_expect(is_equal_approx(Engine.time_scale, 1.0), "victory does not add slow-mo")
+
+	var defeats := {"n": 0}
+	game.game_over.connect(func(stats: Dictionary) -> void:
+		if not stats.get("victory", false):
+			defeats["n"] += 1
+	)
+	player.player_health = 1.0
+	player.hurt_lock = 0.0
+	player.receive_attack(80.0, null)
+	_expect(Engine.time_scale > 0.0 and Engine.time_scale < 0.2, "death enters slow-mo, scale=%s" % Engine.time_scale)
+	_expect(game.get_node_or_null("DeathSlowmoVeil") != null, "death veil is visible during slow-mo")
+	_expect(defeats["n"] == 0, "defeat UI waits until the slow-mo beat ends")
+	await create_timer(0.8).timeout
+	_expect(is_equal_approx(Engine.time_scale, 1.0), "death slow-mo restores time, scale=%s" % Engine.time_scale)
+	_expect(defeats["n"] == 1, "defeat result follows the slow-mo")
 
 	if _failures.is_empty():
 		print("SMOKE OK")

@@ -218,7 +218,7 @@ func _request_hitstop(scale: float, duration_real: float) -> void:
 	var token := hitstop_token
 	Engine.time_scale = scale
 	await get_tree().create_timer(duration_real, true, true).timeout
-	if token == hitstop_token and not is_dying:
+	if token == hitstop_token and not is_dying and not get_tree().has_meta("player_death_slowmo"):
 		Engine.time_scale = 1.0
 
 func _spawn_hit_particles(hit_dir: Vector2) -> void:

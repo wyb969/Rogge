@@ -18,6 +18,11 @@ extends Node2D
 @onready var freeze_controller: Node2D = $FreezeController
 
 var current_level: int = 1
+## Near-freeze on death so the killing hit stays on screen.
+## Real-time length stays under the boss defeat slow-mo (~0.98s).
+const DEATH_SLOWMO_SCALE := 0.08
+const DEATH_SLOWMO_SEC := 0.45
+var _death_presented: bool = false
 signal game_over(stats: Dictionary)
 
 func _ready() -> void:
@@ -127,10 +132,48 @@ func _on_upgrade_selected(upgrade_id: String):
 func on_coin_collected(amount: int = 2) -> void:
 	level_manager.add_coin(amount)
 
-func on_player_died():
+func on_player_died() -> void:
+	if _death_presented:
+		return
+	_death_presented = true
+	# Hold the world almost still, then hand off to the existing result UI.
+	# Step frame-by-frame on the wall clock. A single SceneTreeTimer can be
+	# swallowed by one long browser frame and skip the beat entirely.
+	get_tree().set_meta("player_death_slowmo", true)
+	Engine.time_scale = DEATH_SLOWMO_SCALE
+	var veil := _show_death_veil()
+	await _hold_death_beat()
+	if is_instance_valid(veil):
+		veil.queue_free()
+	if get_tree().has_meta("player_death_slowmo"):
+		get_tree().remove_meta("player_death_slowmo")
 	Engine.time_scale = 1.0
+	if not is_inside_tree():
+		return
 	var stats := _build_run_stats(false)
 	game_over.emit(stats)
+
+func _hold_death_beat() -> void:
+	# Wall-clock loop. OS.delay_msec is a no-op on the web export, and a
+	# single SceneTreeTimer can expire inside one long browser frame.
+	var started := Time.get_ticks_msec()
+	var limit := int(DEATH_SLOWMO_SEC * 1000.0)
+	while Time.get_ticks_msec() - started < limit:
+		Engine.time_scale = DEATH_SLOWMO_SCALE
+		await get_tree().process_frame
+
+func _show_death_veil() -> CanvasLayer:
+	var layer := CanvasLayer.new()
+	layer.name = "DeathSlowmoVeil"
+	layer.layer = 90
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(layer)
+	var rect := ColorRect.new()
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect.color = Color(0.7, 0.05, 0.04, 0.34)
+	layer.add_child(rect)
+	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	return layer
 
 func on_boss_defeated() -> void:
 	Engine.time_scale = 1.0

@@ -10,6 +10,7 @@ func _run() -> void:
 	root.add_child(main)
 	await process_frame
 	await process_frame
+	_check_keys(failures)
 	await _check_menu(main, Vector2i(390, 844), "portrait", failures)
 	await _check_menu(main, Vector2i(900, 500), "landscape", failures)
 	var end_ui: Node = main.get_node("GameEndUI")
@@ -27,6 +28,26 @@ func _run() -> void:
 			print("MENU LAYOUT FAIL: ", failure)
 		quit(1)
 
+func _check_keys(failures: Array[String]) -> void:
+	if not _action_has_key("up", KEY_W) or not _action_has_key("up", KEY_UP):
+		failures.append("up is missing W or arrow")
+	if not _action_has_key("down", KEY_S) or not _action_has_key("down", KEY_DOWN):
+		failures.append("down is missing S or arrow")
+	if not _action_has_key("left", KEY_A) or not _action_has_key("left", KEY_LEFT):
+		failures.append("left is missing A or arrow")
+	if not _action_has_key("right", KEY_D) or not _action_has_key("right", KEY_RIGHT):
+		failures.append("right is missing D or arrow")
+	if not _action_has_key("roll", KEY_Z):
+		failures.append("dash is missing Z")
+
+func _action_has_key(action: StringName, keycode: Key) -> bool:
+	if not InputMap.has_action(action):
+		return false
+	for event in InputMap.action_get_events(action):
+		if event is InputEventKey and (event as InputEventKey).physical_keycode == keycode:
+			return true
+	return false
+
 func _set_viewport(size: Vector2i) -> void:
 	root.size = size
 	await process_frame
@@ -37,11 +58,17 @@ func _check_menu(main: Node, size: Vector2i, label: String, failures: Array[Stri
 	var start: Button = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/StartButton")
 	var settings: Button = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/SettingButton")
 	var title: Label = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/TitleLabel")
+	var hint: Label = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/ControlsHint")
 	var vp := root.get_visible_rect().size
 	_check_background(main.get_node("mainUI/Control/ColorRect/TextureRect"), label, failures)
 	_expect_inside(start, vp, "start %s" % label, failures)
 	_expect_inside(settings, vp, "settings %s" % label, failures)
 	_expect_inside(title, vp, "title %s" % label, failures)
+	_expect_inside(hint, vp, "controls hint %s" % label, failures)
+	if not hint.text.contains("WASD") or not hint.text.contains("Z"):
+		failures.append("controls hint %s missing keyboard keys" % label)
+	if not hint.text.contains("方向键") or not hint.text.contains("摇杆"):
+		failures.append("controls hint %s missing touch or arrow text" % label)
 	if start.custom_minimum_size.y < 48.0:
 		failures.append("start %s button is too short (%s)" % [label, start.custom_minimum_size])
 	if start.custom_minimum_size.x > vp.x - 16.0:

@@ -64,6 +64,15 @@ theme_override_font_sizes/font_size = 30
 text = "Settings"
 script = ExtResource("2_sugp2")
 
+[node name="ControlsHint" type="Label" parent="mainUI/Control/MenuCenter/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "WASD / 方向键 移动
+Z 冲刺
+触屏：左侧摇杆移动，右侧 DASH 冲刺"
+horizontal_alignment = 1
+autowrap_mode = 3
+
 [node name="GameEndUI" parent="." unique_id=776507437 instance=ExtResource("3_sugp2")]
 
 [connection signal="pressed" from="mainUI/Control/MenuCenter/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]

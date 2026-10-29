@@ -15,6 +15,7 @@ var fullscreen_toggle: CanvasLayer = null
 var settings_page: CanvasLayer = null
 
 func _ready() -> void:
+	_ensure_keyboard_actions()
 	main_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	game_end_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	# Warm web glyph atlases so upgrade card digits never tofu.
@@ -30,6 +31,27 @@ func _ready() -> void:
 
 	show_main_menu()
 
+
+func _ensure_keyboard_actions() -> void:
+	_bind_key("up", KEY_W)
+	_bind_key("up", KEY_UP)
+	_bind_key("down", KEY_S)
+	_bind_key("down", KEY_DOWN)
+	_bind_key("left", KEY_A)
+	_bind_key("left", KEY_LEFT)
+	_bind_key("right", KEY_D)
+	_bind_key("right", KEY_RIGHT)
+	_bind_key("roll", KEY_Z)
+
+func _bind_key(action: StringName, keycode: Key) -> void:
+	if not InputMap.has_action(action):
+		InputMap.add_action(action)
+	for event in InputMap.action_get_events(action):
+		if event is InputEventKey and (event as InputEventKey).physical_keycode == keycode:
+			return
+	var key := InputEventKey.new()
+	key.physical_keycode = keycode
+	InputMap.action_add_event(action, key)
 
 func _ensure_mobile_controls() -> void:
 	if mobile_controls != null and is_instance_valid(mobile_controls):

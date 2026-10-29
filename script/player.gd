@@ -346,9 +346,14 @@ func pick_up_upgrade(scale: float):
 func _physics_process(delta: float) -> void:
 	if hurt_lock > 0.0:
 		hurt_lock = maxf(0.0, hurt_lock - delta)
-	var input_direction := Input.get_vector("left", "right", "up", "down")
+	var keys := Input.get_vector("left", "right", "up", "down")
+	var input_direction := keys
+	# Touch and keys stay live together. A resting stick does not block WASD.
 	if MobileInput.controls_enabled and MobileInput.has_move_input():
-		input_direction = MobileInput.move_vector
+		if keys.length_squared() > 0.01:
+			input_direction = (keys + MobileInput.move_vector).limit_length(1.0)
+		else:
+			input_direction = MobileInput.move_vector
 
 	var look_target := get_global_mouse_position()
 	# On touch / web, aim along move or current velocity instead of mouse.

@@ -25,6 +25,8 @@ func _ready() -> void:
 	pause_menu.upgrade_selected.connect(_on_upgrade_selected)
 	player.player_died.connect(on_player_died)
 	spawner.boss_defeated.connect(on_boss_defeated)
+	if spawner.has_signal("stage_advanced"):
+		spawner.stage_advanced.connect(_on_stage_advanced)
 	if player.has_method("set_dash_cooldown_ui"):
 		player.set_dash_cooldown_ui(dash_cooldown_ring)
 	if equipment_panel and equipment_panel.has_method("reset_equipment"):
@@ -136,12 +138,25 @@ func on_boss_defeated() -> void:
 	var stats := _build_run_stats(true)
 	game_over.emit(stats)
 
+func _on_stage_advanced(next_stage: int) -> void:
+	Engine.time_scale = 1.0
+	var bg := get_node_or_null("InfiniteBackground")
+	if bg != null and bg.has_method("set_stage_tint"):
+		if next_stage >= 2:
+			bg.set_stage_tint(Color(0.46, 0.2, 0.24, 1.0))
+	if AudioManager.has_method("play_game_bgm"):
+		AudioManager.play_game_bgm()
+
 func _build_run_stats(victory: bool) -> Dictionary:
+	var stage_num := 1
+	if spawner != null and "stage" in spawner:
+		stage_num = int(spawner.stage)
 	return {
 		"minutes": spawner.minute,
 		"seconds": spawner.second,
 		"kills": spawner.enemy_killed_num,
 		"level": current_level,
+		"stage": stage_num,
 		"victory": victory
 	}
 

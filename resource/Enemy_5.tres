@@ -5,8 +5,20 @@
 
 [resource]
 script = ExtResource("1_ctrb0")
-title = "enemy5"
+title = "dasher"
 sprite = ExtResource("2_foj06")
-health = 35.0
-demage = 2.5
+health = 16.0
+damage = 4.0
+archetype = 1
+move_speed = 112.0
+defense = 0.0
+body_scale = 0.74
+tint = Color(1.35, 0.48, 0.38, 1)
+marker_color = Color(1, 0.28, 0.18, 1)
+contact_damage = 74.0
+contact_cooldown = 0.65
+contact_radius = 22.0
+dash_speed = 360.0
+dash_cooldown = 1.2
+attack_cooldown = 1.2
 metadata/_custom_type_script = "uid://dsf6o758y6et0"

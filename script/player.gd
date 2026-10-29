@@ -38,6 +38,7 @@ var pickup_range: float
 ## Left / right fist stance levels (0 = not owned).
 var left_fist_level: int = 0
 var right_fist_level: int = 0
+var hurt_lock: float = 0.0
 
 func _ready() -> void:
 	health_bar.init_health(player_health)
@@ -109,6 +110,8 @@ func pick_up_upgrade(scale: float):
 	circle_shape.radius = pickup_range
 
 func _physics_process(delta: float) -> void:
+	if hurt_lock > 0.0:
+		hurt_lock = maxf(0.0, hurt_lock - delta)
 	var input_direction := Input.get_vector("left", "right", "up", "down")
 	if MobileInput.controls_enabled and MobileInput.has_move_input():
 		input_direction = MobileInput.move_vector
@@ -214,19 +217,27 @@ func _on_can_dasing_timer_timeout() -> void:
 		if dash_cooldown_ring.has_method("play_ready_bounce"):
 			dash_cooldown_ring.play_ready_bounce()
 
-func _on_area_2d_body_entered(_body: Node2D) -> void:
-	get_hit()
-
-func get_hit() -> void:
-	if dashing:
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body != null and body.has_method("deals_own_contact") and body.deals_own_contact():
 		return
+	var amount := 60.0
+	if body != null and body.has_method("get_touch_damage"):
+		amount = float(body.get_touch_damage())
+	receive_attack(amount, body)
+
+func receive_attack(amount: float, _source: Node = null) -> void:
+	if dashing or amount <= 0.0 or hurt_lock > 0.0 or player_health <= 0.0:
+		return
+	hurt_lock = 0.18
 	AudioManager.play_hit()
 	play_hit_tween()
-	player_health = player_health - 60
-	player_health = max(0, player_health)
+	player_health = max(0.0, player_health - amount)
 	health_bar.set_health(player_health)
-	if player_health <= 0:
+	if player_health <= 0.0:
 		die()
+
+func get_hit() -> void:
+	receive_attack(60.0, null)
 
 func play_hit_tween() -> void:
 	var tween = get_tree().create_tween()

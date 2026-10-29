@@ -9,7 +9,7 @@ const PIXEL_BOLD_PATH := "res://assest/fonts/PixelOperator8-Bold.ttf"
 const CJK_PATH := "res://assest/fonts/DroidSansFallback.ttf"
 
 ## Chars that must never tofu on web (digits / punctuation / level tags).
-const PREWARM_CHARS := "0123456789.+-%:×xXvVlL!?BOSSCOMING /()[]，。！？、·~"
+const PREWARM_CHARS := "0123456789.+-%:×xXvVlL!?BOSSCOMINGSTAGE DASH TANK SHOT MOB /()[]，。！？、·~"
 
 static var _ui: Font
 static var _ui_bold: Font

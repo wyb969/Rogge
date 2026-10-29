@@ -42,7 +42,7 @@ func show_result(stats: Dictionary) -> void:
 
 	time_label.text = "Survived: %02d:%02d" % [minutes, seconds]
 	kill_label.text = "Kills: %d" % stats.get("kills", 0)
-	level_label.text = "Level: %d" % stats.get("level", 1)
+	level_label.text = "Level: %d    Stage: %d" % [stats.get("level", 1), int(stats.get("stage", 1))]
 
 func hide_result() -> void:
 	root_ui.hide()

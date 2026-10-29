@@ -5,8 +5,21 @@
 
 [resource]
 script = ExtResource("1_imclw")
-title = "enemy4"
+title = "ranged"
 sprite = ExtResource("2_wqrpw")
-health = 34.0
-demage = 2.4
+health = 26.0
+damage = 1.2
+archetype = 3
+move_speed = 44.0
+defense = 0.05
+body_scale = 1.0
+tint = Color(0.78, 1.25, 0.5, 1)
+marker_color = Color(0.95, 0.82, 0.15, 1)
+contact_damage = 18.0
+contact_cooldown = 0.9
+contact_radius = 18.0
+preferred_range = 200.0
+projectile_damage = 38.0
+projectile_speed = 250.0
+attack_cooldown = 1.35
 metadata/_custom_type_script = "uid://dsf6o758y6et0"

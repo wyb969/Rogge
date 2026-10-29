@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://c8enemyproj01"]
+
+[ext_resource type="Script" uid="uid://bba4h5q6h2pfe" path="res://script/enemy_projectile.gd" id="1_proj"]
+
+[node name="EnemyProjectile" type="Node2D"]
+z_index = 8
+script = ExtResource("1_proj")

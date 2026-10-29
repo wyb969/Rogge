@@ -5,9 +5,13 @@ extends Node2D
 @onready var label: Label = $CanvasLayer/Label
 @onready var flash: ColorRect = $CanvasLayer/Flash
 
-const WARNING_TEXT := "BOSS IS COMING!!!"
-const SHAKE_DURATION := 1.8
-const SHAKE_STRENGTH := 14.0
+@export var banner_text: String = "BOSS IS COMING!!!"
+@export var banner_color: Color = Color(1.0, 0.82, 0.25, 1.0)
+@export var flash_tint: Color = Color(0.75, 0.05, 0.02, 1.0)
+@export var outline_color: Color = Color(0.55, 0.08, 0.05, 1.0)
+@export var shake_strength: float = 14.0
+@export var shake_duration: float = 1.8
+@export var play_alarm: bool = true
 
 var _shake_camera: Camera2D
 var _shake_origin: Vector2 = Vector2.ZERO
@@ -22,22 +26,24 @@ func _ready() -> void:
 	_setup_flash()
 	_bind_camera()
 
-	if AudioManager and AudioManager.has_method("play_boss_warning"):
+	if play_alarm and AudioManager and AudioManager.has_method("play_boss_warning"):
 		AudioManager.play_boss_warning()
+	elif AudioManager and AudioManager.has_method("play_upgrade"):
+		AudioManager.play_upgrade()
 
-	_shake_time = SHAKE_DURATION
+	_shake_time = shake_duration
 	set_process(true)
 	await _play_banner_tween()
 	queue_free()
 
 func _setup_label() -> void:
-	label.text = WARNING_TEXT
+	label.text = banner_text
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	# ASCII "!" — fullwidth Chinese ！ was tofu on web.
 	UiFonts.apply_to_label(label, 40, true)
-	label.add_theme_color_override("font_color", Color(1.0, 0.82, 0.25, 1.0))
-	label.add_theme_color_override("font_outline_color", Color(0.55, 0.08, 0.05, 1.0))
+	label.add_theme_color_override("font_color", banner_color)
+	label.add_theme_color_override("font_outline_color", outline_color)
 	label.add_theme_constant_override("outline_size", 10)
 	label.modulate.a = 0.0
 	label.scale = Vector2(0.7, 0.7)
@@ -53,7 +59,7 @@ func _setup_flash() -> void:
 	if flash == null:
 		return
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	flash.color = Color(0.75, 0.05, 0.02, 0.0)
+	flash.color = Color(flash_tint.r, flash_tint.g, flash_tint.b, 0.0)
 	flash.set_anchors_preset(Control.PRESET_FULL_RECT)
 
 func _bind_camera() -> void:
@@ -70,8 +76,9 @@ func _process(delta: float) -> void:
 	if _shake_time <= 0.0 or _shake_camera == null or not is_instance_valid(_shake_camera):
 		return
 	_shake_time -= delta
-	var t := clampf(_shake_time / SHAKE_DURATION, 0.0, 1.0)
-	var mag := SHAKE_STRENGTH * t * t
+	var duration := maxf(shake_duration, 0.001)
+	var t := clampf(_shake_time / duration, 0.0, 1.0)
+	var mag := shake_strength * t * t
 	_shake_camera.offset = _shake_origin + Vector2(
 		randf_range(-mag, mag),
 		randf_range(-mag, mag)

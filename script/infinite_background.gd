@@ -131,6 +131,11 @@ func _update_decorations(center: Vector2, half: Vector2) -> void:
 		_decor_sprites[idx].visible = false
 		idx += 1
 
+func set_stage_tint(color: Color) -> void:
+	tint = color
+	if _shader_mat:
+		_shader_mat.set_shader_parameter("tint", Vector4(color.r, color.g, color.b, color.a))
+
 func _cell_hash(x: int, y: int) -> int:
 	var n := x * 374761393 + y * 668265263
 	n = (n ^ (n >> 13)) * 1274126177

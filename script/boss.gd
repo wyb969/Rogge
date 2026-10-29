@@ -20,13 +20,30 @@ var rush_ready_time: float = 0.6
 
 var is_dying: bool = false
 var base_sprite_scale: Vector2 = Vector2(8, 8)
+var sprite_tint: Color = Color.WHITE
+var fight_stage: int = 1
 var hurt_tween: Tween
 var hitstop_token: int = 0
 var last_hitstop_msec: int = 0
 const HITSTOP_COOLDOWN_MSEC := 180
 
+func configure_stage(stage: int) -> void:
+	fight_stage = maxi(stage, 1)
+
+func get_touch_damage() -> float:
+	return 95.0 if fight_stage >= 2 else 60.0
+
 func _ready() -> void:
+	if fight_stage >= 2:
+		health_max_value = 3600.0
+		charge_speed = 760.0
+		rush_ready_time = 0.42
+		if rush_timer:
+			rush_timer.wait_time = 0.7
+		sprite_2d.modulate = Color(1.2, 0.75, 1.3, 1.0)
+		sprite_2d.scale *= 1.06
 	base_sprite_scale = sprite_2d.scale
+	sprite_tint = sprite_2d.modulate
 	_setup_health_bar()
 	health_bar.init_health(health_max_value)
 	boss_current_health = health_max_value
@@ -75,7 +92,7 @@ func show_warning_line_and_then_charge(target_pos: Vector2) -> void:
 	get_tree().current_scene.add_child(line)
 
 	var tween = create_tween()
-	tween.tween_interval(0.6)
+	tween.tween_interval(rush_ready_time)
 	tween.tween_property(line, "modulate:a", 0.0, 0.2)
 	tween.tween_callback(line.queue_free)
 	tween.tween_callback(start_moving_charge)
@@ -92,7 +109,8 @@ func stop_charge() -> void:
 	is_charging = false
 	animation_player.play("idle")
 	velocity = Vector2.ZERO
-	await get_tree().create_timer(0.6).timeout
+	var recover := 0.42 if fight_stage >= 2 else 0.6
+	await get_tree().create_timer(recover).timeout
 	if is_dying:
 		return
 	rush_timer.start()
@@ -185,7 +203,7 @@ func _play_hit_deform(hit_dir: Vector2) -> void:
 	hurt_tween.tween_property(sprite_2d, "scale", squash, 0.02).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	hurt_tween.tween_property(sprite_2d, "position", origin + knock_offset, 0.02)
 	hurt_tween.set_parallel(false)
-	hurt_tween.tween_property(sprite_2d, "modulate", Color.WHITE, 0.04)
+	hurt_tween.tween_property(sprite_2d, "modulate", sprite_tint, 0.04)
 	hurt_tween.set_parallel(true)
 	hurt_tween.tween_property(sprite_2d, "scale", base_sprite_scale, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	hurt_tween.tween_property(sprite_2d, "position", origin, 0.06)

@@ -13,7 +13,6 @@ var knockback_decay: float = 10.0
 var health: float = 10
 var damage: float = 2
 var is_elite: bool = false
-var tween: Tween
 var hurt_tween: Tween
 signal death_signal
 
@@ -54,20 +53,17 @@ const BURN_SPREAD_RADIUS := 78.0
 var freeze_time: float = 0.0
 var freeze_slow: float = 0.5
 var base_modulate: Color = Color.WHITE
+var _sprite_base_scale: Vector2 = Vector2.ONE
+var _wobble: float = 0.0
+var _move_effort: float = 0.0
+var _hit_squash: float = 0.0
 
 func _ready() -> void:
 	queue_redraw()
-	var base := Vector2(body_scale, body_scale)
-	scale = base
+	_apply_body_scale()
 	if sprite_2d:
+		_sprite_base_scale = sprite_2d.scale
 		sprite_2d.modulate = base_modulate
-	tween = create_tween()
-	tween.bind_node(self)
-	tween.set_trans(Tween.TRANS_ELASTIC)
-	tween.set_ease(Tween.EASE_OUT)
-	tween.set_loops()
-	tween.tween_property(self, "scale", base * 1.08, 0.2)
-	tween.tween_property(self, "scale", base, 0.4)
 
 func _draw() -> void:
 	draw_circle(Vector2(0, 14), 3.4, marker_color)
@@ -103,6 +99,8 @@ func set_enemy_data(data: EnemyData) -> void:
 	attack_cooldown = data.attack_cooldown
 	attack_timer = minf(0.55, attack_cooldown)
 	dash_timer = 0.35
+	_sprite_base_scale = ($Sprite2D as Sprite2D).scale
+	_apply_body_scale()
 
 func set_elite_status() -> void:
 	is_elite = true
@@ -117,6 +115,7 @@ func set_elite_status() -> void:
 		mat.set_shader_parameter("frame_uv_rect", Vector4(0.0, 0.0, fw, fh))
 	sprite.material = mat
 	body_scale *= 1.28
+	_apply_body_scale()
 	health *= 1.75
 	contact_damage *= 1.2
 	projectile_damage *= 1.15
@@ -175,6 +174,7 @@ func _physics_process(delta: float) -> void:
 	if is_instance_valid(player_reference):
 		_try_contact(global_position.distance_to(player_reference.global_position))
 	_face(dir)
+	_apply_move_juice(delta)
 
 func _steer_chaser(dir: Vector2, move_speed: float) -> void:
 	velocity = dir * move_speed
@@ -307,6 +307,58 @@ func _try_contact(dist: float) -> void:
 		return
 	player_reference.receive_attack(dmg, self)
 	contact_timer = cd
+
+func _apply_body_scale() -> void:
+	scale = Vector2(body_scale, body_scale)
+
+## Full-speed wobble in Hz. Small/fast bodies cycle faster; tanks stay slow.
+## speed 56 and body_scale 1 is the chaser baseline (~3.2 Hz).
+func move_wobble_hz() -> float:
+	var profile := _juice_profile()
+	var quickness := clampf(speed / 56.0, 0.35, 2.6) / clampf(body_scale, 0.55, 2.2)
+	return clampf(3.2 * quickness * profile.x, 1.05, 7.5)
+
+func _juice_profile() -> Vector3:
+	# x frequency, y lean, z squash. Multiplies the speed/size baseline.
+	match archetype:
+		EnemyData.Archetype.DASHER:
+			return Vector3(1.25, 1.05, 1.45)
+		EnemyData.Archetype.TANK:
+			return Vector3(0.72, 1.4, 0.8)
+		EnemyData.Archetype.RANGED:
+			return Vector3(0.95, 0.9, 0.9)
+		_:
+			return Vector3(1.0, 1.0, 1.0)
+
+func _apply_move_juice(delta: float) -> void:
+	if sprite_2d == null:
+		return
+	var cruise := maxf(speed, 8.0)
+	var target := clampf(velocity.length() / cruise, 0.0, 1.45)
+	if is_dashing:
+		target = maxf(target, 1.2)
+	_move_effort = move_toward(_move_effort, target, delta * 7.0)
+	_hit_squash = maxf(0.0, _hit_squash - delta * 5.0)
+	var effort := _move_effort
+	_wobble += delta * TAU * move_wobble_hz() * maxf(effort, 0.0)
+	var profile := _juice_profile()
+	var size_factor := clampf(body_scale, 0.55, 2.2)
+	var quickness := clampf(speed / 56.0, 0.35, 2.6) / size_factor
+	# Lean and squash are large enough to read on the small enemy sprites.
+	# Bigger bodies lean less sharply; their lower Hz is what makes them feel heavy.
+	var lean := deg_to_rad(clampf(14.0 + 8.0 / size_factor, 12.0, 26.0) * profile.y) * effort
+	var stretch := clampf(0.14 * quickness * profile.z, 0.1, 0.34) * effort
+	var step := sin(_wobble)
+	var squash := sin(_wobble * 2.0)
+	var sx := 1.0 + squash * stretch + _hit_squash * 0.28
+	var sy := 1.0 - squash * stretch * 0.9 - _hit_squash * 0.2
+	if dash_windup > 0.0 or slam_windup > 0.0 or shot_windup > 0.0:
+		sx *= 1.16
+		sy *= 0.84
+	sprite_2d.rotation = step * lean
+	sprite_2d.scale = Vector2(_sprite_base_scale.x * sx, _sprite_base_scale.y * sy)
+	var sway := (6.5 / size_factor) * effort
+	sprite_2d.position = Vector2(step * sway, -abs(squash) * (3.5 + stretch * 14.0))
 
 func _face(dir: Vector2) -> void:
 	if sprite_2d == null:
@@ -464,14 +516,13 @@ func play_hit_tween(direction: Vector2):
 		return
 	if hurt_tween != null and hurt_tween.is_valid():
 		hurt_tween.kill()
-	var resting := Vector2(body_scale, body_scale)
+	_hit_squash = 1.0
 	hurt_tween = get_tree().create_tween()
 	hurt_tween.set_trans(Tween.TRANS_ELASTIC)
 	hurt_tween.set_ease(Tween.EASE_OUT)
 	hurt_tween.set_loops(1)
 	hurt_tween.bind_node(self)
 	hurt_tween.tween_property(self, "position", global_position + direction * 10, 0.5)
-	hurt_tween.parallel().tween_property(self, "scale", resting, 0.5).from(resting * 1.25)
 	hurt_tween.parallel().tween_property(sprite_2d, "modulate", Color.RED, 0.4)
 	hurt_tween.tween_callback(func():
 		if not is_instance_valid(sprite_2d):

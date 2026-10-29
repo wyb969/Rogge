@@ -41,6 +41,18 @@ func _run() -> void:
 	_expect(_has_no_nameplate(dasher) and _has_no_nameplate(tank) and _has_no_nameplate(ranged) and _has_no_nameplate(chaser), "enemies have no floating name tags")
 	_expect(dasher.base_modulate.r > dasher.base_modulate.b, "dasher tint is warm")
 	_expect(tank.base_modulate.b > tank.base_modulate.r, "tank tint is cool")
+	_expect(dasher.move_wobble_hz() > chaser.move_wobble_hz(), "dasher wobbles faster than a chaser, hz=%s" % dasher.move_wobble_hz())
+	_expect(chaser.move_wobble_hz() > tank.move_wobble_hz() * 1.8, "tank wobbles slower than a chaser, tank=%s chaser=%s" % [tank.move_wobble_hz(), chaser.move_wobble_hz()])
+	var body_before: Vector2 = dasher.scale
+	dasher.velocity = Vector2(dasher.speed, 0.0)
+	dasher._apply_move_juice(0.08)
+	_expect(dasher.scale.is_equal_approx(body_before), "move juice leaves the body scale alone")
+	_expect(absf(dasher.sprite_2d.rotation) > 0.01, "moving sprite leans, rot=%s" % dasher.sprite_2d.rotation)
+	dasher.velocity = Vector2.ZERO
+	dasher._move_effort = 0.0
+	dasher._hit_squash = 0.0
+	dasher._apply_move_juice(0.05)
+	_expect(absf(dasher.sprite_2d.rotation) < 0.001, "sprite settles when stopped")
 
 	var tank_hp_before: float = tank.health
 	tank.take_damage(100.0)

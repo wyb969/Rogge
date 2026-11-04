@@ -147,10 +147,15 @@ func _physics_process(delta: float) -> void :
 	_contact_left = maxf(0, _contact_left - delta)
 	match charge_state:
 		ChargeState.WAIT:
+			update_facing_direction(player.global_position)
+			velocity = Vector2.ZERO
 			if not rush_timer.is_stopped():
 				var offset: = player.global_position - global_position
 				velocity = offset.normalized() * (72 if enraged() else 58) * poison_slow if offset.length() > 135 else offset.normalized().orthogonal() * 22 * poison_slow
 				move_and_collide(velocity * delta)
+			var animation: StringName = &"walk" if velocity.length_squared() > 1.0 else &"idle"
+			if animation_player.current_animation != animation or not animation_player.is_playing():
+				animation_player.play(animation)
 		ChargeState.WARN:
 			_state_left = maxf(0, _state_left - delta)
 			if not warning_locked:
@@ -173,6 +178,7 @@ func _physics_process(delta: float) -> void :
 			if collision != null or _distance_left <= 0.001 or _state_left <= 0:
 				stop_charge()
 		ChargeState.RECOVER:
+			update_facing_direction(player.global_position)
 			_state_left = maxf(0, _state_left - delta)
 			if _state_left <= 0:
 				charge_state = ChargeState.WAIT
@@ -207,11 +213,14 @@ func start_charge_attack(chained: bool = false) -> void :
 		_attack_round += 1
 		_combo_left = 1 if enraged() and _attack_round % 2 == 0 else 0
 	warning_locked = false
+	animation_player.play("idle")
 	_aim_charge()
 	show_warning_line_and_then_charge(target_position)
 
 func update_facing_direction(target_pos: Vector2) -> void :
-	sprite_2d.flip_h = target_pos.x < global_position.x
+	var offset_x := target_pos.x - global_position.x
+	if absf(offset_x) > 1.0:
+		sprite_2d.flip_h = offset_x < 0.0
 
 func show_warning_line_and_then_charge(target_pos: Vector2) -> void :
 	if is_dying:
@@ -231,6 +240,7 @@ func start_moving_charge() -> void :
 	_state_left = MAX_CHARGE_SECONDS
 	is_charging = true
 	charges_started += 1
+	update_facing_direction(global_position + charge_direction * MIN_CHARGE_DISTANCE)
 	AudioManager.play_juice("boss_rush")
 	animation_player.play("chase")
 
@@ -240,6 +250,7 @@ func stop_charge() -> void :
 	is_charging = false
 	animation_player.play("idle")
 	velocity = Vector2.ZERO
+	if is_instance_valid(player): update_facing_direction(player.global_position)
 	charge_state = ChargeState.RECOVER
 	_state_left = 0.34 if _combo_left > 0 else (0.8 if enraged() else 0.64)
 

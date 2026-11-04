@@ -10,6 +10,8 @@ const LIGHTNING_RING: = preload("res://script/lightning_ring.gd")
 var growth_hint: Label
 const VARIETY: = preload("res://script/run_variety.gd")
 const POISON: = preload("res://script/poison_trail.gd")
+const FAN := preload("res://script/banana_fan.gd")
+const VORTEX := preload("res://script/black_hole.gd")
 const MAX_REROLLS: = 3
 var rerolls: = 2
 var reroll_button: Button
@@ -19,6 +21,8 @@ var _draft_rng: = RandomNumberGenerator.new()
 var _fit_pending: = false
 
 var upgrade_pool: = [
+	{"id": "banana_fan", "title": "芭蕉扇 +1 级", "desc": "", "icon": "res://assest/sprites/banana_fan.svg", "max_level": 5},
+	{"id": "black_hole", "title": "黑洞 +1 级", "desc": "", "icon": "res://assest/sprites/black_hole.svg", "max_level": 5},
 	{"id": "poison_trail", "title": "剧毒踪迹 +1 级", "desc": "", "icon": "res://assest/sprites/poison_trail.svg", "max_level": 5}, 
 	{"id": "wind_emblem", "title": "踏风徽记 +1 级", "desc": "", "icon": "res://assest/sprites/wind_emblem.svg"}, 
 	{"id": "echo_ember", "title": "回响火种 +1 级", "desc": "", "icon": "res://assest/sprites/echo_ember.svg"}, 
@@ -282,6 +286,16 @@ func available_upgrades() -> Array:
 func _build_card_data(data: Dictionary) -> Dictionary:
 	var card_data: = data.duplicate(true)
 	match str(card_data.get("id", "")):
+		"banana_fan":
+			var game := _get_game()
+			var rank: int = mini(5, 1 + (game.banana_fan.level if game != null else 0))
+			var stats := FAN.stats_for(rank)
+			card_data["desc"] = "沿移动方向吹出气流\n伤害 %.0f · 距离 %.0f\n间隔 %.1f 秒 · 击退敌人\n升级更频繁、更远\n最高 5 级" % [stats.damage, stats.range, stats.interval]
+		"black_hole":
+			var game := _get_game()
+			var rank: int = mini(5, 1 + (game.black_hole.level if game != null else 0))
+			var stats := VORTEX.stats_for(rank)
+			card_data["desc"] = "自动召唤黑洞聚怪\n每秒伤害 %.0f · 半径 %.0f\n间隔 %.1f 秒 · 持续3秒\n升级增伤、扩围、减冷却\n最高 5 级" % [stats.dps, stats.radius, stats.interval]
 		"poison_trail":
 			var game: = _get_game()
 			var rank: int = mini(5, 1 + (game.poison_trail.level if game != null else 0))

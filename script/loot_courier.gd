@@ -56,6 +56,7 @@ func _physics_process(delta: float) -> void :
 	if dist > 255: steering = - dir * 0.5
 	velocity = steering.limit_length() * speed * status_move_scale()
 	if age < 0.8: velocity = Vector2.ZERO
+	_apply_crowd_motion(delta)
 	move_and_collide(velocity * delta)
 	_face( - dir)
 	_apply_move_juice(delta)

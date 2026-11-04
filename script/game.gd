@@ -37,6 +37,10 @@ const METEOR_SHOWER: = preload("res://script/meteor_shower.gd")
 var meteors: Node2D
 const POISON_TRAIL: = preload("res://script/poison_trail.gd")
 var poison_trail: Node2D
+const BANANA_FAN := preload("res://script/banana_fan.gd")
+const BLACK_HOLE := preload("res://script/black_hole.gd")
+var banana_fan: Node2D
+var black_hole: Node2D
 const BEAST_POWERS: = preload("res://script/beast_powers.gd")
 const LIGHTNING_FX: = preload("res://script/lightning_strike.gd")
 const LIGHTNING_RING: = preload("res://script/lightning_ring.gd")
@@ -115,6 +119,12 @@ func _ready() -> void :
 	poison_trail = POISON_TRAIL.new()
 	poison_trail.name = "PoisonTrail"
 	add_child(poison_trail)
+	banana_fan = BANANA_FAN.new()
+	banana_fan.name = "BananaFan"
+	add_child(banana_fan)
+	black_hole = BLACK_HOLE.new()
+	black_hole.name = "BlackHole"
+	add_child(black_hole)
 	spawner.beast_defeated.connect(_on_beast_defeated)
 	level_manager.signal_level_up.connect(on_level_up)
 	pause_menu.upgrade_selected.connect(_on_upgrade_selected)
@@ -218,6 +228,8 @@ func _reset_skill_controllers() -> void :
 	if level_manager: level_manager.reset_feedback()
 	if meteors: meteors.reset()
 	if poison_trail: poison_trail.reset()
+	if banana_fan: banana_fan.reset()
+	if black_hole: black_hole.reset()
 	if variety: variety.reset()
 	if lightning_ring:
 		lightning_ring.reset()
@@ -298,12 +310,17 @@ func _on_upgrade_selected(upgrade_id: String):
 			variety.upgrade(upgrade_id)
 		"poison_trail":
 			poison_trail.upgrade()
+		"banana_fan":
+			banana_fan.upgrade()
+		"black_hole":
+			black_hole.upgrade()
 
 	if spawner and spawner.has_method("note_offense_card") and upgrade_id in [
 		"axe_up", "circle_up", "gun_up", "left_fist", "right_fist", 
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
+		"banana_fan", "black_hole",
 	]:
 		spawner.note_offense_card()
 
@@ -684,6 +701,24 @@ func prepare_poison_debug(rank: int) -> void :
 		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
 		add_child(actor)
 		actor.global_position = player.global_position + at
+
+func prepare_control_debug(mode: StringName) -> void:
+	var rank := 5 if mode in [&"fan5", &"black_hole5", &"control_cards"] else 1
+	var ids: Array[String] = []
+	if mode in [&"fan", &"fan5", &"control_cards"]: ids.append("banana_fan")
+	if mode in [&"black_hole", &"black_hole5", &"control_cards"]: ids.append("black_hole")
+	for id in ids:
+		for _i in rank: _on_upgrade_selected(id)
+	variety.notify("控场卡片 %d 级\n芭蕉扇沿移动方向吹风 · 黑洞自动聚怪" % rank)
+	for offset in [Vector2(95, -28), Vector2(125, 22), Vector2(165, 0), Vector2(-100, -45), Vector2(65, 105)]:
+		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
+		actor.health = 240.0 * run_difficulty.health_scale
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position + offset
 
 func _show_next_reward() -> void :
 	if _death_presented or player.player_health <= 0.0 or process_mode == Node.PROCESS_MODE_DISABLED:

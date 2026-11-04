@@ -10,6 +10,8 @@ const LEVEL_COLOR: = preload("res://script/visual_style.gd").TEXT
 var _slots: Dictionary = {}
 
 const EQUIP_DEFS: = {
+	"banana_fan": {"title": "芭蕉扇", "icon": "res://assest/sprites/banana_fan.svg", "start_level": 0, "max_level": 5},
+	"black_hole": {"title": "黑洞", "icon": "res://assest/sprites/black_hole.svg", "start_level": 0, "max_level": 5},
 	"poison_trail": {"title": "剧毒踪迹", "icon": "res://assest/sprites/poison_trail.svg", "start_level": 0, "max_level": 5}, 
 	"wind_emblem": {"title": "踏风徽记", "icon": "res://assest/sprites/wind_emblem.svg", "start_level": 0}, 
 	"echo_ember": {"title": "回响火种", "icon": "res://assest/sprites/echo_ember.svg", "start_level": 0}, 

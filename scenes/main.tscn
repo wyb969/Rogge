@@ -157,6 +157,31 @@ layout_mode = 2
 text = "测试剧毒踪迹（5级减速）"
 script = ExtResource("5")
 
+[node name="DebugFanButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试芭蕉扇（1级）"
+script = ExtResource("5")
+
+[node name="DebugFan5Button" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试芭蕉扇（5级远距离）"
+script = ExtResource("5")
+
+[node name="DebugBlackHoleButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试黑洞（1级）"
+script = ExtResource("5")
+
+[node name="DebugBlackHole5Button" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试黑洞（5级聚怪）"
+script = ExtResource("5")
+
+[node name="DebugControlCardsButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试芭蕉扇 + 黑洞（双5级）"
+script = ExtResource("5")
+
 [node name="DebugMusicButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer" unique_id=508471939]
 layout_mode = 2
 text = "音乐试听 / 下一首"
@@ -248,6 +273,11 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugVarietyButton" to="." method="_launch_run" binds= [&"variety"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugPoisonButton" to="." method="_launch_run" binds= [&"poison"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugPoison5Button" to="." method="_launch_run" binds= [&"poison5"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFanButton" to="." method="_launch_run" binds= [&"fan"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFan5Button" to="." method="_launch_run" binds= [&"fan5"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBlackHoleButton" to="." method="_launch_run" binds= [&"black_hole"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBlackHole5Button" to="." method="_launch_run" binds= [&"black_hole5"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugControlCardsButton" to="." method="_launch_run" binds= [&"control_cards"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugMusicButton" to="." method="_on_debug_music_pressed"]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugNecklaceButton" to="." method="_on_debug_necklace_pressed"]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugTreasureButton" to="." method="_on_debug_treasure_pressed"]

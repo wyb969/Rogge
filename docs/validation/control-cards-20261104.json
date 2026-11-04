@@ -1,0 +1,297 @@
+{
+  "tests": 48,
+  "passed": 48,
+  "results": [
+    {
+      "test": "smoke_adventure_music.gd",
+      "exit_code": 0,
+      "seconds": 5.24,
+      "passed": true
+    },
+    {
+      "test": "smoke_archetypes.gd",
+      "exit_code": 0,
+      "seconds": 8.295,
+      "passed": true
+    },
+    {
+      "test": "smoke_audio_mix.gd",
+      "exit_code": 0,
+      "seconds": 5.96,
+      "passed": true
+    },
+    {
+      "test": "smoke_axe.gd",
+      "exit_code": 0,
+      "seconds": 1.2,
+      "passed": true
+    },
+    {
+      "test": "smoke_beasts.gd",
+      "exit_code": 0,
+      "seconds": 13.981,
+      "passed": true
+    },
+    {
+      "test": "smoke_blessing_feedback.gd",
+      "exit_code": 0,
+      "seconds": 1.465,
+      "passed": true
+    },
+    {
+      "test": "smoke_book_growth.gd",
+      "exit_code": 0,
+      "seconds": 1.001,
+      "passed": true
+    },
+    {
+      "test": "smoke_boss_rhythm.gd",
+      "exit_code": 0,
+      "seconds": 2.123,
+      "passed": true
+    },
+    {
+      "test": "smoke_camera_motion.gd",
+      "exit_code": 0,
+      "seconds": 0.998,
+      "passed": true
+    },
+    {
+      "test": "smoke_combat_feedback.gd",
+      "exit_code": 0,
+      "seconds": 2.215,
+      "passed": true
+    },
+    {
+      "test": "smoke_combat_lighting.gd",
+      "exit_code": 0,
+      "seconds": 2.117,
+      "passed": true
+    },
+    {
+      "test": "smoke_combo_gun.gd",
+      "exit_code": 0,
+      "seconds": 3.434,
+      "passed": true
+    },
+    {
+      "test": "smoke_control_cards.gd",
+      "exit_code": 0,
+      "seconds": 2.025,
+      "passed": true
+    },
+    {
+      "test": "smoke_damage_flash.gd",
+      "exit_code": 0,
+      "seconds": 2.214,
+      "passed": true
+    },
+    {
+      "test": "smoke_dash_direction.gd",
+      "exit_code": 0,
+      "seconds": 0.349,
+      "passed": true
+    },
+    {
+      "test": "smoke_dash_grace.gd",
+      "exit_code": 0,
+      "seconds": 4.651,
+      "passed": true
+    },
+    {
+      "test": "smoke_dasher_balance.gd",
+      "exit_code": 0,
+      "seconds": 1.007,
+      "passed": true
+    },
+    {
+      "test": "smoke_dasher_recovery.gd",
+      "exit_code": 0,
+      "seconds": 1.0,
+      "passed": true
+    },
+    {
+      "test": "smoke_debug_menu.gd",
+      "exit_code": 0,
+      "seconds": 1.563,
+      "passed": true
+    },
+    {
+      "test": "smoke_diagnostics.gd",
+      "exit_code": 0,
+      "seconds": 2.868,
+      "passed": true
+    },
+    {
+      "test": "smoke_difficulty.gd",
+      "exit_code": 0,
+      "seconds": 3.898,
+      "passed": true
+    },
+    {
+      "test": "smoke_elemental_attacks.gd",
+      "exit_code": 0,
+      "seconds": 1.846,
+      "passed": true
+    },
+    {
+      "test": "smoke_first_boss_overlap.gd",
+      "exit_code": 0,
+      "seconds": 6.69,
+      "passed": true
+    },
+    {
+      "test": "smoke_global_pickup.gd",
+      "exit_code": 0,
+      "seconds": 2.032,
+      "passed": true
+    },
+    {
+      "test": "smoke_knight_boss.gd",
+      "exit_code": 0,
+      "seconds": 2.679,
+      "passed": true
+    },
+    {
+      "test": "smoke_lightning.gd",
+      "exit_code": 0,
+      "seconds": 1.469,
+      "passed": true
+    },
+    {
+      "test": "smoke_lightning_ring.gd",
+      "exit_code": 0,
+      "seconds": 1.748,
+      "passed": true
+    },
+    {
+      "test": "smoke_menu_layout.gd",
+      "exit_code": 0,
+      "seconds": 2.22,
+      "passed": true
+    },
+    {
+      "test": "smoke_meteor_shower.gd",
+      "exit_code": 0,
+      "seconds": 1.465,
+      "passed": true
+    },
+    {
+      "test": "smoke_molotov_spread.gd",
+      "exit_code": 0,
+      "seconds": 1.467,
+      "passed": true
+    },
+    {
+      "test": "smoke_monster_necklace.gd",
+      "exit_code": 0,
+      "seconds": 3.051,
+      "passed": true
+    },
+    {
+      "test": "smoke_poison_trail.gd",
+      "exit_code": 0,
+      "seconds": 1.755,
+      "passed": true
+    },
+    {
+      "test": "smoke_resource_bounds.gd",
+      "exit_code": 0,
+      "seconds": 1.187,
+      "passed": true
+    },
+    {
+      "test": "smoke_rest_pickup_clock.gd",
+      "exit_code": 0,
+      "seconds": 7.634,
+      "passed": true
+    },
+    {
+      "test": "smoke_rest_selection.gd",
+      "exit_code": 0,
+      "seconds": 1.564,
+      "passed": true
+    },
+    {
+      "test": "smoke_run_variety.gd",
+      "exit_code": 0,
+      "seconds": 1.749,
+      "passed": true
+    },
+    {
+      "test": "smoke_runtime_optimization.gd",
+      "exit_code": 0,
+      "seconds": 1.564,
+      "passed": true
+    },
+    {
+      "test": "smoke_skill_icons.gd",
+      "exit_code": 0,
+      "seconds": 1.563,
+      "passed": true
+    },
+    {
+      "test": "smoke_stage_variation.gd",
+      "exit_code": 0,
+      "seconds": 1.389,
+      "passed": true
+    },
+    {
+      "test": "smoke_status_numbers.gd",
+      "exit_code": 0,
+      "seconds": 1.992,
+      "passed": true
+    },
+    {
+      "test": "smoke_survival_growth.gd",
+      "exit_code": 0,
+      "seconds": 1.194,
+      "passed": true
+    },
+    {
+      "test": "smoke_treasure_lottery.gd",
+      "exit_code": 0,
+      "seconds": 3.058,
+      "passed": true
+    },
+    {
+      "test": "smoke_trials.gd",
+      "exit_code": 0,
+      "seconds": 5.021,
+      "passed": true
+    },
+    {
+      "test": "smoke_visual_style.gd",
+      "exit_code": 0,
+      "seconds": 1.474,
+      "passed": true
+    },
+    {
+      "test": "smoke_weather.gd",
+      "exit_code": 0,
+      "seconds": 1.564,
+      "passed": true
+    },
+    {
+      "test": "smoke_weather_audio.gd",
+      "exit_code": 0,
+      "seconds": 4.379,
+      "passed": true
+    },
+    {
+      "test": "smoke_wind_duo.gd",
+      "exit_code": 0,
+      "seconds": 19.38,
+      "passed": true
+    },
+    {
+      "test": "smoke_world_snow.gd",
+      "exit_code": 0,
+      "seconds": 1.563,
+      "passed": true
+    }
+  ],
+  "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+  "packed_control_smoke": true,
+  "version": "20261104-210610"
+}

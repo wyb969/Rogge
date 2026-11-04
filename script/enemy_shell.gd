@@ -13,6 +13,10 @@ var direction: Vector2
 var speed: float = 50
 var knockback: Vector2 = Vector2.ZERO
 var knockback_decay: float = 10.0
+var _airflow_velocity := Vector2.ZERO
+var _airflow_left := 0.0
+var _gravity_velocity := Vector2.ZERO
+var _gravity_left := 0.0
 
 const DASHER_MAX_HEALTH: = 20.0
 const DASH_AIM_SECONDS: = 0.4
@@ -227,6 +231,50 @@ func set_poison_exposure(active: bool, slow: float, tint: Color) -> void :
 	if sprite_2d:
 		sprite_2d.self_modulate = _poison_tint * Color.WHITE.lerp(preload("res://script/visual_style.gd").HIT_FLASH, clampf(_hit_flash_left / 0.065, 0, 1))
 
+func crowd_control_scale() -> float:
+	# Larger bodies and elites resist displacement; bosses use a different base.
+	return clampf(1.0 / pow(maxf(body_scale, 1.0), 1.5), 0.25, 1.0) * (0.65 if is_elite else 1.0)
+
+func apply_airflow(push_velocity: Vector2, seconds: float) -> void:
+	if _death_started: return
+	_airflow_velocity = push_velocity.limit_length(500.0) * crowd_control_scale()
+	_airflow_left = clampf(seconds, 0.0, 0.45)
+	if archetype == EnemyData.Archetype.DASHER:
+		_finish_dash()
+		dash_timer = maxf(dash_timer, 0.75)
+	shot_windup = 0.0
+	slam_windup = 0.0
+	slam_time_left = 0.0
+	attack_timer = maxf(attack_timer, _airflow_left)
+	queue_redraw()
+
+func clear_airflow() -> void:
+	_airflow_velocity = Vector2.ZERO
+	_airflow_left = 0.0
+
+func apply_gravity_pull(pull_velocity: Vector2, seconds: float) -> void:
+	if _death_started: return
+	# Refresh a bounded velocity, never add impulses every scan.
+	_gravity_velocity = pull_velocity.limit_length(280.0) * crowd_control_scale()
+	_gravity_left = clampf(seconds, 0.0, 0.2)
+
+func clear_gravity_pull() -> void:
+	_gravity_velocity = Vector2.ZERO
+	_gravity_left = 0.0
+
+func _apply_crowd_motion(delta: float) -> void:
+	if delta <= 0.0: return
+	if _airflow_left > 0.0:
+		var step := minf(delta, _airflow_left)
+		var decay := exp(-5.0 * step)
+		# Integrate the decaying push so displacement is stable across frame rates.
+		velocity = velocity * (1.0 - step / delta) + _airflow_velocity * ((1.0 - decay) / (5.0 * delta))
+		_airflow_velocity *= decay
+		_airflow_left = maxf(0.0, _airflow_left - delta)
+	if _gravity_left > 0.0:
+		velocity += _gravity_velocity * (minf(delta, _gravity_left) / delta)
+		_gravity_left = maxf(0.0, _gravity_left - delta)
+
 func _physics_process(delta: float) -> void :
 	if _death_started or not is_instance_valid(player_reference):
 		return
@@ -252,7 +300,7 @@ func _physics_process(delta: float) -> void :
 			_steer_ranged(delta, dir, dist, move_speed)
 		_:
 			_steer_chaser(dir, move_speed)
-	if recovering:
+	if recovering and _airflow_left <= 0.0 and _gravity_left <= 0.0:
 
 
 		knockback = Vector2.ZERO
@@ -262,6 +310,7 @@ func _physics_process(delta: float) -> void :
 	if knockback.length() > 0.1:
 		velocity += knockback
 		knockback = knockback.move_toward(Vector2.ZERO, knockback_decay * delta)
+	_apply_crowd_motion(delta)
 	var collision = move_and_collide(velocity * delta)
 	if collision:
 		if collision.get_collider() is CharacterBody2D:

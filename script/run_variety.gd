@@ -124,6 +124,8 @@ func clear_combat_effects() -> void :
 	if game.get("combat_lighting") != null: game.combat_lighting.clear_flashes()
 	if game.get("meteors") != null: game.meteors.clear_combat_effects()
 	if game.get("poison_trail") != null: game.poison_trail.clear_combat_effects()
+	if game.get("banana_fan") != null: game.banana_fan.clear_combat_effects()
+	if game.get("black_hole") != null: game.black_hole.clear_combat_effects()
 	_pending_echoes.clear()
 	for pulse in _pulses: pulse.left = 0.0
 	queue_redraw()

@@ -1,0 +1,15 @@
+# ROGGE development rules
+
+- Read `docs/AI_HANDOFF.md` before changing the project. Check the actual branch, worktree and `git status`; the default branch may lag gameplay development. Code and reproducible evidence take precedence over old conversation summaries.
+- Use Godot 4.7 and matching export templates. Give export commands an explicit output path; the preset paths came from an older machine. Native checks use `gl_compatibility`; do not assume the project configuration already selects it.
+- Preserve existing asset paths, scene names, `.uid` files and meaningful `.import` settings. Historical spellings such as `assest/`, `pasue_menu.gd` and `PasueMenu.tscn` are referenced by the project. Avoid broad renames or formatting of recovered scripts.
+- `main.gd` owns menus and creates a fresh `game.tscn` per run. `game.gd` owns run state and controllers; `spawner.gd` owns encounter progression. Regular horde enemies use `enemy_shell.gd`, not necessarily the legacy `enemy.gd`.
+- Integrate cards through the draft pool, game dispatch, controller, equipment display, rank caps, lottery rewards and run/transition cleanup. Debug equipment must not leak into a normal run.
+- Route combat through the existing damage/death APIs. Preserve speed-trial vulnerability, Boss warning/attack alignment and kill rewards. Timed damage uses the existing `from_status` contract to avoid recursive procs.
+- Reuse bounded buffers and effects. `CombatTargets` is a registry with linear queries, not a spatial index. Avoid scene-tree searches per target, unbounded particle/light nodes and nested crowd scans. Weather particles that represent the world must remain in world coordinates.
+- Respect pause, rest, trial, death and return-to-menu states. Clear transient effects and force states without discarding owned card ranks between stages.
+- Keep hostile attacks, pickups, healing and status colors distinguishable. Favor short audio cues, separate audio buses and bounded local lighting over continuous noise or full-screen glow. Mobile Safari is an important performance target.
+- Run focused smoke tests for the changed subsystem and required import/export checks. Broaden testing for shared combat/lifecycle changes or an unresolved failure; do not run the whole suite for documentation-only edits. Distinguish native tests, packed-resource tests and real browser/device play.
+- Preserve user edits and untracked files. Do not clean/reset worktrees, overwrite user files or force-push as routine work. Keep completed source and handoff notes in Git; temporary cloud paths and chat history are not durable storage.
+- Keep credentials in environment secrets, never source, documents or logs. Publish only within the user's requested scope. Updating the existing itch build channel, editing its storefront and verifying a live browser session are separate operations; report which actually completed.
+- Update `docs/AI_HANDOFF.md` after material changes with code checkpoints, evidence, remaining issues and next steps. Do not describe an old test report as a fresh run or a suspected cause as a confirmed diagnosis.

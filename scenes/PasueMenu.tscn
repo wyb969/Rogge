@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://dobh4rb6edd2n"]
 
-[ext_resource type="Script" uid="uid://djc7uhn2uglq7" path="res://script/pasue_menu.gd" id="1_bp7ru"]
-[ext_resource type="PackedScene" uid="uid://c4xmcc8su3h8g" path="res://scenes/UpgradeCard.tscn" id="2_bsdfi"]
+[ext_resource type="Script" uid="uid://djc7uhn2uglq7" path="res://script/pasue_menu.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://c4xmcc8su3h8g" path="res://scenes/UpgradeCard.tscn" id="2"]
 
 [node name="Node2D" type="CanvasLayer" unique_id=363020718]
-script = ExtResource("1_bp7ru")
-card_scene = ExtResource("2_bsdfi")
+script = ExtResource("1")
+card_scene = ExtResource("2")
 
 [node name="Panel" type="Panel" parent="." unique_id=1430391073]
 process_mode = 2

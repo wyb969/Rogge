@@ -1,0 +1,74 @@
+[
+  {
+    "id": "jianghu",
+    "title": "江湖行",
+    "stage": 1,
+    "bpm": 160,
+    "seconds": 48.0,
+    "bytes": 304212,
+    "sha256": "ee4d6844df9574fd4552f876a979195f2b4a511bfaef4aad0a6a04c561e3c799"
+  },
+  {
+    "id": "ruins",
+    "title": "古堡夜行",
+    "stage": 2,
+    "bpm": 160,
+    "seconds": 48.0,
+    "bytes": 322992,
+    "sha256": "6688bcd98b98368fcdd7d594cd4438804892a2a2c62bbad9cf7ad3681447fabb"
+  },
+  {
+    "id": "tide",
+    "title": "碧潮回响",
+    "stage": 3,
+    "bpm": 160,
+    "seconds": 48.0,
+    "bytes": 308311,
+    "sha256": "5484cc2c96aa4c55e284b774813c519b2f1a4853d88e1fc7e30ff3a0fa8f489c"
+  },
+  {
+    "id": "thunder",
+    "title": "风雷疾驰",
+    "stage": 4,
+    "bpm": 160,
+    "seconds": 48.0,
+    "bytes": 304047,
+    "sha256": "36a51342648a5a53e036eca599f159ea2f9c9dee1e9bb5fb5690960b3fcca63d"
+  },
+  {
+    "id": "gale",
+    "title": "云上漫游",
+    "stage": 5,
+    "bpm": 160,
+    "seconds": 48.0,
+    "bytes": 320406,
+    "sha256": "9c088b66c62315da1f2173e2039ba1d94416c3cdc9d7137a4deefd5859b97fc7"
+  },
+  {
+    "id": "ember",
+    "title": "熔火行军",
+    "stage": 6,
+    "bpm": 160,
+    "seconds": 48.0,
+    "bytes": 316636,
+    "sha256": "0e6f77526972e169d462faca9eefb5c70cd526d87491df96b72b3107563ead1a"
+  },
+  {
+    "id": "daybreak",
+    "title": "逐光冒险",
+    "stage": 0,
+    "bpm": 160,
+    "seconds": 48.0,
+    "bytes": 317901,
+    "sha256": "a66cefda345e7005315ebbc3b8c7b76f6427e1e8bd3de2c90e8b60751f928a7f"
+  },
+  {
+    "id": "banners",
+    "title": "旌旗如风",
+    "stage": 0,
+    "bpm": 160,
+    "seconds": 48.0,
+    "bytes": 298416,
+    "sha256": "5cc44bf656abb81aa69ca79417c5a31afb075b7f43df16ba60c5335a06b831c9"
+  }
+]

@@ -1,39 +1,70 @@
 [gd_scene format=3 uid="uid://c2wk8mvxmn002"]
 
-[ext_resource type="Script" uid="uid://diawytdwevvx8" path="res://script/audio_manager.gd" id="1_aoitu"]
-[ext_resource type="AudioStream" uid="uid://cb23ig08x8f07" path="res://assest/sounds/coin.wav" id="1_m6ggh"]
-[ext_resource type="AudioStream" uid="uid://c0mfitid3fqhp" path="res://assest/sounds/power_up.wav" id="2_aoitu"]
-[ext_resource type="AudioStream" uid="uid://o7v26g0ih0rx" path="res://assest/sounds/hurt.wav" id="3_njtn3"]
-[ext_resource type="AudioStream" uid="uid://dgbfm45rhb4v5" path="res://assest/sounds/jump.wav" id="4_kq7b2"]
-[ext_resource type="AudioStream" uid="uid://cqq5qp6nc6low" path="res://assest/sounds/tap.wav" id="5_ujhup"]
-[ext_resource type="AudioStream" uid="uid://ddwqhbu6pxjqw" path="res://assest/sounds/game_bgm.mp3" id="6_02gw7"]
-[ext_resource type="AudioStream" uid="uid://n76mkbmoa1rg" path="res://assest/sounds/boss_bgm.mp3" id="7_ujhup"]
-[ext_resource type="AudioStream" uid="uid://7savwj7fwag5" path="res://assest/sounds/menu_bgm.mp3" id="8_064dn"]
+[ext_resource type="Script" uid="uid://diawytdwevvx8" path="res://script/audio_manager.gd" id="1"]
+[ext_resource type="AudioStream" uid="uid://cb23ig08x8f07" path="res://assest/sounds/coin.wav" id="2"]
+[ext_resource type="AudioStream" uid="uid://c0mfitid3fqhp" path="res://assest/sounds/power_up.wav" id="3"]
+[ext_resource type="AudioStream" uid="uid://o7v26g0ih0rx" path="res://assest/sounds/hurt.wav" id="4"]
+[ext_resource type="AudioStream" uid="uid://cqq5qp6nc6low" path="res://assest/sounds/tap.wav" id="5"]
+[ext_resource type="AudioStream" uid="uid://be7g3lwq88fnf" path="res://assest/sounds/juice_shot_0.wav" id="6"]
+[ext_resource type="AudioStream" uid="uid://n76mkbmoa1rg" path="res://assest/sounds/boss_bgm.mp3" id="7"]
+[ext_resource type="AudioStream" uid="uid://7savwj7fwag5" path="res://assest/sounds/menu_bgm.mp3" id="8"]
+[ext_resource type="AudioStream" uid="uid://cmcm01it01kmi" path="res://assest/sounds/victory.mp3" id="9"]
+[ext_resource type="AudioStream" uid="uid://niq1m1dqsrvv" path="res://assest/sounds/game_over.mp3" id="10"]
+[ext_resource type="AudioStream" uid="uid://c1xrt8q3gh32b" path="res://assest/sounds/explosion.wav" id="11"]
+[ext_resource type="AudioStream" uid="uid://b43citufom735" path="res://assest/sounds/drone_spawn.wav" id="12"]
+[ext_resource type="AudioStream" uid="uid://b5rgo8avlybcf" path="res://assest/sounds/drone_attack.wav" id="13"]
+[ext_resource type="AudioStream" uid="uid://bcx4gxvapib7x" path="res://assest/sounds/drone_despawn.wav" id="14"]
+[ext_resource type="AudioStream" uid="uid://g3qg27ixqnjk" path="res://assest/sounds/healing_pickup.wav" id="15"]
 
-[node name="AudioManager" type="Node2D" unique_id=2023769010]
+[node name="AudioManager" type="Node" unique_id=2023769010]
 process_mode = 3
-script = ExtResource("1_aoitu")
+script = ExtResource("1")
 
-[node name="PickCoinAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1074440460]
-stream = ExtResource("1_m6ggh")
+[node name="PickCoinAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1074440460]
+stream = ExtResource("2")
 
-[node name="UpgradeAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1813606566]
-stream = ExtResource("2_aoitu")
+[node name="UpgradeAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1813606566]
+stream = ExtResource("3")
 
-[node name="HurtAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1722265207]
-stream = ExtResource("3_njtn3")
+[node name="HurtAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1722265207]
+stream = ExtResource("4")
 
-[node name="EnemyHurtAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=846134851]
-stream = ExtResource("5_ujhup")
+[node name="EnemyHurtAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=846134851]
+stream = ExtResource("5")
 
-[node name="ShootAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1883618810]
-stream = ExtResource("4_kq7b2")
+[node name="ShootAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1883618810]
+stream = ExtResource("6")
 
-[node name="GameAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=2119867240]
-stream = ExtResource("6_02gw7")
+[node name="GameAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=2119867240]
 
-[node name="BossAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1631675751]
-stream = ExtResource("7_ujhup")
+[node name="BossAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1631675751]
+stream = ExtResource("7")
 
-[node name="MenuAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1439733836]
-stream = ExtResource("8_064dn")
+[node name="MenuAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1439733836]
+stream = ExtResource("8")
+
+[node name="VictoryAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=190765063]
+stream = ExtResource("9")
+
+[node name="GameOverAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1930509525]
+stream = ExtResource("10")
+
+[node name="BossWarningAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1815098033]
+stream = ExtResource("11")
+
+[node name="BossAlarmAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=276238815]
+stream = ExtResource("3")
+
+[node name="DroneSpawnAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1684751481]
+stream = ExtResource("12")
+
+[node name="DroneAttackAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1057787338]
+stream = ExtResource("13")
+
+[node name="DroneDespawnAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=927137600]
+stream = ExtResource("14")
+
+[node name="HealingPickupAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1091751855]
+stream = ExtResource("15")
+volume_db = -6.0
+max_polyphony = 4

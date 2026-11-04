@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://dajh6exgsdyc5"]
 
-[ext_resource type="FontFile" uid="uid://baixhmparrg2p" path="res://assest/fonts/PixelOperator8.ttf" id="1_ai1tc"]
-[ext_resource type="Script" uid="uid://dm2s63oy70u6w" path="res://scenes/level_bar.gd" id="1_keqlg"]
+[ext_resource type="Script" uid="uid://dm2s63oy70u6w" path="res://scenes/level_bar.gd" id="1"]
+[ext_resource type="FontFile" uid="uid://baixhmparrg2p" path="res://assest/fonts/PixelOperator8.ttf" id="2"]
 
 [node name="Node2D" type="Node2D" unique_id=907267221]
-script = ExtResource("1_keqlg")
+script = ExtResource("1")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=147311983]
 
@@ -17,7 +17,7 @@ size_flags_vertical = 4
 
 [node name="Label" type="Label" parent="UI/HBoxContainer" unique_id=365720703]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("1_ai1tc")
+theme_override_fonts/font = ExtResource("2")
 theme_override_font_sizes/font_size = 15
 text = "Level: 0  "
 

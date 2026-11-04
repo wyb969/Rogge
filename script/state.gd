@@ -1,16 +1,16 @@
 extends Node
 class_name State
 
-func enter()->void:
+func enter() -> void :
 	pass
-	
-func exit()->void:
+
+func exit() -> void :
 	pass
-	
-func Physics_process(delta: float) -> void:
+
+func Physics_process(delta: float) -> void :
 	pass
-	
-func Update(delta: float) -> void:
+
+func Update(delta: float) -> void :
 	pass
-	
+
 signal transition(from: State, new_state_name: String)

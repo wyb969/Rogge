@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://ccjxgkqb4oqtj" path="res://script/drone_controller.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/drone.tscn" id="2"]
+
+[node name="DroneController" type="Node2D" unique_id=107519446]
+script = ExtResource("1")
+drone_scene = ExtResource("2")

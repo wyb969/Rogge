@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://cmrvuaxdo4ja6" path="res://scenes/enemy_shell.tscn" id="1"]
+[ext_resource type="Script" uid="uid://dnk5kkokyl7px" path="res://script/loot_courier.gd" id="2"]
+
+[node name="LootCourier" unique_id=347761465 instance=ExtResource("1")]
+script = ExtResource("2")

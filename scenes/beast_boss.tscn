@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://6ohkt4wkxka4" path="res://scenes/boss.tscn" id="1"]
+[ext_resource type="Script" uid="uid://3jvclc2261cr" path="res://script/beast_boss.gd" id="2"]
+
+[node name="ElementalGuardian" unique_id=621222270 instance=ExtResource("1")]
+script = ExtResource("2")

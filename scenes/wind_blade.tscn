@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://cbiagh5ermoxu" path="res://script/wind_blade.gd" id="1"]
+
+[node name="WindBlade" type="Node2D" unique_id=387731943]
+z_index = 8
+script = ExtResource("1")

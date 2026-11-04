@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://bcgx23whrma0o" path="res://script/settings_page.gd" id="1"]
+
+[node name="SettingsPage" type="CanvasLayer" unique_id=4460500]
+process_mode = 3
+layer = 70
+script = ExtResource("1")

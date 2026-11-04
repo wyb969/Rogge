@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://d37ch1eyj5n5i"]
 
-[ext_resource type="Script" uid="uid://bjigymqnd04dk" path="res://script/weapon.gd" id="1_d466i"]
-[ext_resource type="Texture2D" uid="uid://xybxcbbonked" path="res://assest/weaponR1.png" id="1_iqy87"]
-[ext_resource type="PackedScene" uid="uid://cxtaq1i3u3wnm" path="res://scenes/bullet.tscn" id="2_pr5e5"]
-[ext_resource type="Texture2D" uid="uid://dpurwmvhjpmmw" path="res://assest/muzzle.png" id="4_s7ojo"]
+[ext_resource type="Script" uid="uid://bjigymqnd04dk" path="res://script/weapon.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://cxtaq1i3u3wnm" path="res://scenes/bullet.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://xybxcbbonked" path="res://assest/weaponR1.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dpurwmvhjpmmw" path="res://assest/muzzle.png" id="4"]
 
 [sub_resource type="Animation" id="Animation_e4mdo"]
 length = 0.001
@@ -71,12 +71,12 @@ offsets = PackedFloat32Array(0, 0.559574, 1)
 colors = PackedColorArray(0.913725, 0, 0, 1, 1, 0.984314, 0.317647, 1, 0.329412, 1, 1, 1)
 
 [node name="Weapon" type="Node2D" unique_id=782294834]
-script = ExtResource("1_d466i")
-bullet = ExtResource("2_pr5e5")
+script = ExtResource("1")
+bullet = ExtResource("2")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2059072617]
 scale = Vector2(0.05, 0.046)
-texture = ExtResource("1_iqy87")
+texture = ExtResource("3")
 region_enabled = true
 region_rect = Rect2(430.937, 1105.46, 1328.82, 728.35)
 
@@ -88,7 +88,7 @@ scale = Vector2(20, 21.7391)
 position = Vector2(800, -43.4779)
 emitting = false
 amount = 1
-texture = ExtResource("4_s7ojo")
+texture = ExtResource("4")
 lifetime = 0.06
 one_shot = true
 gravity = Vector2(0, 0)

@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://cvm1ulmjouj68"]
 
-[ext_resource type="Script" uid="uid://b33uyowbyfbar" path="res://script/debug_panel.gd" id="1_7of2g"]
+[ext_resource type="Script" uid="uid://b33uyowbyfbar" path="res://script/debug_panel.gd" id="1"]
 
 [node name="DebugPanel" type="CanvasLayer" unique_id=2116137223]
 process_mode = 3
-script = ExtResource("1_7of2g")
+script = ExtResource("1")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1855001745]
 anchors_preset = 9

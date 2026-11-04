@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://6ohkt4wkxka4" path="res://scenes/boss.tscn" id="1"]
+[ext_resource type="Script" uid="uid://blndraaao1g07" path="res://script/knight_boss.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://ccddxa1g6rgjb" path="res://assest/sprites/knight.png" id="3"]
+
+[sub_resource type="RectangleShape2D" id="Shape_knight"]
+size = Vector2(60, 86)
+
+[node name="KnightBoss" unique_id=773725683 instance=ExtResource("1")]
+script = ExtResource("2")
+
+[node name="Sprite2D" parent="." index="0" unique_id=966056687]
+texture_filter = 1
+position = Vector2(0, -8)
+scale = Vector2(6, 6)
+texture = ExtResource("3")
+hframes = 8
+vframes = 8
+
+[node name="CollisionShape2D" parent="." index="4" unique_id=2125880875]
+position = Vector2(0, 9)
+shape = SubResource("Shape_knight")

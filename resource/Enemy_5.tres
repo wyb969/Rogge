@@ -1,24 +1,21 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3 uid="uid://bk4s06sc2x81a"]
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bk4s06sc2x81a"]
 
-[ext_resource type="Script" uid="uid://dsf6o758y6et0" path="res://script/enemy_meta.gd" id="1_ctrb0"]
-[ext_resource type="Texture2D" uid="uid://b4pq6tbexg26t" path="res://assest/sprites/5 v1.png" id="2_foj06"]
+[ext_resource type="Script" uid="uid://dsf6o758y6et0" path="res://script/enemy_meta.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b4pq6tbexg26t" path="res://assest/sprites/5 v1.png" id="2"]
 
 [resource]
-script = ExtResource("1_ctrb0")
+script = ExtResource("1")
 title = "dasher"
-sprite = ExtResource("2_foj06")
-health = 16.0
+sprite = ExtResource("2")
+health = 12.0
 damage = 4.0
 archetype = 1
 move_speed = 112.0
-defense = 0.0
 body_scale = 0.74
 tint = Color(1.35, 0.48, 0.38, 1)
 marker_color = Color(1, 0.28, 0.18, 1)
 contact_damage = 74.0
 contact_cooldown = 0.65
 contact_radius = 22.0
-dash_speed = 360.0
-dash_cooldown = 1.2
 attack_cooldown = 1.2
 metadata/_custom_type_script = "uid://dsf6o758y6et0"

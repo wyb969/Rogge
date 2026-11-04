@@ -1,16 +1,18 @@
 extends CanvasLayer
-## Left virtual joystick + right dash button for phone / web play.
-## Settings can scale, fade, and drag them. Positions are saved as viewport fractions.
 
-const BASE_STICK_RADIUS := 56.0
-const BASE_DASH_SIZE := 92.0
-const LAYOUT_MARGIN := 8.0
+
+
+const BASE_STICK_RADIUS: = 56.0
+const BASE_DASH_SIZE: = 92.0
+const LAYOUT_MARGIN: = 8.0
+
+const MOUSE_TOUCH_INDEX: = 1000000
 
 @onready var root: Control = $Root
-@onready var stick_base: Control = $Root/JoystickBase
-@onready var stick_knob: Control = $Root/JoystickBase/Knob
-@onready var dash_button: Control = $Root/DashButton
-@onready var dash_label: Label = $Root/DashButton/Label
+@onready var stick_base: Control = $Root / JoystickBase
+@onready var stick_knob: Control = $Root / JoystickBase / Knob
+@onready var dash_button: Control = $Root / DashButton
+@onready var dash_label: Label = $Root / DashButton / Label
 
 @export var stick_radius: float = 56.0
 @export var deadzone: float = 0.12
@@ -22,8 +24,14 @@ var _drag_offset: Vector2 = Vector2.ZERO
 var _stick_touch_index: int = -1
 var _dash_touch_index: int = -1
 var _stick_center: Vector2 = Vector2.ZERO
+var _player: WeakRef
 
-func _ready() -> void:
+func bind_player(player: Node) -> void :
+	_player = weakref(player)
+	dash_button.reset_feedback()
+	dash_button.set_cooldown(player.dash_cooldown_progress(), player.can_dash, false)
+
+func _ready() -> void :
 	layer = 80
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
@@ -31,15 +39,19 @@ func _ready() -> void:
 	call_deferred("_layout_controls")
 	get_viewport().size_changed.connect(_layout_controls)
 
-func _process(delta: float) -> void:
-	if not layout_edit or not visible:
+func _process(delta: float) -> void :
+	if not visible: return
+	if not layout_edit:
+		var player: Object = _player.get_ref() if _player != null else null
+		if player != null:
+			dash_button.set_cooldown(player.dash_cooldown_progress(), player.can_dash)
 		return
-	var mouse := get_viewport().get_mouse_position()
-	var blend := clampf(1.0 - exp(-16.0 * delta), 0.0, 1.0)
+	var mouse: = get_viewport().get_mouse_position()
+	var blend: = clampf(1.0 - exp(-16.0 * delta), 0.0, 1.0)
 	_juice_layout_widget(stick_base, mouse, _drag_target == "stick", blend)
 	_juice_layout_widget(dash_button, mouse, _drag_target == "dash", blend)
 
-func show_controls() -> void:
+func show_controls() -> void :
 	layout_edit = false
 	_drag_target = ""
 	_set_edit_cursor(false)
@@ -50,28 +62,37 @@ func show_controls() -> void:
 	visible = true
 	MobileInput.controls_enabled = true
 	MobileInput.clear_move()
+	MobileInput.clear_dash()
+	_stick_touch_index = -1
+	_dash_touch_index = -1
 	_layout_controls()
 
-func hide_controls() -> void:
+func hide_controls() -> void :
 	visible = false
 	MobileInput.controls_enabled = false
 	MobileInput.clear_move()
+	MobileInput.clear_dash()
+	_stick_touch_index = -1
+	_dash_touch_index = -1
 	_reset_stick_visual()
 	_set_dash_pressed_visual(false)
 	_reset_widget_juice()
 
-func begin_layout_edit() -> void:
+func begin_layout_edit() -> void :
+	dash_button.reset_feedback()
+	dash_button.set_cooldown(1, true, false)
 	layout_edit = true
 	visible = true
 	MobileInput.controls_enabled = false
 	MobileInput.clear_move()
+	MobileInput.clear_dash()
 	_stick_touch_index = -1
 	_dash_touch_index = -1
 	_drag_target = ""
 	_set_edit_cursor(true)
 	_layout_controls()
 
-func end_layout_edit() -> void:
+func end_layout_edit() -> void :
 	if _drag_target != "":
 		commit_layout_from_positions()
 		_drag_target = ""
@@ -80,15 +101,15 @@ func end_layout_edit() -> void:
 	_reset_widget_juice()
 	hide_controls()
 
-func apply_saved_layout() -> void:
+func apply_saved_layout() -> void :
 	_layout_controls()
 
-func commit_layout_from_positions() -> void:
-	var vp := get_viewport().get_visible_rect().size
+func commit_layout_from_positions() -> void :
+	var vp: = get_viewport().get_visible_rect().size
 	if vp.x < 1.0 or vp.y < 1.0:
 		return
-	var stick_center := stick_base.global_position + stick_base.size * 0.5
-	var dash_center := dash_button.global_position + dash_button.size * 0.5
+	var stick_center: = stick_base.global_position + stick_base.size * 0.5
+	var dash_center: = dash_button.global_position + dash_button.size * 0.5
 	SettingsStore.set_stick_norm(_norm_from_center(stick_center, vp))
 	SettingsStore.set_dash_norm(_norm_from_center(dash_center, vp))
 
@@ -97,15 +118,15 @@ func _should_use_touch_ui() -> bool:
 		return true
 	if DisplayServer.is_touchscreen_available():
 		return true
-	# Web export on phones often reports as web; keep controls available.
+
 	if OS.has_feature("web"):
 		return true
 	return false
 
-func _layout_controls() -> void:
+func _layout_controls() -> void :
 	if root == null:
 		return
-	var vp := get_viewport().get_visible_rect().size
+	var vp: = get_viewport().get_visible_rect().size
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_apply_metrics(vp)
 	if _drag_target == "":
@@ -117,15 +138,15 @@ func _layout_controls() -> void:
 	_stick_center = stick_base.size * 0.5
 	_reset_stick_visual()
 
-func _apply_metrics(vp: Vector2) -> void:
-	var scale := 1.0
+func _apply_metrics(vp: Vector2) -> void :
+	var scale: = 1.0
 	_opacity = 0.85
 	if SettingsStore:
 		scale = SettingsStore.control_scale
 		_opacity = SettingsStore.control_opacity
 	stick_radius = BASE_STICK_RADIUS * scale
-	var stick_size := Vector2.ONE * stick_radius * 2.0
-	var dash_size := Vector2.ONE * BASE_DASH_SIZE * scale
+	var stick_size: = Vector2.ONE * stick_radius * 2.0
+	var dash_size: = Vector2.ONE * BASE_DASH_SIZE * scale
 	_resize_keeping_center(stick_base, stick_size, vp)
 	_resize_keeping_center(dash_button, dash_size, vp)
 	stick_knob.size = Vector2(stick_radius, stick_radius)
@@ -136,22 +157,22 @@ func _apply_metrics(vp: Vector2) -> void:
 		dash_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		dash_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
-func _place_stick(vp: Vector2) -> void:
-	var top_left := Vector2(28.0, vp.y - stick_base.size.y - 24.0)
+func _place_stick(vp: Vector2) -> void :
+	var top_left: = Vector2(28.0, vp.y - stick_base.size.y - 24.0)
 	if SettingsStore and SettingsStore.has_custom_stick():
-		var center := SettingsStore.stick_norm * vp
+		var center: = SettingsStore.stick_norm * vp
 		top_left = center - stick_base.size * 0.5
 	stick_base.global_position = _clamp_top_left(top_left, stick_base.size, vp)
 
-func _place_dash(vp: Vector2) -> void:
-	var top_left := Vector2(vp.x - dash_button.size.x - 28.0, vp.y - dash_button.size.y - 28.0)
+func _place_dash(vp: Vector2) -> void :
+	var top_left: = Vector2(vp.x - dash_button.size.x - 28.0, vp.y - dash_button.size.y - 28.0)
 	if SettingsStore and SettingsStore.has_custom_dash():
-		var center := SettingsStore.dash_norm * vp
+		var center: = SettingsStore.dash_norm * vp
 		top_left = center - dash_button.size * 0.5
 	dash_button.global_position = _clamp_top_left(top_left, dash_button.size, vp)
 
-func _resize_keeping_center(ctrl: Control, new_size: Vector2, vp: Vector2) -> void:
-	var center := ctrl.position + ctrl.size * 0.5
+func _resize_keeping_center(ctrl: Control, new_size: Vector2, vp: Vector2) -> void :
+	var center: = ctrl.position + ctrl.size * 0.5
 	if ctrl.size.x < 2.0:
 		center = new_size * 0.5
 	ctrl.size = new_size
@@ -159,58 +180,62 @@ func _resize_keeping_center(ctrl: Control, new_size: Vector2, vp: Vector2) -> vo
 	ctrl.pivot_offset = new_size * 0.5
 
 func _clamp_top_left(pos: Vector2, size: Vector2, vp: Vector2) -> Vector2:
-	var max_x := maxf(LAYOUT_MARGIN, vp.x - size.x - LAYOUT_MARGIN)
-	var max_y := maxf(LAYOUT_MARGIN, vp.y - size.y - LAYOUT_MARGIN)
+	var max_x: = maxf(LAYOUT_MARGIN, vp.x - size.x - LAYOUT_MARGIN)
+	var max_y: = maxf(LAYOUT_MARGIN, vp.y - size.y - LAYOUT_MARGIN)
 	return Vector2(clampf(pos.x, LAYOUT_MARGIN, max_x), clampf(pos.y, LAYOUT_MARGIN, max_y))
 
 func _norm_from_center(center: Vector2, vp: Vector2) -> Vector2:
 	return Vector2(
-		clampf(center.x / vp.x, 0.0, 1.0),
+		clampf(center.x / vp.x, 0.0, 1.0), 
 		clampf(center.y / vp.y, 0.0, 1.0)
 	)
 
-func _set_edit_cursor(editing: bool) -> void:
-	var filter := Control.MOUSE_FILTER_STOP if editing else Control.MOUSE_FILTER_IGNORE
-	var cursor := Control.CURSOR_POINTING_HAND if editing else Control.CURSOR_ARROW
+func _set_edit_cursor(editing: bool) -> void :
+	var filter: = Control.MOUSE_FILTER_STOP if editing else Control.MOUSE_FILTER_IGNORE
+	var cursor: = Control.CURSOR_POINTING_HAND if editing else Control.CURSOR_ARROW
 	for ctrl in [stick_base, dash_button]:
 		if ctrl == null:
 			continue
 		ctrl.mouse_filter = filter
 		ctrl.mouse_default_cursor_shape = cursor
 
-func _reset_widget_juice() -> void:
+func _reset_widget_juice() -> void :
+	if dash_button != null: dash_button.reset_feedback()
 	for ctrl in [stick_base, dash_button]:
 		if ctrl == null:
 			continue
 		ctrl.scale = Vector2.ONE
 		ctrl.rotation = 0.0
 
-func _juice_layout_widget(ctrl: Control, mouse: Vector2, dragging: bool, blend: float) -> void:
+func _juice_layout_widget(ctrl: Control, mouse: Vector2, dragging: bool, blend: float) -> void :
 	if ctrl == null:
 		return
-	var hot := dragging or _point_in_control(ctrl, mouse)
-	var target_scale := Vector2(1.08, 1.08) if dragging else (Vector2(1.05, 1.05) if hot else Vector2.ONE)
+	var hot: = dragging or _point_in_control(ctrl, mouse)
+	var target_scale: = Vector2(1.08, 1.08) if dragging else (Vector2(1.05, 1.05) if hot else Vector2.ONE)
 	ctrl.pivot_offset = ctrl.size * 0.5
 	ctrl.scale = ctrl.scale.lerp(target_scale, blend)
-	var tint := Color(1.18, 1.32, 1.12, _opacity) if hot else Color(1, 1, 1, _opacity)
+	var tint: = Color(1.18, 1.32, 1.12, _opacity) if hot else Color(1, 1, 1, _opacity)
 	ctrl.modulate = ctrl.modulate.lerp(tint, blend)
 
-func _reset_stick_visual() -> void:
+func _reset_stick_visual() -> void :
 	if stick_knob == null:
 		return
 	stick_knob.position = _stick_center - stick_knob.size * 0.5
 	stick_knob.modulate = Color.WHITE
 
-func _set_dash_pressed_visual(pressed: bool) -> void:
+func _set_dash_pressed_visual(pressed: bool) -> void :
 	if dash_button == null:
 		return
-	var color := Color(0.75, 1.0, 0.8, _opacity) if pressed else Color(1, 1, 1, _opacity)
-	dash_button.modulate = color
-	dash_button.scale = Vector2(0.92, 0.92) if pressed else Vector2.ONE
+	dash_button.modulate = Color(1, 1, 1, _opacity)
+	dash_button.set_pressed_visual(pressed)
 	dash_button.pivot_offset = dash_button.size * 0.5
 
-func _input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void :
 	if not visible:
+		return
+
+
+	if (event is InputEventMouseButton or event is InputEventMouseMotion) and event.device == InputEvent.DEVICE_ID_EMULATION:
 		return
 	if layout_edit:
 		if _handle_layout_pointer(event):
@@ -225,24 +250,24 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventScreenDrag:
 		if _handle_drag(event):
 			get_viewport().set_input_as_handled()
-	# Desktop mouse fallback for quick browser testing without a phone.
+
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		var fake := InputEventScreenTouch.new()
+		var fake: = InputEventScreenTouch.new()
 		fake.pressed = event.pressed
 		fake.position = event.position
-		fake.index = 0
+		fake.index = MOUSE_TOUCH_INDEX
 		if _handle_touch(fake):
 			get_viewport().set_input_as_handled()
-	elif event is InputEventMouseMotion and _stick_touch_index == 0 and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-		var drag := InputEventScreenDrag.new()
-		drag.index = 0
+	elif event is InputEventMouseMotion and _stick_touch_index == MOUSE_TOUCH_INDEX and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		var drag: = InputEventScreenDrag.new()
+		drag.index = MOUSE_TOUCH_INDEX
 		drag.position = event.position
 		if _handle_drag(drag):
 			get_viewport().set_input_as_handled()
 
 func _handle_layout_pointer(event: InputEvent) -> bool:
-	var pos := Vector2.ZERO
-	var kind := ""
+	var pos: = Vector2.ZERO
+	var kind: = ""
 	if event is InputEventScreenTouch:
 		pos = event.position
 		kind = "press" if event.pressed else "release"
@@ -270,8 +295,8 @@ func _handle_layout_pointer(event: InputEvent) -> bool:
 		return false
 	if _drag_target == "":
 		return false
-	var vp := get_viewport().get_visible_rect().size
-	var ctrl := stick_base if _drag_target == "stick" else dash_button
+	var vp: = get_viewport().get_visible_rect().size
+	var ctrl: = stick_base if _drag_target == "stick" else dash_button
 	ctrl.global_position = _clamp_top_left(pos + _drag_offset, ctrl.size, vp)
 	if kind == "release":
 		commit_layout_from_positions()
@@ -281,6 +306,12 @@ func _handle_layout_pointer(event: InputEvent) -> bool:
 func _handle_touch(event: InputEventScreenTouch) -> bool:
 	var pos: Vector2 = event.position
 	if event.pressed:
+		var diagnostics: = get_tree().get_first_node_in_group("diagnostic_ui")
+		if diagnostics != null and diagnostics.owns_pointer(pos):
+			return false
+		var skill_ui: = get_tree().get_first_node_in_group("beast_power_ui")
+		if skill_ui != null and skill_ui.owns_pointer(pos):
+			return false
 		if _point_in_control(dash_button, pos) and _dash_touch_index < 0:
 			_dash_touch_index = event.index
 			_set_dash_pressed_visual(true)
@@ -292,7 +323,7 @@ func _handle_touch(event: InputEventScreenTouch) -> bool:
 			return true
 		return false
 	else:
-		var handled := false
+		var handled: = false
 		if event.index == _stick_touch_index:
 			_stick_touch_index = -1
 			MobileInput.clear_move()
@@ -311,8 +342,8 @@ func _handle_drag(event: InputEventScreenDrag) -> bool:
 	return false
 
 func _near_stick_zone(pos: Vector2) -> bool:
-	# Generous grab area so left-thumb presses near the stick still latch.
-	var center := stick_base.global_position + stick_base.size * 0.5
+
+	var center: = stick_base.global_position + stick_base.size * 0.5
 	return pos.distance_to(center) <= stick_radius * 2.4
 
 func _point_in_control(ctrl: Control, pos: Vector2) -> bool:
@@ -320,16 +351,16 @@ func _point_in_control(ctrl: Control, pos: Vector2) -> bool:
 		return false
 	return ctrl.get_global_rect().has_point(pos)
 
-func _update_stick(screen_pos: Vector2) -> void:
-	var center := stick_base.global_position + stick_base.size * 0.5
-	var offset := screen_pos - center
+func _update_stick(screen_pos: Vector2) -> void :
+	var center: = stick_base.global_position + stick_base.size * 0.5
+	var offset: = screen_pos - center
 	if offset.length() > stick_radius:
 		offset = offset.normalized() * stick_radius
 	stick_knob.position = (_stick_center + offset) - stick_knob.size * 0.5
 
-	var strength := offset.length() / stick_radius
+	var strength: = offset.length() / stick_radius
 	if strength < deadzone:
 		MobileInput.clear_move()
 		return
-	var remapped := (strength - deadzone) / (1.0 - deadzone)
+	var remapped: = (strength - deadzone) / (1.0 - deadzone)
 	MobileInput.set_move_vector(offset.normalized() * remapped)

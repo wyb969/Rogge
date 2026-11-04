@@ -1,28 +1,27 @@
 [gd_scene format=3 uid="uid://bjm6048cqooax"]
 
-[ext_resource type="Script" uid="uid://18ebx7talf74" path="res://script/game.gd" id="1_2dfbb"]
-[ext_resource type="PackedScene" uid="uid://cvchcpf82x874" path="res://scenes/player.tscn" id="1_jtwvx"]
-[ext_resource type="PackedScene" uid="uid://btiwdvuhitc7v" path="res://scenes/hand_weapon.tscn" id="8_0tnpc"]
-[ext_resource type="PackedScene" uid="uid://cfmc3o7psvogd" path="res://scenes/spawner.tscn" id="8_gee14"]
-[ext_resource type="PackedScene" uid="uid://dajh6exgsdyc5" path="res://scenes/level_bar.tscn" id="9_0tnpc"]
-[ext_resource type="PackedScene" uid="uid://d37ch1eyj5n5i" path="res://scenes/weapon.tscn" id="9_kvuet"]
-[ext_resource type="PackedScene" uid="uid://bg160musro4lw" path="res://scenes/circle_weapon.tscn" id="9_vtaks"]
-[ext_resource type="PackedScene" uid="uid://b8vt03vumge1y" path="res://scenes/circle_unit.tscn" id="10_kvpfn"]
-[ext_resource type="PackedScene" uid="uid://dobh4rb6edd2n" path="res://scenes/PasueMenu.tscn" id="11_kvpfn"]
-[ext_resource type="PackedScene" uid="uid://cvm1ulmjouj68" path="res://scenes/debug_panel.tscn" id="12_dinhu"]
-[ext_resource type="Script" path="res://script/dash_cooldown_ring.gd" id="13_dashring"]
-[ext_resource type="PackedScene" path="res://scenes/equipment_panel.tscn" id="14_equip"]
-[ext_resource type="PackedScene" path="res://scenes/drone_controller.tscn" id="15_drone"]
-[ext_resource type="PackedScene" path="res://scenes/molotov_controller.tscn" id="16_molotov"]
-[ext_resource type="PackedScene" path="res://scenes/freeze_controller.tscn" id="17_freeze"]
-[ext_resource type="PackedScene" path="res://scenes/infinite_background.tscn" id="18_infbg"]
+[ext_resource type="Script" uid="uid://18ebx7talf74" path="res://script/game.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/infinite_background.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://cvchcpf82x874" path="res://scenes/player.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://cfmc3o7psvogd" path="res://scenes/spawner.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://dajh6exgsdyc5" path="res://scenes/level_bar.tscn" id="5"]
+[ext_resource type="PackedScene" uid="uid://btiwdvuhitc7v" path="res://scenes/hand_weapon.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://bg160musro4lw" path="res://scenes/circle_weapon.tscn" id="7"]
+[ext_resource type="PackedScene" uid="uid://b8vt03vumge1y" path="res://scenes/circle_unit.tscn" id="8"]
+[ext_resource type="PackedScene" uid="uid://d37ch1eyj5n5i" path="res://scenes/weapon.tscn" id="9"]
+[ext_resource type="PackedScene" path="res://scenes/drone_controller.tscn" id="10"]
+[ext_resource type="PackedScene" path="res://scenes/molotov_controller.tscn" id="11"]
+[ext_resource type="PackedScene" path="res://scenes/freeze_controller.tscn" id="12"]
+[ext_resource type="PackedScene" uid="uid://dobh4rb6edd2n" path="res://scenes/PasueMenu.tscn" id="13"]
+[ext_resource type="PackedScene" uid="uid://cvm1ulmjouj68" path="res://scenes/debug_panel.tscn" id="14"]
+[ext_resource type="PackedScene" path="res://scenes/equipment_panel.tscn" id="15"]
 
 [node name="main" type="Node2D" unique_id=1261806375]
-script = ExtResource("1_2dfbb")
+script = ExtResource("1")
 
-[node name="InfiniteBackground" parent="." instance=ExtResource("18_infbg")]
+[node name="InfiniteBackground" parent="." unique_id=1646690414 instance=ExtResource("2")]
 
-[node name="Player" parent="." unique_id=1689592639 instance=ExtResource("1_jtwvx")]
+[node name="Player" parent="." unique_id=1689592639 instance=ExtResource("3")]
 position = Vector2(0, 0)
 collision_mask = 3
 
@@ -34,39 +33,39 @@ position_smoothing_enabled = true
 wait_time = 4.0
 autostart = true
 
-[node name="Spawner" parent="." unique_id=262256688 node_paths=PackedStringArray("player") instance=ExtResource("8_gee14")]
+[node name="Spawner" parent="." unique_id=262256688 node_paths=PackedStringArray("player") instance=ExtResource("4")]
 player = NodePath("../Player")
 
-[node name="LevelManager" parent="." unique_id=673273762 instance=ExtResource("9_0tnpc")]
+[node name="LevelManager" parent="." unique_id=673273762 instance=ExtResource("5")]
 
-[node name="HandWeapon" parent="." unique_id=1911175087 node_paths=PackedStringArray("player") instance=ExtResource("8_0tnpc")]
+[node name="HandWeapon" parent="." unique_id=1911175087 node_paths=PackedStringArray("player") instance=ExtResource("6")]
 position = Vector2(-67.97662, -55.942734)
 player = NodePath("../Player")
 relative_pos = Vector2(-30, -30)
 
-[node name="CircleWeapon" parent="." unique_id=666725942 node_paths=PackedStringArray("player") instance=ExtResource("9_vtaks")]
+[node name="CircleWeapon" parent="." unique_id=666725942 node_paths=PackedStringArray("player") instance=ExtResource("7")]
 position = Vector2(-90.63861, 17.993988)
-weapon_scene = ExtResource("10_kvpfn")
+weapon_scene = ExtResource("8")
 rotation_speed = 2.0
 player = NodePath("../Player")
 
-[node name="Weapon" parent="." unique_id=782294834 node_paths=PackedStringArray("player") instance=ExtResource("9_kvuet")]
+[node name="Weapon" parent="." unique_id=782294834 node_paths=PackedStringArray("player") instance=ExtResource("9")]
 position = Vector2(48.97811, -1.2091255)
 scale = Vector2(0.6, 0.6)
 player = NodePath("../Player")
 relative_pos = Vector2(20, 20)
 
-[node name="DroneController" parent="." node_paths=PackedStringArray("player") instance=ExtResource("15_drone")]
+[node name="DroneController" parent="." unique_id=1400657614 node_paths=PackedStringArray("player") instance=ExtResource("10")]
 player = NodePath("../Player")
 
-[node name="MolotovController" parent="." node_paths=PackedStringArray("player") instance=ExtResource("16_molotov")]
+[node name="MolotovController" parent="." unique_id=518950864 node_paths=PackedStringArray("player") instance=ExtResource("11")]
 player = NodePath("../Player")
 
-[node name="FreezeController" parent="." instance=ExtResource("17_freeze")]
+[node name="FreezeController" parent="." unique_id=663015196 instance=ExtResource("12")]
 
-[node name="Node2D" parent="." unique_id=363020718 instance=ExtResource("11_kvpfn")]
+[node name="Node2D" parent="." unique_id=363020718 instance=ExtResource("13")]
 
-[node name="DebugPanel" parent="." unique_id=2116137223 node_paths=PackedStringArray("player") instance=ExtResource("12_dinhu")]
+[node name="DebugPanel" parent="." unique_id=2116137223 node_paths=PackedStringArray("player") instance=ExtResource("14")]
 player = NodePath("../Player")
 
 [node name="PickupContainer" type="Node2D" parent="." unique_id=39785325 groups=["pickup_container"]]
@@ -75,23 +74,9 @@ z_index = 3
 [node name="EffectContainer" type="Node2D" parent="." unique_id=410339352 groups=["effect_container"]]
 z_index = 5
 
-[node name="HudLayer" type="CanvasLayer" parent="."]
+[node name="HudLayer" type="CanvasLayer" parent="." unique_id=1814456779]
 layer = 100
 
-[node name="DashCooldownRing" type="Node2D" parent="HudLayer" groups=["dash_cooldown_ui"]]
-position = Vector2(826, 526)
-script = ExtResource("13_dashring")
-radius = 48.0
-line_width = 5.0
-
-[node name="EquipmentPanel" parent="HudLayer" instance=ExtResource("14_equip")]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -158.0
-offset_top = 120.0
-offset_right = -18.0
-offset_bottom = 400.0
-grow_horizontal = 0
+[node name="EquipmentPanel" parent="HudLayer" unique_id=103597962 instance=ExtResource("15")]
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" uid="uid://dsf6o758y6et0" path="res://script/enemy_meta.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bd34fp2ludqb6" path="res://assest/sprites/loot_courier.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+title = "loot_courier"
+sprite = ExtResource("2")
+health = 52.0
+damage = 0.0
+move_speed = 86.0
+defense = 0.05
+body_scale = 1.3
+marker_color = Color(0.45, 1, 0.9, 1)
+contact_damage = 0.0

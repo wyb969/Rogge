@@ -1,12 +1,12 @@
 extends SceneTree
-## Headless check: archetypes move differently, and boss death opens stage 2.
+
 
 var _failures: Array[String] = []
 
-func _init() -> void:
+func _init() -> void :
 	call_deferred("_run")
 
-func _run() -> void:
+func _run() -> void :
 	var game: Node = load("res://scenes/game.tscn").instantiate()
 	root.add_child(game)
 	await process_frame
@@ -18,18 +18,22 @@ func _run() -> void:
 	var elite: Timer = spawner.get_node("Elite")
 	elite.stop()
 	for node_name in ["HandWeapon", "CircleWeapon", "Weapon", "DroneController", "MolotovController", "FreezeController"]:
-		var node := game.get_node_or_null(node_name)
+		var node: = game.get_node_or_null(node_name)
 		if node:
 			node.process_mode = Node.PROCESS_MODE_DISABLED
 	player.player_health = 100000.0
 
 	_check_resources()
 	_check_roster(spawner)
+	_check_ranged_cap(spawner)
 
-	var chaser := _spawn(spawner, load("res://resource/Enemy_1.tres"), Vector2(220, 40))
-	var dasher := _spawn(spawner, load("res://resource/Enemy_5.tres"), Vector2(-180, 30))
-	var tank := _spawn(spawner, load("res://resource/Enemy_3.tres"), Vector2(40, 160))
-	var ranged := _spawn(spawner, load("res://resource/Enemy_4.tres"), Vector2(-30, -180))
+	var chaser: = _spawn(spawner, load("res://resource/Enemy_1.tres"), Vector2(220, 40))
+	var dasher: = _spawn(spawner, load("res://resource/Enemy_5.tres"), Vector2(-180, 30))
+
+
+	dasher.dash_timer = 0.55
+	var tank: = _spawn(spawner, load("res://resource/Enemy_3.tres"), Vector2(40, 160))
+	var ranged: = _spawn(spawner, load("res://resource/Enemy_4.tres"), Vector2(-30, -180))
 
 	_expect(chaser.archetype == EnemyData.Archetype.CHASER, "chaser archetype")
 	_expect(dasher.archetype == EnemyData.Archetype.DASHER, "dasher archetype")
@@ -55,27 +59,36 @@ func _run() -> void:
 	dasher._apply_move_juice(0.05)
 	_expect(absf(dasher.sprite_2d.rotation) < 0.001, "sprite settles when stopped")
 
+
+	var fragile: = _spawn(spawner, load("res://resource/Enemy_5.tres"), Vector2(400, -400))
+	fragile.setHealth(fragile.health * spawner.threat_hp_multiplier_for(30, 900.0, 20, 2))
+	fragile.set_elite_status()
+	_expect(fragile.health <= 20.0, "late elite dasher stays at two base axe hits")
+	fragile.take_damage(10.0)
+	fragile.take_damage(10.0)
+	_expect(fragile.is_queued_for_deletion(), "two base axe hits kill a dasher")
+
 	var tank_hp_before: float = tank.health
 	tank.take_damage(100.0)
 	var tank_lost: float = tank_hp_before - tank.health
 	_expect(tank_lost < 70.0 and tank_lost > 40.0, "tank defense reduced 100 dmg to %s" % tank_lost)
 	_expect(is_instance_valid(tank), "tank survived the mitigated hit")
 
-	var chaser_dummy := _spawn(spawner, load("res://resource/Enemy_1.tres"), Vector2(400, 400))
+	var chaser_dummy: = _spawn(spawner, load("res://resource/Enemy_1.tres"), Vector2(400, 400))
 	var chaser_hp_before: float = chaser_dummy.health
 	chaser_dummy.take_damage(100.0)
 	var chaser_lost: float = chaser_hp_before - chaser_dummy.health
 	_expect(chaser_lost >= 99.0, "chaser took full damage, lost %s" % chaser_lost)
 
-	var max_speed := {
-		"chaser": 0.0,
-		"dasher": 0.0,
-		"tank": 0.0,
-		"ranged": 0.0,
+	var max_speed: = {
+		"chaser": 0.0, 
+		"dasher": 0.0, 
+		"tank": 0.0, 
+		"ranged": 0.0, 
 	}
-	var dasher_lunged := false
-	var tank_slammed := false
-	var frames := 0
+	var dasher_lunged: = false
+	var tank_slammed: = false
+	var frames: = 0
 	while frames < 180:
 		await physics_frame
 		frames += 1
@@ -93,7 +106,10 @@ func _run() -> void:
 		if tank.slam_time_left > 0.0 or tank.slam_windup > 0.0:
 			tank_slammed = true
 
-	var shots := 0
+	for shot in get_nodes_in_group("enemy_projectile"):
+		_expect(shot.velocity.length() <= 150.01, "actual enemy projectile respects slower speed")
+		_expect(shot.color.is_equal_approx(load("res://resource/Enemy_4.tres").marker_color), "actual ranged shot uses the distinct pink palette")
+	var shots: = 0
 	if is_instance_valid(ranged):
 		shots = int(ranged.shots_fired)
 	for node in get_nodes_in_group("enemy_projectile"):
@@ -109,15 +125,15 @@ func _run() -> void:
 	_expect(max_speed["chaser"] < 90.0, "chaser stays at walk speed (max %s)" % max_speed["chaser"])
 	_expect(max_speed["dasher"] > max_speed["chaser"] + 80.0, "dasher is clearly faster than chaser")
 
-	var victory := {"hit": false}
-	spawner.boss_defeated.connect(func() -> void: victory["hit"] = true)
-	var advanced := {"stage": 0}
-	spawner.stage_advanced.connect(func(next_stage: int) -> void: advanced["stage"] = next_stage)
+	var victory: = {"hit": false}
+	spawner.boss_defeated.connect( func() -> void : victory["hit"] = true)
+	var advanced: = {"stage": 0}
+	spawner.stage_advanced.connect( func(next_stage: int) -> void : advanced["stage"] = next_stage)
 
 	game.pause_menu.visible = true
 	game._on_rest_requested()
 	_expect(game.rest_hub == null or not game.rest_hub.visible, "rest waits while the level-up menu is open")
-	game._open_rest_after_level_up("speed_up")
+	game.pause_menu.on_card_selected("speed_up")
 	await process_frame
 	_expect(game.rest_hub != null and game.rest_hub.visible, "rest opens after the level-up card")
 	game.rest_hub.close_hub()
@@ -135,23 +151,33 @@ func _run() -> void:
 	_expect(game.rest_hub.next_button.disabled, "next stage starts locked")
 	var hp_before: float = player.max_player_health
 	game.rest_hub._on_reward_pressed("max_hp")
-	_expect(player.max_player_health > hp_before + 100.0, "max hp reward applied")
+	_expect(player.max_player_health == hp_before, "rest selection previews without applying max HP")
 	_expect(is_equal_approx(player.player_health, player.max_player_health), "max hp reward refills")
-	_expect(not game.rest_hub.next_button.disabled, "next stage unlocks after one reward")
+	_expect( not game.rest_hub.next_button.disabled, "next stage unlocks after one selection")
 	var def_before: float = player.damage_reduction
 	game.rest_hub._on_reward_pressed("defense")
-	_expect(is_equal_approx(player.damage_reduction, def_before), "second reward is ignored")
+	_expect(is_equal_approx(player.damage_reduction, def_before), "reselection previews without granting defense")
+	game.rest_hub._on_reward_pressed("max_hp")
 	game.rest_hub._on_next_pressed()
+	_expect(player.max_player_health > hp_before + 100 and is_equal_approx(player.damage_reduction, def_before), "confirm grants only the final selected max-HP reward")
 	await create_timer(0.2).timeout
 	_expect(spawner.stage == 2, "next stage button starts stage 2, got %s" % spawner.stage)
 	_expect(advanced["stage"] == 2, "stage_advanced emitted 2")
 	_expect(game.rest_hub == null or not game.rest_hub.visible, "rest hub closes")
-	_expect(not paused, "combat pause lifts for stage 2")
+	_expect( not paused, "combat pause lifts for stage 2")
 	_expect(spawner._stage_label != null and spawner._stage_label.text == "STAGE 2", "HUD reads STAGE 2")
-	var bg := game.get_node("InfiniteBackground")
-	_expect(bg.tint.r > 0.8 and bg.tint.g < 0.55 and bg.stage_grade > 0.5, "stage 2 ground is warm, tint=%s grade=%s" % [bg.tint, bg.stage_grade])
+	var bg: = game.get_node("InfiniteBackground")
+	_expect(bg.PALETTE_TINTS.has(bg.tint), "stage 2 uses a safe palette")
 	bg.apply_stage(1)
-	_expect(bg.stage_grade < 0.01 and bg.tint.b > bg.tint.r, "stage 1 ground stays the cool meadow")
+	_expect(bg.PALETTE_TINTS.has(bg.tint), "stage 1 uses a safe palette")
+	for stage_num in range(1, 13):
+		bg.apply_stage(stage_num)
+
+		var values: Vector2 = bg._shader_mat.get_shader_parameter("ground_values")
+		var floor_color: Color = bg.tint * (values.x + values.y)
+		var bullet_color: Color = load("res://resource/Enemy_4.tres").marker_color
+		var contrast: = (_luminance(bullet_color) + 0.05) / (_luminance(floor_color) + 0.05)
+		_expect(contrast >= 4.5, "stage %d projectile contrast %.2f" % [stage_num, contrast])
 	bg.apply_stage(2)
 	var calm: float = spawner.threat_hp_multiplier_for(0, 0.0, 0, 1)
 	var built: float = spawner.threat_hp_multiplier_for(4, 120.0, 3, 1)
@@ -164,7 +190,7 @@ func _run() -> void:
 
 	await create_timer(1.3).timeout
 	_expect(spawner.stage_boss_countdown > 20.0, "stage 2 boss is scheduled, countdown=%s" % spawner.stage_boss_countdown)
-	_expect(not spawner.timer.is_stopped(), "stage 2 resumes spawns")
+	_expect( not spawner.timer.is_stopped(), "stage 2 resumes spawns")
 	_expect(spawner.timer.wait_time < 1.0, "stage 2 spawn timer is faster (%s)" % spawner.timer.wait_time)
 
 	var speed_before: float = player.SPEED
@@ -201,11 +227,11 @@ func _run() -> void:
 	_expect(is_equal_approx(player.player_health, 100.0), "chip hits do not lifesteal")
 	player.notify_damage_dealt(40.0)
 	_expect(player.player_health > 100.0 and player.player_health <= 102.0, "lifesteal is small, hp=%s" % player.player_health)
-	var pool_ids := {}
+	var pool_ids: = {}
 	for entry in game.pause_menu.upgrade_pool:
 		pool_ids[str(entry["id"])] = true
 	_expect(pool_ids.has("regen_up") and pool_ids.has("lifesteal_up"), "level-up pool has both cards")
-	var rest_ids := {}
+	var rest_ids: = {}
 	for btn in game.rest_hub._buttons:
 		rest_ids[str(btn.get_meta("reward_id"))] = true
 	_expect(rest_ids.has("regen_up") and rest_ids.has("lifesteal_up"), "rest hub offers regen and lifesteal")
@@ -246,11 +272,26 @@ func _run() -> void:
 	player._sync_shield_visuals()
 
 	spawner._on_boss_defeated()
-	_expect(victory["hit"] == true, "second boss clears the run")
+	await process_frame
+	_expect( not victory["hit"] and game.rest_hub.visible, "second boss opens a third-stage rest gate")
+	game.rest_hub._on_reward_pressed("defense")
+	game.rest_hub._on_next_pressed()
+	await create_timer(1.25).timeout
+	_expect(spawner.stage == 3 and not paused, "third-stage rest gate resumes combat")
+	spawner._on_boss_defeated()
+	await process_frame
+	await process_frame
+	_expect( not victory["hit"] and game.beast_powers._pending_reward == 3, "third-stage boss offers a blessing")
+	game.beast_powers.reward_claim.pressed.emit()
+	_expect(game.beast_powers.unlocked.has(0), "real blessing claim unlocks healing")
+	await process_frame
+	if is_instance_valid(game.rest_hub):
+		game.rest_hub.close_hub()
+	paused = false
 	_expect(is_equal_approx(Engine.time_scale, 1.0), "victory does not add slow-mo")
 
-	var defeats := {"n": 0}
-	game.game_over.connect(func(stats: Dictionary) -> void:
+	var defeats: = {"n": 0}
+	game.game_over.connect( func(stats: Dictionary) -> void :
 		if not stats.get("victory", false):
 			defeats["n"] += 1
 	)
@@ -272,7 +313,7 @@ func _run() -> void:
 		print("SMOKE FAIL: ", failure)
 	quit(1)
 
-func _check_resources() -> void:
+func _check_resources() -> void :
 	var dasher = load("res://resource/Enemy_5.tres")
 	var tank = load("res://resource/Enemy_3.tres")
 	var ranged = load("res://resource/Enemy_4.tres")
@@ -285,15 +326,30 @@ func _check_resources() -> void:
 	_expect(dasher.health <= 20.0 and dasher.move_speed >= 100.0, "dasher resource is fragile and fast")
 	_expect(ranged.projectile_damage > 20.0, "ranged resource has a projectile")
 
-func _check_roster(spawner: Node) -> void:
-	var seen := {}
-	for _i in 8:
+func _check_roster(spawner: Node) -> void :
+	var seen: = {}
+	spawner._rebuild_pattern()
+	for _i in spawner.THEME_ROSTER_SIZE:
 		var data: EnemyData = spawner._next_enemy_data()
 		seen[int(data.archetype)] = true
 	_expect(seen.has(EnemyData.Archetype.CHASER), "roster includes chaser")
 	_expect(seen.has(EnemyData.Archetype.DASHER), "roster includes dasher")
 	_expect(seen.has(EnemyData.Archetype.TANK), "roster includes tank")
 	_expect(seen.has(EnemyData.Archetype.RANGED), "roster includes ranged")
+
+func _check_ranged_cap(spawner: Node) -> void :
+	for settings in [[1, 0, 1], [1, 20, 2], [2, 4, 3], [2, 12, 4], [3, 12, 6]]:
+		spawner.stage = settings[0]
+		spawner.current_level = settings[1]
+		_expect(spawner.ranged_alive_limit() == settings[2], "ranged cap grows by stage and level: %s" % [settings])
+		for n in 100:
+			spawner.spawn(Vector2(5000 + n * 50, 5000), n % 2 == 0)
+		_expect(spawner._ranged_alive_count() <= settings[2], "actual waves and elites respect ranged cap")
+		for enemy in get_nodes_in_group("EnemyGroup"):
+			enemy.free()
+	spawner.stage = 1
+	spawner.current_level = 0
+	spawner._pattern_stage = -1
 
 func _spawn(spawner: Node, data: EnemyData, offset: Vector2) -> Node:
 	var enemy = spawner.enemy.instantiate()
@@ -312,10 +368,14 @@ func _has_no_nameplate(enemy: Node) -> bool:
 			return false
 	return true
 
-func _expect(ok: bool, message: String) -> void:
+func _expect(ok: bool, message: String) -> void :
 	if not ok:
 		_fail(message)
 
-func _fail(message: String) -> void:
+func _fail(message: String) -> void :
 	_failures.append(message)
 	push_error(message)
+
+func _luminance(color: Color) -> float:
+	var linear: = color.srgb_to_linear()
+	return linear.r * 0.2126 + linear.g * 0.7152 + linear.b * 0.0722

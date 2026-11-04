@@ -4,13 +4,13 @@ signal selected(upgrade_id: String)
 var upgrade_id: String = ""
 var hover_tween: Tween
 
-const CARD_SIZE := Vector2(180, 250)
+const CARD_SIZE: = Vector2(180, 250)
 
-@onready var title_label: Label = $VBoxContainer/TitleLabel
-@onready var desc_label: Label = $VBoxContainer/DescLabel
-@onready var icon: TextureRect = $VBoxContainer/Icon
+@onready var title_label: Label = $VBoxContainer / TitleLabel
+@onready var desc_label: Label = $VBoxContainer / DescLabel
+@onready var icon: TextureRect = $VBoxContainer / Icon
 
-func _ready() -> void:
+func _ready() -> void :
 	custom_minimum_size = CARD_SIZE
 	size = CARD_SIZE
 	size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -24,7 +24,7 @@ func _ready() -> void:
 
 	_configure_labels()
 
-func _configure_labels() -> void:
+func _configure_labels() -> void :
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -40,25 +40,36 @@ func _configure_labels() -> void:
 
 func setup(data: Dictionary):
 	upgrade_id = data["id"]
-	# Keep numbers as plain ASCII so the pixel font glyph atlas can render them.
+
 	title_label.text = str(data.get("title", ""))
 	desc_label.text = str(data.get("desc", ""))
 	icon.texture = load(data["icon"])
+	preload("res://script/visual_style.gd").style_icon(icon, upgrade_id)
 	custom_minimum_size = CARD_SIZE
 	size = CARD_SIZE
+
+func set_display_width(width: float, ui_scale: float = 1.0) -> void :
+	desc_label.custom_minimum_size.x = width - 24.0 * ui_scale
+	UiFonts.apply_to_label(title_label, int(16 * ui_scale))
+	UiFonts.apply_to_label(desc_label, int(13 * ui_scale))
+	icon.custom_minimum_size = Vector2.ONE * 64 * ui_scale
+	$VBoxContainer.add_theme_constant_override("separation", int(8 * ui_scale))
+	custom_minimum_size = Vector2(width, CARD_SIZE.y * ui_scale)
+	size = custom_minimum_size
+	pivot_offset = size * 0.5
 
 func _on_selected_pressed():
 	selected.emit(upgrade_id)
 
-func _gui_input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void :
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			selected.emit(upgrade_id)
 
-func _on_mouse_enter() -> void:
+func _on_mouse_enter() -> void :
 	play_hover_tween(Vector2(1.08, 1.08), Color(1.15, 1.15, 1.15), 0.12)
 
-func _on_mouse_exited() -> void:
+func _on_mouse_exited() -> void :
 	play_hover_tween(Vector2.ONE, Color.WHITE, 0.12)
 
 func play_hover_tween(target_scale: Vector2, target_color: Color, duration: float):

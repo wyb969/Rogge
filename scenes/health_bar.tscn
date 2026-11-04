@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://pcli3eanw4ax"]
 
-[ext_resource type="Script" uid="uid://b02ebagagy26s" path="res://script/health_bar.gd" id="1_yjbje"]
+[ext_resource type="Script" uid="uid://b02ebagagy26s" path="res://script/health_bar.gd" id="1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0xhhv"]
 
@@ -27,7 +27,7 @@ theme_override_styles/background = SubResource("StyleBoxEmpty_0xhhv")
 theme_override_styles/fill = SubResource("StyleBoxFlat_crbgl")
 value = 60.0
 show_percentage = false
-script = ExtResource("1_yjbje")
+script = ExtResource("1")
 
 [node name="DemageBar" type="ProgressBar" parent="." unique_id=1325632462]
 z_index = -1

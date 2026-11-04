@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/beast_boss.tscn" id="1"]
+[ext_resource type="Script" uid="uid://cppypdsgfmgo7" path="res://script/trial_enemy.gd" id="2"]
+
+[node name="TrialEnemy" unique_id=844952168 instance=ExtResource("1")]
+script = ExtResource("2")

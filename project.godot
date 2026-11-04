@@ -15,6 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="rogge"
+config/version="20261104-002331"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
@@ -22,18 +23,28 @@ config/icon="res://icon.svg"
 [autoload]
 
 SettingsStore="*res://script/settings_store.gd"
+RunDiagnostics="*res://script/run_diagnostics.gd"
 AudioManager="*res://scenes/audio_manager.tscn"
 MobileInput="*res://script/mobile_input.gd"
+CombatTargets="*res://script/combat_targets.gd"
 
 [display]
 
 window/size/viewport_width=900
 window/size/viewport_height=600
-window/stretch/mode="canvas_items"
+window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 window/handheld/orientation=6
 mouse_cursor/custom_image="res://assest/tile_0056.png"
 
+[editor]
+
+import/use_multiple_threads=false
+
+[editor_overrides]
+
+text_editor/behavior/indent/type=0
+text_editor/behavior/indent/size=4
 
 [file_customization]
 
@@ -89,7 +100,5 @@ Debug={
 
 [rendering]
 
-textures/vram_compression/import_etc2_astc=true
-
 textures/canvas_textures/default_texture_filter=0
-
+textures/vram_compression/import_etc2_astc=true

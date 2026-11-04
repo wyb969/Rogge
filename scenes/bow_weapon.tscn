@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://cob6c0rb0m83q"]
+[gd_scene format=3 uid="uid://cob6c0rb0m83q"]
 
-[ext_resource type="Texture2D" uid="uid://i1edx4brx0at" path="res://assest/#2 - Transparent Icons & Drop Shadow.png" id="1_27dxc"]
+[ext_resource type="Texture2D" uid="uid://i1edx4brx0at" path="res://assest/#2 - Transparent Icons & Drop Shadow.png" id="1"]
 
-[node name="BowWeapon" type="Node2D"]
+[node name="BowWeapon" type="Node2D" unique_id=1576534981]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=412643142]
 rotation = 0.7853982
-texture = ExtResource("1_27dxc")
+texture = ExtResource("1")
 region_enabled = true
 region_rect = Rect2(128, 192, 32, 32)

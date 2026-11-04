@@ -3,15 +3,15 @@ extends Node2D
 signal retry_pressed
 signal main_menu_pressed
 
-@onready var root_ui: Control = $CanvasLayer/Control
-@onready var result_title: Label = $CanvasLayer/Control/ResultCenter/BoxContainer/ResultTitle
-@onready var time_label: Label = $CanvasLayer/Control/ResultCenter/BoxContainer/TimeLabel
-@onready var kill_label: Label = $CanvasLayer/Control/ResultCenter/BoxContainer/KillLabel
-@onready var level_label: Label = $CanvasLayer/Control/ResultCenter/BoxContainer/LevelLabel
-@onready var retry_button: Button = $CanvasLayer/Control/ResultCenter/BoxContainer/RetryButton
-@onready var main_menu_button: Button = $CanvasLayer/Control/ResultCenter/BoxContainer/BackToMenu
+@onready var root_ui: Control = $CanvasLayer / Control
+@onready var result_title: Label = $CanvasLayer / Control / ResultCenter / BoxContainer / ResultTitle
+@onready var time_label: Label = $CanvasLayer / Control / ResultCenter / BoxContainer / TimeLabel
+@onready var kill_label: Label = $CanvasLayer / Control / ResultCenter / BoxContainer / KillLabel
+@onready var level_label: Label = $CanvasLayer / Control / ResultCenter / BoxContainer / LevelLabel
+@onready var retry_button: Button = $CanvasLayer / Control / ResultCenter / BoxContainer / RetryButton
+@onready var main_menu_button: Button = $CanvasLayer / Control / ResultCenter / BoxContainer / BackToMenu
 
-func _ready() -> void:
+func _ready() -> void :
 	root_ui.hide()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	UiFonts.apply_to_label(result_title, 28, true)
@@ -21,10 +21,10 @@ func _ready() -> void:
 	UiFonts.apply_to_button(retry_button, 18)
 	UiFonts.apply_to_button(main_menu_button, 18)
 
-	retry_button.pressed.connect(func(): retry_pressed.emit())
-	main_menu_button.pressed.connect(func(): main_menu_pressed.emit())
+	retry_button.pressed.connect( func(): retry_pressed.emit())
+	main_menu_button.pressed.connect( func(): main_menu_pressed.emit())
 
-func show_result(stats: Dictionary) -> void:
+func show_result(stats: Dictionary) -> void :
 	root_ui.show()
 
 	var victory: bool = stats.get("victory", false)
@@ -44,5 +44,5 @@ func show_result(stats: Dictionary) -> void:
 	kill_label.text = "Kills: %d" % stats.get("kills", 0)
 	level_label.text = "Level: %d    Stage: %d" % [stats.get("level", 1), int(stats.get("stage", 1))]
 
-func hide_result() -> void:
+func hide_result() -> void :
 	root_ui.hide()

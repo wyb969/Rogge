@@ -30,13 +30,7 @@ Fallbacks=null
 fallbacks=[]
 Compress=null
 compress=false
-preload=[{
-"chars": " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.+-%:×/()[].,!?'\"~_Lv级架秒伤害存活间隔射速冻移额外附燃击中冰持续",
-"glyphs": [],
-"name": "web_ui",
-"size": 16,
-"variation_embolden": 0.0
-}]
+preload=[]
 language_support={}
 script_support={}
 opentype_features={}

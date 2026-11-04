@@ -1,0 +1,53 @@
+{
+  "version": "20261104-002331",
+  "pack_bytes": 20281940,
+  "sha256": "f7f0a3ea0b94ab155a354e68248b0db061782d2dd81ee50146880813add323d4",
+  "source": "public itch playable game",
+  "original_git_recovered": false,
+  "recovery_tool": "GDRE Tools v2.7.4",
+  "decompiled_scripts": 146,
+  "scripts_not_decompiled": 0,
+  "converted_resources": 343,
+  "failed_conversions": 0,
+  "lossy_resource_conversions": 49,
+  "original_worktree_available": false,
+  "original_git_history_available": false,
+  "raw_recovery_zip_sha256": "750525f1f4ca88351d104c99b3b9f6bf336a21338e89095140ab75fab6aedb4a",
+  "loop_metadata_restoration": [
+    {
+      "path": "assest/sounds/beast_aegis_8bit.wav.import",
+      "original_stream_loop_mode": 1,
+      "restored_import_loop_mode": 2,
+      "loop_begin": 0,
+      "loop_end": 330749
+    },
+    {
+      "path": "assest/sounds/beast_gale_8bit.wav.import",
+      "original_stream_loop_mode": 1,
+      "restored_import_loop_mode": 2,
+      "loop_begin": 0,
+      "loop_end": 271383
+    },
+    {
+      "path": "assest/sounds/beast_thunder_8bit.wav.import",
+      "original_stream_loop_mode": 1,
+      "restored_import_loop_mode": 2,
+      "loop_begin": 0,
+      "loop_end": 251999
+    },
+    {
+      "path": "assest/sounds/beast_tide_8bit.wav.import",
+      "original_stream_loop_mode": 1,
+      "restored_import_loop_mode": 2,
+      "loop_begin": 0,
+      "loop_end": 302399
+    },
+    {
+      "path": "assest/sounds/knight_boss_8bit.wav.import",
+      "original_stream_loop_mode": 1,
+      "restored_import_loop_mode": 2,
+      "loop_begin": 0,
+      "loop_end": 529199
+    }
+  ]
+}

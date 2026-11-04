@@ -1,16 +1,16 @@
 [gd_scene format=3 uid="uid://b8vt03vumge1y"]
 
-[ext_resource type="Texture2D" uid="uid://i1edx4brx0at" path="res://assest/#2 - Transparent Icons & Drop Shadow.png" id="1_c163g"]
-[ext_resource type="Script" uid="uid://b42esea37c486" path="res://script/circle_unit.gd" id="1_dta8g"]
+[ext_resource type="Script" uid="uid://b42esea37c486" path="res://script/circle_unit.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://i1edx4brx0at" path="res://assest/#2 - Transparent Icons & Drop Shadow.png" id="2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dta8g"]
 size = Vector2(29, 29)
 
 [node name="CircleUnit" type="Node2D" unique_id=1551228924]
-script = ExtResource("1_dta8g")
+script = ExtResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=92336591]
-texture = ExtResource("1_c163g")
+texture = ExtResource("2")
 region_enabled = true
 region_rect = Rect2(32, 416, 32, 32)
 

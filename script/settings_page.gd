@@ -1,19 +1,26 @@
 extends CanvasLayer
-## Title-screen settings. Volume, on-screen control layout, and a difficulty
-## choice that is saved but does not change combat yet.
+
+
 
 signal closed
 
-const SIZE_MIN := 0.7
-const SIZE_MAX := 1.6
+const SIZE_MIN: = 0.7
+const SIZE_MAX: = 1.6
+const DIFFICULTY: = preload("res://script/run_difficulty.gd")
 
 var volume_slider: HSlider
+var music_slider: HSlider
+var sfx_slider: HSlider
+var ambience_slider: HSlider
 var size_slider: HSlider
 var opacity_slider: HSlider
+var shake_slider: HSlider
+var weather_slider: HSlider
 const DIFF_LABELS: PackedStringArray = ["简单  Easy", "中等  Medium", "困难  Hard"]
 
 var difficulty_button: Button
 var difficulty_list: VBoxContainer
+var difficulty_description: Label
 var volume_value: Label
 var back_button: Button
 var hint_label: Label
@@ -26,7 +33,7 @@ var _base_top: float
 var _base_bottom: float
 var _follow: Vector2 = Vector2.ZERO
 
-func _ready() -> void:
+func _ready() -> void :
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 70
 	visible = false
@@ -35,46 +42,58 @@ func _ready() -> void:
 		get_viewport().size_changed.connect(_fit)
 	call_deferred("_fit")
 
-func _process(delta: float) -> void:
+func _process(delta: float) -> void :
 	if not visible or _panel == null:
 		return
-	var vp := get_viewport().get_visible_rect().size
-	var target := Vector2.ZERO
+	var vp: = get_viewport().get_visible_rect().size
+	var target: = Vector2.ZERO
 	if vp.x > 1.0 and vp.y > 1.0:
-		var mouse := get_viewport().get_mouse_position()
+		var mouse: = get_viewport().get_mouse_position()
 		target = Vector2(
-			clampf(mouse.x / vp.x - 0.5, -0.5, 0.5) * 14.0,
+			clampf(mouse.x / vp.x - 0.5, -0.5, 0.5) * 14.0, 
 			clampf(mouse.y / vp.y - 0.5, -0.5, 0.5) * 8.0
 		)
-	var blend := clampf(1.0 - exp(-12.0 * delta), 0.0, 1.0)
+	var blend: = clampf(1.0 - exp(-12.0 * delta), 0.0, 1.0)
 	_follow = _follow.lerp(target, blend)
 	_panel.offset_left = _base_left + _follow.x
 	_panel.offset_right = _base_right + _follow.x
 	_panel.offset_top = _base_top + _follow.y
 	_panel.offset_bottom = _base_bottom + _follow.y
 
-func open_page() -> void:
+func open_page() -> void :
 	visible = true
 	_sync_from_store()
 	_fit()
 
-func close_page() -> void:
+func close_page() -> void :
 	visible = false
 	closed.emit()
 
-func _sync_from_store() -> void:
+func _sync_from_store() -> void :
 	if volume_slider:
 		volume_slider.set_value_no_signal(SettingsStore.master_linear)
 		_refresh_volume_label()
 	if size_slider:
 		size_slider.set_value_no_signal(SettingsStore.control_scale)
+	if ambience_slider:
+		ambience_slider.set_value_no_signal(SettingsStore.ambience_linear)
+	if music_slider:
+		music_slider.set_value_no_signal(SettingsStore.music_linear)
+	if sfx_slider:
+		sfx_slider.set_value_no_signal(SettingsStore.sfx_linear)
 	if opacity_slider:
 		opacity_slider.set_value_no_signal(SettingsStore.control_opacity)
+	if shake_slider:
+		shake_slider.set_value_no_signal(SettingsStore.camera_shake)
+	if weather_slider:
+		weather_slider.set_value_no_signal(SettingsStore.weather_intensity)
 	if difficulty_button:
 		difficulty_button.text = _difficulty_caption(SettingsStore.difficulty)
+	if difficulty_description:
+		difficulty_description.text = DIFFICULTY.RULES[SettingsStore.difficulty]
 
-func _build_ui() -> void:
-	var dim := ColorRect.new()
+func _build_ui() -> void :
+	var dim: = ColorRect.new()
 	dim.color = Color(0.04, 0.07, 0.12, 0.55)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dim)
@@ -83,7 +102,7 @@ func _build_ui() -> void:
 	_panel = PanelContainer.new()
 	_panel.name = "Panel"
 	_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	var panel_style := StyleBoxFlat.new()
+	var panel_style: = StyleBoxFlat.new()
 	panel_style.bg_color = Color(0.15, 0.17, 0.19, 0.96)
 	panel_style.border_color = Color(0.72, 0.84, 0.92, 0.4)
 	panel_style.set_border_width_all(2)
@@ -97,7 +116,7 @@ func _build_ui() -> void:
 	_panel.add_theme_stylebox_override("panel", panel_style)
 	add_child(_panel)
 
-	var outer := VBoxContainer.new()
+	var outer: = VBoxContainer.new()
 	outer.add_theme_constant_override("separation", 10)
 	outer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	outer.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -122,6 +141,21 @@ func _build_ui() -> void:
 	_box.add_child(volume_slider)
 	volume_value = _label("100%", 14, false)
 	_box.add_child(volume_value)
+	_box.add_child(_label("背景音乐  Music", 16, false))
+	music_slider = _slider(0, 1, 0.01)
+	music_slider.name = "MusicVolume"
+	music_slider.value_changed.connect( func(value: float): SettingsStore.set_music_linear(value))
+	_box.add_child(music_slider)
+	_box.add_child(_label("游戏音效  Sound effects", 16, false))
+	sfx_slider = _slider(0, 1, 0.01)
+	sfx_slider.name = "SfxVolume"
+	sfx_slider.value_changed.connect( func(value: float): SettingsStore.set_sfx_linear(value))
+	_box.add_child(sfx_slider)
+	_box.add_child(_label("环境音  Weather ambience", 16, false))
+	ambience_slider = _slider(0, 1, 0.01)
+	ambience_slider.name = "AmbienceVolume"
+	ambience_slider.value_changed.connect( func(value: float): SettingsStore.set_ambience_linear(value))
+	_box.add_child(ambience_slider)
 
 	_box.add_child(_label("按键大小  Button size", 16, false))
 	size_slider = _slider(SIZE_MIN, SIZE_MAX, 0.05)
@@ -132,6 +166,17 @@ func _build_ui() -> void:
 	opacity_slider = _slider(0.25, 1.0, 0.05)
 	opacity_slider.value_changed.connect(_on_opacity)
 	_box.add_child(opacity_slider)
+	_box.add_child(_label("镜头震动  Camera shake", 16, false))
+	shake_slider = _slider(0.0, 1.0, 0.05)
+	shake_slider.name = "CameraShake"
+	shake_slider.tooltip_text = "控制镜头震动和移动惯性；0 关闭额外动效"
+	shake_slider.value_changed.connect( func(value: float): SettingsStore.set_camera_shake(value))
+	_box.add_child(shake_slider)
+	_box.add_child(_label("天气特效  Weather FX", 16, false))
+	weather_slider = _slider(0, 1, 0.05)
+	weather_slider.name = "WeatherIntensity"
+	weather_slider.value_changed.connect( func(value: float): SettingsStore.set_weather_intensity(value))
+	_box.add_child(weather_slider)
 
 	_box.add_child(_label("难度  Difficulty", 16, false))
 	difficulty_button = Button.new()
@@ -147,20 +192,23 @@ func _build_ui() -> void:
 	difficulty_list.add_theme_constant_override("separation", 4)
 	_box.add_child(difficulty_list)
 	for index in DIFF_LABELS.size():
-		var choice := Button.new()
+		var choice: = Button.new()
 		choice.custom_minimum_size = Vector2(0, 44)
 		choice.pressed.connect(_on_difficulty_choice.bind(index))
 		choice.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_style_action(choice)
-		# Label uses the same font path as the rest of the panel. Button.text on a
-		# web popup was shaping without the CJK fallback.
-		var caption := _label(DIFF_LABELS[index], 18, false)
+
+
+		var caption: = _label(DIFF_LABELS[index], 18, false)
 		caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		caption.set_anchors_preset(Control.PRESET_FULL_RECT)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		choice.add_child(caption)
 		difficulty_list.add_child(choice)
+	difficulty_description = _label("", 16, false)
+	difficulty_description.name = "DifficultyDescription"
+	_box.add_child(difficulty_description)
 
 	hint_label = _label("拖动摇杆和冲刺键   Drag stick and DASH", 14, false)
 	outer.add_child(hint_label)
@@ -175,21 +223,26 @@ func _build_ui() -> void:
 	_sync_from_store()
 
 func _difficulty_caption(index: int) -> String:
-	var safe := clampi(index, 0, DIFF_LABELS.size() - 1)
+	var safe: = clampi(index, 0, DIFF_LABELS.size() - 1)
 	return "%s  v" % DIFF_LABELS[safe]
 
-func _toggle_difficulty_list() -> void:
+func _toggle_difficulty_list() -> void :
 	if difficulty_list:
 		difficulty_list.visible = not difficulty_list.visible
+		if difficulty_list.visible:
+			_scroll.call_deferred("ensure_control_visible", difficulty_list.get_child(2))
 
-func _on_difficulty_choice(index: int) -> void:
+func _on_difficulty_choice(index: int) -> void :
 	_on_difficulty(index)
 	if difficulty_button:
 		difficulty_button.text = _difficulty_caption(index)
 	if difficulty_list:
 		difficulty_list.visible = false
+	if difficulty_description:
+		difficulty_description.text = DIFFICULTY.RULES[SettingsStore.difficulty]
+		_scroll.call_deferred("ensure_control_visible", difficulty_description)
 
-func _style_action(button: Button) -> void:
+func _style_action(button: Button) -> void :
 	button.set_meta("juicy_glow", true)
 	button.add_theme_color_override("font_color", Color(0.96, 0.98, 1.0))
 	button.add_theme_color_override("font_hover_color", Color(1, 1, 1))
@@ -198,7 +251,9 @@ func _style_action(button: Button) -> void:
 	JuicyHover.bind(button)
 
 func _label(text: String, size: int, bold: bool) -> Label:
-	var label := Label.new()
+	var label: = Label.new()
+	label.set_meta("base_font_size", size)
+	label.set_meta("bold", bold)
 	label.text = text
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -207,7 +262,7 @@ func _label(text: String, size: int, bold: bool) -> Label:
 	return label
 
 func _slider(min_v: float, max_v: float, step: float) -> HSlider:
-	var slider := HSlider.new()
+	var slider: = HSlider.new()
 	slider.min_value = min_v
 	slider.max_value = max_v
 	slider.step = step
@@ -215,61 +270,73 @@ func _slider(min_v: float, max_v: float, step: float) -> HSlider:
 	JuicyHover.bind(slider)
 	return slider
 
-func _on_volume(value: float) -> void:
+func _on_volume(value: float) -> void :
 	SettingsStore.set_master_linear(value)
 	_refresh_volume_label()
 
-func _on_volume_released(_changed: bool) -> void:
+func _on_volume_released(_changed: bool) -> void :
 	if AudioManager and AudioManager.has_method("play_pickup"):
 		AudioManager.play_pickup()
 
-func _refresh_volume_label() -> void:
+func _refresh_volume_label() -> void :
 	if volume_value:
 		volume_value.text = "%d%%" % int(round(SettingsStore.master_linear * 100.0))
 
-func _on_size(value: float) -> void:
+func _on_size(value: float) -> void :
 	SettingsStore.set_control_scale(value)
 	_notify_controls()
 
-func _on_opacity(value: float) -> void:
+func _on_opacity(value: float) -> void :
 	SettingsStore.set_control_opacity(value)
 	_notify_controls()
 
-func _on_difficulty(index: int) -> void:
+func _on_difficulty(index: int) -> void :
 	SettingsStore.set_difficulty(index)
 	if AudioManager and AudioManager.has_method("play_upgrade"):
 		AudioManager.play_upgrade()
 
-func _notify_controls() -> void:
-	var controls := get_parent().get_node_or_null("MobileControls") if get_parent() else null
+func _notify_controls() -> void :
+	var controls: = get_parent().get_node_or_null("MobileControls") if get_parent() else null
 	if controls and controls.has_method("apply_saved_layout"):
 		controls.apply_saved_layout()
 
-func _fit() -> void:
+func _fit() -> void :
 	if _panel == null:
 		return
-	var vp := get_viewport().get_visible_rect().size
+	var vp: = get_viewport().get_visible_rect().size
 	if vp.x < 8.0 or vp.y < 8.0:
 		return
-	var width := clampf(vp.x * 0.88, 240.0, 460.0)
-	var height := minf(vp.y - 80.0, 620.0)
+	var ui_scale: = 2.0 if vp.y > vp.x else 1.0
+	var width: = clampf(vp.x * 0.88, 240.0 * ui_scale, 460.0 * ui_scale)
+	var height: = minf(vp.y - 80.0 * ui_scale, 620.0 * ui_scale)
 	_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	_base_left = -width * 0.5
+	_base_left = - width * 0.5
 	_base_right = width * 0.5
-	_base_top = 64.0
-	_base_bottom = 64.0 + height
+	_base_top = 64.0 * ui_scale
+	_base_bottom = _base_top + height
 	_panel.offset_left = _base_left + _follow.x
 	_panel.offset_right = _base_right + _follow.x
 	_panel.offset_top = _base_top + _follow.y
 	_panel.offset_bottom = _base_bottom + _follow.y
 	for child in _box.get_children():
 		if child is Control:
-			child.custom_minimum_size.x = maxf(160.0, width - 48.0)
+			child.custom_minimum_size.x = maxf(160.0, width - 48.0 * ui_scale)
+		if child is Label:
+			UiFonts.apply_to_label(child, int(child.get_meta("base_font_size", 16) * ui_scale), child.get_meta("bold", false))
+		elif child is HSlider:
+			child.custom_minimum_size.y = 40 * ui_scale
+		elif child is Button:
+			child.custom_minimum_size.y = 48 * ui_scale
+			UiFonts.apply_to_button(child, int(18 * ui_scale))
+	_box.add_theme_constant_override("separation", int(8 * ui_scale))
 	if back_button:
-		back_button.custom_minimum_size.x = maxf(160.0, width - 48.0)
+		back_button.custom_minimum_size = Vector2(maxf(160.0, width - 48 * ui_scale), 52 * ui_scale)
+		UiFonts.apply_to_button(back_button, int(18 * ui_scale))
 	if hint_label:
-		hint_label.custom_minimum_size.x = maxf(160.0, width - 48.0)
+		hint_label.custom_minimum_size.x = maxf(160.0, width - 48 * ui_scale)
+		UiFonts.apply_to_label(hint_label, int(14 * ui_scale))
 	if difficulty_list:
 		for choice in difficulty_list.get_children():
 			if choice is Control:
-				choice.custom_minimum_size.x = maxf(160.0, width - 48.0)
+				choice.custom_minimum_size = Vector2(maxf(160.0, width - 48 * ui_scale), 44 * ui_scale)
+				UiFonts.apply_to_label(choice.get_child(0), int(18 * ui_scale))

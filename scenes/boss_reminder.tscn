@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://bd1jumvuhyuxg"]
 
-[ext_resource type="Script" uid="uid://bnfqgr00m383f" path="res://script/boss_reminder.gd" id="1_iqrdq"]
+[ext_resource type="Script" uid="uid://bnfqgr00m383f" path="res://script/boss_reminder.gd" id="1"]
 
 [node name="BossReminder" type="Node2D" unique_id=1840851062]
 process_mode = 3
-script = ExtResource("1_iqrdq")
+script = ExtResource("1")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1089465733]
 layer = 110
 
-[node name="Flash" type="ColorRect" parent="CanvasLayer"]
+[node name="Flash" type="ColorRect" parent="CanvasLayer" unique_id=2080869570]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -32,6 +32,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
 theme_override_font_sizes/font_size = 40
+text = "BOSS IS COMING!!!"
 horizontal_alignment = 1
 vertical_alignment = 1
-text = "BOSS IS COMING!!!"

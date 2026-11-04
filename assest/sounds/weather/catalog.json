@@ -1,0 +1,88 @@
+[
+  {
+    "id": "clear_air",
+    "seconds": 16.0,
+    "loop": true,
+    "peak": 0.1983,
+    "rms": 0.035,
+    "bytes": 101924,
+    "sha256": "3417b3515ef8a146a50d9f3710dbddd5e68928ca1b4d921c68c33c5a6fa3f79f"
+  },
+  {
+    "id": "overcast_wind",
+    "seconds": 20.0,
+    "loop": true,
+    "peak": 0.5839,
+    "rms": 0.1,
+    "bytes": 123761,
+    "sha256": "cda8ada346828c9ca21c3a9c055fad36c3f00a43e402f1fa9c7fb2010bc0413f"
+  },
+  {
+    "id": "rain",
+    "seconds": 25.5,
+    "loop": true,
+    "peak": 0.5551,
+    "rms": 0.085,
+    "bytes": 193696,
+    "sha256": "b8e5a5e356d51fefc7cfcb12605811dedb7d584c7c1f2e04df7a36d141bfa354",
+    "author": "Ylmir",
+    "license": "CC0-1.0",
+    "source": "https://opengameart.org/content/rain-loopable",
+    "source_archive_sha256": "e68f3e1c77493cf43bec84cebff5043bff6be9ce16d59b24caa988cd460aa75b",
+    "source_entry": "1.ogg"
+  },
+  {
+    "id": "snow",
+    "seconds": 18.0,
+    "loop": true,
+    "peak": 0.4115,
+    "rms": 0.065,
+    "bytes": 114127,
+    "sha256": "3b6adf3c7bbefe1f0a7085ed6fc7152a8e12fcba6f161c9de720f3a000161763"
+  },
+  {
+    "id": "birds_1",
+    "seconds": 2.2,
+    "loop": false,
+    "peak": 0.518,
+    "rms": 0.0929,
+    "bytes": 6359,
+    "sha256": "ee570e64bba5568f67e0f43ad7bb2ebd7e59d7b9d0e2c0c4f45ed449d01682de"
+  },
+  {
+    "id": "birds_2",
+    "seconds": 2.45,
+    "loop": false,
+    "peak": 0.5239,
+    "rms": 0.0871,
+    "bytes": 6907,
+    "sha256": "0b122d1f05480c926103174b1b8d3f450c1f559ceb4db904558710ea41cee379"
+  },
+  {
+    "id": "night_owl",
+    "seconds": 2.6,
+    "loop": false,
+    "peak": 0.3813,
+    "rms": 0.0979,
+    "bytes": 6795,
+    "sha256": "c699b3f7f989f6fa6a3605f713e7bdc0088dc1672d96b1c7eb75d14cc04007ef"
+  },
+  {
+    "id": "thunder_1",
+    "seconds": 4.6,
+    "loop": false,
+    "peak": 0.76,
+    "rms": 0.2041,
+    "bytes": 31134,
+    "sha256": "6669dc4c4c5cb485b830e427aac9820e0604fcfc0b7943c3626c3d92414db1c1"
+  },
+  {
+    "id": "thunder_2",
+    "seconds": 5.3,
+    "loop": false,
+    "peak": 0.76,
+    "rms": 0.1801,
+    "bytes": 34435,
+    "sha256": "89b88752e8e1d6cb2912ff42a9a9ef3572fb2e9120a2cca7dd07555d1cf4b8c2"
+  }
+]

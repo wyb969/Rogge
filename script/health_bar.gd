@@ -8,7 +8,7 @@ var _shield: float = 0.0
 var _max_hp: float = 0.0
 var shield_fill: ColorRect
 
-func set_health(new_health) -> void:
+func set_health(new_health) -> void :
 	var pre_health = health
 	health = new_health
 	if health <= 0:
@@ -21,13 +21,13 @@ func set_health(new_health) -> void:
 		demage_bar.value = health
 	_apply_shield_layout()
 
-func set_shield(amount: float, max_hp: float) -> void:
+func set_shield(amount: float, max_hp: float) -> void :
 	_shield = maxf(0.0, amount)
 	if max_hp > 0.0:
 		_max_hp = max_hp
 	_apply_shield_layout()
 
-func init_health(health_val) -> void:
+func init_health(health_val) -> void :
 	health = health_val
 	_max_hp = float(health_val)
 	max_value = health
@@ -36,11 +36,23 @@ func init_health(health_val) -> void:
 	demage_bar.value = health
 	_apply_shield_layout()
 
-func _apply_shield_layout() -> void:
+func set_max_health(maximum: float, current: float) -> void :
+
+
+	_max_hp = maximum
+	max_value = maximum
+	health = clampf(current, 0.0, maximum)
+	value = health
+	demage_bar.max_value = maximum
+	demage_bar.value = health
+	timer.stop()
+	_apply_shield_layout()
+
+func _apply_shield_layout() -> void :
 	if shield_fill == null or demage_bar == null:
 		return
-	var max_hp := _max_hp if _max_hp > 0.0 else float(max_value)
-	var hp := maxf(0.0, float(health))
+	var max_hp: = _max_hp if _max_hp > 0.0 else float(max_value)
+	var hp: = maxf(0.0, float(health))
 	if max_hp > 0.0:
 		max_value = max_hp
 		demage_bar.max_value = max_hp
@@ -49,16 +61,16 @@ func _apply_shield_layout() -> void:
 		shield_fill.visible = false
 		return
 	shield_fill.visible = true
-	var width := size.x
+	var width: = size.x
 	if width < 1.0:
 		width = 26.0
-	var hp_w := width * (minf(hp, max_hp) / max_hp)
-	# Small shields still paint a visible tip. The value itself is not capped.
-	var sh_w := clampf(width * (_shield / max_hp), 3.0, width * 2.5)
+	var hp_w: = width * (minf(hp, max_hp) / max_hp)
+
+	var sh_w: = clampf(width * (_shield / max_hp), 3.0, width * 2.5)
 	shield_fill.position = Vector2(hp_w, 0.0)
 	shield_fill.size = Vector2(sh_w, maxf(size.y, 4.0))
 
-func _ready() -> void:
+func _ready() -> void :
 	shield_fill = ColorRect.new()
 	shield_fill.name = "ShieldFill"
 	shield_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -67,9 +79,9 @@ func _ready() -> void:
 	shield_fill.z_index = 1
 	add_child(shield_fill)
 
-func _process(_delta: float) -> void:
+func _process(_delta: float) -> void :
 	pass
 
-func _on_timer_timeout() -> void:
+func _on_timer_timeout() -> void :
 	demage_bar.value = health
 	_apply_shield_layout()

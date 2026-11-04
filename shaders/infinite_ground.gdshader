@@ -12,6 +12,15 @@ uniform float world_tile_size = 16.0;
 uniform vec4 tint = vec4(0.227451, 0.321569, 0.415686, 1.0);
 // 0 keeps the classic multiply. Higher values recolor the tiles toward tint.
 uniform float grade = 0.0;
+// Minimum brightness and texture span are set by the shared visual style.
+uniform vec2 ground_values = vec2(0.84,0.24);
+// Weather lighting affects scenery only. Default values retain the menu/test
+// palette; the multiplier never brightens past the established contrast bound.
+uniform vec3 ambient_light = vec3(1.0);
+uniform vec2 sun_direction = vec2(0.9, 0.35);
+uniform float sun_strength = 0.0;
+uniform float cloud_strength = 0.0;
+uniform float environment_time = 0.0;
 
 varying vec2 v_world;
 
@@ -44,7 +53,18 @@ void fragment() {
 	vec4 tex = texture(ground_tex, uv);
 	vec3 multiplied = tex.rgb * tint.rgb;
 	float luma = dot(tex.rgb, vec3(0.299, 0.587, 0.114));
-	vec3 placed = tint.rgb * (0.35 + luma * 1.35);
+	// Narrow value range: scenery keeps texture without competing with actors.
+	vec3 placed = tint.rgb * (ground_values.x + luma * ground_values.y);
 	vec3 graded = mix(multiplied, placed, clamp(grade, 0.0, 1.0));
-	COLOR = vec4(graded, tex.a * tint.a);
+	vec3 light = clamp(ambient_light, vec3(0.0), vec3(1.0));
+	if (sun_strength > 0.0) {
+		float coordinate = dot(v_world, sun_direction) * 0.028 + environment_time * 0.035;
+		float rays = smoothstep(0.72, 0.98, 0.5 + 0.5 * sin(coordinate));
+		light = clamp(light + vec3(0.9, 0.8, 0.55) * sun_strength * rays, vec3(0.0), vec3(1.0));
+	}
+	if (cloud_strength > 0.0) {
+		float cloud = 0.5 + 0.5 * sin(dot(v_world, vec2(0.004, 0.002)) + environment_time * 0.06);
+		light *= 1.0 - cloud_strength * cloud * 0.08;
+	}
+	COLOR = vec4(graded * light, tex.a * tint.a);
 }

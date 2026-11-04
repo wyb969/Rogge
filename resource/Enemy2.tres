@@ -1,15 +1,14 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3 uid="uid://bf0jtqhjteerc"]
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bf0jtqhjteerc"]
 
-[ext_resource type="Script" uid="uid://dsf6o758y6et0" path="res://script/enemy_meta.gd" id="1_uiy5t"]
-[ext_resource type="Texture2D" uid="uid://bfqxeh4u6065q" path="res://assest/sprites/2 v1.png" id="2_cfobx"]
+[ext_resource type="Script" uid="uid://dsf6o758y6et0" path="res://script/enemy_meta.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bfqxeh4u6065q" path="res://assest/sprites/2 v1.png" id="2"]
 
 [resource]
-script = ExtResource("1_uiy5t")
+script = ExtResource("1")
 title = "chaser_brute"
-sprite = ExtResource("2_cfobx")
+sprite = ExtResource("2")
 health = 42.0
 damage = 2.2
-archetype = 0
 move_speed = 48.0
 defense = 0.08
 body_scale = 1.12

@@ -1,7 +1,4 @@
-# Godot 4+ specific ignores
 .godot/
-/android/
-
-# Godot web export output
+.autoconverted/
+__pycache__/
 export/
-

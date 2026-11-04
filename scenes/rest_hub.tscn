@@ -1,8 +1,8 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://script/rest_hub.gd" id="1_rest"]
+[ext_resource type="Script" uid="uid://c5203nupkxtuy" path="res://script/rest_hub.gd" id="1"]
 
-[node name="RestHub" type="CanvasLayer"]
-layer = 125
+[node name="RestHub" type="CanvasLayer" unique_id=925022958]
 process_mode = 3
-script = ExtResource("1_rest")
+layer = 125
+script = ExtResource("1")

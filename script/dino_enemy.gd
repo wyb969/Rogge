@@ -6,10 +6,10 @@ extends CharacterBody2D
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
-func _physics_process(delta: float) -> void:
-	if velocity.length()>0:
+func _physics_process(delta: float) -> void :
+	if velocity.length() > 0:
 		animation_player.play("walk")
-	
+
 	if velocity.x < 0:
 		sprite_2d.flip_h = true
 	else:
@@ -17,5 +17,5 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
-func get_hit(direction:Vector2, demage:float):
+func get_hit(direction: Vector2, demage: float):
 	animation_player.play("hurt")

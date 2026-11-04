@@ -1,10 +1,10 @@
 extends SceneTree
-## Checks the start menu and result screen reflow for portrait and landscape.
 
-func _init() -> void:
+
+func _init() -> void :
 	call_deferred("_run")
 
-func _run() -> void:
+func _run() -> void :
 	var failures: Array[String] = []
 	var main: Node = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
@@ -13,6 +13,8 @@ func _run() -> void:
 	_check_keys(failures)
 	await _check_menu(main, Vector2i(390, 844), "portrait", failures)
 	await _check_menu(main, Vector2i(900, 500), "landscape", failures)
+	await _check_debug_page(main, Vector2i(390, 844), "portrait", failures)
+	await _check_debug_page(main, Vector2i(900, 500), "landscape", failures)
 	var end_ui: Node = main.get_node("GameEndUI")
 	end_ui.show_result({"victory": false, "minutes": 1, "seconds": 5, "kills": 3, "level": 2, "stage": 1})
 	await process_frame
@@ -28,7 +30,7 @@ func _run() -> void:
 			print("MENU LAYOUT FAIL: ", failure)
 		quit(1)
 
-func _check_keys(failures: Array[String]) -> void:
+func _check_keys(failures: Array[String]) -> void :
 	if not _action_has_key("up", KEY_W) or not _action_has_key("up", KEY_UP):
 		failures.append("up is missing W or arrow")
 	if not _action_has_key("down", KEY_S) or not _action_has_key("down", KEY_DOWN):
@@ -37,8 +39,16 @@ func _check_keys(failures: Array[String]) -> void:
 		failures.append("left is missing A or arrow")
 	if not _action_has_key("right", KEY_D) or not _action_has_key("right", KEY_RIGHT):
 		failures.append("right is missing D or arrow")
-	if not _action_has_key("roll", KEY_Z):
-		failures.append("dash is missing Z")
+	if not _action_has_key("roll", KEY_SHIFT):
+		failures.append("dash is missing Shift")
+	if _action_has_key("roll", KEY_Z):
+		failures.append("legacy Z dash binding is still active")
+
+	var shift: = InputEventKey.new()
+	shift.physical_keycode = KEY_SHIFT
+	shift.pressed = true
+	if not InputMap.event_is_action(shift, "roll"):
+		failures.append("Shift event does not trigger dash action")
 
 func _action_has_key(action: StringName, keycode: Key) -> bool:
 	if not InputMap.has_action(action):
@@ -48,24 +58,32 @@ func _action_has_key(action: StringName, keycode: Key) -> bool:
 			return true
 	return false
 
-func _set_viewport(size: Vector2i) -> void:
+func _set_viewport(size: Vector2i) -> void :
 	root.size = size
 	await process_frame
 	await process_frame
 
-func _check_menu(main: Node, size: Vector2i, label: String, failures: Array[String]) -> void:
+func _check_menu(main: Node, size: Vector2i, label: String, failures: Array[String]) -> void :
 	await _set_viewport(size)
 	var start: Button = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/StartButton")
+	var debug: Button = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/DebugButton")
 	var settings: Button = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/SettingButton")
 	var title: Label = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/TitleLabel")
 	var hint: Label = main.get_node("mainUI/Control/MenuCenter/VBoxContainer/ControlsHint")
-	var vp := root.get_visible_rect().size
+	var vp: = root.get_visible_rect().size
+	var version: Label = main.get_node("mainUI/Control/BuildVersionLabel")
+	_expect_inside(version, vp, "build version %s" % label, failures)
+	if version.text != "v" + str(ProjectSettings.get_setting("application/config/version", "dev")):
+		failures.append("menu version must use the packaged build stamp")
+	if version.position.x > vp.x * 0.1 or version.position.y < vp.y * 0.9 or version.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+		failures.append("menu version must stay at the bottom left without intercepting input")
 	_check_background(main.get_node("mainUI/Control/ColorRect/TextureRect"), label, failures)
 	_expect_inside(start, vp, "start %s" % label, failures)
 	_expect_inside(settings, vp, "settings %s" % label, failures)
+	_expect_inside(debug, vp, "debug entry %s" % label, failures)
 	_expect_inside(title, vp, "title %s" % label, failures)
 	_expect_inside(hint, vp, "controls hint %s" % label, failures)
-	if not hint.text.contains("WASD") or not hint.text.contains("Z"):
+	if not hint.text.contains("↑ ↓ ← →") or not hint.text.contains("Shift") or hint.text.contains("WASD"):
 		failures.append("controls hint %s missing keyboard keys" % label)
 	if not hint.text.contains("方向键") or not hint.text.contains("摇杆"):
 		failures.append("controls hint %s missing touch or arrow text" % label)
@@ -74,18 +92,18 @@ func _check_menu(main: Node, size: Vector2i, label: String, failures: Array[Stri
 	if start.custom_minimum_size.x > vp.x - 16.0:
 		failures.append("start %s wider than viewport" % label)
 
-func _check_result(end_ui: Node, size: Vector2i, label: String, failures: Array[String]) -> void:
+func _check_result(end_ui: Node, size: Vector2i, label: String, failures: Array[String]) -> void :
 	await _set_viewport(size)
 	var retry: Button = end_ui.get_node("CanvasLayer/Control/ResultCenter/BoxContainer/RetryButton")
 	var title: Label = end_ui.get_node("CanvasLayer/Control/ResultCenter/BoxContainer/ResultTitle")
-	var vp := root.get_visible_rect().size
+	var vp: = root.get_visible_rect().size
 	_check_background(end_ui.get_node("CanvasLayer/Control/ColorRect/TextureRect"), "result " + label, failures)
 	_expect_inside(retry, vp, "retry %s" % label, failures)
 	_expect_inside(title, vp, "result title %s" % label, failures)
 	if retry.custom_minimum_size.y < 48.0:
 		failures.append("retry %s button is too short" % label)
 
-func _check_settings(main: Node, failures: Array[String]) -> void:
+func _check_settings(main: Node, failures: Array[String]) -> void :
 	var host: Variant = main
 	var store: Variant = root.get_node("SettingsStore")
 	var player: Variant = host.game.get_node("Player")
@@ -110,8 +128,8 @@ func _check_settings(main: Node, failures: Array[String]) -> void:
 	if player.player_health != health_before or player.max_player_health != max_before:
 		failures.append("difficulty changed player health")
 	store.apply_audio()
-	var bus := AudioServer.get_bus_index("Master")
-	var db := AudioServer.get_bus_volume_db(bus)
+	var bus: = AudioServer.get_bus_index("Master")
+	var db: = AudioServer.get_bus_volume_db(bus)
 	if db > -6.0 or db < -10.0:
 		failures.append("master bus db %s is outside the saved 40%% range" % db)
 	await _set_viewport(Vector2i(390, 844))
@@ -136,12 +154,12 @@ func _check_settings(main: Node, failures: Array[String]) -> void:
 		failures.append("layout edit did not show the on-screen buttons")
 	controls.apply_saved_layout()
 	await process_frame
-	var vp := root.get_visible_rect().size
+	var vp: = root.get_visible_rect().size
 	var stick_center: Vector2 = controls.stick_base.global_position + controls.stick_base.size * 0.5
-	var expected := Vector2(0.22, 0.72) * vp
+	var expected: = Vector2(0.22, 0.72) * vp
 	if stick_center.distance_to(expected) > 6.0:
 		failures.append("stick layout %s expected %s" % [stick_center, expected])
-	var expected_stick := 56.0 * 1.3 * 2.0
+	var expected_stick: = 56.0 * 1.3 * 2.0
 	if absf(controls.stick_base.size.x - expected_stick) > 1.0:
 		failures.append("stick size %s" % controls.stick_base.size)
 	if absf(controls.stick_base.modulate.a - 0.5) > 0.02:
@@ -162,12 +180,12 @@ func _check_settings(main: Node, failures: Array[String]) -> void:
 	vp = root.get_visible_rect().size
 	_expect_inside(page._panel, vp, "settings landscape panel", failures)
 	_expect_inside(page.back_button, vp, "settings landscape back", failures)
-	var press := InputEventMouseButton.new()
+	var press: = InputEventMouseButton.new()
 	press.button_index = MOUSE_BUTTON_LEFT
 	press.pressed = true
 	press.position = controls.dash_button.global_position + Vector2(8, 8)
 	controls._input(press)
-	var release := InputEventMouseButton.new()
+	var release: = InputEventMouseButton.new()
 	release.button_index = MOUSE_BUTTON_LEFT
 	release.pressed = false
 	release.position = Vector2(120, 80)
@@ -182,7 +200,7 @@ func _check_settings(main: Node, failures: Array[String]) -> void:
 	if page.visible or controls.visible:
 		failures.append("settings close left the page or buttons up")
 
-func _reset_settings() -> void:
+func _reset_settings() -> void :
 	var store: Variant = root.get_node_or_null("SettingsStore")
 	if store == null:
 		return
@@ -195,14 +213,14 @@ func _reset_settings() -> void:
 	store.save_to_disk()
 	store.apply_audio()
 
-func _check_background(rect: TextureRect, label: String, failures: Array[String]) -> void:
+func _check_background(rect: TextureRect, label: String, failures: Array[String]) -> void :
 	if rect.size.y < 1.0:
 		failures.append("background %s has no size" % label)
 		return
 	rect._apply_aspect()
-	var mat := rect.material as ShaderMaterial
-	var aspect := float(mat.get_shader_parameter("g_aspect"))
-	var expected := rect.size.x / rect.size.y
+	var mat: = rect.material as ShaderMaterial
+	var aspect: = float(mat.get_shader_parameter("g_aspect"))
+	var expected: = rect.size.x / rect.size.y
 	if absf(aspect - expected) > 0.04:
 		failures.append("background %s aspect %s expected %s" % [label, aspect, expected])
 	if label.contains("portrait") and aspect > 1.0:
@@ -210,8 +228,8 @@ func _check_background(rect: TextureRect, label: String, failures: Array[String]
 	if label.contains("landscape") and aspect < 1.0:
 		failures.append("background %s stayed portrait (%s) rect=%s window=%s visible=%s" % [label, aspect, rect.size, root.size, root.get_visible_rect().size])
 
-func _expect_inside(control: Control, vp: Vector2, label: String, failures: Array[String]) -> void:
-	var rect := control.get_global_rect()
+func _expect_inside(control: Control, vp: Vector2, label: String, failures: Array[String]) -> void :
+	var rect: = control.get_global_rect()
 	if rect.size.x < 8.0 or rect.size.y < 8.0:
 		failures.append("%s has no size %s" % [label, rect])
 		return
@@ -219,3 +237,23 @@ func _expect_inside(control: Control, vp: Vector2, label: String, failures: Arra
 		failures.append("%s starts offscreen %s" % [label, rect])
 	if rect.end.x > vp.x + 4.0 or rect.end.y > vp.y + 4.0:
 		failures.append("%s overflows viewport %s vp=%s" % [label, rect, vp])
+
+func _check_debug_page(main: Node, size: Vector2i, label: String, failures: Array[String]) -> void :
+	await _set_viewport(size)
+	var original_game: Node = main.game
+	main.get_node("mainUI/Control/MenuCenter/VBoxContainer/DebugButton").pressed.emit()
+	await process_frame
+	if main.menu_page.visible or not main.debug_page.visible or not paused:
+		failures.append("Debug page does not replace paused home menu")
+	var vp: = root.get_visible_rect().size
+	for name in ["TitleLabel", "DebugKnightButton", "DebugNecklaceButton", "DebugTreasureButton", "BackButton", "DebugHint", "DebugBeast3Button", "DebugBeast4Button", "DebugBeast5Button", "DebugBeast6Button", "DebugPowerTrialButton", "DebugSpeedTrialButton", "DebugLightningButton", "DebugMusicButton", "DebugWeatherButton", "DebugStabilityButton", "DebugReportButton"]:
+		if not main.has_node("mainUI/Control/DebugCenter/VBoxContainer/" + name):
+			continue
+		var control: Control = main.get_node("mainUI/Control/DebugCenter/VBoxContainer/" + name)
+		main.debug_page.ensure_control_visible(control)
+		await process_frame
+		await process_frame
+		_expect_inside(control, vp, "Debug %s %s" % [name, label], failures)
+	main.get_node("mainUI/Control/DebugCenter/VBoxContainer/BackButton").pressed.emit()
+	if not main.menu_page.visible or main.debug_page.visible or main.game != original_game:
+		failures.append("Debug back does not restore the original home page")

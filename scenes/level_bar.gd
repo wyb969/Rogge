@@ -2,11 +2,39 @@ extends Node2D
 var level: int = 0
 var coin_number: int = 0
 var level_need_coin_number: int = 6
-@onready var progress_bar: ProgressBar = $UI/HBoxContainer/ProgressBar
-@onready var label: Label = $UI/HBoxContainer/Label
+@onready var progress_bar: ProgressBar = $UI / HBoxContainer / ProgressBar
+@onready var label: Label = $UI / HBoxContainer / Label
 signal signal_level_up(level)
+var pickup_glow: ColorRect
 
-func add_coin(value: int) -> void:
+func _ready() -> void :
+	progress_bar.modulate = Color.WHITE
+	var back: = StyleBoxFlat.new()
+	back.bg_color = Color(0.035, 0.055, 0.075, 0.95)
+	back.border_color = Color(0.22, 0.35, 0.39)
+	back.set_border_width_all(1)
+	back.set_corner_radius_all(4)
+	var fill: = StyleBoxFlat.new()
+	fill.bg_color = Color(0.2, 0.65, 0.72)
+	fill.set_corner_radius_all(4)
+	progress_bar.add_theme_stylebox_override("background", back)
+	progress_bar.add_theme_stylebox_override("fill", fill)
+	progress_bar.add_theme_color_override("font_color", Color(0.9, 0.94, 0.9))
+	pickup_glow = preload("res://script/xp_pickup_glow.gd").new()
+	progress_bar.add_child(pickup_glow)
+	pickup_glow.bind(progress_bar)
+	AudioManager.pickup_tone_played.connect(_on_pickup_tone)
+
+func _on_pickup_tone(pitch: float) -> void :
+	var game: = get_parent()
+	if not game.visible or game.process_mode == Node.PROCESS_MODE_DISABLED: return
+	pickup_glow.pulse(pitch)
+
+func reset_feedback() -> void :
+	if is_instance_valid(pickup_glow): pickup_glow.reset()
+	AudioManager.reset_pickup_combo()
+
+func add_coin(value: int) -> void :
 	coin_number += value
 	while check_level_up():
 		level_up()
@@ -19,15 +47,15 @@ func level_up():
 	coin_number = max(0, coin_number - level_need_coin_number)
 	level_need_coin_number = get_need_exp(level)
 	progress_bar.value = float(coin_number) / float(level_need_coin_number) * 100.0
-	progress_bar.modulate = Color.from_hsv(float(level) / 4.0, float(level) / 0.8, float(level) / 0.5)
 	signal_level_up.emit(level)
 
 func get_need_exp(level: int) -> int:
-	# Slightly gentler curve so fewer, denser-value kills still pace upgrades.
+
 	return int(6 + level * 3.5 + level * level * 0.5)
 
 func check_level_up() -> bool:
 	return coin_number >= level_need_coin_number
 
-func _process(_delta: float) -> void:
-	progress_bar.value = float(coin_number) / float(level_need_coin_number) * 100.0
+func _process(_delta: float) -> void :
+	var value: = float(coin_number) / float(level_need_coin_number) * 100.0
+	if not is_equal_approx(progress_bar.value, value): progress_bar.value = value

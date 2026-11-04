@@ -1,0 +1,289 @@
+[
+  {
+    "test": "smoke_adventure_music.gd",
+    "ok": true,
+    "seconds": 4.73,
+    "marker": "ADVENTURE MUSIC OK: eight arranged tracks, real preview/Back, bags/stages/no-repeat, isolated RNG, crossfades, browser unlock, pause/slowmo-safe switching, boss/result cancellation, volume and run/Retry",
+    "restored_audio_checked": true
+  },
+  {
+    "test": "smoke_archetypes.gd",
+    "ok": true,
+    "seconds": 10.79,
+    "marker": "SMOKE OK"
+  },
+  {
+    "test": "smoke_audio_mix.gd",
+    "ok": true,
+    "seconds": 5.96,
+    "marker": "AUDIO MIX OK: legacy migration/new settings, independent buses, shared Web stream backend, muted backgrounds/live SFX, bounded cue restarts, music focus/recovery and weather loop ownership",
+    "restored_audio_checked": true
+  },
+  {
+    "test": "smoke_axe.gd",
+    "ok": true,
+    "seconds": 2.81,
+    "marker": "AXE OK: real level-five/later cards, nearest live aim, swept multi-target hits, one hit per leg, clipped range, moving-hand catch and no idle damage"
+  },
+  {
+    "test": "smoke_beasts.gd",
+    "ok": true,
+    "seconds": 13.52,
+    "marker": "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset",
+    "restored_audio_checked": true
+  },
+  {
+    "test": "smoke_blessing_feedback.gd",
+    "ok": true,
+    "seconds": 1.47,
+    "marker": "BLESSING FEEDBACK OK: real four skill casts, distinct cached stream SFX, green fade-in/out, cooldown/no-op/pause, input/red hurt priority, 500 bounded replacements and teardown"
+  },
+  {
+    "test": "smoke_book_growth.gd",
+    "ok": true,
+    "seconds": 1.2,
+    "marker": "BOOK GROWTH OK: fifty actual cards including same-frame stacks, bounded count/speed, increasing finite damage and stable collider reuse"
+  },
+  {
+    "test": "smoke_boss_rhythm.gd",
+    "ok": true,
+    "seconds": 2.32,
+    "marker": "BOSS RHYTHM OK: tracking/visible lock/swept real hurt geometry/safe anticipation and opening, bounded two-rush phase/HUD, all guardian close-range movement/slow, frozen warnings, finite elemental travel, wind roles and phase cancellation"
+  },
+  {
+    "test": "smoke_camera_motion.gd",
+    "ok": true,
+    "seconds": 1.32,
+    "marker": "CAMERA MOTION OK: eased lag/stop/reversal, pause, bounded dash catch-up, zero setting, unchanged collider/FOV and teardown"
+  },
+  {
+    "test": "smoke_combat_feedback.gd",
+    "ok": true,
+    "seconds": 2.75,
+    "marker": "COMBAT FEEDBACK OK: real actions/settings/persistence, exact damage, independent RNG, stable colliders, bounded camera/batches/ghosts, rising pickups, floating text and teardown"
+  },
+  {
+    "test": "smoke_combat_lighting.gd",
+    "ok": true,
+    "seconds": 2.43,
+    "marker": "COMBAT LIGHTING OK: fixed batches/shared texture/layers, real drone/gun behavior, stable beam points, bounded projectile/orb/muzzle storms, exact audible-pitch XP glow/no-op/gap/pause/progress, deletion/Debug/return"
+  },
+  {
+    "test": "smoke_combo_gun.gd",
+    "ok": true,
+    "seconds": 3.24,
+    "marker": "COMBO/GUN OK: short original cues, successful-shot-only audio, no restart storms, varied quiet bursts/pickup priority/shared mix, real-note 30 combo/fever beyond pitch cap, zero fake XP, portrait/landscape/pause and return",
+    "restored_audio_checked": true
+  },
+  {
+    "test": "smoke_damage_flash.gd",
+    "ok": true,
+    "seconds": 2.47,
+    "marker": "DAMAGE FLASH OK: real damage, shields/dash, bounded repeated hits, wall-clock fade, viewport coverage and run reset"
+  },
+  {
+    "test": "smoke_dash_direction.gd",
+    "ok": true,
+    "seconds": 0.44,
+    "marker": "DASH DIRECTION OK: 8 directions, light input, stopped/released stick, request snapshot, multi-touch and reset"
+  },
+  {
+    "test": "smoke_dash_grace.gd",
+    "ok": true,
+    "seconds": 5.54,
+    "marker": "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+  },
+  {
+    "test": "smoke_dasher_balance.gd",
+    "ok": true,
+    "seconds": 1.84,
+    "marker": "DASHER BALANCE OK: smooth tracking/red-arrow lock, harmless warning, jump/landing, 30/60 FPS and slow-frame distance, stagger, damage, immunity, freeze and 24-enemy charge budget"
+  },
+  {
+    "test": "smoke_dasher_recovery.gd",
+    "ok": true,
+    "seconds": 1.77,
+    "marker": "DASHER RECOVERY OK: normal/charge contacts, 0.9-second stationary opening at 30/60 FPS and slow frames, no duplicate hits/knockback bypass, chase resumption, dash/shield, walking escape, status death and archetype isolation"
+  },
+  {
+    "test": "smoke_debug_menu.gd",
+    "ok": true,
+    "seconds": 1.9,
+    "marker": "DEBUG MENU OK: home/back navigation, equipped necklace test, actual heal, rapid-tap guard, retry and normal-run reset"
+  },
+  {
+    "test": "smoke_diagnostics.gd",
+    "ok": true,
+    "seconds": 4.07,
+    "marker": "DIAGNOSTICS OK: bundled arrows, real final-boss stress entry, bounded reports, JSON export/reload, stop/back and run-owned cleanup"
+  },
+  {
+    "test": "smoke_difficulty.gd",
+    "ok": true,
+    "seconds": 7.76,
+    "marker": "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
+  },
+  {
+    "test": "smoke_elemental_attacks.gd",
+    "ok": true,
+    "seconds": 4.18,
+    "marker": "ELEMENTAL ATTACKS OK: all four elements/both wind roles, both phases/patterns, exact damage/world geometry, safe ring hole, travelling gust range, renderer reuse/RNG and cancellation/teardown"
+  },
+  {
+    "test": "smoke_first_boss_overlap.gd",
+    "ok": true,
+    "seconds": 8.2,
+    "marker": "FIRST BOSS OVERLAP OK: actual 10-FPS cycles, endpoint clamping, overlap direction/recovery, distant/time/solid interruption, pause, repeat contact, real dash grace/shield and owned warning cleanup"
+  },
+  {
+    "test": "smoke_global_pickup.gd",
+    "ok": true,
+    "seconds": 3.21,
+    "marker": "GLOBAL PICKUP OK: actual skill, map-wide coins/orbs, offscreen and moving targets, expiring drops, exact XP/heal without necklace, pause/no-op and cooldown"
+  },
+  {
+    "test": "smoke_knight_boss.gd",
+    "ok": true,
+    "seconds": 2.79,
+    "marker": "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate",
+    "restored_audio_checked": true
+  },
+  {
+    "test": "smoke_lightning.gd",
+    "ok": true,
+    "seconds": 1.8,
+    "marker": "LIGHTNING OK: real skill damage, random branches/restrikes, anchored endpoints, isolated cosmetic RNG, pause and cleanup"
+  },
+  {
+    "test": "smoke_lightning_ring.gd",
+    "ok": true,
+    "seconds": 4.11,
+    "marker": "LIGHTNING RING OK: real cards/stats, unique targets, range, mitigation, cooldown, color/audio, kill drops, lottery, bosses/trials and run reset"
+  },
+  {
+    "test": "smoke_menu_layout.gd",
+    "ok": true,
+    "seconds": 4.93,
+    "marker": "MENU LAYOUT OK"
+  },
+  {
+    "test": "smoke_meteor_shower.gd",
+    "ok": true,
+    "seconds": 2.4,
+    "marker": "METEOR SHOWER OK: weather/night scheduling, pauses/boss/rest/transition gates, exact telegraphed kills and normal rewards, special-target exclusion, independent RNG, 3-10 supplies without necklace, bounded two/frame and 80 showers, Debug/reset"
+  },
+  {
+    "test": "smoke_molotov_spread.gd",
+    "ok": true,
+    "seconds": 3.35,
+    "marker": "MOLOTOV SPREAD OK: exact real explosion/live radius/owner/once, shared assets, 240-source reference equivalence, cap/potency/RNG/pause, request and bucket overflow, deletion/clear and bounded allocation"
+  },
+  {
+    "test": "smoke_monster_necklace.gd",
+    "ok": true,
+    "seconds": 4.95,
+    "marker": "MONSTER NECKLACE OK: card selection, stacking, real kill drops, pickup/heal/audio, boss/rest/stage flow and reset"
+  },
+  {
+    "test": "smoke_poison_trail.gd",
+    "ok": true,
+    "seconds": 4.43,
+    "marker": "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+  },
+  {
+    "test": "smoke_resource_bounds.gd",
+    "ok": true,
+    "seconds": 1.58,
+    "marker": "RESOURCE BOUNDS OK: 1000 coins/500 orbs preserve rewards, shared GPU resources, projectile ownership/TTL, cosmetic budgets, single explosions and teardown"
+  },
+  {
+    "test": "smoke_rest_pickup_clock.gd",
+    "ok": true,
+    "seconds": 9.85,
+    "marker": "REST PICKUP / CLOCK OK: first necklace from real boss rest; automatic full/injured/stacked collection and audio; active-time HUD, pause exclusions, 03:30 final boss and guardian/reward gates"
+  },
+  {
+    "test": "smoke_rest_selection.gd",
+    "ok": true,
+    "seconds": 2.62,
+    "marker": "REST SELECTION OK: real boss rest, freely changing filled selections, deferred exact reward, one confirmation/advance, hidden and invalid guards, reset"
+  },
+  {
+    "test": "smoke_run_variety.gd",
+    "ok": true,
+    "seconds": 2.81,
+    "marker": "RUN VARIETY OK: real wind/echo cards, landing damage/grace/cancel, exact queued pause-safe nonrecursive echo, lottery stacks, diverse independent draws, reroll UI/tokens, harmless bounded courier/rewards/escape, full HUD layout and Retry"
+  },
+  {
+    "test": "smoke_runtime_optimization.gd",
+    "ok": true,
+    "seconds": 3.7,
+    "marker": "RUNTIME OPTIMIZATION OK: live target lifecycle/nearest selection, exact pooled pause-safe chains/RNG, no child effects/timers, synchronous pickup indices, fixed cosmetic slots, cached geometry/audio and clean Retry"
+  },
+  {
+    "test": "smoke_skill_icons.gd",
+    "ok": true,
+    "seconds": 3.9,
+    "marker": "SKILL ICONS OK: direct heal/defense/lightning casts, preserved no-op charges, independent cooldown masks/pause/readiness, no right controls, compact rotation layout/touch ownership and run reset"
+  },
+  {
+    "test": "smoke_stage_variation.gd",
+    "ok": true,
+    "seconds": 1.5,
+    "marker": "STAGE VARIATION OK: 12 safe colors, stable/repeat-free opening rolls, 3 primary themes, 75% share, stage transition and ranged caps"
+  },
+  {
+    "test": "smoke_status_numbers.gd",
+    "ok": true,
+    "seconds": 3.77,
+    "marker": "STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return"
+  },
+  {
+    "test": "smoke_survival_growth.gd",
+    "ok": true,
+    "seconds": 1.7,
+    "marker": "SURVIVAL GROWTH OK: real XP/multi-level growth, HP HUD/shields, rest stacking, no duplicate/card/revive growth, fresh runs, bounded stage-three elite hits and multi-source escape window"
+  },
+  {
+    "test": "smoke_treasure_lottery.gd",
+    "ok": true,
+    "seconds": 5.42,
+    "marker": "TREASURE LOTTERY OK: third stage, real mini-boss, safe warning, one reward, probability intervals, actual stacked stats, pause ordering, responsive UI and victory"
+  },
+  {
+    "test": "smoke_trials.gd",
+    "ok": true,
+    "seconds": 6.52,
+    "marker": "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+  },
+  {
+    "test": "smoke_visual_style.gd",
+    "ok": true,
+    "seconds": 3.23,
+    "marker": "VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/damage/burn, fixed footprint, shared non-additive pickups and exact healing"
+  },
+  {
+    "test": "smoke_weather.gd",
+    "ok": true,
+    "seconds": 2.54,
+    "marker": "WEATHER OK: real Debug/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+  },
+  {
+    "test": "smoke_weather_audio.gd",
+    "ok": true,
+    "seconds": 4.86,
+    "marker": "WEATHER AUDIO OK: four weather beds, day/night calls, thunder timing, real preview, bounded stream crossfades, pause/boss mix, RNG, volume, unlock, Back/result/Retry ownership"
+  },
+  {
+    "test": "smoke_wind_duo.gd",
+    "ok": true,
+    "seconds": 20.83,
+    "marker": "WIND DUO OK: two moving/attacking roles, real travelling blades, independent HP/HUD, both kill orders, survivor AI, one final reward, next stage and duplicate-spawn races"
+  },
+  {
+    "test": "smoke_world_snow.gd",
+    "ok": true,
+    "seconds": 2.93,
+    "marker": "WORLD SNOW OK: camera/subframe independence, exact wind/fall, only offscreen recycling, portrait/Retina reuse, pause and return"
+  }
+]

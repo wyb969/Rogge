@@ -1,0 +1,39 @@
+{
+  "status": "prepared_not_published",
+  "game_url": "https://ybwangrogger.itch.io/rogue-white",
+  "editor_url": "https://itch.io/game/edit/3184628",
+  "game_id": 3184628,
+  "keep_existing_url_and_playable_upload": true,
+  "title": "ROGGE",
+  "short_description": "Dash through pixel hordes, stack wild upgrades, and challenge four elemental guardians. Play free in your browser.",
+  "description_source": "description.html",
+  "cover_source": "cover.png",
+  "design": {
+    "layout": "single_column",
+    "background_color": "#0D1720",
+    "inner_background_color": "#142A32",
+    "text_color": "#E7EDD5",
+    "link_and_button_color": "#5DDBB0",
+    "heading_font": "Press Start 2P",
+    "body_font": "Pixelify Sans",
+    "body_size_target_px": 19,
+    "heading_accent_if_supported": "#FFD98A",
+    "page_width_target_px": 1040,
+    "header_alignment_if_supported": "center",
+    "custom_css_required": false,
+    "instructions": "Use itch's native Text and Colors controls. Font sizes, content width, heading-only color, and header alignment are visual targets; apply only controls actually available in the editor. Preserve the current playable embed dimensions and orientation unless a preview reveals a problem."
+  },
+  "gallery_order": [
+    "../screenshots/combat.png",
+    "../screenshots/wind-guardians.png",
+    "../screenshots/boss-rush.png",
+    "../screenshots/snow-poison.png",
+    "../screenshots/upgrade-cards.png"
+  ],
+  "ai_disclosure": {
+    "cover": "Generative AI was used for the new promotional cover, with actual gameplay screenshots as visual references.",
+    "screenshots": "Native game captures; no generated gameplay screenshots.",
+    "editor_action": "Update the game's AI disclosure accurately for the promotional cover. Do not retain the current blanket claim that no generative AI was used. Do not infer the provenance of unrelated existing game assets."
+  },
+  "documentation": "https://itch.io/docs/creators/design"
+}

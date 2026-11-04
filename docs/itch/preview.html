@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>ROGGE — itch page design preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&amp;family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+<style>
+:root { --ink:#0D1720; --panel:#142A32; --line:#35515A; --paper:#E7EDD5; --mint:#5DDBB0; --gold:#FFD98A; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--ink); color:var(--paper); font-family:'Pixelify Sans',monospace; font-size:20px; line-height:1.55; }
+.notice { padding:14px 20px; border-bottom:1px solid var(--line); text-align:center; font:12px/1.6 monospace; color:#B8C9BC; }
+.notice strong { color:var(--gold); }
+.page { width:min(1040px,100%); margin:auto; background:var(--panel); border-inline:1px solid var(--line); }
+.masthead { padding:30px 28px; text-align:center; border-bottom:1px solid var(--line); }
+.masthead a { color:var(--mint); text-decoration:none; font-size:16px; }
+h1,h2,h3,.play { font-family:'Press Start 2P',monospace; }
+h1 { margin:0 0 12px; font-size:clamp(24px,6vw,38px); letter-spacing:4px; color:var(--gold); }
+.hero { padding:32px; display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center; }
+.cover { width:100%; height:auto; display:block; border:2px solid var(--line); box-shadow:8px 8px 0 #091820; }
+.eyebrow { margin:0 0 18px; color:var(--mint); font-size:16px; letter-spacing:2px; }
+.hero h2 { margin:0 0 22px; border:0; padding:0; font-size:clamp(15px,2.2vw,23px); line-height:1.8; color:var(--paper); }
+.hero p { color:#C8D8C7; }
+.tags { display:flex; gap:8px; flex-wrap:wrap; margin:22px 0; }
+.tags span { border:1px solid var(--line); padding:3px 9px; font-size:15px; }
+.play { display:inline-block; margin:6px 0 0; padding:16px 20px; font-size:12px; line-height:1.8; color:#10272B; background:var(--mint); text-decoration:none; box-shadow:5px 5px 0 #081B21; }
+.play:hover { background:#84F2C5; }
+a { color:var(--mint); text-underline-offset:4px; }
+a:focus-visible { outline:3px solid var(--gold); outline-offset:5px; }
+main { padding:0 64px 48px; }
+h2 { margin:46px 0 22px; padding-top:30px; border-top:2px solid var(--line); color:var(--gold); font-size:17px; line-height:1.9; }
+p { margin:0 0 19px; }
+strong { color:#F2F3DA; font-weight:700; }
+ul { padding-left:24px; margin:0 0 28px; }
+li { padding-left:4px; margin:0 0 14px; }
+li::marker { color:var(--mint); }
+main img,.gallery img { width:100%; height:auto; display:block; border:1px solid var(--line); }
+main em { color:#B5CBC3; font-size:17px; font-style:normal; }
+.gallery { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+figure { margin:0; }
+figcaption { font-size:16px; padding:10px 0; color:#B5CBC3; }
+footer { padding:22px; border-top:1px solid var(--line); text-align:center; color:#B5CBC3; font-size:16px; }
+@media(max-width:700px) { .hero { grid-template-columns:1fr; padding:24px; gap:25px; } .cover { max-width:460px; margin:auto; } main { padding:0 24px 32px; } h2 { font-size:14px; } .gallery { grid-template-columns:1fr; } .hero h2 { font-size:20px; } }
+@media(prefers-reduced-motion:reduce) { * { scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+<div class="notice"><strong>DESIGN PREVIEW · NOT YET LIVE</strong><br>This concept shows the proposed art, copy, and palette. The itch editor controls the final layout.</div>
+<div class="page">
+<header class="masthead"><h1>ROGGE</h1><a href="https://ybwangrogger.itch.io/rogue-white">A game by ybwangRogger</a></header>
+<section class="hero" aria-label="Game cover and quick introduction">
+<img class="cover" src="cover.png" width="1402" height="1122" alt="ROGGE promotional pixel art: the blue hero dashes with orbiting books and a drone beneath two wind falcons.">
+<div><p class="eyebrow">PIXEL SURVIVAL ROGUELITE</p><h2>ONE MORE<br>UPGRADE.<br>ONE MORE RUN.</h2><p>Dash through pixel hordes, stack wild upgrades, and challenge four elemental guardians. Play free in your browser.</p><div class="tags"><span>HTML5</span><span>Auto-attacks</span><span>Keyboard + touch</span></div><a class="play" href="https://ybwangrogger.itch.io/rogue-white">PLAY IN BROWSER</a></div>
+</section>
+<main>
+<h2>DASH. BUILD. SURVIVE.</h2>
+<p>A tiny hero. A growing horde. One more upgrade.</p>
+<p><strong>ROGGE</strong> is a pixel survival roguelite where your weapons fire automatically and every dash matters. Slip through danger, collect experience, and turn a handful of upgrades into a build that clears the screen.</p>
+<p><strong>Free to play in your browser.</strong> Keyboard and touch controls supported.</p>
+
+<p><img src="../screenshots/combat.png" alt="Real ROGGE gameplay: orbiting books, a laser drone, lightning, healing orbs, and a rising combo." /></p>
+
+<h2>MAKE EVERY RUN YOURS</h2>
+<ul>
+<li><strong>Build around 18 equipment types.</strong> Combine automatic weapons, elemental effects, healing, shields, and movement upgrades.</li>
+<li><strong>Choose your next upgrade.</strong> Pick from three cards, spend a reroll, and chase the combination your run needs.</li>
+<li><strong>Read the fight, then dash.</strong> Dodge charging beasts, sword strikes, lightning lanes, and diving guardians.</li>
+<li><strong>Chase something unexpected.</strong> Changing enemy themes, weather, day and night, treasure encounters, and meteor showers add variety to the arena.</li>
+<li><strong>Find your pace.</strong> Easy, Medium, and Hard change the pressure of the horde.</li>
+</ul>
+
+<h2>PICK YOUR KIND OF CHAOS</h2>
+<p><strong>Steel &amp; machines</strong><br />Axes sweep nearby enemies. Guns pick targets off. A tiny drone adds laser fire.</p>
+<p><strong>Spells &amp; elements</strong><br />Orbiting Books hold a perimeter. Lightning Ring strikes groups. Molotov burns, Frost slows, and Poison Trail turns your escape route into a trap. Reach Poison Trail level 5 to add a slow.</p>
+<p><strong>Movement &amp; impact</strong><br />Wind Emblem turns the end of a dash into a shockwave. Echo Ember rewards chains of kills. Movement Speed, Pickup Range, and directional damage upgrades help shape your approach.</p>
+<p><strong>Stay in the fight</strong><br />Monster Necklace makes defeated enemies drop healing orbs. Add Regeneration, Lifesteal, or Jade Pendant for more ways to recover and protect yourself.</p>
+
+<h2>FOUR GUARDIANS. FOUR NEW POWERS.</h2>
+<p>Push past the charging bull and sword-wielding knight to face four elemental encounters. Defeat a guardian to earn a skill you can activate from the icons on the left of the screen.</p>
+<ul>
+<li><strong>Tide:</strong> restore your health.</li>
+<li><strong>Thunder:</strong> strike enemies across the screen.</li>
+<li><strong>Wind:</strong> gather dropped experience and healing orbs from across the arena. Its two falcons fight at different ranges.</li>
+<li><strong>Earth &amp; fire:</strong> brace behind a powerful defensive barrier.</li>
+</ul>
+<p>Strength and Speed Trials put your damage, timing, and dash control to the test between guardian encounters.</p>
+
+<p><img src="../screenshots/wind-guardians.png" alt="Real gameplay from the twin Wind Falcons encounter, with two bosses and marked attack lanes." /></p>
+
+<h2>HOW TO PLAY</h2>
+<ul>
+<li><strong>Move:</strong> Arrow keys or WASD.</li>
+<li><strong>Dash:</strong> Shift. Time it to avoid incoming attacks.</li>
+<li><strong>Attack:</strong> automatic. Focus on movement and your build.</li>
+<li><strong>Guardian skills:</strong> click or tap their icons on the left. You can also use Q to cycle and E to activate the selected skill.</li>
+<li><strong>Touch:</strong> move with the left joystick, then tap DASH or a guardian icon.</li>
+</ul>
+
+<h2>ONE MORE RUN?</h2>
+<p>A treasure guardian can turn a difficult run around with a card-level lottery. A passing meteor shower might clear enemies and leave coins or healing behind. Keep moving. There is always another upgrade to chase.</p>
+<p><em>Active development build. In-game text is currently Chinese; the controls above are the English quick-start guide. Screenshots show actual gameplay. The promotional cover was created with generative AI using gameplay references.</em></p>
+<p><a href="https://github.com/wyb969/Rogge">Source &amp; development on GitHub</a></p>
+
+<section aria-label="More actual gameplay screenshots">
+<h2>A LOOK INSIDE THE ARENA</h2>
+<div class="gallery">
+<figure><img loading="lazy" src="../screenshots/boss-rush.png" width="1066" height="600" alt="The charging bull boss marks a rush lane before attacking."><figcaption>Read the lane. Time your dash.</figcaption></figure>
+<figure><img loading="lazy" src="../screenshots/snow-poison.png" width="1066" height="600" alt="A blue hero leaves a poison cloud trail while dashing through a snowy arena."><figcaption>Turn your escape route into a trap.</figcaption></figure>
+<figure><img loading="lazy" src="../screenshots/upgrade-cards.png" width="1066" height="600" alt="The real upgrade screen offers three equipment cards and a reroll."><figcaption>Three choices. A new direction for your build. Current game UI: Chinese.</figcaption></figure>
+</div>
+</section>
+</main>
+<footer>Made with Godot 4.7 · Active development · <a href="https://github.com/wyb969/Rogge">Follow the project</a></footer>
+</div>
+</body>
+</html>

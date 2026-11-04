@@ -263,6 +263,9 @@ func _on_rush_timer_timeout() -> void :
 		return
 	start_charge_attack()
 
+func get_status_echo_kind(poison_tick: float) -> int:
+	return 2 if poison_tick > 0.0 else 0
+
 func get_status_echo_damage(poison_tick: float) -> float:
 	var owner_player: Node = player if is_instance_valid(player) else get_tree().get_first_node_in_group("player")
 	if owner_player != null and owner_player.has_method("get_side_damage_multiplier"):

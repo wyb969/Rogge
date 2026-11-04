@@ -13,6 +13,7 @@ const POISON: = preload("res://script/poison_trail.gd")
 const FAN := preload("res://script/banana_fan.gd")
 const VORTEX := preload("res://script/black_hole.gd")
 const CRITICAL := preload("res://script/critical_glasses.gd")
+const MOLOTOV := preload("res://script/molotov_controller.gd")
 const MAX_REROLLS: = 3
 var rerolls: = 2
 var reroll_button: Button
@@ -376,11 +377,11 @@ func _molotov_desc() -> String:
 	if game and game.get("molotov_controller"):
 		lv = int(game.molotov_controller.level)
 	var next: = lv + 1
-	var interval: = maxf(1.6, 4.2 - float(next) * 0.35)
+	var interval: float = MOLOTOV.interval_for(next)
 	var stacks: = 2 + int((next - 1) / 2)
 	var dps: = 2.5 + float(next) * 1.8
 	var chance: = mini(0.18 + float(next) * 0.07, 0.65) * 100.0
-	return "投掷汽油瓶\n间隔 %.1fs 燃烧%d层\n击中附燃 %.0f%% DPS%.0f" % [interval, stacks, chance, dps]
+	return "投掷汽油瓶\n间隔 %.2fs 燃烧%d层\n击中附燃 %.0f%% DPS%.0f" % [interval, stacks, chance, dps]
 
 
 func _regen_desc() -> String:

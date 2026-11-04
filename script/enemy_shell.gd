@@ -600,6 +600,9 @@ func _mitigate(raw: float) -> float:
 		dealt = maxf(dealt, 1.0)
 	return dealt
 
+func get_status_echo_kind(poison_tick: float) -> int:
+	return (1 if burn_stacks > 0 else 0) | (2 if poison_tick > 0.0 else 0)
+
 func get_status_echo_damage(poison_tick: float) -> float:
 	var total := _mitigate(float(burn_stacks) * burn_dps * 0.45) if burn_stacks > 0 else 0.0
 	if poison_tick > 0.0:

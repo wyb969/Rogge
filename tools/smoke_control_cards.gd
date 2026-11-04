@@ -272,7 +272,8 @@ func _run() -> void:
 		fan._physics_process(0.05)
 		hole._physics_process(0.05)
 	var query_count: int = registry.queries - queries_before
-	_expect(query_count <= 100 and fan.get_child_count() == 1 and hole.get_child_count() == 1 and fan._wakes.size() == 24, "dense crowds use bounded scans, fixed wake records and two persistent audio nodes")
+	# Two 20 Hz area scans plus cast checks; a faster fan has more active scan time.
+	_expect(query_count <= 130 and fan.get_child_count() == 2 and hole.get_child_count() == 1 and fan._wakes.size() == 24 and fan.status_feedback._records.size() == 48 and fan.status_feedback.get_child_count() == 0, "dense crowds use bounded scans, fixed wake/flash pools, two audio nodes and one shared flash layer")
 	print("CONTROL CARDS CROWD: 180 enemies / 3 simulated seconds / %d queries / %d us" % [query_count, Time.get_ticks_usec() - started])
 	for pair in [["DebugFanButton", 1, 0], ["DebugFan5Button", 5, 0], ["DebugBlackHoleButton", 0, 1], ["DebugBlackHole5Button", 0, 5], ["DebugControlCardsButton", 5, 5]]:
 		main.show_main_menu()

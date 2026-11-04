@@ -5,7 +5,9 @@ const GUST_SECONDS := 0.52
 const SCAN_STEP := 0.05
 const HALF_ANGLE := 0.64
 const MAX_WAKES := 24
+const COOLDOWN_SCALE := 0.7
 const ICON := preload("res://assest/sprites/banana_fan.svg")
+var status_feedback: Node2D
 var level := 0
 var casts := 0
 var hits := 0
@@ -30,10 +32,13 @@ var _audio: AudioStreamPlayer
 static func stats_for(rank: int) -> Dictionary:
 	var step := clampi(rank, 1, MAX_LEVEL) - 1
 	return {"damage": 12.0 + 4.0 * step, "range": 130.0 + 25.0 * step,
-		"interval": 3.0 * pow(0.8, step), "push_speed": 300.0 + 25.0 * step}
+		"interval": 3.0 * pow(COOLDOWN_SCALE, step), "push_speed": 300.0 + 25.0 * step}
 
 func _ready() -> void:
 	z_index = 7
+	status_feedback = preload("res://script/status_echo_feedback.gd").new()
+	status_feedback.name = "StatusEchoFeedback"
+	add_child(status_feedback)
 	_stream.resize(7)
 	for _i in MAX_WAKES:
 		_wakes.append({"actor": null, "left": 0.0, "phase": float(_i) * 2.39996})
@@ -61,6 +66,7 @@ func reset() -> void:
 
 func clear_combat_effects() -> void:
 	_generation += 1
+	if status_feedback != null: status_feedback.reset()
 	for ref in _hit_ids.values():
 		var actor: Object = ref.get_ref()
 		if is_instance_valid(actor) and actor.has_method("clear_airflow"):
@@ -152,8 +158,11 @@ func _scan_gust() -> void:
 		_hit_ids[id] = ref
 		# Snapshot before the direct hit can add a new on-hit status.
 		var extra_damage := 0.0
+		var echo_kind := 0
 		if actor.has_method("get_status_echo_damage"):
-			extra_damage = actor.get_status_echo_damage(game.poison_trail.extra_tick_damage_for(actor))
+			var poison_tick: float = game.poison_trail.extra_tick_damage_for(actor)
+			extra_damage = actor.get_status_echo_damage(poison_tick)
+			echo_kind = actor.get_status_echo_kind(poison_tick)
 		actor.apply_hit({"damage": _stats.damage, "direction": _direction, "effect": "banana_fan", "source": self})
 		if generation != _generation: return
 		hits += 1
@@ -165,6 +174,7 @@ func _scan_gust() -> void:
 			status_echoes += 1
 			if generation != _generation: return
 			if not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_in_group("EnemyGroup"): continue
+			status_feedback.flash(ref, echo_kind)
 		if actor.has_method("apply_airflow"):
 			actor.apply_airflow(_direction * float(_stats.push_speed), 0.36)
 			var wake: Dictionary = _wakes[_wake_slot]

@@ -147,8 +147,8 @@ func _run() -> void:
 		for _i in rank: fan.upgrade()
 		fan.set_physics_process(false)
 		_expect(is_equal_approx(fan._stats.damage, 12 + 4 * (rank - 1)) and is_equal_approx(fan._stats.range, 130 + 25 * (rank - 1)), "damage/range remain unchanged at every rank")
-		var expected: float = [3.0, 2.4, 1.92, 1.536, 1.2288][rank - 1]
-		_expect(is_equal_approx(fan._stats.interval, expected), "each rank multiplies the previous cooldown by 80 percent")
+		var expected: float = [3.0, 2.1, 1.47, 1.029, 0.7203][rank - 1]
+		_expect(is_equal_approx(fan._stats.interval, expected), "each rank multiplies the previous cooldown by 70 percent")
 		fan.cast()
 		var elapsed := 0.0
 		while fan.casts < 2 and elapsed < 4:

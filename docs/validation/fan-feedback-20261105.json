@@ -137,5 +137,15 @@
     "shutdown_notes": "Prior native-capture shutdown GL texture/resource warnings remain; no script or shader runtime errors occurred during capture."
   },
   "browser_qa": "Not run: managed Sites browser tool unavailable. Native captures are not browser/device QA.",
-  "itch_uploaded": false
+  "itch_uploaded": false,
+  "preview_deployment": {
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aeb72b13a90819192c6985e3fe01c73",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_fd42df795eb88191b5cfda71d29b18d0",
+    "site_source_commit": "48b7aacfaa0d81afbd0ff04ca7cb9f93882f3cfd",
+    "game_commit": "c6c0e600943f78da2a333b4f76486e5dbc378996",
+    "audience": "owner-private"
+  }
 }

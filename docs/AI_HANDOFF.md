@@ -8,11 +8,11 @@
 | --- | --- |
 | 仓库 | <https://github.com/wyb969/Rogge> |
 | 最新玩法分支 | `feature/fan-black-hole-20261104` |
-| 最新玩法 | 芭蕉扇×0.7冷却、汽油瓶减冷却、异常追加身体变色，与本次文档同提交；实际 SHA 用 `git log -1` 核对 |
+| 最新玩法 | `c6c0e600943f78da2a333b4f76486e5dbc378996`：芭蕉扇×0.7冷却、汽油瓶减冷却、异常追加身体变色；之后的文档提交不改变游戏 |
 | 上一玩法提交 | `ebc67f49d6d46e821230d1da3a6b9bd849a6f72a` 为异常追加；`71ada60` 为暴击眼镜/默认点燃，`8bc1fa0` 为 Boss 转向，`04281a9` 为芭蕉扇/黑洞 |
 | 默认 `master` 的代码基线 | `d684fa41d9afac8879422c2baf9917996b8f8778`，尚无上述玩法更新 |
 | 合并状态 | [PR #3](https://github.com/wyb969/Rogge/pull/3) 在检查时 open、未合并；不要假定已进入 master |
-| 游戏版本 | `project.godot` 的 `application/config/version = 20261105-015239`；新包已构建，独立试玩页待更新，按用户要求本轮不更新 itch |
+| 游戏版本 | `project.godot` 的 `application/config/version = 20261105-015239`；已更新现有独立私有试玩页（见下），按用户要求本轮不更新 itch |
 | 工作区状态 | 本轮开始时开发分支干净；完成后重新检查 `git status`，不要依赖本行判断后续编辑 |
 
 最初的交接文档曾同步到 master；本轮进度和功能更新在开发分支，尚未合并。新会话先重新检查远端和本地状态，切到开发分支读取最新本文件。
@@ -152,7 +152,7 @@ git status --short --branch
 5. **物理设备稳定性和新卡平衡需要试玩。** 历史手机 Safari 重载/崩溃报告促成了预算和诊断改造；原生测试不能证明手机在最终神兽、雨雪、高密度汽油瓶+黑洞的长局内存稳定。复现检查应记录设备、版本、天气、装备、关卡，并从 Debug 导出诊断。`stress_stability.gd`、`benchmark_runtime.gd` 可辅助但不能代替设备实测；本次未运行。
 6. **itch 商店文案存在时效差异。** `docs/itch/` 的英文封面/文案/像素字体套件是编辑素材，内部保留 prepared_not_published 状态，部分文案仍写 18 种装备（当前为 21）。不能由素材存在推断在线首页已全部应用；用户/其他流程也可能编辑了在线页面。后续更新主页前应读取当时真实页面。
 
-本轮需求已实现，新包已构建，正在更新原有独立试玩页。**用户明确要求 itch 明天再整理上传，本轮不要上传或要求现在配置密钥。** 之前 Butler 只读检查表明环境尚未配置 `BUTLER_API_KEY`；后续获得上传指示时再处理 secret，复用既有 channel，发布后核对线上版本。
+本轮需求已实现，原有独立试玩页已更新成功，版本 `20261105-015239`，等待用户反馈。**用户明确要求 itch 明天再整理上传，本轮不要上传或要求现在配置密钥。** 之前 Butler 只读检查表明环境尚未配置 `BUTLER_API_KEY`；后续获得上传指示时再处理 secret，复用既有 channel，发布后核对线上版本。
 
 ## 7. 测试、排查与发布命令
 
@@ -205,12 +205,12 @@ butler push export/web ybwangrogger/rogue-white:html --userversion "$BUILD_VERSI
 - 上次已上传导出：`/workspace/Rogge-boss-facing-20261104/web-build`，其 `itch-push.jsonl` 记录 build `2297831`。更早新卡版的线上比对在 `/workspace/Rogge-fan-blackhole-20261104/`。
 
 
-### 独立试玩页（已有页面，本轮待更新）
+### 独立试玩页（已更新）
 
 - 链接：<https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，Sites 私有页面，需要当前所有者账号登录。入口为主页 → Debug → 测试芭蕉扇（异常追加），也可普通开局。
-- 游戏代码：`ebc67f49d6d46e821230d1da3a6b9bd849a6f72a`；版本 `20261105-011946`。19 项原生、3 项 PCK 检查通过；当前页面没有真实浏览器/手机 QA 记录。
-- Site project id：`appgprj_6aeb66ad64408191b317328a1063f65c`；deployment id：`appgdep_6aeb6bada0b481918a4424d77e02b4b3`；发布结果 `succeeded`。
-- Site version id：`appgprj_6aeb66ad64408191b317328a1063f65c~appgver_6f56be0a12f88191a026c346e6008f7a`；独立托管源提交：`ca65b2a15fc98501f7ae827ffe2e06710ed5351d`。后续更新复用这个 Site，不要重复注册或自行改变访问范围。
+- 游戏代码：`c6c0e600943f78da2a333b4f76486e5dbc378996`；版本 `20261105-015239`。14 项原生、3 项 PCK 检查通过，原生GPU已核对颜色变化/双异常/恢复；当前页面没有真实浏览器/手机 QA 记录。
+- Site project id：`appgprj_6aeb66ad64408191b317328a1063f65c`；deployment id：`appgdep_6aeb72b13a90819192c6985e3fe01c73`；发布结果 `succeeded`。
+- Site version id：`appgprj_6aeb66ad64408191b317328a1063f65c~appgver_fd42df795eb88191b5cfda71d29b18d0`；独立托管源提交：`48b7aacfaa0d81afbd0ff04ca7cb9f93882f3cfd`。后续更新复用这个 Site，不要重复注册或自行改变访问范围。
 - 本地托管源码在 `/workspace/sites/rogge-fan-status-playtest-20261105`，`source.json` 锁定 GitHub 游戏提交和 PCK 哈希；`build-preview.py` 可重建输出。原始游戏导出未改加载器，托管副本用流式 gzip 加载 WASM 以满足每文件 25 MiB 的托管限制。
 - 加载脚本已用 Node 校验解压后与原 WASM 完全相同，兼容服务器已解码响应，其他资源请求不变。Sites 浏览器工具缺失，按技能没有启动替代浏览器；原生与脚本检查不等同网页实测。
 - 环境缺少 Sites 官方源助手，已用标准 Git、隐藏 stdin 凭据和 tar 完成同等源同步/打包，原生发布工具接受并成功部署。Sites 源凭据有效期短，过期应通过 `create_source_repository_write_credential` 为同一 project 刷新，不向用户索要 token，不把 token 写入文件或日志。

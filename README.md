@@ -8,7 +8,7 @@
 
 [![浏览器试玩](https://img.shields.io/badge/立即试玩-itch.io-FA5C5C?style=for-the-badge&logo=itchdotio&logoColor=white)](https://ybwangrogger.itch.io/rogue-white)
 [![Godot](https://img.shields.io/badge/Godot-4.7-478CBF?style=for-the-badge&logo=godotengine&logoColor=white)](https://godotengine.org/)
-[![装备卡片](https://img.shields.io/badge/装备卡片-20_种-59C9A5?style=for-the-badge)](#装备图鉴)
+[![装备卡片](https://img.shields.io/badge/装备卡片-21_种-59C9A5?style=for-the-badge)](#装备图鉴)
 
 [开始一局](https://ybwangrogger.itch.io/rogue-white) · [装备图鉴](#装备图鉴) · [四神兽与祝福](#四神兽与祝福) · [运行项目](#运行项目)
 
@@ -47,7 +47,7 @@
 
 ## 装备图鉴
 
-20 种装备与成长卡可以交叉搭配。斧头、书本提供开局火力，其余能力在升级过程中逐步加入。
+21 种装备与成长卡可以交叉搭配。斧头、书本提供开局火力，其余能力在升级过程中逐步加入。
 
 | 类型 | 装备 | 打法与作用 |
 | --- | --- | --- |
@@ -59,6 +59,7 @@
 | <img src="assest/sprites/poison_trail.svg" width="28" alt="剧毒踪迹"> 移动毒场 | **剧毒踪迹** | 移动时身后留下毒雾，持续伤害其中的敌人；最高 5 级解锁减速。 |
 | <img src="assest/sprites/banana_fan.svg" width="28" alt="芭蕉扇"> 定向击退 | **芭蕉扇** | 沿当前或最后移动方向吹出气流，造成伤害并击退小怪；升级提高频率与距离，最高 5 级。 |
 | <img src="assest/sprites/black_hole.svg" width="28" alt="黑洞"> 引力聚怪 | **黑洞** | 周期召唤持续 3 秒的小黑洞，聚拢敌人并每秒伤害；升级缩短冷却、扩大范围并提高伤害，最高 5 级。 |
+| <img src="assest/sprites/critical_glasses.svg" width="28" alt="暴击眼镜"> 暴击强化 | **暴击眼镜** | 每级增加 20% 直接攻击暴击率，最高 5 级；暴击伤害为 150%，满级提高到 200%，以更大的金色伤害字标记。 |
 | <img src="assest/sprites/wind_emblem.svg" width="28" alt="踏风徽记"> 触发连锁 | **踏风徽记、回响火种** | 冲刺结束释放风压；累计击杀后，在最后一次击杀处引爆回响。 |
 | <img src="assest/sprites/monster_necklace.png" width="28" alt="怪物项链"> 生存续航 | **怪物项链、回复、吸血、玉佩** | 击杀掉落回血球、周期回复、伤害吸血，以及击杀补充护盾。 |
 | <img src="assest/sprites/fist_left.svg" width="28" alt="方向伤害"> 方向与成长 | **左拳、右拳、拾取、移速** | 强化对应方向的伤害，扩大拾取范围，或提高移动速度。 |

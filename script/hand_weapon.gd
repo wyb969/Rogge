@@ -68,8 +68,6 @@ func _move_with_hits(destination: Vector2) -> void :
 		body.apply_hit({
 			"damage": weapon_demage, 
 			"direction": (body.global_position - before).normalized(), 
-			"effect": "burn", 
-			"duration": 3.0, 
 			"source": self, 
 		})
 

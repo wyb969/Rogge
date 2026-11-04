@@ -280,9 +280,16 @@ func apply_hit(hit_data: Dictionary) -> void :
 		if p.has_method("get_side_damage_multiplier"):
 			damage_value *= p.get_side_damage_multiplier(global_position)
 
+	var critical_player: Node = player if is_instance_valid(player) else get_tree().get_first_node_in_group("player")
+	var crit_multiplier := 1.0
+	if critical_player != null and critical_player.has_method("roll_critical_multiplier"):
+		crit_multiplier = critical_player.roll_critical_multiplier(hit_data)
+	damage_value *= crit_multiplier
+	var critical := crit_multiplier > 1.0
+	var status_damage := preload("res://script/demage_text.gd").is_status_hit(hit_data)
 	boss_current_health = max(0.0, boss_current_health - damage_value)
-	if damage_value > 0 and preload("res://script/demage_text.gd").is_status_hit(hit_data):
-		_show_status_damage(damage_value)
+	if damage_value > 0 and (status_damage or critical):
+		_show_damage_number(damage_value, status_damage, critical)
 	if health_bar:
 		health_bar.visible = true
 		health_bar.set_health(boss_current_health)
@@ -300,14 +307,14 @@ func apply_hit(hit_data: Dictionary) -> void :
 	if boss_current_health <= 0.0:
 		await start_defeat_sequence()
 
-func _show_status_damage(amount: float) -> void :
+func _show_damage_number(amount: float, status_damage: bool, critical: bool) -> void :
 	if not preload("res://script/feedback_budget.gd").allow_popup(get_tree()): return
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	var container: Node = feedback.get_parent().effect_container if feedback != null else get_parent()
 	var popup: Node = preload("res://scenes/damage_text.tscn").instantiate()
 	container.add_child(popup)
 	popup.global_position = global_position
-	popup.show_damage(str(int(floor(amount))), global_position, 0, 0, true)
+	popup.show_damage(str(int(floor(amount))), global_position, 0, 0, status_damage, critical)
 
 func _apply_phase2_outline() -> void :
 

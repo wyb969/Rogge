@@ -1,21 +1,21 @@
 # ROGGE · AI 开发交接
 
-记录日期：2026-11-04。此文档依据工作区、Git、源码、已保存测试报告和发布日志整理；本次只增加交接文档，没有修改游戏逻辑，也没有重新跑完整回归。
+更新日期：2026-11-05（北京时间，UTC 为 11-04）。本轮新增暴击眼镜卡、修复开局武器无条件点燃，并补齐 Web 诊断 JS 的导出；详细行为见 `docs/critical-glasses.md`。初始交接时仅整理文档，本次已恢复功能开发。
 
 ## 1. 先找到正确的代码
 
-| 项目 | 已确认状态（交接文档提交前的代码检查点） |
+| 项目 | 已确认状态 |
 | --- | --- |
 | 仓库 | <https://github.com/wyb969/Rogge> |
 | 最新玩法分支 | `feature/fan-black-hole-20261104` |
-| 最新玩法提交 | `8bc1fa0a5969be34639f36b6698a804fbbc4b628`，第一关 Boss 转向与行走动画修复 |
-| 上一玩法提交 | `04281a98476f5845ce17b133c1b38dc81b38c4fb`，芭蕉扇、黑洞卡 |
-| 默认 `master` 的代码基线 | `d684fa41d9afac8879422c2baf9917996b8f8778`，尚无上述两次玩法更新 |
+| 最新玩法 | 暴击眼镜与默认点燃修复，与本次文档同提交；实际 SHA 用 `git log -1` 核对 |
+| 上一玩法提交 | `8bc1fa0a5969be34639f36b6698a804fbbc4b628`，第一关 Boss 转向与行走动画修复；更早的 `04281a9` 为芭蕉扇/黑洞 |
+| 默认 `master` 的代码基线 | `d684fa41d9afac8879422c2baf9917996b8f8778`，尚无上述玩法更新 |
 | 合并状态 | [PR #3](https://github.com/wyb969/Rogge/pull/3) 在检查时 open、未合并；不要假定已进入 master |
-| 游戏版本 | `project.godot` 的 `application/config/version = 20261104-233814` |
-| 工作区状态 | 开始整理时两个目标工作区均干净，与各自远端分支一致 |
+| 游戏版本 | `project.godot` 的 `application/config/version = 20261105-003002`；当前本地构建，尚未更新 itch |
+| 工作区状态 | 本轮开始时开发分支干净；完成后重新检查 `git status`，不要依赖本行判断后续编辑 |
 
-交接文档同步保存在开发分支和 master，仅增加文档，不把开发分支的游戏代码合入 master。上表固定记录玩法检查点；后续文档提交会推进分支 HEAD。新会话先读本文件，再重新检查远端和本地状态。
+最初的交接文档曾同步到 master；本轮进度和功能更新在开发分支，尚未合并。新会话先重新检查远端和本地状态，切到开发分支读取最新本文件。
 
 已有工作区先执行 `git status --short --branch`、`git worktree list`、`git log -5 --oneline`。不要覆盖工作区或重新从 itch 反编译。全新机器可克隆仓库后切到开发分支：
 
@@ -34,9 +34,9 @@ git status --short --branch
 
 ## 2. 引擎、资源与恢复来源
 
-- Godot **4.7**，GDScript；当前有 150 个 `.gd` 文件、49 个 `tools/smoke_*.gd` 脚本。没有额外的 npm/Python 运行时依赖，也没有 GitHub Actions 发布工作流。
+- Godot **4.7**，GDScript；当前有 152 个 `.gd` 文件、50 个 `tools/smoke_*.gd` 脚本。没有额外的 npm/Python 运行时依赖，也没有 GitHub Actions 发布工作流。
 - 主场景 `res://scenes/main.tscn`，逻辑视口 900×600。配置 features 写有 Forward Plus，项目没有显式渲染器覆盖；已有原生检查和 Web 导出使用命令行 `--rendering-method gl_compatibility`。
-- Web 预设关闭线程、扩展和 PWA，使用默认 HTML shell；`include_filter` 为空。另有 Windows Desktop 预设，但不能据此声称 Windows 包已构建测试。
+- Web 预设关闭线程、扩展和 PWA，使用默认 HTML shell；`include_filter` 显式包含 `script/web_diagnostics.js`，确保 `FileAccess` 可读取诊断 helper。另有 Windows Desktop 预设，但不能据此声称 Windows 包已构建测试。
 - 资源主目录故意沿用 `assest/` 拼写。保留 `.uid`、`.import`，尤其音频循环参数；`.godot` 是可重建缓存。`docs/.gdignore` 将文档素材排除出游戏导入。
 - 源码曾从公开 itch 包 `20261104-002331` 恢复。详见 `RECOVERY_README.md`、`RECOVERY_PROVENANCE.json`：146 个脚本反编译无失败，343 个资源转换无失败，其中 49 项有损。音频曾从压缩资源还原 PCM WAV 并恢复循环设置。
 - 恢复版不是丢失工作区的逐字备份：原注释、未导出资源、未推送历史和原始美术母版不能保证恢复。以当前 Git 源码为维护基线，避免批量格式化反编译文件。
@@ -92,11 +92,11 @@ git status --short --branch
 
 ### 卡片、神兽技能和输入
 
-当前选卡池及装备定义均为 **20 种**；稳定 ID 如下：
+当前选卡池及装备定义均为 **21 种**；稳定 ID 如下：
 
 - 武器：`axe_up`、`circle_up`、`gun_up`、`drone_up`、`molotov_up`、`freeze_up`。
 - 成长/生存：`pickup_up`、`speed_up`、`left_fist`、`right_fist`、`regen_up`、`lifesteal_up`、`shield_up`、`monster_necklace`。
-- 机制卡：`lightning_ring`、`wind_emblem`、`echo_ember`、`poison_trail`、`banana_fan`、`black_hole`。
+- 机制卡：`lightning_ring`、`wind_emblem`、`echo_ember`、`poison_trail`、`banana_fan`、`black_hole`、`critical_glasses`。
 
 左右拳卡是方向伤害加成，并非独立拳击武器。斧头和环绕书开局已有 1 级；其余按各自控制器判断，不要由显示文字推断是否已装备。
 
@@ -104,6 +104,8 @@ git status --short --branch
 - 黑洞：最高 5 级，持续 3 秒，DPS 6→18，半径 70→118，间隔 10→6 秒；在附近目标处生成、中心距玩家至少 88，平滑牵引和旋转。持续伤害不递归触发燃烧、冰冻、吸血，击杀仍正常给经验和项链掉落。
 - Boss/试炼敌人承受卡片伤害，但免疫这两张卡的强制位移；速度试炼无敌期仍受保护。宝藏守卫继承普通敌人行为，有自身质量/抗性，不能泛称所有小 Boss 都完全免疫。
 - 剧毒踪迹：最高 5 级，DPS 为 5×等级，5 级减速 25%；云团有寿命与数量上限，重叠不重复叠伤，毒色与灼烧/冰冻区分。
+- 暴击眼镜：墨镜图标，最高 5 级，每级 +20% 暴击率；1～4 级暴击伤害 150%，5 级为 100% 暴击率和 200% 伤害（用户已确认）。`critical_glasses.gd` 为无节点的规则模块，等级和独立 RNG 在玩家身上，普通怪/Boss 的 `apply_hit` 调用同一接口。持续伤害不再次暴击，弹字更大、描边更厚并加 `!`；转场保留等级，返回/新局清零。
+- 斧头和开局环绕书的命中数据均已移除默认燃烧，不再无卡点燃群怪。只有显式燃烧攻击/汽油瓶卡的正常附燃等来源应引入灼烧；勿将旧烟雾/火焰模板重新复制到普通攻击。
 - 怪物项链杀敌掉绿色治疗球，1 级基础治疗 5，后续升级增加；治疗走难度和玩家治疗倍率。闪电戒指随等级增加伤害、数量及范围。
 - 选卡有重选；宝藏抽奖通常给随机卡 +2（80%），+3 为 15%，+1 为 5%，不超过卡片上限。休息奖励可在最终确认前改选，确认后只领取一次。
 - 四神兽技能依次为治疗、屏幕雷击与清弹、全地图已掉落物牵引、6 秒减伤 90%；基础冷却分别 35/45/22/40 秒。治疗基础为最大血量 45%，Boss 雷击为最大血量 6% 且上限 420。左侧图标直接释放并显示冷却，另保留 Q 切换、E 释放当前技能。
@@ -125,11 +127,14 @@ git status --short --branch
 | --- | --- | --- |
 | `RECOVERY_TEST_RESULTS.json` | 47/47 | 恢复基线的原生检查，历史记录 |
 | `docs/validation/control-cards-20261104.json` | 48/48 | 两张新卡加入后的原生回归，版本 `20261104-210610` |
-| `docs/validation/boss-facing-20261104.json` | 8/8 | 最新 `20261104-233814` 的聚焦检查：转向、冲刺节奏、重叠、骑士、双风、神兽、属性攻击、新卡 |
+| `docs/validation/boss-facing-20261104.json` | 8/8 | 历史 `20261104-233814` 的聚焦检查：转向、冲刺节奏、重叠、骑士、双风、神兽、属性攻击、新卡 |
+| `docs/validation/critical-glasses-20261105.json` | 27/27 个不同原生检查 | 本轮暴击、两种开局武器的默认点燃、相关战斗/关卡/奖励及诊断检查；之后另有实际导出 PCK 与 Chromium Web 检查 |
 | 导出 PCK 内测试日志 | 新卡、最新 Boss 转向检查通过 | 当时云端 `packed-control-smoke.log`、`packed-boss-facing.log`；属于原生引擎加载实际 PCK，不是真浏览器 |
 | `docs/screenshots/` 四张新卡截图 | 有实际运行截帧 | 原生运行截图，不是 Safari/itch 浏览器截图 |
 
-当前共有 49 个 smoke 脚本，**没有最新版本全量 49/49 的记录**。上述报告不能相加当作 103 项独立功能，也不保证所有分支当前都通过。本次交接没有重跑这些测试，只检查报告、源码和现有日志。
+当前共有 50 个 smoke 脚本，**没有最新版本全量 50/50 的记录**。历史报告不能相加当作独立功能数，也不保证所有分支当前都通过。本轮针对共享战斗改动选测 27 项；最终修复书本后复跑 7 项相关检查，再验证实际 PCK。原生截图新增两张，位于 `docs/screenshots/critical-glasses-*.png`。
+
+本地 Chromium 155.0.8059.79 已实测当前 Web 导出：新启动、Debug 满级卡、战斗/伤害字、移动与 Shift 冲刺、390×844 竖屏调整，控制台错误为 0。它运行于云端软件图形环境，不是 itch CDN 或物理手机 Safari 验证。
 
 最新 Boss 修复的代码与测试共同确认：WAIT 追击时朝向玩家并播放循环 walk；RECOVER 每帧更新朝向，冲刺结束立即转向；蓄力/冲刺保持锁定方向，细小横向差有防抖。旧“冲刺后倒着滑行”的修复位于 `boss.gd` 与 `tools/smoke_boss_facing.gd`。
 
@@ -138,11 +143,11 @@ git status --short --branch
 1. **分支尚未合并。** PR #3 open；下一会话不能只在旧 master 上继续加功能。合并、扩大功能范围按后续用户指示处理，本次没有合并游戏代码。
 2. **最新在线包的端到端核验未完成。** Butler 接受了版本 `20261104-233814`、build `2297831` 的上传，但当时在线资源核验遇到 429/新 CDN 404，未完成最新版 PCK 哈希比对和真实浏览器试玩。复核方式：打开 itch，核对左下角版本，重载并进入第一关测试转向；必要时比对实际 iframe/CDN 的 PCK 与本地导出。不要仅凭上传成功就宣称已在 Safari 验证。
 3. **别的电脑偶发启动报错，用户已要求暂不处理。** 现象为 Godot 加载时弹出 `Couldn't load project data at path "/". Is the .pck file missing?`，尚未进入游戏。用户自己的电脑、手机未复现；Win7 只是用户猜测，没有确认系统、浏览器、网络请求或根因。只有用户重新要求时，才收集那台机器的浏览器版本/控制台/网络失败信息；不要顺带改导出加载器。以前的实验留在项目外 `deferred-web-investigation-20261104/`，未合入、未发布。
-4. **浏览器诊断 helper 疑似未随 Web 包导出，待验证。** 源码 `run_diagnostics.gd` 用 `FileAccess` 读取 `res://script/web_diagnostics.js`，但 Web include_filter 为空；本次在最新版 PCK 字节检索中找到诊断脚本路径，未找到 JS 路径。此为静态线索，尚未通过 PCK 文件清单或真实 Web 复现确认，不能直接认定为启动报错根因。后续如处理诊断，可先列包资源，再在 Web 检查该文件是否存在、`globalThis.RoggeDiagnostics` 是否可用以及 Debug 导出诊断是否成功。本次未修改。
+4. **诊断 helper 漏打包已确认并修复。** 本轮 Chromium 复现 `RoggeDiagnostics.previous` 未定义，原 PCK 确实缺 JS。Web include_filter 加入该文件后重新导出，PCK 包含路径，浏览器全局 helper 为 object，运行阶段控制台错误为 0。此问题与用户暂停调查的“找不到项目 PCK”启动提示不是同一个已证实根因；不要混为一谈。
 5. **物理设备稳定性和新卡平衡需要试玩。** 历史手机 Safari 重载/崩溃报告促成了预算和诊断改造；原生测试不能证明手机在最终神兽、雨雪、高密度汽油瓶+黑洞的长局内存稳定。复现检查应记录设备、版本、天气、装备、关卡，并从 Debug 导出诊断。`stress_stability.gd`、`benchmark_runtime.gd` 可辅助但不能代替设备实测；本次未运行。
-6. **itch 商店文案存在时效差异。** `docs/itch/` 的英文封面/文案/像素字体套件是编辑素材，内部保留 prepared_not_published 状态，部分文案仍写 18 种装备（当前为 20）。不能由素材存在推断在线首页已全部应用；用户/其他流程也可能编辑了在线页面。后续更新主页前应读取当时真实页面。
+6. **itch 商店文案存在时效差异。** `docs/itch/` 的英文封面/文案/像素字体套件是编辑素材，内部保留 prepared_not_published 状态，部分文案仍写 18 种装备（当前为 21）。不能由素材存在推断在线首页已全部应用；用户/其他流程也可能编辑了在线页面。后续更新主页前应读取当时真实页面。
 
-目前没有需要本次继续开发的新功能。下一次最小有效动作是确认所在分支和用户的新目标；若目标是验收，则优先补最新版浏览器试玩及上述核验，而不是默认增加卡片或调查已暂停的兼容问题。
+本轮需求已实现，尚需用户试玩反馈。`20261105-003002` Web 包已在本地构建/验证，Butler 只读状态检查明确返回未配置 `BUTLER_API_KEY`，所以本轮未上传 itch。下一次若要发布，先在环境配置该 secret，复用既有 channel，发布后核对线上版本；不要让用户把密钥写进源码或聊天。
 
 ## 7. 测试、排查与发布命令
 
@@ -160,12 +165,12 @@ XDG_DATA_HOME="$(mktemp -d)" "$GODOT_BIN" --headless --rendering-method gl_compa
 | 改动范围 | 优先选择的 `tools/` 检查 |
 | --- | --- |
 | 第一关 Boss | `smoke_boss_facing.gd`、`smoke_boss_rhythm.gd`、`smoke_first_boss_overlap.gd` |
-| 卡片/持续伤害/击退 | `smoke_control_cards.gd`、`smoke_poison_trail.gd`、`smoke_monster_necklace.gd`、`smoke_status_numbers.gd` |
+| 卡片/持续伤害/击退 | `smoke_critical_glasses.gd`、`smoke_axe.gd`、`smoke_book_growth.gd`、`smoke_control_cards.gd`、`smoke_poison_trail.gd`、`smoke_monster_necklace.gd`、`smoke_status_numbers.gd` |
 | 骑士/神兽/试炼 | `smoke_knight_boss.gd`、`smoke_beasts.gd`、`smoke_wind_duo.gd`、`smoke_elemental_attacks.gd`、`smoke_trials.gd` |
 | 休息/全局拾取/奖励 | `smoke_rest_selection.gd`、`smoke_rest_pickup_clock.gd`、`smoke_global_pickup.gd`、`smoke_treasure_lottery.gd` |
 | 性能/天气/声音 | `smoke_resource_bounds.gd`、`smoke_runtime_optimization.gd`、`smoke_molotov_spread.gd`、`smoke_world_snow.gd`、`smoke_weather_audio.gd`、`smoke_audio_mix.gd` |
 
-诊断：`RunDiagnostics` 保存 `user://rogge_diagnostics.json`，最多 60 个采样、96 个事件，约每 5 秒保存；记录 160ms 以上长帧（限频）、引擎错误、节点/内存/目标/装备等。主页 Debug 有诊断导出和压力测试入口。Web 还设计了 localStorage/上下文丢失捕获，但受第 6 节 helper 打包疑点限制；诊断也不能覆盖加载 PCK 之前的启动失败。
+诊断：`RunDiagnostics` 保存 `user://rogge_diagnostics.json`，最多 60 个采样、96 个事件，约每 5 秒保存；记录 160ms 以上长帧（限频）、引擎错误、节点/内存/目标/装备等。主页 Debug 有诊断导出和压力测试入口。Web 有 localStorage/上下文丢失捕获，当前已包含必要 JS；诊断不能覆盖加载 PCK 之前的启动失败。
 
 Web 构建要求匹配的 4.7 导出模板。使用新的构建输出目录并指定路径；不要沿用预设中旧机器的相对输出位置：
 
@@ -190,7 +195,8 @@ butler push export/web ybwangrogger/rogue-white:html --userversion "$BUILD_VERSI
 
 - 引擎：`/workspace/Rogge-recovery-20261104T024444Z/godot-validation-tool/Godot_v4.7-stable_linux.x86_64`，已有日志版本 `4.7.stable.official.5b4e0cb0f`。
 - 已安装 Web release 模板：`/home/agent/.local/share/godot/export_templates/4.7.stable/web_nothreads_release.zip`。
-- 最新导出：`/workspace/Rogge-boss-facing-20261104/web-build`；上传日志 `itch-push.jsonl` 记录 build `2297831`。新卡上一版日志及线上比对在 `/workspace/Rogge-fan-blackhole-20261104/`。
+- 当前本地导出与本轮日志：`/workspace/Rogge-critical-glasses-20261104/web-build`；构建版本 `20261105-003002`。该目录使用 UTC 日期命名，版本号使用北京时间。测试/浏览器记录位于同级目录，Web ZIP 也在此处。
+- 上次已上传导出：`/workspace/Rogge-boss-facing-20261104/web-build`，其 `itch-push.jsonl` 记录 build `2297831`。更早新卡版的线上比对在 `/workspace/Rogge-fan-blackhole-20261104/`。
 
 ## 8. 下一会话维护此文档
 

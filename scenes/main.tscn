@@ -157,6 +157,16 @@ layout_mode = 2
 text = "测试剧毒踪迹（5级减速）"
 script = ExtResource("5")
 
+[node name="DebugCriticalButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试暴击眼镜（1级）"
+script = ExtResource("5")
+
+[node name="DebugCritical5Button" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试暴击眼镜（5级必暴击）"
+script = ExtResource("5")
+
 [node name="DebugFanButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "测试芭蕉扇（1级）"
@@ -274,6 +284,8 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugPoisonButton" to="." method="_launch_run" binds= [&"poison"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugPoison5Button" to="." method="_launch_run" binds= [&"poison5"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFanButton" to="." method="_launch_run" binds= [&"fan"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugCriticalButton" to="." method="_launch_run" binds= [&"critical"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugCritical5Button" to="." method="_launch_run" binds= [&"critical5"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFan5Button" to="." method="_launch_run" binds= [&"fan5"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBlackHoleButton" to="." method="_launch_run" binds= [&"black_hole"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBlackHole5Button" to="." method="_launch_run" binds= [&"black_hole5"]]

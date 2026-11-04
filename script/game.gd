@@ -215,6 +215,7 @@ func end_game() -> void :
 	hide()
 
 func _reset_skill_controllers() -> void :
+	player.reset_critical_glasses()
 
 	for entry in CombatTargets._entries:
 		var actor: Node = entry.actor
@@ -304,6 +305,8 @@ func _on_upgrade_selected(upgrade_id: String):
 			player.add_shield_level()
 		"monster_necklace":
 			player.add_monster_necklace_level()
+		"critical_glasses":
+			player.add_critical_glasses_level()
 		"lightning_ring":
 			lightning_ring.upgrade()
 		"wind_emblem", "echo_ember":
@@ -320,7 +323,7 @@ func _on_upgrade_selected(upgrade_id: String):
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
-		"banana_fan", "black_hole",
+		"banana_fan", "black_hole", "critical_glasses",
 	]:
 		spawner.note_offense_card()
 
@@ -701,6 +704,20 @@ func prepare_poison_debug(rank: int) -> void :
 		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
 		add_child(actor)
 		actor.global_position = player.global_position + at
+
+func prepare_critical_debug(rank: int) -> void:
+	for _i in clampi(rank, 1, 5): _on_upgrade_selected("critical_glasses")
+	_on_upgrade_selected("gun_up")
+	variety.notify("暴击眼镜 %d 级 · 暴击率 %d%%\n大号金色伤害字与 ! 表示暴击" % [player.critical_glasses_level, roundi(player.CRITICAL_GLASSES.chance_for(player.critical_glasses_level) * 100.0)])
+	for offset in [Vector2(95, -28), Vector2(125, 22), Vector2(-100, -45)]:
+		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
+		actor.health = 600.0 * run_difficulty.health_scale
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position + offset
 
 func prepare_control_debug(mode: StringName) -> void:
 	var rank := 5 if mode in [&"fan5", &"black_hole5", &"control_cards"] else 1

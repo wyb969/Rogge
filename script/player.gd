@@ -66,6 +66,9 @@ const LIFESTEAL_MIN_HIT: = 8.0
 var regen_level: int = 0
 var lifesteal_level: int = 0
 var monster_necklace_level: int = 0
+const CRITICAL_GLASSES := preload("res://script/critical_glasses.gd")
+var critical_glasses_level := 0
+var _critical_rng := RandomNumberGenerator.new()
 var _regen_acc: float = 0.0
 
 const SHIELD_GAIN_BASE: = 2.0
@@ -89,6 +92,7 @@ var _hurt_tween: Tween
 var _hurt_punch: = 0.0
 
 func _ready() -> void :
+	_critical_rng.randomize()
 	_visual_base_scale = animated_sprite_2d.scale
 	health_bar.init_health(player_health)
 	max_player_health = player_health
@@ -155,6 +159,15 @@ func add_lifesteal_level() -> void :
 
 func add_monster_necklace_level() -> void :
 	monster_necklace_level += 1
+
+func add_critical_glasses_level() -> void:
+	critical_glasses_level = mini(critical_glasses_level + 1, CRITICAL_GLASSES.MAX_LEVEL)
+
+func roll_critical_multiplier(hit: Dictionary) -> float:
+	return CRITICAL_GLASSES.roll_multiplier(critical_glasses_level, hit, _critical_rng)
+
+func reset_critical_glasses() -> void:
+	critical_glasses_level = 0
 
 func monster_necklace_heal_for(level: int) -> float:
 	return 5.0 * float(maxi(level, 0))

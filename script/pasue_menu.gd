@@ -12,6 +12,7 @@ const VARIETY: = preload("res://script/run_variety.gd")
 const POISON: = preload("res://script/poison_trail.gd")
 const FAN := preload("res://script/banana_fan.gd")
 const VORTEX := preload("res://script/black_hole.gd")
+const CRITICAL := preload("res://script/critical_glasses.gd")
 const MAX_REROLLS: = 3
 var rerolls: = 2
 var reroll_button: Button
@@ -21,6 +22,7 @@ var _draft_rng: = RandomNumberGenerator.new()
 var _fit_pending: = false
 
 var upgrade_pool: = [
+	{"id": "critical_glasses", "title": "暴击眼镜 +1 级", "desc": "", "icon": "res://assest/sprites/critical_glasses.svg", "max_level": 5},
 	{"id": "banana_fan", "title": "芭蕉扇 +1 级", "desc": "", "icon": "res://assest/sprites/banana_fan.svg", "max_level": 5},
 	{"id": "black_hole", "title": "黑洞 +1 级", "desc": "", "icon": "res://assest/sprites/black_hole.svg", "max_level": 5},
 	{"id": "poison_trail", "title": "剧毒踪迹 +1 级", "desc": "", "icon": "res://assest/sprites/poison_trail.svg", "max_level": 5}, 
@@ -286,6 +288,10 @@ func available_upgrades() -> Array:
 func _build_card_data(data: Dictionary) -> Dictionary:
 	var card_data: = data.duplicate(true)
 	match str(card_data.get("id", "")):
+		"critical_glasses":
+			var game := _get_game()
+			var rank: int = mini(CRITICAL.MAX_LEVEL, 1 + (game.player.critical_glasses_level if game != null else 0))
+			card_data["desc"] = "直接攻击暴击率 %d%%\n暴击造成 %d%% 伤害\n每级 +20%% · 最高5级\n满级：暴击伤害200%%\n持续伤害不触发暴击" % [roundi(CRITICAL.chance_for(rank) * 100.0), roundi(CRITICAL.damage_multiplier_for(rank) * 100.0)]
 		"banana_fan":
 			var game := _get_game()
 			var rank: int = mini(5, 1 + (game.banana_fan.level if game != null else 0))

@@ -600,13 +600,13 @@ func _mitigate(raw: float) -> float:
 		dealt = maxf(dealt, 1.0)
 	return dealt
 
-func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false) -> float:
+func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false) -> float:
 	if _death_started or damage_value <= 0: return 0.0
 	var dealt: = _mitigate(damage_value)
 	var feedback: = JUICE.find(self)
 	if feedback != null: feedback.hit(global_position, direction, is_elite)
 	play_hit_tween(direction)
-	show_damage_text(dealt, status_damage)
+	show_damage_text(dealt, status_damage, critical)
 	AudioManager.play_enemy_hurt()
 	_apply_health_loss(dealt)
 	return dealt
@@ -627,7 +627,10 @@ func apply_hit(hit_data: Dictionary) -> void :
 			damage_value *= 1.0 + fc.get_frozen_bonus()
 			status_damage = true
 
-	var dealt: float = receive_hit(damage_dir, damage_value, status_damage)
+	var crit_multiplier := 1.0
+	if player_node != null and player_node.has_method("roll_critical_multiplier"):
+		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
+	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0)
 	if not hit_data.get("from_status", false):
 		_report_lifesteal(dealt)
 
@@ -756,7 +759,7 @@ func _apply_health_loss(dealt: float) -> void :
 		death_signal.emit()
 		queue_free()
 
-func show_damage_text(damage_value: float, status_damage: bool = false) -> void :
+func show_damage_text(damage_value: float, status_damage: bool = false, critical: bool = false) -> void :
 	var owner: = _game_owner()
 	var container: Node = owner.effect_container if owner != null else get_tree().get_first_node_in_group("effect_container")
 	if container == null or not FEEDBACK_BUDGET.allow_popup(get_tree()):
@@ -764,7 +767,7 @@ func show_damage_text(damage_value: float, status_damage: bool = false) -> void 
 	var d = damage_text.instantiate()
 	container.add_child(d)
 	d.position = self.position
-	d.show_damage(str(int(floor(damage_value))), self.global_position, 0, 0, status_damage)
+	d.show_damage(str(int(floor(damage_value))), self.global_position, 0, 0, status_damage, critical)
 
 func spaw_icon() -> void :
 	var game: = _game_owner()

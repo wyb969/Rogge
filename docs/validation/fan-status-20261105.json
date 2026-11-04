@@ -158,6 +158,7 @@
     "wasm_sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656",
     "checks": [
       "gzip bytes equal original WASM",
+      "host-decoded bytes accepted",
       "streamed MIME type",
       "same-origin options preserved",
       "other assets unchanged"
@@ -165,5 +166,15 @@
   },
   "browser_qa": "Not run for this version: managed Sites browser tool is unavailable. Native and packed checks are not browser/device QA.",
   "itch_uploaded": false,
-  "itch_note": "User explicitly deferred itch upload until tomorrow."
+  "itch_note": "User explicitly deferred itch upload until tomorrow.",
+  "preview_deployment": {
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aeb6bada0b481918a4424d77e02b4b3",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_6f56be0a12f88191a026c346e6008f7a",
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "audience": "owner-private",
+    "site_source_commit": "ca65b2a15fc98501f7ae827ffe2e06710ed5351d",
+    "game_commit": "ebc67f49d6d46e821230d1da3a6b9bd849a6f72a"
+  }
 }

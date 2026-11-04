@@ -9,6 +9,7 @@ const ICON := preload("res://assest/sprites/banana_fan.svg")
 var level := 0
 var casts := 0
 var hits := 0
+var status_echoes := 0
 var _cooldown := 0.0
 var _wave_left := 0.0
 var _scan_left := 0.0
@@ -29,7 +30,7 @@ var _audio: AudioStreamPlayer
 static func stats_for(rank: int) -> Dictionary:
 	var step := clampi(rank, 1, MAX_LEVEL) - 1
 	return {"damage": 12.0 + 4.0 * step, "range": 130.0 + 25.0 * step,
-		"interval": 3.2 - 0.45 * step, "push_speed": 300.0 + 25.0 * step}
+		"interval": 3.0 * pow(0.8, step), "push_speed": 300.0 + 25.0 * step}
 
 func _ready() -> void:
 	z_index = 7
@@ -54,6 +55,7 @@ func reset() -> void:
 	level = 0
 	casts = 0
 	hits = 0
+	status_echoes = 0
 	_cooldown = 0.0
 	set_physics_process(false)
 
@@ -148,10 +150,21 @@ func _scan_gust() -> void:
 		if actor.has_method("vulnerable") and not actor.vulnerable(): continue
 		var ref: WeakRef = weakref(actor)
 		_hit_ids[id] = ref
+		# Snapshot before the direct hit can add a new on-hit status.
+		var extra_damage := 0.0
+		if actor.has_method("get_status_echo_damage"):
+			extra_damage = actor.get_status_echo_damage(game.poison_trail.extra_tick_damage_for(actor))
 		actor.apply_hit({"damage": _stats.damage, "direction": _direction, "effect": "banana_fan", "source": self})
 		if generation != _generation: return
 		hits += 1
 		if not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_in_group("EnemyGroup"): continue
+		if extra_damage > 0.0:
+			# A final status-only hit cannot reapply statuses or reroll modifiers.
+			actor.apply_hit({"damage": extra_damage, "direction": _direction, "effect": "fan_status_bonus",
+				"from_status": true, "damage_is_final": true, "ignore_side_bonus": true, "source": self})
+			status_echoes += 1
+			if generation != _generation: return
+			if not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_in_group("EnemyGroup"): continue
 		if actor.has_method("apply_airflow"):
 			actor.apply_airflow(_direction * float(_stats.push_speed), 0.36)
 			var wake: Dictionary = _wakes[_wake_slot]

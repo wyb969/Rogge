@@ -600,9 +600,21 @@ func _mitigate(raw: float) -> float:
 		dealt = maxf(dealt, 1.0)
 	return dealt
 
-func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false) -> float:
+func get_status_echo_damage(poison_tick: float) -> float:
+	var total := _mitigate(float(burn_stacks) * burn_dps * 0.45) if burn_stacks > 0 else 0.0
+	if poison_tick > 0.0:
+		var player_node := _player_owner()
+		if player_node != null and player_node.has_method("get_side_damage_multiplier"):
+			poison_tick *= player_node.get_side_damage_multiplier(global_position)
+		var game := _game_owner()
+		if is_frozen() and game != null and game.get("freeze_controller") != null and game.freeze_controller.level > 0:
+			poison_tick *= 1.0 + game.freeze_controller.get_frozen_bonus()
+		total += _mitigate(poison_tick)
+	return total
+
+func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false) -> float:
 	if _death_started or damage_value <= 0: return 0.0
-	var dealt: = _mitigate(damage_value)
+	var dealt: float = damage_value if damage_is_final else _mitigate(damage_value)
 	var feedback: = JUICE.find(self)
 	if feedback != null: feedback.hit(global_position, direction, is_elite)
 	play_hit_tween(direction)
@@ -612,26 +624,28 @@ func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = 
 	return dealt
 
 func apply_hit(hit_data: Dictionary) -> void :
+	if _death_started or is_queued_for_deletion(): return
 	var status_damage: = preload("res://script/demage_text.gd").is_status_hit(hit_data)
+	var damage_is_final: bool = hit_data.get("damage_is_final", false)
 	var damage_value = float(hit_data.get("damage", 0))
 	var damage_dir: Vector2 = hit_data.get("direction", Vector2.ZERO)
 	var player_node: = _player_owner()
-	if player_node != null and player_node.has_method("get_side_damage_multiplier"):
+	if not damage_is_final and player_node != null and player_node.has_method("get_side_damage_multiplier"):
 		damage_value *= player_node.get_side_damage_multiplier(global_position)
 
 
 	var game: = _game_owner()
-	if is_frozen() and game != null and game.get("freeze_controller") != null:
+	if not damage_is_final and is_frozen() and game != null and game.get("freeze_controller") != null:
 		var fc = game.freeze_controller
 		if fc != null and fc.level > 0:
 			damage_value *= 1.0 + fc.get_frozen_bonus()
 			status_damage = true
 
 	var crit_multiplier := 1.0
-	if player_node != null and player_node.has_method("roll_critical_multiplier"):
+	if not damage_is_final and player_node != null and player_node.has_method("roll_critical_multiplier"):
 		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
-	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0)
-	if not hit_data.get("from_status", false):
+	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final)
+	if not hit_data.get("from_status", false) and not damage_is_final:
 		_report_lifesteal(dealt)
 
 	var effect_type = hit_data.get("effect", "")
@@ -651,7 +665,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 
 func _try_passive_procs(game: Node, hit_data: Dictionary) -> void :
 
-	if hit_data.get("from_status", false):
+	if hit_data.get("from_status", false) or hit_data.get("damage_is_final", false):
 		return
 	var mc = game.get("molotov_controller")
 	if mc != null and mc.level > 0 and randf() < mc.get_on_hit_chance():

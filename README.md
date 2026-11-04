@@ -57,7 +57,7 @@
 | <img src="assest/sprites/lightning_ring.svg" width="28" alt="闪电戒指"> 范围雷击 | **闪电戒指** | 周期雷击周围目标；升级提高伤害、雷击数量与范围。 |
 | <img src="assest/sprites/molotov.svg" width="28" alt="汽油瓶"> 点燃与控制 | **汽油瓶、寒冰** | 汽油瓶引燃群怪并传播灼烧；寒冰提供控制与冻伤增伤。 |
 | <img src="assest/sprites/poison_trail.svg" width="28" alt="剧毒踪迹"> 移动毒场 | **剧毒踪迹** | 移动时身后留下毒雾，持续伤害其中的敌人；最高 5 级解锁减速。 |
-| <img src="assest/sprites/banana_fan.svg" width="28" alt="芭蕉扇"> 定向击退 | **芭蕉扇** | 沿当前或最后移动方向吹出气流，造成伤害并击退小怪；升级提高频率与距离，最高 5 级。 |
+| <img src="assest/sprites/banana_fan.svg" width="28" alt="芭蕉扇"> 定向击退 | **芭蕉扇** | 吹出气流并击退小怪，对已有灼烧/中毒额外结算一跳；初始间隔 3 秒，每级冷却×0.8，最高 5 级。 |
 | <img src="assest/sprites/black_hole.svg" width="28" alt="黑洞"> 引力聚怪 | **黑洞** | 周期召唤持续 3 秒的小黑洞，聚拢敌人并每秒伤害；升级缩短冷却、扩大范围并提高伤害，最高 5 级。 |
 | <img src="assest/sprites/critical_glasses.svg" width="28" alt="暴击眼镜"> 暴击强化 | **暴击眼镜** | 每级增加 20% 直接攻击暴击率，最高 5 级；暴击伤害为 150%，满级提高到 200%，以更大的金色伤害字标记。 |
 | <img src="assest/sprites/wind_emblem.svg" width="28" alt="踏风徽记"> 触发连锁 | **踏风徽记、回响火种** | 冲刺结束释放风压；累计击杀后，在最后一次击杀处引爆回响。 |

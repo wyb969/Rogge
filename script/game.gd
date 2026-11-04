@@ -719,6 +719,19 @@ func prepare_critical_debug(rank: int) -> void:
 		add_child(actor)
 		actor.global_position = player.global_position + offset
 
+func prepare_fan_status_debug() -> void:
+	prepare_control_debug(&"fan5")
+	_on_upgrade_selected("molotov_up")
+	_on_upgrade_selected("poison_trail")
+	var targets: Array[Node2D] = CombatTargets.in_radius(player.global_position, 240.0 * 240.0, self)
+	for actor in targets:
+		if actor.has_method("apply_burn"): actor.apply_burn({"burn_stacks": 3, "burn_dps": 4.0})
+	if not targets.is_empty():
+		poison_trail._clouds[0].at = targets[0].global_position
+		poison_trail._clouds[0].left = poison_trail.CLOUD_LIFE
+		poison_trail._scan(0.0)
+	variety.notify("芭蕉扇5级 + 汽油瓶 / 剧毒\n已有异常额外一跳 · 同次吹风不重复、不传播")
+
 func prepare_control_debug(mode: StringName) -> void:
 	var rank := 5 if mode in [&"fan5", &"black_hole5", &"control_cards"] else 1
 	var ids: Array[String] = []

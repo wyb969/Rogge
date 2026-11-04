@@ -296,7 +296,7 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 			var game := _get_game()
 			var rank: int = mini(5, 1 + (game.banana_fan.level if game != null else 0))
 			var stats := FAN.stats_for(rank)
-			card_data["desc"] = "沿移动方向吹出气流\n伤害 %.0f · 距离 %.0f\n间隔 %.1f 秒 · 击退敌人\n升级更频繁、更远\n最高 5 级" % [stats.damage, stats.range, stats.interval]
+			card_data["desc"] = "沿移动方向吹出气流\n伤害 %.0f · 距离 %.0f\n间隔 %.2f 秒 · 击退敌人\n已有灼烧/中毒额外一跳\n最高5级 · 追加不传播" % [stats.damage, stats.range, stats.interval]
 		"black_hole":
 			var game := _get_game()
 			var rank: int = mini(5, 1 + (game.black_hole.level if game != null else 0))

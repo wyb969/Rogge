@@ -263,26 +263,33 @@ func _on_rush_timer_timeout() -> void :
 		return
 	start_charge_attack()
 
+func get_status_echo_damage(poison_tick: float) -> float:
+	var owner_player: Node = player if is_instance_valid(player) else get_tree().get_first_node_in_group("player")
+	if owner_player != null and owner_player.has_method("get_side_damage_multiplier"):
+		poison_tick *= owner_player.get_side_damage_multiplier(global_position)
+	return poison_tick
+
 func apply_hit(hit_data: Dictionary) -> void :
 	if is_dying:
 		return
 
 	AudioManager.play_enemy_hurt()
+	var damage_is_final: bool = hit_data.get("damage_is_final", false)
 	var damage_value: float = float(hit_data.get("damage", 0))
 	var damage_dir: Vector2 = hit_data.get("direction", Vector2.ZERO)
 	if damage_dir.length_squared() < 0.001:
 		damage_dir = Vector2.RIGHT
 
-	if not hit_data.get("ignore_side_bonus", false) and is_instance_valid(player) and player.has_method("get_side_damage_multiplier"):
+	if not damage_is_final and not hit_data.get("ignore_side_bonus", false) and is_instance_valid(player) and player.has_method("get_side_damage_multiplier"):
 		damage_value *= player.get_side_damage_multiplier(global_position)
-	elif not hit_data.get("ignore_side_bonus", false) and get_tree().get_first_node_in_group("player") != null:
+	elif not damage_is_final and not hit_data.get("ignore_side_bonus", false) and get_tree().get_first_node_in_group("player") != null:
 		var p: = get_tree().get_first_node_in_group("player")
 		if p.has_method("get_side_damage_multiplier"):
 			damage_value *= p.get_side_damage_multiplier(global_position)
 
 	var critical_player: Node = player if is_instance_valid(player) else get_tree().get_first_node_in_group("player")
 	var crit_multiplier := 1.0
-	if critical_player != null and critical_player.has_method("roll_critical_multiplier"):
+	if not damage_is_final and critical_player != null and critical_player.has_method("roll_critical_multiplier"):
 		crit_multiplier = critical_player.roll_critical_multiplier(hit_data)
 	damage_value *= crit_multiplier
 	var critical := crit_multiplier > 1.0
@@ -293,7 +300,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 	if health_bar:
 		health_bar.visible = true
 		health_bar.set_health(boss_current_health)
-	if not hit_data.get("from_status", false) and damage_value > 0.0:
+	if not hit_data.get("from_status", false) and not damage_is_final and damage_value > 0.0:
 		var steal_target: Node = player if is_instance_valid(player) else get_tree().get_first_node_in_group("player")
 		if steal_target != null and steal_target.has_method("notify_damage_dealt"):
 			steal_target.notify_damage_dealt(damage_value)

@@ -1,6 +1,6 @@
 # ROGGE · AI 开发交接
 
-更新日期：2026-11-05（北京时间，UTC 为 11-04）。本轮新增暴击眼镜卡、修复开局武器无条件点燃，并补齐 Web 诊断 JS 的导出；详细行为见 `docs/critical-glasses.md`。初始交接时仅整理文档，本次已恢复功能开发。
+更新日期：2026-11-05（北京时间，UTC 为 11-04）。本轮升级芭蕉扇：已有灼烧/中毒额外一跳、每次每目标去重、3 秒初始冷却且升级×0.8。伤害、范围、击退成长保留，详见 `docs/control-cards.md`。之前的暴击眼镜与默认点燃修复保持，详见 `docs/critical-glasses.md`。
 
 ## 1. 先找到正确的代码
 
@@ -8,11 +8,11 @@
 | --- | --- |
 | 仓库 | <https://github.com/wyb969/Rogge> |
 | 最新玩法分支 | `feature/fan-black-hole-20261104` |
-| 最新玩法 | 暴击眼镜与默认点燃修复，与本次文档同提交；实际 SHA 用 `git log -1` 核对 |
-| 上一玩法提交 | `8bc1fa0a5969be34639f36b6698a804fbbc4b628`，第一关 Boss 转向与行走动画修复；更早的 `04281a9` 为芭蕉扇/黑洞 |
+| 最新玩法 | 芭蕉扇异常追加与冷却升级，与本次文档同提交；实际 SHA 用 `git log -1` 核对 |
+| 上一玩法提交 | `71ada606585cfe9fa4bff76ad3c59ea1aac38031`，暴击眼镜与默认点燃修复；更早的 `8bc1fa0` 为 Boss 转向，`04281a9` 为芭蕉扇/黑洞 |
 | 默认 `master` 的代码基线 | `d684fa41d9afac8879422c2baf9917996b8f8778`，尚无上述玩法更新 |
 | 合并状态 | [PR #3](https://github.com/wyb969/Rogge/pull/3) 在检查时 open、未合并；不要假定已进入 master |
-| 游戏版本 | `project.godot` 的 `application/config/version = 20261105-003002`；当前本地构建，尚未更新 itch |
+| 游戏版本 | `project.godot` 的 `application/config/version = 20261105-011946`；已构建，独立试玩页准备发布，按用户要求本轮不更新 itch |
 | 工作区状态 | 本轮开始时开发分支干净；完成后重新检查 `git status`，不要依赖本行判断后续编辑 |
 
 最初的交接文档曾同步到 master；本轮进度和功能更新在开发分支，尚未合并。新会话先重新检查远端和本地状态，切到开发分支读取最新本文件。
@@ -34,7 +34,7 @@ git status --short --branch
 
 ## 2. 引擎、资源与恢复来源
 
-- Godot **4.7**，GDScript；当前有 152 个 `.gd` 文件、50 个 `tools/smoke_*.gd` 脚本。没有额外的 npm/Python 运行时依赖，也没有 GitHub Actions 发布工作流。
+- Godot **4.7**，GDScript；当前有 153 个 `.gd` 文件、51 个 `tools/smoke_*.gd` 脚本。没有额外的 npm/Python 运行时依赖，也没有 GitHub Actions 发布工作流。
 - 主场景 `res://scenes/main.tscn`，逻辑视口 900×600。配置 features 写有 Forward Plus，项目没有显式渲染器覆盖；已有原生检查和 Web 导出使用命令行 `--rendering-method gl_compatibility`。
 - Web 预设关闭线程、扩展和 PWA，使用默认 HTML shell；`include_filter` 显式包含 `script/web_diagnostics.js`，确保 `FileAccess` 可读取诊断 helper。另有 Windows Desktop 预设，但不能据此声称 Windows 包已构建测试。
 - 资源主目录故意沿用 `assest/` 拼写。保留 `.uid`、`.import`，尤其音频循环参数；`.godot` 是可重建缓存。`docs/.gdignore` 将文档素材排除出游戏导入。
@@ -68,6 +68,7 @@ git status --short --branch
 - `_show_next_reward()` 排队解决抽奖、神兽领取、升级卡、试炼、休息；试炼和模态窗口有阻塞条件，避免两个暂停窗口同时开启。
 - `game.tscn` 内名为 `Node2D` 的实例实际是升级 UI；场景根名与运行时 `game` 实例名也不同。定位时看脚本和 ownership，别只看节点名。
 - 敌人在 `EnemyGroup`；掉落物和特效分别归 `pickup_container`、`effect_container`。伤害走 `apply_hit(Dictionary)`，保留 `vulnerable()`、防御、死亡奖励。`from_status: true` 用于避免持续伤害递归触发被动；并非跳过所有伤害修正。
+- 芭蕉扇通过目标的 `get_status_echo_damage(poison_tick)` 读取命中前的已结算数值，再发送独立 `fan_status_bonus` 命中；`damage_is_final: true` 仅用于这类内部已计算的追加，避免再次乘方向/冻伤/暴击或减免。同时使用 `from_status: true`，不复制原始 effect，不重加状态或触发传播；Boss/试炼仍经过它们的 `apply_hit` 保护。
 
 ## 4. 当前玩法与已实现内容
 
@@ -100,7 +101,7 @@ git status --short --branch
 
 左右拳卡是方向伤害加成，并非独立拳击武器。斧头和环绕书开局已有 1 级；其余按各自控制器判断，不要由显示文字推断是否已装备。
 
-- 芭蕉扇：最高 5 级，沿冲刺/最后移动方向吹击，基础伤害 12→28，距离 130→230，间隔 3.2→1.4 秒；单次气流每敌人只命中一次，实际击退身体、产生有限气流扰动，可打断敏捷怪冲刺。
+- 芭蕉扇：最高 5 级，沿冲刺/最后移动方向吹击，基础伤害 12→28，距离 130→230，冷却依次为 3、2.4、1.92、1.536、1.2288 秒；单次气流每敌人只命中一次，实际击退身体、产生有限气流扰动，可打断敏捷怪冲刺。已有灼烧/中毒各补一跳，合并一次追加和一个伤害字，不改原计时/层数，不递归、不主动传播、不再暴击或吸血；新附燃不参与本次快照。
 - 黑洞：最高 5 级，持续 3 秒，DPS 6→18，半径 70→118，间隔 10→6 秒；在附近目标处生成、中心距玩家至少 88，平滑牵引和旋转。持续伤害不递归触发燃烧、冰冻、吸血，击杀仍正常给经验和项链掉落。
 - Boss/试炼敌人承受卡片伤害，但免疫这两张卡的强制位移；速度试炼无敌期仍受保护。宝藏守卫继承普通敌人行为，有自身质量/抗性，不能泛称所有小 Boss 都完全免疫。
 - 剧毒踪迹：最高 5 级，DPS 为 5×等级，5 级减速 25%；云团有寿命与数量上限，重叠不重复叠伤，毒色与灼烧/冰冻区分。
@@ -129,12 +130,13 @@ git status --short --branch
 | `docs/validation/control-cards-20261104.json` | 48/48 | 两张新卡加入后的原生回归，版本 `20261104-210610` |
 | `docs/validation/boss-facing-20261104.json` | 8/8 | 历史 `20261104-233814` 的聚焦检查：转向、冲刺节奏、重叠、骑士、双风、神兽、属性攻击、新卡 |
 | `docs/validation/critical-glasses-20261105.json` | 27/27 个不同原生检查 | 本轮暴击、两种开局武器的默认点燃、相关战斗/关卡/奖励及诊断检查；之后另有实际导出 PCK 与 Chromium Web 检查 |
+| `docs/validation/fan-status-20261105.json` | 19/19 个不同原生检查、3/3 导出 PCK 检查 | 当前芭蕉扇更新，覆盖密集群怪去重、无额外传播、异常时钟、倍率、奖励、Boss/试炼、五级真实自动冷却和 Debug/Retry |
 | 导出 PCK 内测试日志 | 新卡、最新 Boss 转向检查通过 | 当时云端 `packed-control-smoke.log`、`packed-boss-facing.log`；属于原生引擎加载实际 PCK，不是真浏览器 |
 | `docs/screenshots/` 四张新卡截图 | 有实际运行截帧 | 原生运行截图，不是 Safari/itch 浏览器截图 |
 
-当前共有 50 个 smoke 脚本，**没有最新版本全量 50/50 的记录**。历史报告不能相加当作独立功能数，也不保证所有分支当前都通过。本轮针对共享战斗改动选测 27 项；最终修复书本后复跑 7 项相关检查，再验证实际 PCK。原生截图新增两张，位于 `docs/screenshots/critical-glasses-*.png`。
+当前共有 51 个 smoke 脚本，**没有最新版本全量 51/51 的记录**。历史报告不能相加当作独立功能数，也不保证所有分支当前都通过。暴击眼镜版本选测 27 项；本轮芭蕉扇更新选测 19 项，最新新增试炼保护断言后重跑芭蕉扇检查，最终 PCK 内再检查 3 项。旧原生截图保存在 `docs/screenshots/critical-glasses-*.png`。
 
-本地 Chromium 155.0.8059.79 已实测当前 Web 导出：新启动、Debug 满级卡、战斗/伤害字、移动与 Shift 冲刺、390×844 竖屏调整，控制台错误为 0。它运行于云端软件图形环境，不是 itch CDN 或物理手机 Safari 验证。
+上一版 `20261105-003002` 的本地 Chromium 155 检查覆盖启动、满级暴击、移动与竖屏，控制台错误为 0。本轮 Sites 试玩页的浏览器 QA 尚未完成：环境没有该技能要求的 `cua_repl.js` 工具，按技能跳过浏览器 QA；已有引擎、实际 PCK 和试玩资源加载脚本检查不能代替当前浏览器/物理手机验证。
 
 最新 Boss 修复的代码与测试共同确认：WAIT 追击时朝向玩家并播放循环 walk；RECOVER 每帧更新朝向，冲刺结束立即转向；蓄力/冲刺保持锁定方向，细小横向差有防抖。旧“冲刺后倒着滑行”的修复位于 `boss.gd` 与 `tools/smoke_boss_facing.gd`。
 
@@ -147,7 +149,7 @@ git status --short --branch
 5. **物理设备稳定性和新卡平衡需要试玩。** 历史手机 Safari 重载/崩溃报告促成了预算和诊断改造；原生测试不能证明手机在最终神兽、雨雪、高密度汽油瓶+黑洞的长局内存稳定。复现检查应记录设备、版本、天气、装备、关卡，并从 Debug 导出诊断。`stress_stability.gd`、`benchmark_runtime.gd` 可辅助但不能代替设备实测；本次未运行。
 6. **itch 商店文案存在时效差异。** `docs/itch/` 的英文封面/文案/像素字体套件是编辑素材，内部保留 prepared_not_published 状态，部分文案仍写 18 种装备（当前为 21）。不能由素材存在推断在线首页已全部应用；用户/其他流程也可能编辑了在线页面。后续更新主页前应读取当时真实页面。
 
-本轮需求已实现，尚需用户试玩反馈。`20261105-003002` Web 包已在本地构建/验证，Butler 只读状态检查明确返回未配置 `BUTLER_API_KEY`，所以本轮未上传 itch。下一次若要发布，先在环境配置该 secret，复用既有 channel，发布后核对线上版本；不要让用户把密钥写进源码或聊天。
+本轮需求已实现，等待独立试玩页发布结果与用户反馈。**用户明确要求 itch 明天再整理上传，本轮不要上传或要求现在配置密钥。** 之前 Butler 只读检查表明环境尚未配置 `BUTLER_API_KEY`；后续获得上传指示时再处理 secret，复用既有 channel，发布后核对线上版本。
 
 ## 7. 测试、排查与发布命令
 
@@ -165,7 +167,7 @@ XDG_DATA_HOME="$(mktemp -d)" "$GODOT_BIN" --headless --rendering-method gl_compa
 | 改动范围 | 优先选择的 `tools/` 检查 |
 | --- | --- |
 | 第一关 Boss | `smoke_boss_facing.gd`、`smoke_boss_rhythm.gd`、`smoke_first_boss_overlap.gd` |
-| 卡片/持续伤害/击退 | `smoke_critical_glasses.gd`、`smoke_axe.gd`、`smoke_book_growth.gd`、`smoke_control_cards.gd`、`smoke_poison_trail.gd`、`smoke_monster_necklace.gd`、`smoke_status_numbers.gd` |
+| 卡片/持续伤害/击退 | `smoke_fan_status.gd`、`smoke_critical_glasses.gd`、`smoke_axe.gd`、`smoke_book_growth.gd`、`smoke_control_cards.gd`、`smoke_poison_trail.gd`、`smoke_monster_necklace.gd`、`smoke_status_numbers.gd` |
 | 骑士/神兽/试炼 | `smoke_knight_boss.gd`、`smoke_beasts.gd`、`smoke_wind_duo.gd`、`smoke_elemental_attacks.gd`、`smoke_trials.gd` |
 | 休息/全局拾取/奖励 | `smoke_rest_selection.gd`、`smoke_rest_pickup_clock.gd`、`smoke_global_pickup.gd`、`smoke_treasure_lottery.gd` |
 | 性能/天气/声音 | `smoke_resource_bounds.gd`、`smoke_runtime_optimization.gd`、`smoke_molotov_spread.gd`、`smoke_world_snow.gd`、`smoke_weather_audio.gd`、`smoke_audio_mix.gd` |
@@ -195,7 +197,8 @@ butler push export/web ybwangrogger/rogue-white:html --userversion "$BUILD_VERSI
 
 - 引擎：`/workspace/Rogge-recovery-20261104T024444Z/godot-validation-tool/Godot_v4.7-stable_linux.x86_64`，已有日志版本 `4.7.stable.official.5b4e0cb0f`。
 - 已安装 Web release 模板：`/home/agent/.local/share/godot/export_templates/4.7.stable/web_nothreads_release.zip`。
-- 当前本地导出与本轮日志：`/workspace/Rogge-critical-glasses-20261104/web-build`；构建版本 `20261105-003002`。该目录使用 UTC 日期命名，版本号使用北京时间。测试/浏览器记录位于同级目录，Web ZIP 也在此处。
+- 当前本地导出与本轮日志：`/workspace/Rogge-fan-status-20261105/web-build`；构建版本 `20261105-011946`，19 项相关原生与 3 项 PCK 验证。Sites 测试页源码目录：`/workspace/sites/rogge-fan-status-playtest-20261105`，身份保存在其 `.openai/hosting.json`，不能重复注册。
+- 暴击眼镜上一版：`/workspace/Rogge-critical-glasses-20261104/web-build`，版本 `20261105-003002`；该目录名为 UTC 日期，版本号为北京时间。
 - 上次已上传导出：`/workspace/Rogge-boss-facing-20261104/web-build`，其 `itch-push.jsonl` 记录 build `2297831`。更早新卡版的线上比对在 `/workspace/Rogge-fan-blackhole-20261104/`。
 
 ## 8. 下一会话维护此文档

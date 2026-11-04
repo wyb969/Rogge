@@ -296,6 +296,8 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_poison_debug(5 if mode == &"poison5" else 1)
 		&"fan", &"fan5", &"black_hole", &"black_hole5", &"control_cards":
 			game.prepare_control_debug(mode)
+		&"fan_status":
+			game.prepare_fan_status_debug()
 		&"critical", &"critical5":
 			game.prepare_critical_debug(5 if mode == &"critical5" else 1)
 		&"stability":

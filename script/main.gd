@@ -294,6 +294,8 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_meteor_debug()
 		&"poison", &"poison5":
 			game.prepare_poison_debug(5 if mode == &"poison5" else 1)
+		&"fan", &"fan5", &"black_hole", &"black_hole5", &"control_cards":
+			game.prepare_control_debug(mode)
 		&"stability":
 			var test: Node = load("res://script/stability_test.gd").new()
 			test.name = "StabilityTest"

@@ -3,6 +3,8 @@
 **Target:** [ybwangrogger.itch.io/rogue-white](https://ybwangrogger.itch.io/rogue-white)  
 **Publication status:** Prepared locally. The live itch page has not been updated by this kit.
 
+**Download:** [English itch page kit ZIP (about 2 MB)](https://raw.githubusercontent.com/wyb969/Rogge/master/docs/itch/ROGGE-itch-English-page-kit-20261104.zip). Includes the cover, description, theme settings, five game captures, a local preview, and the original public-page backup.
+
 A midnight arcade palette, crisp pixel headings, readable pixel body text, original promotional cover, and an English introduction built around the current game.
 
 ## Files

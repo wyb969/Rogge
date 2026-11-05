@@ -389,11 +389,21 @@
   },
   "browser_qa": "not run: required managed browser tools unavailable",
   "physical_device_qa": "not run",
-  "playtest_publication": "pending",
+  "playtest_publication": {
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aecc593a18c819199a4d9d5ddfceecd",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_ef6be86998c48191877b273f74a8e125",
+    "site_source_commit": "ebba7e7d3fed02c6aa073df5b922996efc939fc5",
+    "access": "owner-private",
+    "loader_validation": "Actual compressed and server-decoded WASM match original bytes; fragmented prefixes and PCK pass-through checked with Node; not browser QA."
+  },
   "itch_publication": "not performed for this feature; remains 20261106-011424",
   "notes": [
     "Native check results distinguish known ObjectDB/resources-in-use exit messages from runtime/script errors.",
     "New bomb bootstrap tests initially preloaded an Autoload-dependent controller too early; fixed to load after tree startup. Only passing corrected results are included.",
     "No entire 54-script suite was claimed. PCK checks run with the native engine and are not browser gameplay verification."
-  ]
+  ],
+  "game_source_commit": "fe2ddb06d2563073eb6bc3174f5d17101ecb27da"
 }

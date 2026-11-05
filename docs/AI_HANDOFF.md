@@ -3,12 +3,20 @@
 ## 2026-11-06 炸弹卡与军械护盾（最新开发）
 
 - 本轮新增 `bomb` 炸弹卡及枪支/无人机/炸弹三件套，详见 `docs/bomb-arsenal.md`。开发分支仍为 `feature/fan-black-hole-20261104`，不合并 master。
-- 当前游戏版本 **`20261106-015912`**；本轮先更新现有 Sites 私有试玩，itch 当前仍是上一轮 `20261106-011424`，不要混淆两个托管入口。
+- 当前游戏版本 **`20261106-015912`**；已成功更新现有 Sites 私有试玩，itch 当前仍是上一轮 `20261106-011424`，不要混淆两个托管入口。
 - 炸弹最高5级：伤害50→110、半径70→118、间隔4.8→2.50563秒；有限抛物线投掷与引信、径向冲击和视觉腾空。直接伤害可暴击/使用已拥有被动，本身不默认点燃、不递归爆炸；Boss/试炼的位移抗性与易伤窗口保留。
 - 军械组合以实际装备等级>0判断，集齐后第3/6/9秒各获得1秒无敌；独立 `arsenal_shield_active`，不覆盖 dash grace、玉佩护盾或速度试炼的 dash-only 条件。暂停冻结；休息/转场清当前窗口、保留资格；死亡/新局清理。
 - 新模块 `bomb_controller.gd` / `arsenal_combo.gd` 接入 Game 创建、升级、重置与 `variety.clear_combat_effects()`；Debug 有1级/5级炸弹及三件套入口。
 - 目前159个GDScript、54个smoke脚本、22种装备。19个不同原生检查、5项实际导出PCK检查通过；真实原生GPU截图已核对。浏览器工具缺失，本轮无浏览器/物理手机试玩，退出时资源警告保留记录。
-- 证据：`docs/validation/bomb-arsenal-20261106.json`、`docs/screenshots/bomb-*.png`、`arsenal-shield.png`。试玩发布状态与实际提交将在本轮完成后补充。
+- 证据：`docs/validation/bomb-arsenal-20261106.json`、`docs/screenshots/bomb-*.png`、`arsenal-shield.png`。游戏提交 `fe2ddb06d2563073eb6bc3174f5d17101ecb27da`；后续文档提交不改变已部署代码。
+
+### 本轮试玩（已部署）
+
+- 链接：<https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，仍为所有者私有页面。主页 → Debug → 测试炸弹1级 / 5级 / 军械组合。
+- Site `appgprj_6aeb66ad64408191b317328a1063f65c` 继续复用；deployment `appgdep_6aecc593a18c819199a4d9d5ddfceecd` 返回 succeeded。
+- Site version `appgprj_6aeb66ad64408191b317328a1063f65c~appgver_ef6be86998c48191877b273f74a8e125`；独立托管源提交 `ebba7e7d3fed02c6aa073df5b922996efc939fc5`，锁定游戏提交 `fe2ddb0` 与 PCK `d2d9b800dfa880afce95d1a76002e7169935d7bf6d7958df1131103eb3db2c2c`。
+- 继续使用原有 gzip WASM 加载适配，Node 检查了实际解压字节、已由服务器解码的分支、碎片化响应前缀与 PCK 请求透传；不等同真实浏览器试玩。
+- 本次没有触发 PixelFishing 的 itch 发布任务。若之后要求更新 itch，使用 `docs/ITCH_PUBLISH.md` 的原 channel，建议给 CI 选测清单加入 `smoke_bomb_card` 与 `smoke_arsenal_combo`，并将源码/版本一同更新后再推工作流文件。
 
 ## 2026-11-06 itch 发布完成与趣味性讨论
 
@@ -32,7 +40,7 @@
 | --- | --- |
 | 仓库 | <https://github.com/wyb969/Rogge> |
 | 最新玩法分支 | `feature/fan-black-hole-20261104` |
-| 最新玩法 | 本轮炸弹与军械护盾；基线 `6cd945e`，准确提交请检查 `git log`；当前版本见文首 |
+| 最新玩法 | `fe2ddb06d2563073eb6bc3174f5d17101ecb27da`：炸弹卡与军械护盾；之后的文档提交不改变游戏 |
 | 上一玩法提交 | `ebc67f49d6d46e821230d1da3a6b9bd849a6f72a` 为异常追加；`71ada60` 为暴击眼镜/默认点燃，`8bc1fa0` 为 Boss 转向，`04281a9` 为芭蕉扇/黑洞 |
 | 默认 `master` 的代码基线 | `d684fa41d9afac8879422c2baf9917996b8f8778`，尚无上述玩法更新 |
 | 合并状态 | [PR #3](https://github.com/wyb969/Rogge/pull/3) 在检查时 open、未合并；不要假定已进入 master |

@@ -1,0 +1,86 @@
+{
+  "version": "20261106-011424",
+  "source_game_commit": "41821f514696f62d43b06046a07e46fb76d0814d",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "rendering_method": "gl_compatibility",
+  "native_loading_exported_pck": [
+    {
+      "name": "smoke_menu_layout",
+      "packed_resource": true,
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.84,
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ],
+      "runtime_errors": []
+    },
+    {
+      "name": "smoke_fan_feedback",
+      "packed_resource": true,
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.18,
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ],
+      "runtime_errors": []
+    },
+    {
+      "name": "smoke_control_cards",
+      "packed_resource": true,
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.94,
+      "shutdown_warnings": [
+        "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ],
+      "runtime_errors": []
+    }
+  ],
+  "export_manifest": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "c3b587479f3349a008bda89eb88f56c6cf744cf9d4fc022793cf8b182b15e3ec"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23306424,
+      "sha256": "ff1831e38c164ce2fdfba8635a01e946a68b69789314286ea918ec626f76d662"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "browser_qa": "not run",
+  "physical_device_qa": "not run",
+  "itch_upload": "pending GitHub Actions publication",
+  "shutdown_warning_note": "Existing ObjectDB/resource-in-use warnings are recorded separately from runtime/parser errors; these checks do not establish long-session memory stability."
+}

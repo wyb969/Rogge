@@ -1,5 +1,17 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-06 itch 发布准备（本节更新于旧试玩记录之后）
+
+用户本次已明确授权现在更新 itch；下文“明天上传 / 本轮不上传”为上一轮历史约束，不再阻止本次发布。
+
+- 发布分支：`release/itch-20261105-171424`，从 `41821f514696f62d43b06046a07e46fb76d0814d` 建立。
+- 本次仅更新打包版本与发布文档，未修改游戏业务逻辑。新版本：北京时间 `20261106-011424`。
+- 已使用 Godot `4.7.stable.official.5b4e0cb0f` 和匹配 Web 模板导出。系统默认 `godot` 是 4.6.3，不能直接用默认命令代替。
+- 实际导出 PCK 的 `smoke_menu_layout`、`smoke_fan_feedback`、`smoke_control_cards` 共 3/3 通过；已记录历史存在的退出时 ObjectDB/resources-in-use 警告。没有本轮浏览器/手机实测。
+- 发布目标固定 `ybwangrogger/rogue-white:html`，复用原上传 channel；当前状态为本地打包完成、等待 Actions 上传，不能据此声称 itch 已更新。
+- 当前云端没有 `BUTLER_API_KEY`。用户表示密钥放在 pixelfish；已找到 `wyb969/PixelFishing` 的现有成功 itch 工作流，使用 `secrets.BUTLER_API_KEY`。GitHub Secrets 无法反向读取，将由独立 ROGGE Actions 任务直接消费，不能把密钥输出或传回聊天。
+- 验证清单：`docs/validation/itch-release-20261106.json`。发布完成后继续记录 Actions run、Butler build 和线上 PCK 比对结果。
+
 更新日期：2026-11-05（北京时间，UTC 为 11-04）。本轮将芭蕉扇升级冷却改为×0.7，汽油瓶间隔整体缩短25%，并添加异常追加的深红/深紫身体变色与双异常过渡。已有灼烧/中毒额外一跳及每目标去重保持。伤害、范围、击退成长保留，详见 `docs/control-cards.md`。之前的暴击眼镜与默认点燃修复保持，详见 `docs/critical-glasses.md`。
 
 ## 1. 先找到正确的代码

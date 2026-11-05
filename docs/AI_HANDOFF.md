@@ -1,16 +1,18 @@
 # ROGGE · AI 开发交接
 
-## 2026-11-06 itch 发布准备（本节更新于旧试玩记录之后）
+## 2026-11-06 itch 发布完成与趣味性讨论
 
-用户本次已明确授权现在更新 itch；下文“明天上传 / 本轮不上传”为上一轮历史约束，不再阻止本次发布。
+用户本次明确授权现在更新 itch；下文“明天上传 / 本轮不上传”为上一轮历史约束。本轮没有新增或调整玩法。
 
-- 发布分支：`release/itch-20261105-171424`，从 `41821f514696f62d43b06046a07e46fb76d0814d` 建立。
-- 本次仅更新打包版本与发布文档，未修改游戏业务逻辑。新版本：北京时间 `20261106-011424`。
-- 已使用 Godot `4.7.stable.official.5b4e0cb0f` 和匹配 Web 模板导出。系统默认 `godot` 是 4.6.3，不能直接用默认命令代替。
-- 实际导出 PCK 的 `smoke_menu_layout`、`smoke_fan_feedback`、`smoke_control_cards` 共 3/3 通过；已记录历史存在的退出时 ObjectDB/resources-in-use 警告。没有本轮浏览器/手机实测。
-- 发布目标固定 `ybwangrogger/rogue-white:html`，复用原上传 channel；当前状态为本地打包完成、等待 Actions 上传，不能据此声称 itch 已更新。
-- 当前云端没有 `BUTLER_API_KEY`。用户表示密钥放在 pixelfish；已找到 `wyb969/PixelFishing` 的现有成功 itch 工作流，使用 `secrets.BUTLER_API_KEY`。GitHub Secrets 无法反向读取，将由独立 ROGGE Actions 任务直接消费，不能把密钥输出或传回聊天。
-- 验证清单：`docs/validation/itch-release-20261106.json`。发布完成后继续记录 Actions run、Butler build 和线上 PCK 比对结果。
+- 开发继续使用 `feature/fan-black-hole-20261104`。本次先在独立发布分支 `release/itch-20261105-171424` 准备，发布后将版本与文档快进同步到开发分支；不合并 master。
+- 线上版本为北京时间 **`20261106-011424`**，对应发布源码 `4f8577fb7704426df5bae9d7eb147d042dcd431c`，玩法仍为 `c6c0e600943f78da2a333b4f76486e5dbc378996`。后续文档提交不改变发布包。
+- 已用官方 Godot 4.7 与匹配模板导出；本地和 Actions 分别通过实际 PCK 的主页布局、芭蕉扇反馈、控制卡片 3 项检查。历史退出 ObjectDB/resources-in-use 警告保留；本轮没有浏览器或物理手机试玩。
+- 已更新原 `ybwangrogger/rogue-white:html` channel，upload `20115514`，Butler build **`2307264`**。itch 公共 iframe 已返回新构建，PCK/WASM/JS 三项字节数与 SHA-256 均匹配 Actions 构建清单。
+- 在线 PCK：`24de0b0de69c512b0e43fdd104f6c713e91860bc6d0c1321043da527ff7fa458`。本地另一次导出具有不同哈希，不能误当作已发布包。
+- Actions 成功记录：<https://github.com/wyb969/PixelFishing/actions/runs/42073745113>。密钥是 PixelFishing 的仓库 Actions Secret `BUTLER_API_KEY`，工作流直接使用，没有取回其原值。当前开发云端没有绑定该变量。
+- 独立发布工作流位于 PixelFishing 的 `automation/rogge-itch-release` 分支，文件 `.github/workflows/publish-rogge-itch.yml`；下一次更新完整 `ROGGE_COMMIT` / `BUILD_VERSION` 并推送该文件，会重新编译、聚焦检查、保存构件和上传。详情 `docs/ITCH_PUBLISH.md`。现有 PixelFishing 默认分支发布流程未改。
+- 发布证据：`docs/validation/itch-release-20261106.json`、`docs/validation/itch-live-20261106.json`。HTTP 资源比对不等于浏览器游玩验证。Actions artifact 保留 30 天，源码和概要已经进入 Git。
+- 趣味性讨论写入 `docs/ROGUELITE_FUN_REVIEW.md`：先验证现有聚怪控场、异常走位、暴击直伤是否形成不同打法。方案尚未实现或经过玩家测试。特别注意：芭蕉扇原本已读取冲刺/最后移动方向，无需再次实现“冲刺定向”。
 
 更新日期：2026-11-05（北京时间，UTC 为 11-04）。本轮将芭蕉扇升级冷却改为×0.7，汽油瓶间隔整体缩短25%，并添加异常追加的深红/深紫身体变色与双异常过渡。已有灼烧/中毒额外一跳及每目标去重保持。伤害、范围、击退成长保留，详见 `docs/control-cards.md`。之前的暴击眼镜与默认点燃修复保持，详见 `docs/critical-glasses.md`。
 
@@ -24,7 +26,7 @@
 | 上一玩法提交 | `ebc67f49d6d46e821230d1da3a6b9bd849a6f72a` 为异常追加；`71ada60` 为暴击眼镜/默认点燃，`8bc1fa0` 为 Boss 转向，`04281a9` 为芭蕉扇/黑洞 |
 | 默认 `master` 的代码基线 | `d684fa41d9afac8879422c2baf9917996b8f8778`，尚无上述玩法更新 |
 | 合并状态 | [PR #3](https://github.com/wyb969/Rogge/pull/3) 在检查时 open、未合并；不要假定已进入 master |
-| 游戏版本 | `project.godot` 的 `application/config/version = 20261105-015239`；已更新现有独立私有试玩页（见下），按用户要求本轮不更新 itch |
+| 游戏版本 | `project.godot` 的 `application/config/version = 20261106-011424`，已发布 itch；独立 Sites 试玩仍为上一版 `20261105-015239` |
 | 工作区状态 | 本轮开始时开发分支干净；完成后重新检查 `git status`，不要依赖本行判断后续编辑 |
 
 最初的交接文档曾同步到 master；本轮进度和功能更新在开发分支，尚未合并。新会话先重新检查远端和本地状态，切到开发分支读取最新本文件。
@@ -46,7 +48,7 @@ git status --short --branch
 
 ## 2. 引擎、资源与恢复来源
 
-- Godot **4.7**，GDScript；当前有 155 个 `.gd` 文件、52 个 `tools/smoke_*.gd` 脚本。没有额外的 npm/Python 运行时依赖，也没有 GitHub Actions 发布工作流。
+- Godot **4.7**，GDScript；当前有 155 个 `.gd` 文件、52 个 `tools/smoke_*.gd` 脚本。没有额外的 npm/Python 运行时依赖。ROGGE 自身仓库没有 Actions 工作流；跨仓库的独立发布任务已在 PixelFishing 验证成功，见文首与 `docs/ITCH_PUBLISH.md`。
 - 主场景 `res://scenes/main.tscn`，逻辑视口 900×600。配置 features 写有 Forward Plus，项目没有显式渲染器覆盖；已有原生检查和 Web 导出使用命令行 `--rendering-method gl_compatibility`。
 - Web 预设关闭线程、扩展和 PWA，使用默认 HTML shell；`include_filter` 显式包含 `script/web_diagnostics.js`，确保 `FileAccess` 可读取诊断 helper。另有 Windows Desktop 预设，但不能据此声称 Windows 包已构建测试。
 - 资源主目录故意沿用 `assest/` 拼写。保留 `.uid`、`.import`，尤其音频循环参数；`.godot` 是可重建缓存。`docs/.gdignore` 将文档素材排除出游戏导入。
@@ -158,13 +160,13 @@ git status --short --branch
 ## 6. 尚未完成、已知问题与复现
 
 1. **分支尚未合并。** PR #3 open；下一会话不能只在旧 master 上继续加功能。合并、扩大功能范围按后续用户指示处理，本次没有合并游戏代码。
-2. **最新在线包的端到端核验未完成。** Butler 接受了版本 `20261104-233814`、build `2297831` 的上传，但当时在线资源核验遇到 429/新 CDN 404，未完成最新版 PCK 哈希比对和真实浏览器试玩。复核方式：打开 itch，核对左下角版本，重载并进入第一关测试转向；必要时比对实际 iframe/CDN 的 PCK 与本地导出。不要仅凭上传成功就宣称已在 Safari 验证。
+2. **最新在线资源核验已完成，浏览器/手机试玩仍待进行。** 本轮版本 `20261106-011424`、build `2307264` 已上传且线上 PCK/WASM/JS 匹配 CI 清单。之前 `20261104-233814` 遇到 429/404 的未完成记录已被本轮新发布核验覆盖；本次也曾遇到提取等待与 429，退避后成功。不能由资源哈希一致推断 Safari 游玩已通过。
 3. **别的电脑偶发启动报错，用户已要求暂不处理。** 现象为 Godot 加载时弹出 `Couldn't load project data at path "/". Is the .pck file missing?`，尚未进入游戏。用户自己的电脑、手机未复现；Win7 只是用户猜测，没有确认系统、浏览器、网络请求或根因。只有用户重新要求时，才收集那台机器的浏览器版本/控制台/网络失败信息；不要顺带改导出加载器。以前的实验留在项目外 `deferred-web-investigation-20261104/`，未合入、未发布。
 4. **诊断 helper 漏打包已确认并修复。** 本轮 Chromium 复现 `RoggeDiagnostics.previous` 未定义，原 PCK 确实缺 JS。Web include_filter 加入该文件后重新导出，PCK 包含路径，浏览器全局 helper 为 object，运行阶段控制台错误为 0。此问题与用户暂停调查的“找不到项目 PCK”启动提示不是同一个已证实根因；不要混为一谈。
 5. **物理设备稳定性和新卡平衡需要试玩。** 历史手机 Safari 重载/崩溃报告促成了预算和诊断改造；原生测试不能证明手机在最终神兽、雨雪、高密度汽油瓶+黑洞的长局内存稳定。复现检查应记录设备、版本、天气、装备、关卡，并从 Debug 导出诊断。`stress_stability.gd`、`benchmark_runtime.gd` 可辅助但不能代替设备实测；本次未运行。
 6. **itch 商店文案存在时效差异。** `docs/itch/` 的英文封面/文案/像素字体套件是编辑素材，内部保留 prepared_not_published 状态，部分文案仍写 18 种装备（当前为 21）。不能由素材存在推断在线首页已全部应用；用户/其他流程也可能编辑了在线页面。后续更新主页前应读取当时真实页面。
 
-本轮需求已实现，原有独立试玩页已更新成功，版本 `20261105-015239`，等待用户反馈。**用户明确要求 itch 明天再整理上传，本轮不要上传或要求现在配置密钥。** 之前 Butler 只读检查表明环境尚未配置 `BUTLER_API_KEY`；后续获得上传指示时再处理 secret，复用既有 channel，发布后核对线上版本。
+上一轮独立试玩页版本为 `20261105-015239`。用户随后明确授权现在更新 itch，本轮已通过 PixelFishing Actions 发布 `20261106-011424` 并核对线上资源。后续发布复用现有 channel 与 Actions Secret，无需索要密钥原值。
 
 ## 7. 测试、排查与发布命令
 
@@ -206,7 +208,7 @@ butler push export/web ybwangrogger/rogue-white:html --userversion "$BUILD_VERSI
 - 复用 `html` channel（已有 upload id `20115514`）；不要为普通更新创建另一公开包。Butler 保留构建历史与“页面只显示一个当前文件”是两回事。
 - 版本号使用打包日期时分秒，沿用北京时间 `yyyyMMdd-HHmmss`。文档提交不触发版本变更。
 - `20261104-210610` 的卡片版本曾完成线上 PCK 比对，SHA-256 为 `3f53d74ed57a004690683dac0a9ffc8d858a4d8e1ce08a7af8f904b2f26fe8c6`；这个哈希**不属于**最新 Boss 修复包。
-- 仓库没有自动编译上传 CI。当前环境也没有绑定发布 secret；之前聊天中的凭据不能作为新会话依赖。主页封面/字体/描述更新是另一个流程，Butler 上传不会自动修改它们。
+- ROGGE 发布 CI 现位于 PixelFishing 的独立发布分支，使用该仓库 `BUTLER_API_KEY`，详情 `docs/ITCH_PUBLISH.md`。当前开发环境没有绑定该 secret；不要依赖聊天凭据。主页封面/字体/描述更新是另一个流程，Butler 上传不会自动修改它们。
 
 本次环境中可用的本地工具/产物（非持久依赖）：
 

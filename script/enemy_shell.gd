@@ -17,6 +17,10 @@ var _airflow_velocity := Vector2.ZERO
 var _airflow_left := 0.0
 var _gravity_velocity := Vector2.ZERO
 var _gravity_left := 0.0
+var _blast_velocity := Vector2.ZERO
+var _blast_left := 0.0
+var _blast_duration := 0.3
+var _blast_height := 0.0
 
 const DASHER_MAX_HEALTH: = 20.0
 const DASH_AIM_SECONDS: = 0.4
@@ -90,6 +94,11 @@ func _ready() -> void :
 		sprite_2d.modulate = base_modulate
 
 func _draw() -> void :
+	if _blast_left > 0.0:
+		var unit := 1.0 / maxf(body_scale, 0.4)
+		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
+		draw_circle(Vector2.ZERO, 7.5, Color(0.015, 0.025, 0.03, 0.3))
+		draw_set_transform(Vector2.ZERO)
 	if archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0:
 		var unit: = 1.0 / maxf(body_scale, 0.4)
 		draw_arc(Vector2(0, 11) * unit, 8 * unit, - PI * 0.5, - PI * 0.5 + TAU * contact_recovery_left / DASHER_CONTACT_RECOVERY, 16, Color(0.85, 0.92, 1, 0.65), 1.2 * unit, false)
@@ -262,6 +271,32 @@ func clear_gravity_pull() -> void:
 	_gravity_velocity = Vector2.ZERO
 	_gravity_left = 0.0
 
+func apply_blast_impulse(push_velocity: Vector2, seconds: float) -> void:
+	if _death_started: return
+	var resistance := crowd_control_scale()
+	_blast_velocity = push_velocity.limit_length(480.0) * resistance
+	_blast_duration = clampf(seconds, 0.05, 0.35)
+	_blast_left = _blast_duration
+	_blast_height = 13.0 * resistance
+	if archetype == EnemyData.Archetype.DASHER:
+		_finish_dash()
+		dash_timer = maxf(dash_timer, 0.75)
+	shot_windup = 0.0
+	slam_windup = 0.0
+	slam_time_left = 0.0
+	attack_timer = maxf(attack_timer, _blast_left)
+	queue_redraw()
+
+func blast_jump_height() -> float:
+	return sin(clampf(1.0 - _blast_left / _blast_duration, 0.0, 1.0) * PI) * _blast_height if _blast_left > 0.0 else 0.0
+
+func clear_blast_impulse() -> void:
+	_blast_left = 0.0
+	_blast_velocity = Vector2.ZERO
+	_blast_height = 0.0
+	if sprite_2d != null: _apply_move_juice(0.0)
+	queue_redraw()
+
 func _apply_crowd_motion(delta: float) -> void:
 	if delta <= 0.0: return
 	if _airflow_left > 0.0:
@@ -274,6 +309,13 @@ func _apply_crowd_motion(delta: float) -> void:
 	if _gravity_left > 0.0:
 		velocity += _gravity_velocity * (minf(delta, _gravity_left) / delta)
 		_gravity_left = maxf(0.0, _gravity_left - delta)
+	if _blast_left > 0.0:
+		var step := minf(delta, _blast_left)
+		var decay := exp(-5.0 * step)
+		velocity = velocity * (1.0 - step / delta) + _blast_velocity * ((1.0 - decay) / (5.0 * delta))
+		_blast_velocity *= decay
+		_blast_left = maxf(0.0, _blast_left - delta)
+		queue_redraw()
 
 func _physics_process(delta: float) -> void :
 	if _death_started or not is_instance_valid(player_reference):
@@ -478,7 +520,7 @@ func _fire_projectile(dir: Vector2) -> void :
 	shots_fired += 1
 
 func _try_contact(dist: float) -> void :
-	if _death_started or is_queued_for_deletion() or (archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or contact_recovery_left > 0.0)):
+	if _death_started or _blast_left > 0.0 or is_queued_for_deletion() or (archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or contact_recovery_left > 0.0)):
 		return
 	if archetype == EnemyData.Archetype.RANGED:
 		return
@@ -565,6 +607,8 @@ func _apply_move_juice(delta: float) -> void :
 			sprite_2d.scale *= Vector2(1.12, 0.85)
 			sprite_2d.position.y += 2.0 / maxf(body_scale, 0.4)
 			sprite_2d.rotation = 0
+
+	sprite_2d.position.y -= blast_jump_height() / maxf(body_scale, 0.4)
 
 func _face(dir: Vector2) -> void :
 	if sprite_2d == null:

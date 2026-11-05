@@ -8,8 +8,11 @@ const LEVEL_COLOR: = preload("res://script/visual_style.gd").TEXT
 @onready var slot_list: GridContainer = $SlotList
 
 var _slots: Dictionary = {}
+var _arsenal_label: Label
+const ARSENAL_HINT := "军械组合：无人机 + 枪支 + 炸弹\n三件均装备后，每3秒获得1秒无敌护盾"
 
 const EQUIP_DEFS: = {
+	"bomb": {"title": "炸弹", "icon": "res://assest/sprites/bomb.svg", "start_level": 0, "max_level": 5},
 	"critical_glasses": {"title": "暴击眼镜", "icon": "res://assest/sprites/critical_glasses.svg", "start_level": 0, "max_level": 5},
 	"banana_fan": {"title": "芭蕉扇", "icon": "res://assest/sprites/banana_fan.svg", "start_level": 0, "max_level": 5},
 	"black_hole": {"title": "黑洞", "icon": "res://assest/sprites/black_hole.svg", "start_level": 0, "max_level": 5},
@@ -94,6 +97,12 @@ const EQUIP_DEFS: = {
 }
 
 func _ready() -> void :
+	_arsenal_label = Label.new()
+	_arsenal_label.position = Vector2(0, -23)
+	_arsenal_label.size = Vector2(125, 20)
+	UiFonts.apply_to_label(_arsenal_label, 12)
+	_arsenal_label.tooltip_text = ARSENAL_HINT
+	add_child(_arsenal_label)
 	get_viewport().size_changed.connect(_fit_equipment)
 	reset_equipment()
 
@@ -114,6 +123,7 @@ func reset_equipment() -> void :
 	for child in slot_list.get_children():
 		child.queue_free()
 	_slots.clear()
+	set_arsenal_status(0, false, 0.0)
 
 	for id in ["axe_up", "circle_up"]:
 		_add_or_set_level(id, EQUIP_DEFS[id]["start_level"], false)
@@ -131,6 +141,12 @@ func get_level(upgrade_id: String) -> int:
 	if _slots.has(upgrade_id):
 		return int(_slots[upgrade_id]["level"])
 	return 0
+
+func set_arsenal_status(owned: int, active: bool, seconds: float) -> void:
+	if _arsenal_label == null: return
+	_arsenal_label.visible = owned > 0
+	_arsenal_label.text = ("无敌护盾 %.1fs" % seconds if active else "军械护盾 %.1fs" % seconds) if owned == 3 else "军械组合 %d/3" % owned
+	_arsenal_label.modulate = Color(0.65, 0.96, 1.0) if active else LEVEL_COLOR
 
 func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> void :
 	if level <= 0:
@@ -156,6 +172,7 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = load(def["icon"])
+	icon_wrap.tooltip_text = str(def.title) + ("\n" + ARSENAL_HINT if upgrade_id in ["gun_up", "drone_up", "bomb"] else "")
 	preload("res://script/visual_style.gd").style_icon(icon, upgrade_id)
 	if def.has("modulate"):
 		icon.modulate = def["modulate"]

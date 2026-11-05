@@ -46,6 +46,7 @@ var pickup_range: float
 var left_fist_level: int = 0
 var right_fist_level: int = 0
 var hurt_lock: float = 0.0
+var arsenal_shield_active := false
 
 var damage_reduction: float = 0.0
 var cooldown_scale: float = 1.0
@@ -547,7 +548,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void :
 	receive_attack(amount, body)
 
 func receive_attack(amount: float, _source: Node = null) -> void :
-	if is_dash_invulnerable() or amount <= 0.0 or hurt_lock > 0.0 or player_health <= 0.0:
+	if is_dash_invulnerable() or arsenal_shield_active or amount <= 0.0 or hurt_lock > 0.0 or player_health <= 0.0:
 		return
 	hurt_lock = HURT_INVULNERABILITY
 	AudioManager.play_hit()

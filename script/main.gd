@@ -298,6 +298,8 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_control_debug(mode)
 		&"fan_status":
 			game.prepare_fan_status_debug()
+		&"bomb", &"bomb5", &"arsenal":
+			game.prepare_bomb_debug(mode)
 		&"critical", &"critical5":
 			game.prepare_critical_debug(5 if mode == &"critical5" else 1)
 		&"stability":

@@ -39,8 +39,12 @@ const POISON_TRAIL: = preload("res://script/poison_trail.gd")
 var poison_trail: Node2D
 const BANANA_FAN := preload("res://script/banana_fan.gd")
 const BLACK_HOLE := preload("res://script/black_hole.gd")
+const BOMB := preload("res://script/bomb_controller.gd")
+const ARSENAL_COMBO := preload("res://script/arsenal_combo.gd")
 var banana_fan: Node2D
 var black_hole: Node2D
+var bomb_controller: Node2D
+var arsenal_combo: Node2D
 const BEAST_POWERS: = preload("res://script/beast_powers.gd")
 const LIGHTNING_FX: = preload("res://script/lightning_strike.gd")
 const LIGHTNING_RING: = preload("res://script/lightning_ring.gd")
@@ -125,6 +129,12 @@ func _ready() -> void :
 	black_hole = BLACK_HOLE.new()
 	black_hole.name = "BlackHole"
 	add_child(black_hole)
+	bomb_controller = BOMB.new()
+	bomb_controller.name = "BombController"
+	add_child(bomb_controller)
+	arsenal_combo = ARSENAL_COMBO.new()
+	arsenal_combo.name = "ArsenalCombo"
+	add_child(arsenal_combo)
 	spawner.beast_defeated.connect(_on_beast_defeated)
 	level_manager.signal_level_up.connect(on_level_up)
 	pause_menu.upgrade_selected.connect(_on_upgrade_selected)
@@ -231,6 +241,8 @@ func _reset_skill_controllers() -> void :
 	if poison_trail: poison_trail.reset()
 	if banana_fan: banana_fan.reset()
 	if black_hole: black_hole.reset()
+	if bomb_controller: bomb_controller.reset()
+	if arsenal_combo: arsenal_combo.reset()
 	if variety: variety.reset()
 	if lightning_ring:
 		lightning_ring.reset()
@@ -317,18 +329,21 @@ func _on_upgrade_selected(upgrade_id: String):
 			banana_fan.upgrade()
 		"black_hole":
 			black_hole.upgrade()
+		"bomb":
+			bomb_controller.upgrade()
 
 	if spawner and spawner.has_method("note_offense_card") and upgrade_id in [
 		"axe_up", "circle_up", "gun_up", "left_fist", "right_fist", 
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
-		"banana_fan", "black_hole", "critical_glasses",
+		"banana_fan", "black_hole", "critical_glasses", "bomb",
 	]:
 		spawner.note_offense_card()
 
 	if equipment_panel and equipment_panel.has_method("apply_upgrade"):
 		equipment_panel.apply_upgrade(upgrade_id)
+	arsenal_combo.refresh_equipment()
 	combat_feedback.reward(player.global_position)
 	RunDiagnostics.mark("after_card", {"id": upgrade_id}, true)
 
@@ -745,6 +760,25 @@ func prepare_control_debug(mode: StringName) -> void:
 		actor.set_player_ref(player)
 		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
 		actor.health = 240.0 * run_difficulty.health_scale
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position + offset
+
+func prepare_bomb_debug(mode: StringName) -> void:
+	var rank := 5 if mode in [&"bomb5", &"arsenal"] else 1
+	for _i in rank: _on_upgrade_selected("bomb")
+	if mode == &"arsenal":
+		_on_upgrade_selected("gun_up")
+		_on_upgrade_selected("drone_up")
+	player.apply_rest_max_hp(250)
+	player.full_heal()
+	variety.notify("炸弹 %d 级 · 自动抛投、范围爆破与击飞\n%s" % [rank, "军械组合：每3秒获得1秒无敌" if mode == &"arsenal" else "集齐无人机 + 枪支 + 炸弹可激活军械护盾"])
+	for offset in [Vector2(125, -28), Vector2(145, 24), Vector2(175, 0), Vector2(-145, -35), Vector2(85, 130)]:
+		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
+		actor.health = 400.0 * run_difficulty.health_scale
 		actor.add_to_group("EnemyGroup")
 		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
 		add_child(actor)

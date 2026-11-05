@@ -172,6 +172,21 @@ layout_mode = 2
 text = "测试芭蕉扇（1级）"
 script = ExtResource("5")
 
+[node name="DebugBombButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试炸弹（1级）"
+script = ExtResource("5")
+
+[node name="DebugBomb5Button" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试炸弹（5级爆破）"
+script = ExtResource("5")
+
+[node name="DebugArsenalButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试军械组合（每3秒无敌1秒）"
+script = ExtResource("5")
+
 [node name="DebugFan5Button" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "测试芭蕉扇（5级远距离）"
@@ -289,6 +304,9 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugPoisonButton" to="." method="_launch_run" binds= [&"poison"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugPoison5Button" to="." method="_launch_run" binds= [&"poison5"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFanButton" to="." method="_launch_run" binds= [&"fan"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBombButton" to="." method="_launch_run" binds= [&"bomb"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBomb5Button" to="." method="_launch_run" binds= [&"bomb5"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugArsenalButton" to="." method="_launch_run" binds= [&"arsenal"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugCriticalButton" to="." method="_launch_run" binds= [&"critical"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugCritical5Button" to="." method="_launch_run" binds= [&"critical5"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFan5Button" to="." method="_launch_run" binds= [&"fan5"]]

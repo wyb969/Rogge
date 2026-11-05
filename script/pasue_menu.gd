@@ -14,6 +14,8 @@ const FAN := preload("res://script/banana_fan.gd")
 const VORTEX := preload("res://script/black_hole.gd")
 const CRITICAL := preload("res://script/critical_glasses.gd")
 const MOLOTOV := preload("res://script/molotov_controller.gd")
+const BOMB := preload("res://script/bomb_controller.gd")
+const ARSENAL_HINT := "军械：枪支+无人机+炸弹\n每3秒获得1秒无敌护盾"
 const MAX_REROLLS: = 3
 var rerolls: = 2
 var reroll_button: Button
@@ -23,6 +25,7 @@ var _draft_rng: = RandomNumberGenerator.new()
 var _fit_pending: = false
 
 var upgrade_pool: = [
+	{"id": "bomb", "title": "炸弹 +1 级", "desc": "", "icon": "res://assest/sprites/bomb.svg", "max_level": 5},
 	{"id": "critical_glasses", "title": "暴击眼镜 +1 级", "desc": "", "icon": "res://assest/sprites/critical_glasses.svg", "max_level": 5},
 	{"id": "banana_fan", "title": "芭蕉扇 +1 级", "desc": "", "icon": "res://assest/sprites/banana_fan.svg", "max_level": 5},
 	{"id": "black_hole", "title": "黑洞 +1 级", "desc": "", "icon": "res://assest/sprites/black_hole.svg", "max_level": 5},
@@ -289,6 +292,13 @@ func available_upgrades() -> Array:
 func _build_card_data(data: Dictionary) -> Dictionary:
 	var card_data: = data.duplicate(true)
 	match str(card_data.get("id", "")):
+		"bomb":
+			var game := _get_game()
+			var rank: int = mini(BOMB.MAX_LEVEL, 1 + (game.bomb_controller.level if game != null else 0))
+			var stats := BOMB.stats_for(rank)
+			card_data["desc"] = "自动投弹 · 爆炸击飞\n伤害 %.0f · 半径 %.0f\n间隔 %.2fs · 最高5级\n%s" % [stats.damage, stats.radius, stats.interval, ARSENAL_HINT]
+		"gun_up":
+			card_data["desc"] = "强化枪支伤害与射速\n" + ARSENAL_HINT
 		"critical_glasses":
 			var game := _get_game()
 			var rank: int = mini(CRITICAL.MAX_LEVEL, 1 + (game.player.critical_glasses_level if game != null else 0))
@@ -313,7 +323,7 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 		"right_fist":
 			card_data["desc"] = _fist_desc(false)
 		"drone_up":
-			card_data["desc"] = _drone_desc()
+			card_data["desc"] = _drone_desc() + "\n" + ARSENAL_HINT
 		"molotov_up":
 			card_data["desc"] = _molotov_desc()
 		"freeze_up":

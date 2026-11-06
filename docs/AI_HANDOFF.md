@@ -3,15 +3,23 @@
 ## 2026-11-06 生机组合与同步装备流光（最新开发）
 
 - 新增生机组合：`pickup_up` + `speed_up` + `regen_up`，各至少1级，经验获取+30%、最终步行速度+20%、回复效果+20%。没有增加卡片，仍22种。详见 `docs/equipment-combos.md`。
-- 当前版本 `20261106-161319`。本轮更新现有私有Sites试玩，itch仍为 `20261106-011424`，不触发跨仓库上传工作流。
+- 当前版本 `20261106-161319`。已成功更新现有私有Sites试玩，itch仍为 `20261106-011424`，不触发跨仓库上传工作流。
 - `equipment_combos.gd` 集中成员/颜色/倍率；军械控制器引用同一成员定义。生机图标荧光绿，军械图标金色；`equipment_combo_border.gd` 复用顶点，由装备栏一个时钟约30Hz驱动，组内颜色/相位严格一致，最多6个边框，无额外粒子或灯光。
 - 经验加成只在实际领取时叠加到难度处理后的值，直接/预备/合并/全图拾取走统一入口。整数十分之一累计余数，避免小额币重复舍入。角色使用独立移速/回复倍率，不覆盖难度，不重复累乘；生命成长和dash参数保持原值。
 - 休息页确认回复奖励也同步装备栏并补齐组合；暂停冻结边框；转场保留被动与余数，新局/回主页清理。
 - 检查时修复了旧的共享拾取形状泄漏：每个Player复制自己的CircleShape2D，重试/新局不再继承变大半径。校正旧visual_style检查的默认燃烧断言，书本伤害代码未改。
 - 当前162个GDScript、55个smoke脚本、22种装备。19个不同原生检查、6项实际PCK检查通过；新组合测试61项断言。原生GPU核对两组颜色和不同相位截图，未做浏览器/物理手机实测。
-- Debug新增 `growth` 与 `equipment_combos` 入口。报告 `docs/validation/equipment-combos-20261106.json`；试玩发布结果和实际提交在完成后补充。
+- Debug新增 `growth` 与 `equipment_combos` 入口。报告 `docs/validation/equipment-combos-20261106.json`；游戏提交 `d5688bced318369b0c4e05922f4c3a1e6ef7fc88`，后续文档提交不改变已部署代码。
 
-## 2026-11-06 炸弹卡与军械护盾（最新开发）
+### 生机与双组合试玩（已部署）
+
+- 链接：<https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，仍为所有者私有页面。主页 → Debug → 测试生机组合 / 测试双组合（荧光绿 / 金色流光）。
+- Site `appgprj_6aeb66ad64408191b317328a1063f65c` 继续复用，deployment `appgdep_6aed8f1d38f88191b3ae277fea3a6c8e` 已返回 succeeded。
+- Site version `appgprj_6aeb66ad64408191b317328a1063f65c~appgver_5cd818196ce48191bef756c761e8004a`；独立托管源提交 `5ab723016ae26968a23f376f076d81fe158f21fd`，锁定游戏提交 `d5688bc`，PCK `18dc58d1967eb3ccd7ea46707470b51a07e204602f656e790488534c1856a62a`。
+- 继续使用已有 gzip WASM 适配；检查了PCK、WASM字节和每文件大小限制，加载脚本未改。浏览器工具仍缺失，没有真实网页/手机试玩。
+- 本次没有更新itch，也未触发PixelFishing上传工作流。后续发布itch时，建议将 `smoke_growth_combo` 纳入聚焦检查清单。
+
+## 2026-11-06 炸弹卡与军械护盾（上一轮记录）
 
 - 本轮新增 `bomb` 炸弹卡及枪支/无人机/炸弹三件套，详见 `docs/bomb-arsenal.md`。开发分支仍为 `feature/fan-black-hole-20261104`，不合并 master。
 - 当前游戏版本 **`20261106-015912`**；已成功更新现有 Sites 私有试玩，itch 当前仍是上一轮 `20261106-011424`，不要混淆两个托管入口。
@@ -51,7 +59,7 @@
 | --- | --- |
 | 仓库 | <https://github.com/wyb969/Rogge> |
 | 最新玩法分支 | `feature/fan-black-hole-20261104` |
-| 最新玩法 | 本轮生机组合与同步装备流光；基线 `d362330`，准确提交请检查git log；版本见文首 |
+| 最新玩法 | `d5688bced318369b0c4e05922f4c3a1e6ef7fc88`：生机组合与同步装备流光；之后文档提交不改变游戏 |
 | 上一玩法提交 | `ebc67f49d6d46e821230d1da3a6b9bd849a6f72a` 为异常追加；`71ada60` 为暴击眼镜/默认点燃，`8bc1fa0` 为 Boss 转向，`04281a9` 为芭蕉扇/黑洞 |
 | 默认 `master` 的代码基线 | `d684fa41d9afac8879422c2baf9917996b8f8778`，尚无上述玩法更新 |
 | 合并状态 | [PR #3](https://github.com/wyb969/Rogge/pull/3) 在检查时 open、未合并；不要假定已进入 master |

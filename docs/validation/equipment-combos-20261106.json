@@ -412,12 +412,22 @@
   },
   "browser_qa": "not run: managed browser tools unavailable",
   "physical_device_qa": "not run",
-  "playtest_publication": "pending",
+  "playtest_publication": {
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aed8f1d38f88191b3ae277fea3a6c8e",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_5cd818196ce48191bef756c761e8004a",
+    "site_source_commit": "5ab723016ae26968a23f376f076d81fe158f21fd",
+    "access": "owner-private",
+    "asset_validation": "Hosted PCK hash matches actual tested export; WASM gzip decompresses to the original engine bytes; every asset below 25MiB. Loader syntax checked; this is not browser play verification."
+  },
   "itch_publication": "not performed; remains 20261106-011424",
   "notes": [
     "XP is difficulty-prepared at spawn and gets one combo bonus at collection using integer tenths.",
     "Pickup shapes are now per-player resources; retry/new-run radii are verified.",
     "The legacy visual-style test expected implicit book burning despite the existing removal; the test was aligned with the unchanged damage code.",
     "Known exit warnings are kept separately from runtime/script errors."
-  ]
+  ],
+  "game_source_commit": "d5688bced318369b0c4e05922f4c3a1e6ef7fc88"
 }

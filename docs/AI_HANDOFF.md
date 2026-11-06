@@ -11,9 +11,17 @@
 - 聚焦检查：14个不同原生脚本通过，实际导出PCK的4项检查通过。Debug检查覆盖7种窗口尺寸及DPR2/3横竖屏模拟、所有页面、触摸高度、重叠/边界、导出、Back、连点、Retry与普通开局隔离。没有运行全量55项。
 - 原生GPU已核对390×844、320×568、844×390及竖屏末页截图。工具缺少Sites要求的浏览器控制能力，未做真实浏览器/物理手机验证；退出时已有ObjectDB/资源警告另记，不能当成已解决。
 - 报告 `docs/validation/debug-pages-20261106.json`，截图 `docs/screenshots/debug-pages-*.png`。Web导出与日志临时路径 `/workspace/Rogge-debug-pages-20261106/`。
-- 正在更新原有所有者私有Sites试玩；成功后补充发布记录。本轮不更新itch，itch仍是 `20261106-011424`。
+- 已成功更新原有所有者私有Sites试玩；本轮不更新itch，itch仍是 `20261106-011424`。
 
-## 2026-11-06 生机组合与同步装备流光（最新开发）
+### Debug 分页试玩（已部署）
+
+- 链接：<https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，所有者私有，访问范围未改。主页 → Debug → 上一页 / 下一页；手机横竖屏均支持。
+- 最终版本 `20261106-170834`，游戏源码 `7c6ee122b5e3f68698a153ac84af4bf718a25d58`，包括Web画布CSS/DPR换算；首版菜单提交 `aa65a27`。文档提交不改变导出。
+- Site源 `041fd16f1f9e44359aa7523e298024e33b33efa7`；deployment `appgdep_6aed99de54b4819185c3861007917a99` 返回 succeeded，version `appgprj_6aeb66ad64408191b317328a1063f65c~appgver_dac36fc48dec8191aa9994bd24a8429b`。
+- PCK `3669159b8004b981c340001e3f0fc480f8777951c720d1f007afee81c17b9689`；托管副本PCK一致、gzip WASM解压后字节一致、所有文件小于25MiB，加载脚本未改。
+- DPR补充后重跑2项原生菜单检查和4项实际PCK检查；另外12项为本任务较早的聚焦检查，玩法未变。Node单元检查了15个CSS宽度组合和5个缺失canvas id回退，原生测试模拟DPR2/3的横竖屏；仍不代表真实浏览器/手机实测。
+
+## 2026-11-06 生机组合与同步装备流光（上一轮记录）
 
 - 新增生机组合：`pickup_up` + `speed_up` + `regen_up`，各至少1级，经验获取+30%、最终步行速度+20%、回复效果+20%。没有增加卡片，仍22种。详见 `docs/equipment-combos.md`。
 - 当前版本 `20261106-161319`。已成功更新现有私有Sites试玩，itch仍为 `20261106-011424`，不触发跨仓库上传工作流。

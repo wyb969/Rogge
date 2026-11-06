@@ -2,7 +2,7 @@
   "version": "20261106-170834",
   "base_commit": "91410a4d63b63773b347a548f3a238a8cc5ed6db",
   "engine": "4.7.stable.official.5b4e0cb0f",
-  "verified_utc": "2026-11-06T09:03:25.912820+00:00",
+  "verified_utc": "2026-11-06T09:13:18.106745+00:00",
   "change": "Clean recovered Debug entries and add physically sized responsive pagination; gameplay presets retained",
   "cleanup": {
     "removed_test_buttons": 21,
@@ -341,8 +341,15 @@
     "Exit resource warnings retained in check records; no unaccounted runtime/script errors."
   ],
   "publication": {
-    "status": "prepared_followup",
-    "target": "existing owner-private Sites playtest",
+    "status": "succeeded",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aed99de54b4819185c3861007917a99",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_dac36fc48dec8191aa9994bd24a8429b",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "site_source_commit": "041fd16f1f9e44359aa7523e298024e33b33efa7",
+    "game_commit": "7c6ee122b5e3f68698a153ac84af4bf718a25d58",
+    "game_version": "20261106-170834",
+    "audience": "owner-private, unchanged",
     "itch_updated": false
   },
   "followup_base_commit": "aa65a27f0e67585076b2c6b43065b5835c851257",

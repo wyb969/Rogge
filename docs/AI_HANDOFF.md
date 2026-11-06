@@ -8,7 +8,15 @@
 - Main复用结算页返回路径，结束旧局并创建新的准备场景；防重复点击/返回期间开局，清理移动锁、怪潮、装备状态与输入。死亡慢动作中退出会移除SceneTree标记并恢复时间，防旧结算回调。
 - 手机输入层优先让出工具栏区域，用户自定义摇杆/DASH位置也不会吞掉按钮点击。全屏处理逻辑保留，原生GPU已实际验证进入/退出全屏。
 - 新增 `tools/smoke_session_toolbar.gd`（50项断言），覆盖真实GUI点击、布局、触屏优先级、暂停/活动试炼、死亡慢动作退出、连续点击、结果返回。6项原生与4项实际PCK检查通过，报告 `docs/validation/session-toolbar-20261106.json`；当前58个smoke脚本，未全量运行。
-- 原生GPU截图 `docs/screenshots/home-toolbar-*.png`；没有真实浏览器/手机QA。试玩复用现有私有Sites，itch不更新。
+- 原生GPU截图 `docs/screenshots/home-toolbar-*.png`；没有真实浏览器/手机QA。已成功更新现有私有Sites，itch不更新。
+
+### 返回主页与小图标试玩（已部署）
+
+- 链接：<https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，所有者私有、访问范围不变。进入任意普通/Debug对局，在右上角点击返回主页；说明页和暂停时也可使用。
+- 版本 `20261106-182118`，游戏源码 `2c63960dbacf6ca213c98bf14f5f294a13a84cc7`。后续文档提交不改变导出。
+- Site源 `4931473d2fc3f7b06066e92bdc9d4046f279a102`；deployment `appgdep_6aedaaf99db081919bba9c38615e41cc` 返回 succeeded；version `appgprj_6aeb66ad64408191b317328a1063f65c~appgver_28331672fb148191b75285d45b344b36`。
+- PCK `38fc64033844266a6b99b2510aeb21abed186057af8bafa06f616852b8d2395e`，托管PCK哈希和WASM解压字节一致、单文件小于25MiB。加载脚本未改；没有浏览器/物理手机QA。
+- 代码已推送当前开发分支。itch仍为 `20261106-011424`，本轮未触发itch工作流。
 
 ## 2026-11-06 木头人挑战与装备角标（上一轮记录）
 

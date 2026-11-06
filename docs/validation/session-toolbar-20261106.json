@@ -2,7 +2,7 @@
   "version": "20261106-182118",
   "base_commit": "d2e0d77cbf41e95d423dd75d03a59c5bf0bc018a",
   "engine": "4.7.stable.official.5b4e0cb0f",
-  "verified_utc": "2026-11-06T10:22:28.640664+00:00",
+  "verified_utc": "2026-11-06T10:25:40.256548+00:00",
   "change": "Restore original equipment scale/two columns; adjacent Fullscreen/Home buttons with safe current-run teardown",
   "native": {
     "tests": 6,
@@ -208,8 +208,15 @@
     }
   },
   "publication": {
-    "status": "prepared",
-    "target": "existing owner-private Sites",
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aedaaf99db081919bba9c38615e41cc",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_28331672fb148191b75285d45b344b36",
+    "site_source_commit": "4931473d2fc3f7b06066e92bdc9d4046f279a102",
+    "game_commit": "2c63960dbacf6ca213c98bf14f5f294a13a84cc7",
+    "game_version": "20261106-182118",
+    "audience": "owner-private, unchanged",
     "itch_updated": false
   },
   "limitations": [

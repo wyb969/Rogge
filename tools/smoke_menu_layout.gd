@@ -246,14 +246,12 @@ func _check_debug_page(main: Node, size: Vector2i, label: String, failures: Arra
 	if main.menu_page.visible or not main.debug_page.visible or not paused:
 		failures.append("Debug page does not replace paused home menu")
 	var vp: = root.get_visible_rect().size
-	for name in ["TitleLabel", "DebugKnightButton", "DebugNecklaceButton", "DebugTreasureButton", "BackButton", "DebugHint", "DebugBeast3Button", "DebugBeast4Button", "DebugBeast5Button", "DebugBeast6Button", "DebugPowerTrialButton", "DebugSpeedTrialButton", "DebugLightningButton", "DebugMusicButton", "DebugWeatherButton", "DebugStabilityButton", "DebugReportButton"]:
-		if not main.has_node("mainUI/Control/DebugCenter/VBoxContainer/" + name):
-			continue
-		var control: Control = main.get_node("mainUI/Control/DebugCenter/VBoxContainer/" + name)
+	var controls: Array[Control] = [main.debug_page.title, main.debug_page.hint, main.debug_page.back_button, main.debug_page.report_button, main.debug_page.prev_button, main.debug_page.next_button, main.debug_page.page_label]
+	controls.append_array(main.debug_page.entries)
+	for control in controls:
 		main.debug_page.ensure_control_visible(control)
 		await process_frame
-		await process_frame
-		_expect_inside(control, vp, "Debug %s %s" % [name, label], failures)
+		_expect_inside(control, vp, "Debug %s %s" % [control.name, label], failures)
 	main.get_node("mainUI/Control/DebugCenter/VBoxContainer/BackButton").pressed.emit()
 	if not main.menu_page.visible or main.debug_page.visible or main.game != original_game:
 		failures.append("Debug back does not restore the original home page")

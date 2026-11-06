@@ -11,8 +11,7 @@ func _run() -> void :
 	await process_frame
 	await process_frame
 	main.get_node("mainUI/Control/MenuCenter/VBoxContainer/DebugButton").pressed.emit()
-	var button: Button = main.get_node("mainUI/Control/DebugCenter/VBoxContainer/DebugKnightButton")
-	button.pressed.emit()
+	main._launch_run(&"knight")
 	await process_frame
 	await process_frame
 	await physics_frame
@@ -27,7 +26,7 @@ func _run() -> void :
 	for node in get_nodes_in_group("EnemyGroup"):
 		if node.get_script() == load("res://script/knight_boss.gd"):
 			knight = node
-	_expect(knight != null, "debug button spawns the actual knight scene")
+	_expect(knight != null, "debug preset spawns the actual knight scene")
 	if knight == null:
 		quit(1)
 		return

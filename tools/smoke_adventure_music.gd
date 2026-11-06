@@ -39,10 +39,9 @@ func _run() -> void :
 	await process_frame
 	main._on_debug_button_pressed()
 	var prepared_game: Node = main.game
-	var button: Button = main.get_node("mainUI/Control/DebugCenter/VBoxContainer/DebugMusicButton")
 	for index in range(8):
-		button.pressed.emit()
-		_expect(music.preview_mode and music.track_index == index and button.text.contains(music.title()), "real Debug button auditions each named song")
+		main._on_debug_music_pressed()
+		_expect(music.preview_mode and music.track_index == index and not music.title().is_empty(), "legacy audition helper still selects each named song without a removed UI button")
 		_expect(main.game == prepared_game and paused and main.debug_page.visible, "preview does not start/replace a run or unpause")
 		_expect(_normal_playing() <= 2, "rapid next-song taps cannot create extra music voices")
 		_settle()

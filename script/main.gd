@@ -224,12 +224,9 @@ func load_new_game() -> void :
 		game.game_over.connect(on_game_over)
 
 func _on_debug_button_pressed() -> void :
-	if not AudioManager.adventure_music.active:
-		$mainUI / Control / DebugCenter / VBoxContainer / DebugMusicButton.text = "音乐试听 / 下一首"
 	menu_page.hide()
 	build_version_label.hide()
-	debug_page.show()
-	$mainUI / Control / DebugCenter / VBoxContainer / DebugKnightButton.grab_focus()
+	debug_page.open_page()
 
 func _on_debug_back_pressed() -> void :
 	AudioManager.play_menu_bgm()
@@ -243,13 +240,14 @@ func _on_debug_music_pressed() -> void :
 	AudioManager.preview_game_bgm_next()
 
 func _on_debug_report_pressed() -> void :
-	$mainUI / Control / DebugCenter / VBoxContainer / DebugHint.text = RunDiagnostics.export_report()
+	debug_page.show_status(RunDiagnostics.export_report())
 
 func _on_game_track_changed(title: String) -> void :
-	if not debug_page.visible or not AudioManager.adventure_music.preview_mode:
+	var button: Button = debug_page.get_node_or_null("VBoxContainer/DebugMusicButton")
+	if button == null or not debug_page.visible or not AudioManager.adventure_music.preview_mode:
 		return
 	var index: int = AudioManager.adventure_music.track_index + 1
-	$mainUI / Control / DebugCenter / VBoxContainer / DebugMusicButton.text = "试听：%s（%d/8）· 下一首" % [title, index]
+	button.text = "试听：%s（%d/8）· 下一首" % [title, index]
 
 func _on_debug_knight_pressed() -> void :
 	await _launch_run(&"knight")

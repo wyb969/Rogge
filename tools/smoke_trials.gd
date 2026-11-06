@@ -29,14 +29,14 @@ func _run() -> void :
 	await process_frame
 	await process_frame
 	main._on_debug_button_pressed()
-	main.get_node("mainUI/Control/DebugCenter/VBoxContainer/DebugPowerTrialButton").pressed.emit()
+	main._launch_run(&"trial_power")
 	await process_frame
 	await process_frame
 	var game: Node = main.game
 	_configure(game)
 	var trials: Node = game.trials
 	var player: Node = game.player
-	_expect(paused and trials.flow == trials.TrialFlow.INTRO and trials.enemy == null, "real Debug entry opens explanation before creating the enemy")
+	_expect(paused and trials.flow == trials.TrialFlow.INTRO and trials.enemy == null, "legacy trial preset opens explanation before creating the enemy")
 	_expect(trials._body.text.contains("60 秒") and trials._body.text.contains("锁定音"), "strength introduction explains time and laser lock audio")
 	trials._process(30)
 	_expect(trials.elapsed == 0, "reading the introduction does not consume trial time")
@@ -113,14 +113,7 @@ func _run() -> void :
 	_expect( not trials.results.power.passed and game.rest_hub.visible and game.player.player_health > 0, "explicit abandon preserves build and continues without recording a pass")
 	main.game.end_game()
 	main._on_debug_button_pressed()
-	if main.has_node("mainUI/Control/DebugCenter/VBoxContainer/DebugSpeedTrialButton"):
-		main.get_node("mainUI/Control/DebugCenter/VBoxContainer/DebugSpeedTrialButton").pressed.emit()
-		await process_frame
-		await process_frame
-		game = main.game
-		_configure(game)
-	else:
-		game = await _enter("speed")
+	game = await _enter("speed")
 	trials = game.trials
 	player = game.player
 	_expect(trials._body.text.contains("0.5") and trials._body.text.contains("反击"), "speed introduction teaches the reaction/window mechanic")

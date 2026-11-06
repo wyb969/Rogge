@@ -20,7 +20,7 @@ func _run() -> void :
 	await process_frame
 	await process_frame
 	main.get_node("mainUI/Control/MenuCenter/VBoxContainer/DebugButton").pressed.emit()
-	main.get_node("mainUI/Control/DebugCenter/VBoxContainer/DebugTreasureButton").pressed.emit()
+	main._launch_run(&"treasure")
 	await process_frame
 	await process_frame
 	var game: Node = main.game
@@ -32,7 +32,7 @@ func _run() -> void :
 	spawner.timer.stop()
 	spawner.get_node("Elite").stop()
 	spawner.set_process(false)
-	_expect(spawner.stage == 3 and not paused, "real debug button starts stage three")
+	_expect(spawner.stage == 3 and not paused, "legacy treasure preset starts stage three")
 	_expect(get_nodes_in_group("treasure_guardian").size() == 1, "exactly one guardian spawns")
 	var guardian: Node = get_nodes_in_group("treasure_guardian")[0]
 	guardian.set_physics_process(false)

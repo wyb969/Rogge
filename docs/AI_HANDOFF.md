@@ -1,5 +1,16 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-06 生机组合与同步装备流光（最新开发）
+
+- 新增生机组合：`pickup_up` + `speed_up` + `regen_up`，各至少1级，经验获取+30%、最终步行速度+20%、回复效果+20%。没有增加卡片，仍22种。详见 `docs/equipment-combos.md`。
+- 当前版本 `20261106-161319`。本轮更新现有私有Sites试玩，itch仍为 `20261106-011424`，不触发跨仓库上传工作流。
+- `equipment_combos.gd` 集中成员/颜色/倍率；军械控制器引用同一成员定义。生机图标荧光绿，军械图标金色；`equipment_combo_border.gd` 复用顶点，由装备栏一个时钟约30Hz驱动，组内颜色/相位严格一致，最多6个边框，无额外粒子或灯光。
+- 经验加成只在实际领取时叠加到难度处理后的值，直接/预备/合并/全图拾取走统一入口。整数十分之一累计余数，避免小额币重复舍入。角色使用独立移速/回复倍率，不覆盖难度，不重复累乘；生命成长和dash参数保持原值。
+- 休息页确认回复奖励也同步装备栏并补齐组合；暂停冻结边框；转场保留被动与余数，新局/回主页清理。
+- 检查时修复了旧的共享拾取形状泄漏：每个Player复制自己的CircleShape2D，重试/新局不再继承变大半径。校正旧visual_style检查的默认燃烧断言，书本伤害代码未改。
+- 当前162个GDScript、55个smoke脚本、22种装备。19个不同原生检查、6项实际PCK检查通过；新组合测试61项断言。原生GPU核对两组颜色和不同相位截图，未做浏览器/物理手机实测。
+- Debug新增 `growth` 与 `equipment_combos` 入口。报告 `docs/validation/equipment-combos-20261106.json`；试玩发布结果和实际提交在完成后补充。
+
 ## 2026-11-06 炸弹卡与军械护盾（最新开发）
 
 - 本轮新增 `bomb` 炸弹卡及枪支/无人机/炸弹三件套，详见 `docs/bomb-arsenal.md`。开发分支仍为 `feature/fan-black-hole-20261104`，不合并 master。
@@ -40,11 +51,11 @@
 | --- | --- |
 | 仓库 | <https://github.com/wyb969/Rogge> |
 | 最新玩法分支 | `feature/fan-black-hole-20261104` |
-| 最新玩法 | `fe2ddb06d2563073eb6bc3174f5d17101ecb27da`：炸弹卡与军械护盾；之后的文档提交不改变游戏 |
+| 最新玩法 | 本轮生机组合与同步装备流光；基线 `d362330`，准确提交请检查git log；版本见文首 |
 | 上一玩法提交 | `ebc67f49d6d46e821230d1da3a6b9bd849a6f72a` 为异常追加；`71ada60` 为暴击眼镜/默认点燃，`8bc1fa0` 为 Boss 转向，`04281a9` 为芭蕉扇/黑洞 |
 | 默认 `master` 的代码基线 | `d684fa41d9afac8879422c2baf9917996b8f8778`，尚无上述玩法更新 |
 | 合并状态 | [PR #3](https://github.com/wyb969/Rogge/pull/3) 在检查时 open、未合并；不要假定已进入 master |
-| 游戏版本 | `project.godot` 为 `20261106-015912`，本轮 Sites 试玩；itch 为上一轮 `20261106-011424` |
+| 游戏版本 | `project.godot` 为 `20261106-161319`，本轮Sites试玩；itch为 `20261106-011424` |
 | 工作区状态 | 本轮开始时开发分支干净；完成后重新检查 `git status`，不要依赖本行判断后续编辑 |
 
 最初的交接文档曾同步到 master；本轮进度和功能更新在开发分支，尚未合并。新会话先重新检查远端和本地状态，切到开发分支读取最新本文件。
@@ -66,7 +77,7 @@ git status --short --branch
 
 ## 2. 引擎、资源与恢复来源
 
-- Godot **4.7**，GDScript；当前有 159 个 `.gd` 文件、54 个 `tools/smoke_*.gd` 脚本。没有额外的 npm/Python 运行时依赖。ROGGE 自身仓库没有 Actions 工作流；跨仓库的独立发布任务已在 PixelFishing 验证成功，见文首与 `docs/ITCH_PUBLISH.md`。
+- Godot **4.7**，GDScript；当前有 162 个 `.gd` 文件、55 个 `tools/smoke_*.gd` 脚本。没有额外的 npm/Python 运行时依赖。ROGGE 自身仓库没有 Actions 工作流；跨仓库的独立发布任务已在 PixelFishing 验证成功，见文首与 `docs/ITCH_PUBLISH.md`。
 - 主场景 `res://scenes/main.tscn`，逻辑视口 900×600。配置 features 写有 Forward Plus，项目没有显式渲染器覆盖；已有原生检查和 Web 导出使用命令行 `--rendering-method gl_compatibility`。
 - Web 预设关闭线程、扩展和 PWA，使用默认 HTML shell；`include_filter` 显式包含 `script/web_diagnostics.js`，确保 `FileAccess` 可读取诊断 helper。另有 Windows Desktop 预设，但不能据此声称 Windows 包已构建测试。
 - 资源主目录故意沿用 `assest/` 拼写。保留 `.uid`、`.import`，尤其音频循环参数；`.godot` 是可重建缓存。`docs/.gdignore` 将文档素材排除出游戏导入。
@@ -169,7 +180,7 @@ git status --short --branch
 | 导出 PCK 内测试日志 | 新卡、最新 Boss 转向检查通过 | 当时云端 `packed-control-smoke.log`、`packed-boss-facing.log`；属于原生引擎加载实际 PCK，不是真浏览器 |
 | `docs/screenshots/` 四张新卡截图 | 有实际运行截帧 | 原生运行截图，不是 Safari/itch 浏览器截图 |
 
-当前共有 54 个 smoke 脚本，**没有最新版本全量 54/54 的记录**。炸弹版本选测19项并验证5项PCK，详见文首和对应报告。历史报告不能相加当作独立功能数，也不保证所有分支当前都通过。暴击眼镜版本选测 27 项；本轮芭蕉扇更新选测 19 项，最新新增试炼保护断言后重跑芭蕉扇检查，最终 PCK 内再检查 3 项。旧原生截图保存在 `docs/screenshots/critical-glasses-*.png`。
+当前共有 55 个 smoke 脚本，**没有最新版本全量 55/55 的记录**。生机组合版本选测19项并验证6项PCK，详见文首。炸弹版本选测19项并验证5项PCK，详见文首和对应报告。历史报告不能相加当作独立功能数，也不保证所有分支当前都通过。暴击眼镜版本选测 27 项；本轮芭蕉扇更新选测 19 项，最新新增试炼保护断言后重跑芭蕉扇检查，最终 PCK 内再检查 3 项。旧原生截图保存在 `docs/screenshots/critical-glasses-*.png`。
 
 上一版 `20261105-003002` 的本地 Chromium 155 检查覆盖启动、满级暴击、移动与竖屏，控制台错误为 0。本轮身体变色版的浏览器 QA 尚未完成：环境没有该技能要求的 `cua_repl.js` 工具，按技能跳过浏览器 QA；已有引擎、实际 PCK 和试玩资源加载脚本检查不能代替当前浏览器/物理手机验证。
 

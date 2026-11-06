@@ -45,6 +45,9 @@ var banana_fan: Node2D
 var black_hole: Node2D
 var bomb_controller: Node2D
 var arsenal_combo: Node2D
+const EQUIPMENT_COMBOS := preload("res://script/equipment_combos.gd")
+var growth_combo_active := false
+var _growth_xp_tenths := 0
 const BEAST_POWERS: = preload("res://script/beast_powers.gd")
 const LIGHTNING_FX: = preload("res://script/lightning_strike.gd")
 const LIGHTNING_RING: = preload("res://script/lightning_ring.gd")
@@ -226,6 +229,12 @@ func end_game() -> void :
 
 func _reset_skill_controllers() -> void :
 	player.reset_critical_glasses()
+	growth_combo_active = false
+	_growth_xp_tenths = 0
+	player.growth_move_multiplier = 1.0
+	player.growth_heal_multiplier = 1.0
+	equipment_panel.reset_combo_effects()
+	equipment_panel.set_growth_status(0, false)
 
 	for entry in CombatTargets._entries:
 		var actor: Node = entry.actor
@@ -344,11 +353,37 @@ func _on_upgrade_selected(upgrade_id: String):
 	if equipment_panel and equipment_panel.has_method("apply_upgrade"):
 		equipment_panel.apply_upgrade(upgrade_id)
 	arsenal_combo.refresh_equipment()
+	_refresh_growth_combo()
 	combat_feedback.reward(player.global_position)
 	RunDiagnostics.mark("after_card", {"id": upgrade_id}, true)
 
 func on_coin_collected(amount: int = 2) -> void :
-	level_manager.add_coin(run_difficulty.experience_for(amount))
+	_award_prepared_experience(run_difficulty.experience_for(amount))
+
+func _refresh_growth_combo() -> void:
+	var owned := EQUIPMENT_COMBOS.owned_count(equipment_panel, EQUIPMENT_COMBOS.GROWTH_MEMBERS)
+	var active := owned == EQUIPMENT_COMBOS.GROWTH_MEMBERS.size()
+	if active != growth_combo_active:
+		_growth_xp_tenths = 0
+		if active: variety.notify("生机组合已激活\n经验 +30% · 移动速度与回复效果 +20%")
+	growth_combo_active = active
+	player.growth_move_multiplier = EQUIPMENT_COMBOS.MOVE_MULTIPLIER if active else 1.0
+	player.growth_heal_multiplier = EQUIPMENT_COMBOS.HEAL_MULTIPLIER if active else 1.0
+	equipment_panel.set_growth_status(owned, active)
+	beast_powers.refresh_healing_description()
+
+func _award_prepared_experience(base_amount: int) -> int:
+	if base_amount <= 0: return 0
+	var earned := base_amount
+	if growth_combo_active:
+		# Coins already contain the difficulty adjustment. Apply this bonus at collection only.
+		var tenths := base_amount * EQUIPMENT_COMBOS.XP_BONUS_TENTHS + _growth_xp_tenths
+		@warning_ignore("integer_division")
+		var bonus: int = tenths / 10
+		earned += bonus
+		_growth_xp_tenths = tenths % 10
+	level_manager.add_coin(earned)
+	return earned
 
 func spawn_xp_coin(at: Vector2, raw_xp: int) -> void :
 
@@ -377,7 +412,8 @@ func _spawn_xp_coin_now(at: Vector2, raw_xp: int) -> void :
 	coin.global_position = at
 
 func _on_prepared_coin_collected(_raw: int, coin: Node) -> void :
-	level_manager.add_coin(coin.prepared_xp)
+	var prepared: int = coin.prepared_xp if coin.prepared_xp >= 0 else run_difficulty.experience_for(_raw)
+	_award_prepared_experience(prepared)
 
 func on_player_died() -> void :
 	if trials.active_fight():
@@ -464,6 +500,8 @@ func _on_rest_reward(reward_id: String) -> void :
 				gun_weapon.apply_cooldown_scale(scale)
 		"regen_up":
 			player.add_regen_level()
+			equipment_panel.apply_upgrade(reward_id)
+			_refresh_growth_combo()
 		"lifesteal_up":
 			player.add_lifesteal_level()
 		"shield_up":
@@ -783,6 +821,14 @@ func prepare_bomb_debug(mode: StringName) -> void:
 		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
 		add_child(actor)
 		actor.global_position = player.global_position + offset
+
+func prepare_growth_debug(both: bool = false) -> void:
+	for id in EQUIPMENT_COMBOS.GROWTH_MEMBERS: _on_upgrade_selected(id)
+	if both:
+		for id in EQUIPMENT_COMBOS.ARSENAL_MEMBERS: _on_upgrade_selected(id)
+	player.player_health = player.max_player_health - 60.0
+	player.health_bar.set_health(player.player_health)
+	variety.notify("生机组合：经验+30%% · 移速/回复+20%%\n%s" % ("两组图标已激活：荧光绿 / 金色同步流光" if both else "右侧拾取、移速、回复图标：荧光绿同步流光"))
 
 func _show_next_reward() -> void :
 	if _death_presented or player.player_health <= 0.0 or process_mode == Node.PROCESS_MODE_DISABLED:

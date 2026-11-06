@@ -1,6 +1,7 @@
 extends Node2D
 
-const MEMBERS: Array[String] = ["gun_up", "drone_up", "bomb"]
+const COMBOS := preload("res://script/equipment_combos.gd")
+const MEMBERS: Array[String] = COMBOS.ARSENAL_MEMBERS
 const CYCLE_SECONDS := 3.0
 const SHIELD_SECONDS := 1.0
 const STYLE := preload("res://script/visual_style.gd")

@@ -15,6 +15,7 @@ const VORTEX := preload("res://script/black_hole.gd")
 const CRITICAL := preload("res://script/critical_glasses.gd")
 const MOLOTOV := preload("res://script/molotov_controller.gd")
 const BOMB := preload("res://script/bomb_controller.gd")
+const GROWTH_HINT := "生机：拾取+移速+回复\n集齐后经验 +30%\n移速、回复效果 +20%"
 const ARSENAL_HINT := "军械：枪支+无人机+炸弹\n每3秒获得1秒无敌护盾"
 const MAX_REROLLS: = 3
 var rerolls: = 2
@@ -299,6 +300,10 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 			card_data["desc"] = "自动投弹 · 爆炸击飞\n伤害 %.0f · 半径 %.0f\n间隔 %.2fs · 最高5级\n%s" % [stats.damage, stats.radius, stats.interval, ARSENAL_HINT]
 		"gun_up":
 			card_data["desc"] = "强化枪支伤害与射速\n" + ARSENAL_HINT
+		"pickup_up":
+			card_data["desc"] = "拾取范围提高20%\n" + GROWTH_HINT
+		"speed_up":
+			card_data["desc"] = "基础移动速度 +20\n" + GROWTH_HINT
 		"critical_glasses":
 			var game := _get_game()
 			var rank: int = mini(CRITICAL.MAX_LEVEL, 1 + (game.player.critical_glasses_level if game != null else 0))
@@ -329,7 +334,7 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 		"freeze_up":
 			card_data["desc"] = _freeze_desc()
 		"regen_up":
-			card_data["desc"] = _regen_desc()
+			card_data["desc"] = _regen_desc() + "\n" + GROWTH_HINT
 		"lifesteal_up":
 			card_data["desc"] = _lifesteal_desc()
 		"shield_up":
@@ -411,9 +416,10 @@ func _lifesteal_desc() -> String:
 	if player != null:
 		next_level = int(player.lifesteal_level) + 1
 	if player != null and player.has_method("lifesteal_cap_for"):
-		var percent: float = player.lifesteal_percent_for(next_level) * 100.0 * player.healing_multiplier
+		var multiplier: float = player.total_healing_multiplier()
+		var percent: float = player.lifesteal_percent_for(next_level) * 100.0 * multiplier
 		var cap: float = player.effective_heal_amount(player.lifesteal_cap_for(next_level))
-		return "命中回复少量\n约 %s%% +%s  上限 %s" % [_heal_number(percent), _heal_number(player.healing_multiplier), _heal_number(cap)]
+		return "命中回复少量\n约 %s%% +%s  上限 %s" % [_heal_number(percent), _heal_number(multiplier), _heal_number(cap)]
 	return "命中回复少量\n约 3% +1  上限 2"
 
 func _shield_desc() -> String:
@@ -456,7 +462,7 @@ func _monster_necklace_desc() -> String:
 	var next_level: = 1
 	if player != null:
 		next_level = int(player.monster_necklace_level) + 1
-	var multiplier: float = player.healing_multiplier if player != null else 1.0
+	var multiplier: float = player.total_healing_multiplier() if player != null else 1.0
 	return "击杀掉落回血球\n拾取回复 +%s 生命\n每级增加 %s 点" % [_heal_number(next_level * 5 * multiplier), _heal_number(5 * multiplier)]
 
 func _heal_number(amount: float) -> String:

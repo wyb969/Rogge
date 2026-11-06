@@ -182,6 +182,16 @@ layout_mode = 2
 text = "测试炸弹（5级爆破）"
 script = ExtResource("5")
 
+[node name="DebugGrowthButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试生机组合（经验/移速/回复）"
+script = ExtResource("5")
+
+[node name="DebugEquipmentCombosButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "测试双组合（荧光绿 / 金色流光）"
+script = ExtResource("5")
+
 [node name="DebugArsenalButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "测试军械组合（每3秒无敌1秒）"
@@ -307,6 +317,8 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBombButton" to="." method="_launch_run" binds= [&"bomb"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBomb5Button" to="." method="_launch_run" binds= [&"bomb5"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugArsenalButton" to="." method="_launch_run" binds= [&"arsenal"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugGrowthButton" to="." method="_launch_run" binds= [&"growth"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugEquipmentCombosButton" to="." method="_launch_run" binds= [&"equipment_combos"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugCriticalButton" to="." method="_launch_run" binds= [&"critical"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugCritical5Button" to="." method="_launch_run" binds= [&"critical5"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFan5Button" to="." method="_launch_run" binds= [&"fan5"]]

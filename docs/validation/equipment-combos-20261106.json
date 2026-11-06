@@ -1,0 +1,423 @@
+{
+  "version": "20261106-161319",
+  "base_commit": "d362330a2214f84ae0f2052443cc0642bca2d660",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "native": {
+    "tests": 19,
+    "passed": 19,
+    "results": [
+      {
+        "name": "smoke_growth_combo",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.62,
+        "errors": [],
+        "markers": [
+          "GROWTH COMBO OK: 61 checks; actual movement/healing/XP pickups/merge/difficulty, no stacking, shared green/gold phase, bounded border work, layout and Debug lifecycle"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_arsenal_combo",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.57,
+        "errors": [],
+        "markers": [
+          "ARSENAL COMBO OK: 25 checks; real three-card ownership, exact 3s/1s cadence, damage/shield isolation, dash coexistence, pause/lag/rest/death/reset and Debug retry"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_bomb_card",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.66,
+        "errors": [],
+        "markers": [
+          "BOMB CARD OK: 57 checks; real draft/upgrade/caps, area/fuse/unique hit, blast hop/force, rewards/crit, trial/Boss rules, fixed pools, pause/cleanup and Debug lifecycle"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_difficulty",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 4.4,
+        "errors": [],
+        "markers": [
+          "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_survival_growth",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.09,
+        "errors": [],
+        "markers": [
+          "SURVIVAL GROWTH OK: real XP/multi-level growth, HP HUD/shields, rest stacking, no duplicate/card/revive growth, fresh runs, bounded stage-three elite hits and multi-source escape window"
+        ],
+        "shutdown_warnings": []
+      },
+      {
+        "name": "smoke_global_pickup",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.93,
+        "errors": [],
+        "markers": [
+          "GLOBAL PICKUP OK: actual skill, map-wide coins/orbs, offscreen and moving targets, expiring drops, exact XP/heal without necklace, pause/no-op and cooldown"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_rest_pickup_clock",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 7.62,
+        "errors": [],
+        "markers": [
+          "REST PICKUP / CLOCK OK: first necklace from real boss rest; automatic full/injured/stacked collection and audio; active-time HUD, pause exclusions, 03:30 final boss and guardian/reward gates"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_rest_selection",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.66,
+        "errors": [],
+        "markers": [
+          "REST SELECTION OK: real boss rest, freely changing filled selections, deferred exact reward, one confirmation/advance, hidden and invalid guards, reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_monster_necklace",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.96,
+        "errors": [],
+        "markers": [
+          "MONSTER NECKLACE OK: card selection, stacking, real kill drops, pickup/heal/audio, boss/rest/stage flow and reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_dash_grace",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 4.45,
+        "errors": [],
+        "markers": [
+          "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 37 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_dash_direction",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 0.35,
+        "errors": [],
+        "markers": [
+          "DASH DIRECTION OK: 8 directions, light input, stopped/released stick, request snapshot, multi-touch and reset"
+        ],
+        "shutdown_warnings": []
+      },
+      {
+        "name": "smoke_trials",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 5.01,
+        "errors": [],
+        "markers": [
+          "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_beasts",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 13.5,
+        "errors": [],
+        "markers": [
+          "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_skill_icons",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.46,
+        "errors": [],
+        "markers": [
+          "SKILL ICONS OK: direct heal/defense/lightning casts, preserved no-op charges, independent cooldown masks/pause/readiness, no right controls, compact rotation layout/touch ownership and run reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_run_variety",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.75,
+        "errors": [],
+        "markers": [
+          "RUN VARIETY OK: real wind/echo cards, landing damage/grace/cancel, exact queued pause-safe nonrecursive echo, lottery stacks, diverse independent draws, reroll UI/tokens, harmless bounded courier/rewards/escape, full HUD layout and Retry"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_resource_bounds",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 0.99,
+        "errors": [],
+        "markers": [
+          "RESOURCE BOUNDS OK: 1000 coins/500 orbs preserve rewards, shared GPU resources, projectile ownership/TTL, cosmetic budgets, single explosions and teardown"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_menu_layout",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.02,
+        "errors": [],
+        "markers": [
+          "MENU LAYOUT OK"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_debug_menu",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.66,
+        "errors": [],
+        "markers": [
+          "DEBUG MENU OK: home/back navigation, equipped necklace test, actual heal, rapid-tap guard, retry and normal-run reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 28 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_visual_style",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.25,
+        "errors": [],
+        "markers": [
+          "VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/direct damage without implicit burn, fixed footprint, shared non-additive pickups and exact healing"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ]
+  },
+  "packed": [
+    {
+      "name": "smoke_growth_combo",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.03,
+      "errors": [],
+      "markers": [
+        "GROWTH COMBO OK: 61 checks; actual movement/healing/XP pickups/merge/difficulty, no stacking, shared green/gold phase, bounded border work, layout and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_arsenal_combo",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.28,
+      "errors": [],
+      "markers": [
+        "ARSENAL COMBO OK: 25 checks; real three-card ownership, exact 3s/1s cadence, damage/shield isolation, dash coexistence, pause/lag/rest/death/reset and Debug retry"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_difficulty",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.61,
+      "errors": [],
+      "markers": [
+        "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 25 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_global_pickup",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.84,
+      "errors": [],
+      "markers": [
+        "GLOBAL PICKUP OK: actual skill, map-wide coins/orbs, offscreen and moving targets, expiring drops, exact XP/heal without necklace, pause/no-op and cooldown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dash_grace",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.36,
+      "errors": [],
+      "markers": [
+        "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_visual_style",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.18,
+      "errors": [],
+      "markers": [
+        "VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/direct damage without implicit burn, fixed footprint, shared non-additive pickups and exact healing"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "web_manifest": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "dcabe9638f1589da6493ca6521435f8f85179f692717c1091b39a7bf755794a8"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23361188,
+      "sha256": "18dc58d1967eb3ccd7ea46707470b51a07e204602f656e790488534c1856a62a"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "visual_qa": {
+    "type": "native GPU screenshots, OpenGL compatibility / llvmpipe",
+    "captures": [
+      "equipment-combos-phase-a.png",
+      "equipment-combos-phase-b.png",
+      "growth-combo.png",
+      "growth-combo-cards.png"
+    ],
+    "runtime_script_errors": false,
+    "shutdown_warnings": [
+      "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+      "ERROR: Texture with GL ID of 19: leaked 1364 bytes.",
+      "ERROR: Parameter \"RenderingServer::get_singleton()\" is null.",
+      "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 5 resources still in use at exit (run with --verbose for details).",
+      "ERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit."
+    ]
+  },
+  "browser_qa": "not run: managed browser tools unavailable",
+  "physical_device_qa": "not run",
+  "playtest_publication": "pending",
+  "itch_publication": "not performed; remains 20261106-011424",
+  "notes": [
+    "XP is difficulty-prepared at spawn and gets one combo bonus at collection using integer tenths.",
+    "Pickup shapes are now per-player resources; retry/new-run radii are verified.",
+    "The legacy visual-style test expected implicit book burning despite the existing removal; the test was aligned with the unchanged damage code.",
+    "Known exit warnings are kept separately from runtime/script errors."
+  ]
+}

@@ -26,6 +26,8 @@ const HURT_INVULNERABILITY: = 0.45
 var growth_level: = 0
 var beast_damage_scale: = 1.0
 var healing_multiplier: = 1.0
+var growth_move_multiplier := 1.0
+var growth_heal_multiplier := 1.0
 
 var SPEED = 100.0
 const DASH_SPEED = 780.0
@@ -105,6 +107,9 @@ func _ready() -> void :
 	right_fist_level = 0
 	var circle_shape: = pick_shape.shape as CircleShape2D
 	if circle_shape != null:
+		# Card upgrades must not mutate the PackedScene's shared pickup shape between runs.
+		circle_shape = circle_shape.duplicate() as CircleShape2D
+		pick_shape.shape = circle_shape
 		pickup_range = circle_shape.radius
 	_ensure_shield_gem()
 
@@ -150,7 +155,13 @@ func heal(amount: float) -> float:
 	return gained
 
 func effective_heal_amount(base_amount: float) -> float:
-	return base_amount * healing_multiplier
+	return base_amount * total_healing_multiplier()
+
+func total_healing_multiplier() -> float:
+	return healing_multiplier * growth_heal_multiplier
+
+func effective_move_speed() -> float:
+	return float(SPEED) * growth_move_multiplier
 
 func add_regen_level() -> void :
 	regen_level += 1
@@ -409,7 +420,7 @@ func _process(delta: float) -> void :
 
 func _tick_visuals(delta: float) -> void :
 	_hurt_punch = move_toward(_hurt_punch, 0, delta * 8)
-	var effort: = clampf(velocity.length() / maxf(SPEED, 1), 0, 1)
+	var effort: = clampf(velocity.length() / maxf(effective_move_speed(), 1), 0, 1)
 	var stretch: = Vector2(1.13, 0.88) if dashing else Vector2(1.0 + effort * 0.025, 1.0 - effort * 0.015)
 	stretch += Vector2(0.1, -0.08) * _hurt_punch
 	animated_sprite_2d.scale = animated_sprite_2d.scale.lerp(_visual_base_scale * stretch, 1.0 - exp( - delta * 25))
@@ -470,7 +481,7 @@ func _physics_process(delta: float) -> void :
 	if dashing:
 		velocity = dash_direction * DASH_SPEED
 	else:
-		max_speed = SPEED
+		max_speed = effective_move_speed()
 		acceleration = 900.0
 		if input_direction != Vector2.ZERO:
 			velocity = velocity.move_toward(input_direction.normalized() * max_speed, acceleration * delta)
@@ -531,7 +542,7 @@ func _on_dashing_timer_timeout() -> void :
 	dash_grace_left = DASH_GRACE_SECONDS
 	_sync_dash_hurt_area()
 	shadow_timer.stop()
-	velocity = dash_direction * minf(SPEED * 1.35, DASH_SPEED * 0.35)
+	velocity = dash_direction * minf(effective_move_speed() * 1.35, DASH_SPEED * 0.35)
 	dash_completed.emit(global_position)
 
 func _on_can_dasing_timer_timeout() -> void :

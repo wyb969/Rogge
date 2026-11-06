@@ -1,5 +1,5 @@
 {
-  "version": "20261106-165901",
+  "version": "20261106-170834",
   "base_commit": "91410a4d63b63773b347a548f3a238a8cc5ed6db",
   "engine": "4.7.stable.official.5b4e0cb0f",
   "verified_utc": "2026-11-06T09:03:25.912820+00:00",
@@ -21,18 +21,21 @@
         "name": "smoke_debug_menu",
         "passed": true,
         "exit_code": 0,
-        "seconds": 2.02,
+        "seconds": 2.31,
         "errors": [],
         "markers": [
-          "DEBUG MENU OK: 2340 assertions; seven physical viewport sizes, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+          "DEBUG MENU OK: 3660 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
         ],
-        "shutdown_warnings": []
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+        ]
       },
       {
         "name": "smoke_menu_layout",
         "passed": true,
         "exit_code": 0,
-        "seconds": 2.02,
+        "seconds": 2.2,
         "errors": [],
         "markers": [
           "MENU LAYOUT OK"
@@ -207,32 +210,33 @@
           "ERROR: 11 resources still in use at exit (run with --verbose for details)."
         ]
       }
-    ]
+    ],
+    "followup": "After Web-DPR correction, reran Debug and menu checks; unrelated combat/preset results are unchanged earlier checks from this task."
   },
   "packed": {
     "tests": 4,
     "passed": 4,
-    "pck_sha256": "6c44ada9977ffdfb9f554fc431020b995c1374f6ffe19a8bdf3c6147b008384d",
+    "pck_sha256": "3669159b8004b981c340001e3f0fc480f8777951c720d1f007afee81c17b9689",
     "results": [
       {
         "name": "smoke_debug_menu",
         "passed": true,
         "exit_code": 0,
-        "seconds": 1.94,
+        "seconds": 2.03,
         "errors": [],
         "markers": [
-          "DEBUG MENU OK: 2340 assertions; seven physical viewport sizes, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+          "DEBUG MENU OK: 3660 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
         ],
         "shutdown_warnings": [
-          "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
-          "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
         ]
       },
       {
         "name": "smoke_menu_layout",
         "passed": true,
         "exit_code": 0,
-        "seconds": 1.84,
+        "seconds": 1.83,
         "errors": [],
         "markers": [
           "MENU LAYOUT OK"
@@ -252,7 +256,7 @@
           "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
         ],
         "shutdown_warnings": [
-          "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
           "ERROR: 10 resources still in use at exit (run with --verbose for details)."
         ]
       },
@@ -266,8 +270,8 @@
           "GROWTH COMBO OK: 61 checks; actual movement/healing/XP pickups/merge/difficulty, no stacking, shared green/gold phase, bounded border work, layout and Debug lifecycle"
         ],
         "shutdown_warnings": [
-          "WARNING: 32 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
-          "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+          "WARNING: 27 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
         ]
       }
     ]
@@ -285,8 +289,8 @@
         "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
       },
       "index.pck": {
-        "bytes": 23366132,
-        "sha256": "6c44ada9977ffdfb9f554fc431020b995c1374f6ffe19a8bdf3c6147b008384d"
+        "bytes": 23367204,
+        "sha256": "3669159b8004b981c340001e3f0fc480f8777951c720d1f007afee81c17b9689"
       },
       "index.audio.worklet.js": {
         "bytes": 7298,
@@ -302,7 +306,7 @@
       },
       "index.html": {
         "bytes": 5437,
-        "sha256": "3c02d2d6995278535f72eda6f02c9a5b2869fa894a962ba7ab2a6d17f1e1240e"
+        "sha256": "ed6b59eb00a6e9606b188dfc9cb0c6da8e7c1f9bd93a1329e092353a084d54b4"
       },
       "index.audio.position.worklet.js": {
         "bytes": 2973,
@@ -328,7 +332,8 @@
       "320x568"
     ],
     "result": "All controls visible; bounded touch targets and stationary footer across pages",
-    "shutdown_warnings": "Capture exit logged one GL texture/RID, ObjectDB/resources-in-use and null RenderingServer warning; not a gameplay leak diagnosis."
+    "shutdown_warnings": "Capture exit logged one GL texture/RID, ObjectDB/resources-in-use and null RenderingServer warning; not a gameplay leak diagnosis.",
+    "captured_before_web_dpr_followup": true
   },
   "limitations": [
     "No real browser or physical mobile QA; Sites-managed browser control is unavailable.",
@@ -336,8 +341,15 @@
     "Exit resource warnings retained in check records; no unaccounted runtime/script errors."
   ],
   "publication": {
-    "status": "prepared",
+    "status": "prepared_followup",
     "target": "existing owner-private Sites playtest",
     "itch_updated": false
+  },
+  "followup_base_commit": "aa65a27f0e67585076b2c6b43065b5835c851257",
+  "web_css_unit_checks": {
+    "canvas_width_cases": 15,
+    "missing_id_fallback_cases": 5,
+    "result": "passed",
+    "scope": "Node VM evaluates the exact CSS width expression; native subclass simulates DPR 2/3 for portrait/landscape; not real browser integration."
   }
 }

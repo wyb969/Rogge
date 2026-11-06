@@ -1,6 +1,6 @@
 # Debug menu — November cleanup
 
-The Debug page is a compact paginated panel, with recent tests ordered newest first.
+The Debug page is a compact paginated panel, with the latest equipment combinations at the top.
 Opening it resets to page one. Previous/Next, the page number, Back and diagnostic export
 remain in fixed positions on every page, including the last partial page. PageUp/PageDown
 also change pages; Escape returns home. Resizing preserves the current first entry where possible.
@@ -24,12 +24,13 @@ No gameplay preset, controller or combat behavior was deleted. Automated checks 
 
 ## Mobile layout
 
-- Panel width is capped at 620 physical pixels, with margins and room above for fullscreen.
+- Panel width is capped at 620 displayed pixels, with margins and room above for fullscreen.
 - Narrow screens use one column (up to four entries); wide screens use two (up to three rows).
   Available height determines the actual capacity. A normal 390×844 phone gets four pages.
-- The viewport's final transform converts physical touch/font sizes to logical coordinates:
+- The viewport's final transform converts displayed touch/font sizes to logical coordinates;
+  on Web, the canvas CSS width also removes the device-pixel ratio (DPR):
   the game's 900-pixel logical viewport must not shrink buttons on a phone.
-- Entries are 48 physical pixels high; Back/export/pager are 44. Labels clip or ellipsize;
+- Entries are 48 displayed pixels high; Back/export/pager are 44. Labels clip or ellipsize;
   report status stays on one line and its tooltip retains the full message.
 - Off-page entries are hidden and disabled. Shared hover/pressed styles keep button bounds fixed;
   the homepage's scale/rotation script is not attached to these Debug buttons.
@@ -41,7 +42,7 @@ No gameplay preset, controller or combat behavior was deleted. Automated checks 
 Use Godot 4.7, `gl_compatibility`, Dummy audio and isolated user data, as described in
 `AI_HANDOFF.md`. Primary checks: `smoke_debug_menu.gd` and `smoke_menu_layout.gd`.
 The former walks every page at 390×844, 320×568, 280×480, 844×390, 640×360,
-900×500 and 1440×900, checking bounds, overlap, touch heights and fixed controls;
+900×500 and 1440×900, plus DPR 2/3 portrait/landscape simulations, checking bounds, overlap, touch heights and fixed controls;
 it also covers export, Back, double-tap launch, Retry and ordinary Start isolation.
 
 Evidence: `validation/debug-pages-20261106.json` and four `screenshots/debug-pages-*.png`

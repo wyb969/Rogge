@@ -112,13 +112,21 @@ func _request_fit() -> void:
 	_fit_pending = true
 	call_deferred("_fit")
 
+func _display_pixel_ratio() -> float:
+	if OS.has_feature("web"):
+		# Web canvases use device pixels; touch targets are measured in CSS pixels.
+		var css_width: Variant = JavaScriptBridge.eval("(function(){var c=document.getElementById('canvas');return c?c.getBoundingClientRect().width:window.innerWidth;})()", true)
+		if (css_width is float or css_width is int) and float(css_width) > 0.0:
+			return float(get_tree().root.size.x) / float(css_width)
+	return 1.0
+
 func _fit() -> void:
 	_fit_pending = false
 	var vp: = get_viewport().get_visible_rect().size
 	# The logical viewport is often 900 px wide even on a 390 px phone.
 	var transform: = get_viewport().get_final_transform()
 	var physical_scale: = (transform * Vector2.RIGHT - transform * Vector2.ZERO).length()
-	_ui = 1.0 / maxf(physical_scale, 0.1)
+	_ui = _display_pixel_ratio() / maxf(physical_scale, 0.1)
 	var physical_height: = vp.y / _ui
 	var compact: = physical_height < 520.0
 	var tiny: = physical_height < 340.0

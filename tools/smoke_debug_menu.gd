@@ -2,6 +2,11 @@ extends SceneTree
 var failures: Array[String] = []
 var checks: = 0
 
+class SimulatedScreenDebug extends "res://script/debug_menu_layout.gd":
+	var display_pixel_ratio: = 1.0
+	func _display_pixel_ratio() -> float:
+		return display_pixel_ratio
+
 func _init() -> void:
 	call_deferred("_run")
 
@@ -14,7 +19,8 @@ func _inside(control: Control, vp: Vector2) -> bool:
 	var rect: = control.get_global_rect()
 	return rect.size.x > 0 and rect.size.y > 0 and rect.position.x >= -1 and rect.position.y >= -1 and rect.end.x <= vp.x + 1 and rect.end.y <= vp.y + 1
 
-func _layout(page: Control, physical_size: Vector2i) -> void:
+func _layout(page: Control, physical_size: Vector2i, ratio: float = 1.0) -> void:
+	page.display_pixel_ratio = ratio
 	root.size = physical_size
 	await process_frame
 	await process_frame
@@ -22,7 +28,7 @@ func _layout(page: Control, physical_size: Vector2i) -> void:
 	await process_frame
 	var vp: = root.get_visible_rect().size
 	var transform: = root.get_final_transform()
-	var scale: = (transform * Vector2.RIGHT - transform * Vector2.ZERO).length()
+	var scale: = (transform * Vector2.RIGHT - transform * Vector2.ZERO).length() / ratio
 	var seen: = {}
 	var footer_y: float = page.back_button.position.y
 	var panel_rect: Rect2 = page.panel.get_global_rect()
@@ -40,14 +46,14 @@ func _layout(page: Control, physical_size: Vector2i) -> void:
 				seen[button.name] = true
 				controls.append(button)
 				_expect(not button.disabled and button.get_script() == null, "visible entries are interactive without overflowing hover transforms")
-				_expect(button.size.y * scale >= 47.0, "test entry remains a physical 48px touch target")
+				_expect(button.size.y * scale >= 47.0, "test entry remains a displayed 48px touch target")
 			else:
 				_expect(button.disabled, "off-page entries cannot receive focus/taps")
 		_expect(visible_count > 0 and visible_count <= page.page_size, "each page has bounded nonempty content")
 		for control in controls:
 			_expect(_inside(control, vp), "%s fits %s" % [control.name, physical_size])
 		for button in [page.back_button, page.report_button, page.prev_button, page.next_button]:
-			_expect(button.size.y * scale >= 43.0, "footer remains a physical 44px touch target")
+			_expect(button.size.y * scale >= 43.0, "footer remains a displayed 44px touch target")
 		for i in controls.size():
 			for j in range(i + 1, controls.size()):
 				_expect(not controls[i].get_global_rect().intersects(controls[j].get_global_rect()), "%s/%s do not overlap at %s" % [controls[i].name, controls[j].name, physical_size])
@@ -67,6 +73,7 @@ func _layout(page: Control, physical_size: Vector2i) -> void:
 
 func _run() -> void:
 	var main: Node = load("res://scenes/main.tscn").instantiate()
+	main.get_node("mainUI/Control/DebugCenter").set_script(SimulatedScreenDebug)
 	root.add_child(main)
 	current_scene = main
 	await process_frame
@@ -81,6 +88,15 @@ func _run() -> void:
 		_expect(not page.box.has_node(old), "restored old entry removed: " + old)
 	for size in [Vector2i(390,844), Vector2i(320,568), Vector2i(280,480), Vector2i(844,390), Vector2i(640,360), Vector2i(900,500), Vector2i(1440,900)]:
 		await _layout(page, size)
+	for ratio in [2.0, 3.0]:
+		await _layout(page, Vector2i(Vector2(390,844) * ratio), ratio)
+		_expect(page.columns == 1 and page.page_size == 4 and page.page_count == 4, "high-DPI phone keeps the same CSS layout at DPR %s" % ratio)
+		await _layout(page, Vector2i(Vector2(844,390) * ratio), ratio)
+		_expect(page.columns == 2 and page.page_size == 6 and page.page_count == 3, "high-DPI landscape keeps the same CSS layout at DPR %s" % ratio)
+	page.display_pixel_ratio = 1.0
+	root.size = Vector2i(900,600)
+	await process_frame
+	await process_frame
 	_expect(main.game == original and paused, "paging/resizing cannot replace or start the prepared run")
 	page.report_button.pressed.emit()
 	_expect(page.visible and paused and not page.hint.text.is_empty(), "diagnostics remains available without starting gameplay")
@@ -112,7 +128,7 @@ func _run() -> void:
 	await process_frame
 	_expect(not main.game.growth_combo_active and main.game.player.growth_move_multiplier == 1 and main.game_root.get_child_count() == 1, "normal Start inherits no debug set or duplicate game")
 	if failures.is_empty():
-		print("DEBUG MENU OK: %d assertions; seven physical viewport sizes, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset" % checks)
+		print("DEBUG MENU OK: %d assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset" % checks)
 	else:
 		for failure in failures: push_error(failure)
 	quit(0 if failures.is_empty() else 1)

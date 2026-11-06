@@ -2,7 +2,7 @@
   "version": "20261106-174113",
   "base_commit": "7f157f0af30b73de8d269be7652bb59d37ff839a",
   "engine": "4.7.stable.official.5b4e0cb0f",
-  "verified_utc": "2026-11-06T09:44:49.585744+00:00",
+  "verified_utc": "2026-11-06T09:49:53.209923+00:00",
   "native": {
     "tests": 18,
     "passed": 18,
@@ -469,8 +469,15 @@
     }
   },
   "publication": {
-    "status": "prepared",
-    "target": "existing owner-private Sites",
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aeda279db1c81918a258a9b57c8c109",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_dd8d1107c62c819189199ec1a12f17f6",
+    "site_source_commit": "7efaf06dbedc64fb4d38e82c4351c10b5a8913de",
+    "game_commit": "250680bbeec4ab84fc8aedc1dc72f3fc8d5b8ab6",
+    "game_version": "20261106-174113",
+    "audience": "owner-private, unchanged",
     "itch_updated": false
   },
   "limitations": [

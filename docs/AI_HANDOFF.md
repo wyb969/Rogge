@@ -10,7 +10,15 @@
 - Player权威移动锁同时阻止键盘、触屏和直接dash；取消旧dash/grace，仍处理受伤和被动回复。挑战期间隐藏摇杆/DASH，左侧神兽技能可用；结束、失败、Retry、回主页/新局清除锁与怪潮。
 - Debug首项新增木头人60秒预设，现14个测试入口；原测试脚本已适配新增关卡，保留分页和诊断。
 - 真实原生60秒样本：斧2/书1/枪6及已获得技能，346次生成、274击杀，末尾886/1150HP；采样峰值71怪。仅一局平衡样本，非胜率/手机性能结论。实战发现并修复死亡对象TypedArray失效引用，改WeakRef并新增释放回归。
-- 本轮18个不同原生检查和6项实际导出PCK检查通过（含木头人49项断言）；共57个smoke脚本，未全量运行。报告 `docs/validation/wooden-trial-20261106.json`。原生GPU已核对装备角标、手机说明页、横屏怪潮；浏览器工具缺失，无物理手机/真实Web实测。试玩将复用原私有Sites，itch不更新。
+- 本轮18个不同原生检查和6项实际导出PCK检查通过（含木头人49项断言）；共57个smoke脚本，未全量运行。报告 `docs/validation/wooden-trial-20261106.json`。原生GPU已核对装备角标、手机说明页、横屏怪潮；浏览器工具缺失，无物理手机/真实Web实测。已成功更新原私有Sites，itch不更新。
+
+### 木头人挑战试玩（已部署）
+
+- 链接：<https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，所有者私有，访问范围未改。主页 → Debug第一项木头人挑战；自然流程为速度试炼结果 → 木头人说明页。
+- 版本 `20261106-174113`，游戏提交 `250680bbeec4ab84fc8aedc1dc72f3fc8d5b8ab6`。后续文档提交不改变已导出代码。
+- Site源 `7efaf06dbedc64fb4d38e82c4351c10b5a8913de`；deployment `appgdep_6aeda279db1c81918a258a9b57c8c109` 返回 succeeded；version `appgprj_6aeb66ad64408191b317328a1063f65c~appgver_dd8d1107c62c819189199ec1a12f17f6`。
+- PCK `9332ce09b296d4d2e9508391a24173285144f05c4ba90c02de78d27a3d35ce90`。托管PCK一致，gzip WASM解压字节一致，每个资产小于25MiB，加载脚本未改。没有浏览器或物理手机QA。
+- itch仍为 `20261106-011424`，本轮未触发PixelFishing发布工作流。下一次更新itch建议纳入 `smoke_wooden_trial`、`smoke_equipment_badges` 与新试炼流程检查。
 
 ## 2026-11-06 Debug 清理与手机分页（上一轮记录）
 

@@ -49,6 +49,8 @@ var left_fist_level: int = 0
 var right_fist_level: int = 0
 var hurt_lock: float = 0.0
 var arsenal_shield_active := false
+var movement_locked := false
+var _movement_lock_position := Vector2.ZERO
 
 var damage_reduction: float = 0.0
 var cooldown_scale: float = 1.0
@@ -413,6 +415,17 @@ func reset_dash() -> void :
 	can_dash = true
 	velocity = Vector2.ZERO
 
+func set_movement_locked(locked: bool) -> void:
+	movement_locked = locked
+	reset_dash()
+	MobileInput.clear_move()
+	MobileInput.clear_dash()
+	if locked:
+		_movement_lock_position = global_position
+		can_dash = false
+		cpu_particles_2d.emitting = false
+		animated_sprite_2d.pause()
+
 func _process(delta: float) -> void :
 	_tick_visuals(delta)
 	_tick_regen(delta)
@@ -445,6 +458,12 @@ func _physics_process(delta: float) -> void :
 			_sync_dash_hurt_area()
 	if hurt_lock > 0.0:
 		hurt_lock = maxf(0.0, hurt_lock - delta)
+	if movement_locked:
+		global_position = _movement_lock_position
+		velocity = Vector2.ZERO
+		MobileInput.clear_move()
+		MobileInput.clear_dash()
+		return
 	var keys: = Input.get_vector("left", "right", "up", "down")
 	var input_direction: = keys
 
@@ -494,7 +513,7 @@ func _physics_process(delta: float) -> void :
 	move_and_slide()
 
 func _start_dash(input_direction: Vector2) -> void :
-	if not can_dash or player_health <= 0: return
+	if movement_locked or not can_dash or player_health <= 0: return
 	can_dash = false
 	dashing = true
 	dash_grace_left = 0
@@ -546,7 +565,7 @@ func _on_dashing_timer_timeout() -> void :
 	dash_completed.emit(global_position)
 
 func _on_can_dasing_timer_timeout() -> void :
-	can_dash = true
+	can_dash = not movement_locked
 	var feedback: = JUICE.find(self)
 	if feedback != null and feedback.is_processing(): AudioManager.play_juice("ready")
 

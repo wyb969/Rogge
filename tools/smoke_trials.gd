@@ -147,8 +147,15 @@ func _run() -> void :
 	_expect(trials._passed and paused, "defeating the exposed wizard succeeds")
 	var result: = {"victory": false}
 	game.game_over.connect( func(stats: Dictionary): result.merge(stats, true))
+	trials.continue_button.pressed.emit()
+	await process_frame
+	await process_frame
+	_expect(trials.kind == "wooden" and trials.flow == trials.TrialFlow.INTRO and trials.results.speed.passed, "speed success leads to the wooden challenge before settlement")
+	trials.set_process(false)
+	trials.start_button.pressed.emit()
+	trials._process(60)
 	trials.settle_button.pressed.emit()
-	_expect(result.victory and result.trials.speed.passed, "speed success can settle the real stage-six victory")
+	_expect(result.victory and result.trials.speed.passed and result.trials.wooden.passed, "wooden survival can settle the real stage-six victory")
 
 	await main._launch_run(&"beast_4")
 	game = main.game
@@ -191,7 +198,7 @@ func _run() -> void :
 			trials._fit()
 			await process_frame
 			var bounds: = Rect2(Vector2.ZERO, root.get_visible_rect().size)
-			_expect(bounds.encloses(trials.retry_button.get_global_rect()) and bounds.encloses(trials.settle_button.get_global_rect()), "speed retry and explicit settlement fit both viewports")
+			_expect(bounds.encloses(trials.retry_button.get_global_rect()) and bounds.encloses(trials.continue_button.get_global_rect()), "speed retry and next challenge fit both viewports")
 		trials.retry_button.pressed.emit()
 		actor = trials.enemy
 		actor.set_physics_process(false)
@@ -199,7 +206,13 @@ func _run() -> void :
 		actor.apply_hit({"damage": 1000000})
 		trials.continue_button.pressed.emit()
 		await process_frame
-		_expect(game.spawner._endless_trial and game.beast_powers.finish_button.visible and trials.results.speed.passed, "speed completion resumes the real free-trial arena with its settlement button")
+		await process_frame
+		_expect(trials.kind == "wooden" and trials.flow == trials.TrialFlow.INTRO and trials.results.speed.passed, "speed completion starts the wooden explanation")
+		trials.set_process(false)
+		trials.start_button.pressed.emit()
+		trials._process(60)
+		trials.continue_button.pressed.emit()
+		_expect(game.spawner._endless_trial and game.beast_powers.finish_button.visible and trials.results.wooden.passed, "wooden completion resumes the real free-trial arena with its settlement button")
 	if failures.is_empty(): print("TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset")
 	else:
 		for failure in failures: push_error(failure)

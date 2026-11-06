@@ -139,6 +139,11 @@ func _run() -> void :
 			spawner.timer.stop()
 			spawner.get_node("Elite").stop()
 		else:
+			_expect(game.trials.kind == "wooden" and game.trials.flow == game.trials.TrialFlow.INTRO, "final speed trial proceeds to the stationary challenge")
+			game.trials.set_process(false)
+			game.trials.start_button.pressed.emit()
+			game.trials._process(60.0)
+			game.trials.continue_button.pressed.emit()
 			_expect(spawner._endless_trial and powers.finish_button.visible and not paused, "last reward allows a free trial with earned powers")
 		spawner.timer.stop()
 		spawner.get_node("Elite").stop()

@@ -924,6 +924,9 @@ func _on_trial_completed(kind: String, _passed: bool, settle: bool) -> void :
 	if kind == "power":
 		_rest_pending = true
 		call_deferred("_show_next_reward")
+	elif kind == "speed":
+		_trial_pending = "wooden"
+		call_deferred("_show_next_reward")
 	elif settle:
 		on_boss_defeated()
 	else:

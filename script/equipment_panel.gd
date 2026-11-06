@@ -2,7 +2,8 @@ extends Control
 
 const SLOT_SIZE: = Vector2(48, 48)
 const ICON_SIZE: = Vector2(36, 36)
-const UI_FONT_SIZE: = 15
+const UI_FONT_SIZE: = 16
+const SLOT_FOOTPRINT := Vector2(64, 60)
 const LEVEL_COLOR: = preload("res://script/visual_style.gd").TEXT
 
 @onready var slot_list: GridContainer = $SlotList
@@ -123,14 +124,17 @@ func _fit_equipment() -> void :
 	slot_list.columns = 2 if count > 6 else 1
 	var rows: = int(ceil(float(count) / slot_list.columns))
 	var status_rows := int(_arsenal_label.visible) + int(_growth_label.visible)
-	var icon_height := rows * 58.0
+	var icon_height := rows * (SLOT_FOOTPRINT.y + 10.0)
 	var height: = icon_height + status_rows * 20.0 + (4.0 if status_rows > 0 else 0.0)
 	var budget: = maxf(180, vp.y - 240)
-	var factor: = minf(1, budget / maxf(height, 1))
-	var width: = 128.0 * slot_list.columns
+	var preferred_scale := minf(2.0, vp.x / 450.0) if vp.y > vp.x else 1.0
+	var factor: = minf(preferred_scale, budget / maxf(height, 1))
+	var grid_width := SLOT_FOOTPRINT.x * slot_list.columns + 8.0 * (slot_list.columns - 1)
+	var width: = maxf(grid_width, 128.0 if status_rows > 0 else 0.0)
 	scale = Vector2.ONE * factor
 	global_position = Vector2(vp.x - width * factor - 18, 120)
-	slot_list.size = Vector2(width, icon_height)
+	slot_list.position.x = width - grid_width
+	slot_list.size = Vector2(grid_width, icon_height)
 	_arsenal_label.position = Vector2(0, icon_height + 4)
 	_growth_label.position = Vector2(0, icon_height + 4 + (20 if _arsenal_label.visible else 0))
 
@@ -218,20 +222,25 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	if _slots.has(upgrade_id):
 		_slots[upgrade_id]["level"] = level
 		var label: Label = _slots[upgrade_id]["level_label"]
-		label.text = "Lv.%d" % level
+		label.text = str(level)
 		if juice:
 			_play_level_up_juice(upgrade_id)
 		return
 
-	var root: = HBoxContainer.new()
-	root.custom_minimum_size = Vector2(120, SLOT_SIZE.y)
-	root.add_theme_constant_override("separation", 8)
+	var root: = Control.new()
+	root.custom_minimum_size = SLOT_FOOTPRINT
+	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var icon_wrap: = PanelContainer.new()
-	icon_wrap.custom_minimum_size = SLOT_SIZE
+	var icon_wrap: = Panel.new()
+	icon_wrap.position = Vector2(6, 6)
+	icon_wrap.size = SLOT_SIZE
+	icon_wrap.mouse_filter = Control.MOUSE_FILTER_PASS
 
 	var icon: = TextureRect.new()
 	icon.custom_minimum_size = ICON_SIZE
+	icon.position = Vector2(6, 6)
+	icon.size = ICON_SIZE
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = load(def["icon"])
@@ -246,11 +255,18 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 		combo_border = COMBO_BORDER.new()
 		combo_border.name = "ComboBorder"
 		combo_border.visible = false
-		icon.add_child(combo_border)
+		icon_wrap.add_child(combo_border)
 
 	var level_label: = Label.new()
-	level_label.text = "Lv.%d" % level
-	UiFonts.apply_to_label(level_label, UI_FONT_SIZE)
+	level_label.text = str(level)
+	UiFonts.apply_to_label(level_label, UI_FONT_SIZE, true)
+	level_label.position = Vector2(32, 32)
+	level_label.size = Vector2(18, 20)
+	level_label.z_index = 2
+	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	level_label.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.04))
+	level_label.add_theme_constant_override("outline_size", 2)
 	level_label.add_theme_color_override("font_color", LEVEL_COLOR)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 

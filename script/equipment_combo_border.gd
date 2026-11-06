@@ -2,6 +2,7 @@ extends Control
 
 const SEGMENTS := 16
 const TAIL := 0.24
+const WIDTH_SCALE := 1.5
 var combo_group := ""
 var tint := Color.WHITE
 var phase := 0.0
@@ -41,11 +42,11 @@ func _draw() -> void:
 	if size.x <= 0 or size.y <= 0 or _trail.is_empty(): return
 	var rect := Rect2(Vector2(-3, -3), size + Vector2(6, 6))
 	# Thin local glow with an empty center: the item art keeps its own colors.
-	draw_rect(rect, Color(tint, 0.13), false, 4.5)
-	draw_rect(rect, Color(tint, 0.62), false, 1.0)
+	draw_rect(rect, Color(tint, 0.13), false, 4.5 * WIDTH_SCALE)
+	draw_rect(rect, Color(tint, 0.62), false, 1.0 * WIDTH_SCALE)
 	for i in SEGMENTS + 1:
 		var p := float(i) / SEGMENTS
 		_trail[i] = _edge_point(phase - TAIL + TAIL * p, rect)
 		_colors[i] = Color(tint.lerp(Color.WHITE, p * p * 0.62), p * p * 0.95)
-	draw_polyline(_trail, Color(tint, 0.18), 4.0, false)
-	draw_polyline_colors(_trail, _colors, 1.8, false)
+	draw_polyline(_trail, Color(tint, 0.18), 4.0 * WIDTH_SCALE, false)
+	draw_polyline_colors(_trail, _colors, 1.8 * WIDTH_SCALE, false)

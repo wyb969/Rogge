@@ -1,13 +1,14 @@
 # Debug menu — November cleanup
 
-The Debug page is a compact paginated panel, with the latest equipment combinations at the top.
+The Debug page is a compact paginated panel, with recent gameplay tests at the top.
 Opening it resets to page one. Previous/Next, the page number, Back and diagnostic export
 remain in fixed positions on every page, including the last partial page. PageUp/PageDown
 also change pages; Escape returns home. Resizing preserves the current first entry where possible.
 
 ## Entry scope and provenance
 
-13 retained test entries were introduced after recovery, in commits dated November 4–6:
+The November6 Wooden Dummy challenge adds one entry, for14 tests total. The other13 retained
+test entries were introduced after recovery, in commits dated November4–6:
 critical glasses (1/5), fan (1/5/status), black hole (1/5), fan + black hole, bomb (1/5),
 Arsenal, Growth and both equipment sets. Back and diagnostic export are utilities, not tests.
 

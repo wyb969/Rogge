@@ -1,0 +1,220 @@
+{
+  "version": "20261106-182118",
+  "base_commit": "d2e0d77cbf41e95d423dd75d03a59c5bf0bc018a",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "verified_utc": "2026-11-06T10:22:28.640664+00:00",
+  "change": "Restore original equipment scale/two columns; adjacent Fullscreen/Home buttons with safe current-run teardown",
+  "native": {
+    "tests": 6,
+    "passed": 6,
+    "results": [
+      {
+        "name": "smoke_session_toolbar",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.68,
+        "errors": [],
+        "markers": [
+          "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_equipment_badges",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.21,
+        "errors": [],
+        "markers": [
+          "EQUIPMENT BADGES OK: all22 equipment, bold corner digits including6, unobscured 1.5x perimeter and four screen layouts"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_menu_layout",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.11,
+        "errors": [],
+        "markers": [
+          "MENU LAYOUT OK"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_debug_menu",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.12,
+        "errors": [],
+        "markers": [
+          "DEBUG MENU OK: 3820 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_wooden_trial",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.02,
+        "errors": [],
+        "markers": [
+          "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_growth_combo",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.5,
+        "errors": [],
+        "markers": [
+          "GROWTH COMBO OK: 61 checks; actual movement/healing/XP pickups/merge/difficulty, no stacking, shared green/gold phase, bounded border work, layout and Debug lifecycle"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 33 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 15 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ]
+  },
+  "packed": {
+    "tests": 4,
+    "passed": 4,
+    "pck_sha256": "38fc64033844266a6b99b2510aeb21abed186057af8bafa06f616852b8d2395e",
+    "results": [
+      {
+        "name": "smoke_session_toolbar",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.4,
+        "errors": [],
+        "markers": [
+          "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_equipment_badges",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.02,
+        "errors": [],
+        "markers": [
+          "EQUIPMENT BADGES OK: all22 equipment, bold corner digits including6, unobscured 1.5x perimeter and four screen layouts"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_menu_layout",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.02,
+        "errors": [],
+        "markers": [
+          "MENU LAYOUT OK"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_wooden_trial",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.93,
+        "errors": [],
+        "markers": [
+          "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+        ],
+        "shutdown_warnings": []
+      }
+    ]
+  },
+  "native_gpu": {
+    "renderer": "OpenGL Compatibility / llvmpipe",
+    "captures": [
+      "docs/screenshots/home-toolbar-landscape.png",
+      "docs/screenshots/home-toolbar-phone.png",
+      "docs/screenshots/home-toolbar-paused-trial.png"
+    ],
+    "native_fullscreen_enter_exit": "passed",
+    "scope": "Native GPU and actual GUI input; not a browser/mobile device test.",
+    "shutdown_warnings": "Capture exit logged texture/RID/null RenderingServer and ObjectDB/resources-in-use warnings; preserved separately from runtime test failures."
+  },
+  "web_export": {
+    "import_errors": 0,
+    "export_errors": 0,
+    "assets": {
+      "index.apple-touch-icon.png": {
+        "bytes": 11441,
+        "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+      },
+      "index.icon.png": {
+        "bytes": 3209,
+        "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+      },
+      "index.pck": {
+        "bytes": 23390876,
+        "sha256": "38fc64033844266a6b99b2510aeb21abed186057af8bafa06f616852b8d2395e"
+      },
+      "index.audio.worklet.js": {
+        "bytes": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+      },
+      "index.png": {
+        "bytes": 21443,
+        "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+      },
+      "index.html": {
+        "bytes": 5437,
+        "sha256": "9795728f9ce41274592a76ef252c9bb397d580eb69f394a345a466cd6f0a7f87"
+      },
+      "index.audio.position.worklet.js": {
+        "bytes": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "index.wasm": {
+        "bytes": 39509339,
+        "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+      }
+    }
+  },
+  "publication": {
+    "status": "prepared",
+    "target": "existing owner-private Sites",
+    "itch_updated": false
+  },
+  "limitations": [
+    "No real browser or physical phone QA; required managed-browser tools are unavailable.",
+    "Six focused scripts; not the full58-script smoke suite.",
+    "Exit-time resource warnings retained in check records."
+  ]
+}

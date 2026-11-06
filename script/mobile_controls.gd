@@ -306,6 +306,9 @@ func _handle_layout_pointer(event: InputEvent) -> bool:
 func _handle_touch(event: InputEventScreenTouch) -> bool:
 	var pos: Vector2 = event.position
 	if event.pressed:
+		var toolbar := get_tree().get_first_node_in_group("session_toolbar")
+		if toolbar != null and toolbar.owns_pointer(pos):
+			return false
 		var diagnostics: = get_tree().get_first_node_in_group("diagnostic_ui")
 		if diagnostics != null and diagnostics.owns_pointer(pos):
 			return false

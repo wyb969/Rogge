@@ -21,6 +21,7 @@ func _run() -> void:
 		await process_frame
 		panel._fit_equipment()
 		await process_frame
+		_expect(panel.scale.x <= 1.0 and panel.slot_list.columns == 2, "equipment never enlarges in portrait and stays in two compact columns")
 		var bounds := Rect2(Vector2.ZERO,root.get_visible_rect().size)
 		for id in panel._slots:
 			var slot: Dictionary = panel._slots[id]

@@ -1,12 +1,20 @@
 extends CanvasLayer
 
 
+signal home_requested
+
 @onready var button: Button = %FullscreenButton
+@onready var home_button: Button = %HomeButton
+var _home_available := false
 
 func _ready() -> void :
-	layer = 128
+	layer = 160
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = true
+	add_to_group("session_toolbar")
+	UiFonts.apply_to_button(home_button, 15)
+	home_button.pressed.connect(_request_home)
+	set_home_available(false)
 	if button == null:
 		button = get_node_or_null("Root/FullscreenButton")
 	if button:
@@ -15,6 +23,22 @@ func _ready() -> void :
 			button.pressed.connect(_on_pressed)
 	get_viewport().size_changed.connect(_refresh_label)
 	_refresh_label()
+
+func set_home_available(available: bool) -> void:
+	_home_available = available
+	home_button.visible = available
+	home_button.disabled = not available
+
+func _request_home() -> void:
+	if not _home_available: return
+	set_home_available(false)
+	home_requested.emit()
+
+func owns_pointer(point: Vector2) -> bool:
+	if not visible: return false
+	for control in [button, home_button]:
+		if control.visible and control.get_global_rect().has_point(point): return true
+	return false
 
 func _on_pressed() -> void :
 	if AudioManager and AudioManager.has_method("unlock_web_audio"):
@@ -46,3 +70,10 @@ func _refresh_label() -> void :
 	button.offset_right = -10.0
 	button.offset_bottom = 8.0 + h
 	button.offset_left = -10.0 - w
+
+	# Same height, style and fixed gap: the two controls form one compact toolbar.
+	var home_width := clampf(vp.x * 0.22, 100.0, 138.0)
+	home_button.offset_top = button.offset_top
+	home_button.offset_bottom = button.offset_bottom
+	home_button.offset_right = button.offset_left - 8.0
+	home_button.offset_left = home_button.offset_right - home_width

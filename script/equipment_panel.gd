@@ -121,14 +121,13 @@ func _ready() -> void :
 func _fit_equipment() -> void :
 	var vp: = get_viewport().get_visible_rect().size
 	var count: = _slots.size()
-	slot_list.columns = 2 if count > 6 else 1
+	slot_list.columns = 2 if count > 1 else 1
 	var rows: = int(ceil(float(count) / slot_list.columns))
 	var status_rows := int(_arsenal_label.visible) + int(_growth_label.visible)
 	var icon_height := rows * (SLOT_FOOTPRINT.y + 10.0)
 	var height: = icon_height + status_rows * 20.0 + (4.0 if status_rows > 0 else 0.0)
 	var budget: = maxf(180, vp.y - 240)
-	var preferred_scale := minf(2.0, vp.x / 450.0) if vp.y > vp.x else 1.0
-	var factor: = minf(preferred_scale, budget / maxf(height, 1))
+	var factor: = minf(1.0, budget / maxf(height, 1))
 	var grid_width := SLOT_FOOTPRINT.x * slot_list.columns + 8.0 * (slot_list.columns - 1)
 	var width: = maxf(grid_width, 128.0 if status_rows > 0 else 0.0)
 	scale = Vector2.ONE * factor

@@ -52,8 +52,8 @@ The border stroke widths are multiplied by1.5, retaining the green/gold colors, 
 30Hz update budget and empty center. The border now surrounds the icon frame. The side `Lv.N`
 label is gone; ranks use bold digits with a dark outline in the bottom-right corner, inset from the
 colored perimeter. Values and card caps are unchanged; uncapped rank6 also renders as `6`.
-Slots use a64×60 footprint; one/two-column packing and a portrait scale/height budget keep badges
-within the viewport. Status lines for the two sets remain below the icon grid.
+Slots use a64×60 footprint and two columns from two items onward. Portrait enlargement
+was removed after user feedback; scale stays at most1 and shrinks only to fit the height budget. Status lines for the two sets remain below the icon grid.
 
 Primary checks: `smoke_wooden_trial`, `smoke_equipment_badges`, `smoke_trials`, `smoke_beasts`,
 `smoke_debug_menu`, dash and combo smoke scripts. Evidence is in

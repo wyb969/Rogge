@@ -1,6 +1,19 @@
 # ROGGE · AI 开发交接
 
 
+## 2026-11-06 最新itch发布（当前线上版本）
+
+本轮用户明确要求把最新包更新到itch；此前各轮“itch不更新”为历史发布边界。本次仅发布现有版本，没有新增玩法或改动版本号。
+
+- 线上版本 **`20261106-182118`**：<https://ybwangrogger.itch.io/rogue-white>。原 `ybwangrogger/rogue-white:html` channel、upload `20115514` 已更新为 Butler build **`2312775`**；没有新增上传通道或修改商店外观。
+- 发布源码 `89545184f37fcb0ef8a47691ee216232a2ac7916`（实际玩法与UI提交 `2c63960dbacf6ca213c98bf14f5f294a13a84cc7`，其后仅文档）。包括炸弹/两套组合、木头人怪潮、Debug分页、粗体数字角标、小尺寸两列装备和右上角返回主页。
+- GitHub Actions：<https://github.com/wyb969/PixelFishing/actions/runs/42213352444>，结论success。工作流分支 `automation/rogge-itch-release`，提交 `d8feb8285693b8ae03224c226a8c137b34fff92a`；仍由仓库 `BUTLER_API_KEY` 直接供给Butler，没有取回密钥值。
+- CI用官方Godot4.7与匹配模板重新导出；10项实际PCK检查全部通过：菜单、芭蕉扇反馈、控制卡、返回主页、装备角标、木头人、试炼主线、生机、炸弹、军械。保留已有退出资源警告，运行/解析错误不忽略。不是全量58项回归，也不是真浏览器或手机实测。
+- itch完成提取后，主页实际iframe为 `https://html.itch.zone/html/20115514-2312775/index.html?v=1793966190`。已下载PCK/WASM/JS核对大小和SHA-256，均与Actions清单一致；PCK为 `ee05299db173955074e7f1dde006b49bfd49b4556eacb8590c27c6f54ce04841`。
+- CI重建PCK与Sites使用的本地导出PCK哈希不同；线上核验以对应CI清单为准，不将差异视作丢功能。两个入口的版本均为182118，托管产物与源码来源分别记录。
+- 证据：`docs/validation/itch-release-20261106-182118.json`、`docs/validation/itch-live-20261106-182118.json`。Actions artifact `13500117886` 保留到2026-12-06；临时构件和核验脚本在 `/workspace/Rogge-itch-update-20261106T1100Z/`，长期摘要已入Git。
+- 下次发布复用同一工作流/通道，按新功能调整聚焦检查名单。itch提取期间可能返回load_url；就绪后iframe可能直接放在主页的转义data-iframe中，不能假设一直存在load_url。更新流程见 `docs/ITCH_PUBLISH.md`。
+
 ## 2026-11-06 紧凑装备栏与返回主页（最新开发）
 
 - 版本 `20261106-182118`，仍在 `feature/fan-black-hole-20261104`。用户反馈装备图标太大：去掉上一版竖屏2×放大，scale最多1，只按高度预算缩小；从2件起两列。右下角粗体数字与1.5×组合流光保留。

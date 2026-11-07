@@ -76,7 +76,7 @@ func _run() -> void:
 	actor.burn_stacks=1
 	actor._take_status_damage(1000)
 	_expect(stains.stamps[0].tint.r==expected.r, "real burn tick retains the species pigment")
-	for path in ["Enemy_1", "Enemy2", "Enemy_3", "Enemy_4", "Enemy_5", "LootCourier"]:
+	for path in ["Enemy_1", "Enemy2", "Enemy_3", "Enemy_4", "Enemy_5", "LootCourier", "BladeMantis", "BoomerangImp", "SporeBomber"]:
 		stains.reset()
 		var resource_path := "res://resource/%s.tres" % path
 		var data: EnemyData = load(resource_path)

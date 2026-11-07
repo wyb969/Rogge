@@ -35,6 +35,8 @@ const RUN_VARIETY: = preload("res://script/run_variety.gd")
 var variety: Node2D
 const INK_SURF := preload("res://script/ink_surf.gd")
 var ink_surf: Node2D
+const ENEMY_ATTACKS := preload("res://script/enemy_attack_field.gd")
+var enemy_attacks: Node2D
 const METEOR_SHOWER: = preload("res://script/meteor_shower.gd")
 var meteors: Node2D
 const POISON_TRAIL: = preload("res://script/poison_trail.gd")
@@ -125,6 +127,9 @@ func _ready() -> void :
 	ink_surf = INK_SURF.new()
 	ink_surf.name = "InkSurf"
 	add_child(ink_surf)
+	enemy_attacks = ENEMY_ATTACKS.new()
+	enemy_attacks.name = "EnemyAttackField"
+	add_child(enemy_attacks)
 	meteors = METEOR_SHOWER.new()
 	meteors.name = "MeteorShower"
 	add_child(meteors)
@@ -200,6 +205,7 @@ func start_game() -> void :
 	RunDiagnostics.begin(self, diagnostic_mode)
 	variety.begin_run()
 	ink_surf.begin_run()
+	enemy_attacks.begin_run()
 	combat_lighting.begin_run()
 	meteors.begin_run()
 	pause_menu.reset_draft()
@@ -260,6 +266,7 @@ func _reset_skill_controllers() -> void :
 	if arsenal_combo: arsenal_combo.reset()
 	if variety: variety.reset()
 	if ink_surf: ink_surf.reset()
+	if enemy_attacks: enemy_attacks.reset()
 	if lightning_ring:
 		lightning_ring.reset()
 	if drone_controller and drone_controller.has_method("reset"):
@@ -758,6 +765,24 @@ func prepare_ink_surf_debug() -> void:
 		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
 		add_child(actor)
 		actor.global_position = player.global_position+offset
+
+func prepare_tactical_enemy_debug() -> void:
+	spawner.timer.stop()
+	spawner.get_node("Elite").stop()
+	spawner.set_process(false)
+	variety._courier_left = 99999
+	variety.notify("新怪物：刃螳扇形斩 / 回旋镖妖 / 孢子炮击\n红区锁定后走开；风、冰冻与击退可打断")
+	var data = [load("res://resource/BladeMantis.tres"),load("res://resource/BoomerangImp.tres"),load("res://resource/SporeBomber.tres")]
+	var offsets = [Vector2(-82,30),Vector2(170,-65),Vector2(-170,-95)]
+	for i in data.size():
+		var actor: Node2D = spawner.enemy.instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(data[i])
+		actor.health = 320*run_difficulty.health_scale
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position+offsets[i]
 
 func _on_treasure_earned() -> void :
 

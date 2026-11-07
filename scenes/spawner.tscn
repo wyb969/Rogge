@@ -10,11 +10,14 @@
 [ext_resource type="PackedScene" uid="uid://bd1jumvuhyuxg" path="res://scenes/boss_reminder.tscn" id="8"]
 [ext_resource type="PackedScene" uid="uid://6ohkt4wkxka4" path="res://scenes/boss.tscn" id="9"]
 [ext_resource type="FontFile" uid="uid://b5d0qdmbof32m" path="res://assest/fonts/PixelOperator8-Bold.ttf" id="10"]
+[ext_resource type="Resource" path="res://resource/BladeMantis.tres" id="11_mantis"]
+[ext_resource type="Resource" path="res://resource/BoomerangImp.tres" id="12_imp"]
+[ext_resource type="Resource" path="res://resource/SporeBomber.tres" id="13_bomber"]
 
 [node name="Spawner" type="Node2D" unique_id=320286520]
 script = ExtResource("1")
 enemy = ExtResource("2")
-enemy_array = [ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7")]
+enemy_array = [ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("11_mantis"), ExtResource("12_imp"), ExtResource("13_bomber")]
 boss_warning_scene = ExtResource("8")
 boss = ExtResource("9")
 

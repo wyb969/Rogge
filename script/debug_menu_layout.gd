@@ -4,6 +4,7 @@ extends Control
 const RECENT_ORDER: Array[String] = [
 	"DebugWoodenTrialButton",
 	"DebugInkSurfButton",
+	"DebugTacticalEnemiesButton",
 	"DebugEquipmentCombosButton", "DebugGrowthButton", "DebugArsenalButton",
 	"DebugBomb5Button", "DebugBombButton", "DebugFanStatusButton",
 	"DebugControlCardsButton", "DebugFan5Button", "DebugFanButton",

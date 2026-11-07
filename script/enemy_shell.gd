@@ -40,6 +40,8 @@ var _death_started: bool = false
 var _hit_flash_left: = 0.0
 var _game_ref: WeakRef
 const DEATH_STAINS := preload("res://script/death_stains.gd")
+const TACTICAL_AI := preload("res://script/tactical_enemy_ai.gd")
+var tactical_ai: RefCounted
 var death_stain_color: Color = DEATH_STAINS.PALETTE[&"chaser"]
 signal death_signal
 
@@ -176,6 +178,10 @@ func set_enemy_data(data: EnemyData) -> void :
 	projectile_speed = data.projectile_speed
 	attack_cooldown = data.attack_cooldown
 	attack_timer = minf(0.55, attack_cooldown)
+	tactical_ai = null
+	if data.attack_style!=&"":
+		tactical_ai = TACTICAL_AI.new()
+		tactical_ai.setup(data.attack_style,get_instance_id())
 
 	dash_timer = randf_range(0.6, 1.4) if archetype == EnemyData.Archetype.DASHER else 0.35
 	_sprite_base_scale = ($Sprite2D as Sprite2D).scale
@@ -336,15 +342,18 @@ func _physics_process(delta: float) -> void :
 	var move_speed: = speed
 	move_speed *= status_move_scale()
 
-	match archetype:
-		EnemyData.Archetype.DASHER:
-			_steer_dasher(delta, dir, dist, move_speed)
-		EnemyData.Archetype.TANK:
-			_steer_tank(delta, dir, dist, move_speed)
-		EnemyData.Archetype.RANGED:
-			_steer_ranged(delta, dir, dist, move_speed)
-		_:
-			_steer_chaser(dir, move_speed)
+	if tactical_ai!=null:
+		tactical_ai.steer(self,delta,dir,dist,move_speed)
+	else:
+		match archetype:
+			EnemyData.Archetype.DASHER:
+				_steer_dasher(delta, dir, dist, move_speed)
+			EnemyData.Archetype.TANK:
+				_steer_tank(delta, dir, dist, move_speed)
+			EnemyData.Archetype.RANGED:
+				_steer_ranged(delta, dir, dist, move_speed)
+			_:
+				_steer_chaser(dir, move_speed)
 	if recovering and _airflow_left <= 0.0 and _gravity_left <= 0.0:
 
 
@@ -365,7 +374,10 @@ func _physics_process(delta: float) -> void :
 
 	if is_instance_valid(player_reference):
 		_try_contact(global_position.distance_to(player_reference.global_position))
-	_face(dash_dir if archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or is_dashing) else dir)
+	if tactical_ai!=null and tactical_ai.committed:
+		_face(tactical_ai.facing,false)
+	else:
+		_face(dash_dir if archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or is_dashing) else dir)
 	_apply_move_juice(delta)
 
 func _steer_chaser(dir: Vector2, move_speed: float) -> void :
@@ -523,6 +535,7 @@ func _fire_projectile(dir: Vector2) -> void :
 	shots_fired += 1
 
 func _try_contact(dist: float) -> void :
+	if tactical_ai!=null and (tactical_ai.committed or tactical_ai.recovery>0): return
 	if _death_started or _blast_left > 0.0 or is_queued_for_deletion() or (archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or contact_recovery_left > 0.0)):
 		return
 	if archetype == EnemyData.Archetype.RANGED:
@@ -613,10 +626,10 @@ func _apply_move_juice(delta: float) -> void :
 
 	sprite_2d.position.y -= blast_jump_height() / maxf(body_scale, 0.4)
 
-func _face(dir: Vector2) -> void :
+func _face(dir: Vector2, prefer_velocity: bool = true) -> void :
 	if sprite_2d == null:
 		return
-	var face: = velocity if absf(velocity.x) > 2.0 else dir
+	var face: = velocity if prefer_velocity and absf(velocity.x) > 2.0 else dir
 	if absf(face.x) > 0.01:
 		sprite_2d.flip_h = face.x < 0.0
 

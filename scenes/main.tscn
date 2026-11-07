@@ -118,6 +118,10 @@ text = "木头人挑战 · 60秒怪潮"
 layout_mode = 2
 text = "彩墨冲浪 · 冲刺吸墨震波"
 
+[node name="DebugTacticalEnemiesButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "新怪物 · 斩击 / 回旋 / 炮击"
+
 [node name="DebugCriticalButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "暴击眼镜 · 1级"
@@ -191,6 +195,7 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/MenuCenter/VBoxContainer/DebugButton" to="." method="_on_debug_button_pressed"]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugWoodenTrialButton" to="." method="_launch_run" binds= [&"trial_wooden"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugInkSurfButton" to="." method="_launch_run" binds= [&"ink_surf"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugTacticalEnemiesButton" to="." method="_launch_run" binds= [&"tactical_enemies"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFanButton" to="." method="_launch_run" binds= [&"fan"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBombButton" to="." method="_launch_run" binds= [&"bomb"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBomb5Button" to="." method="_launch_run" binds= [&"bomb5"]]

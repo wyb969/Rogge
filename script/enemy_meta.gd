@@ -24,3 +24,4 @@ enum Archetype{CHASER, DASHER, TANK, RANGED}
 @export var projectile_damage: float = 36.0
 @export var projectile_speed: float = 150.0
 @export var attack_cooldown: float = 1.4
+@export var attack_style: StringName = &""

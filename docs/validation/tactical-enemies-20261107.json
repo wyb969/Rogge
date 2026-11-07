@@ -1,0 +1,460 @@
+{
+  "date_utc": "2026-11-07",
+  "version": "20261108-010552",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "branch": "feature/fan-black-hole-20261104",
+  "base_commit": "13290f1",
+  "scope": "Three ordinary tactical enemy species and pooled, interruptible attack patterns; no itch publication",
+  "native_checks": [
+    {
+      "name": "smoke_tactical_enemies",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.94,
+      "errors": [],
+      "markers": [
+        "TACTICAL ENEMIES OK: 71 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_stage_variation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.37,
+      "errors": [],
+      "markers": [
+        "STAGE VARIATION OK: 12 safe colors, stable/repeat-free opening rolls, 3 primary themes, 75% share, stage transition and ranged caps"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_difficulty",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.55,
+      "errors": [],
+      "markers": [
+        "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.02,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 281 checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 4173 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_archetypes",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.58,
+      "errors": [],
+      "markers": [
+        "SMOKE OK"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dasher_balance",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.1,
+      "errors": [],
+      "markers": [
+        "DASHER BALANCE OK: smooth tracking/red-arrow lock, harmless warning, jump/landing, 30/60 FPS and slow-frame distance, stagger, damage, immunity, freeze and 24-enemy charge budget"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dasher_recovery",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.1,
+      "errors": [],
+      "markers": [
+        "DASHER RECOVERY OK: normal/charge contacts, 0.9-second stationary opening at 30/60 FPS and slow frames, no duplicate hits/knockback bypass, chase resumption, dash/shield, walking escape, status death and archetype isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_control_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.68,
+      "errors": [],
+      "markers": [
+        "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.93,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_resource_bounds",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.19,
+      "errors": [],
+      "markers": [
+        "RESOURCE BOUNDS OK: 1000 coins/500 orbs preserve rewards, shared GPU resources, projectile ownership/TTL, cosmetic budgets, single explosions and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_runtime_optimization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.03,
+      "errors": [],
+      "markers": [
+        "RUNTIME OPTIMIZATION OK: live target lifecycle/nearest selection, exact pooled pause-safe chains/RNG, no child effects/timers, synchronous pickup indices, fixed cosmetic slots, cached geometry/audio and clean Retry"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.05,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.68,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": []
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_tactical_enemies",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.74,
+      "errors": [],
+      "markers": [
+        "TACTICAL ENEMIES OK: 71 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_stage_variation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.89,
+      "errors": [],
+      "markers": [
+        "STAGE VARIATION OK: 12 safe colors, stable/repeat-free opening rolls, 3 primary themes, 75% share, stage transition and ranged caps"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_difficulty",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 7.81,
+      "errors": [],
+      "markers": [
+        "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_control_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.6,
+      "errors": [],
+      "markers": [
+        "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.67,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 4173 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.73,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "browser": [
+    {
+      "name": "desktop",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "dpr": 1,
+      "seconds": 20.1,
+      "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
+      "actions": [
+        "Home → Debug → new tactical enemies",
+        "Real three-species combat with warning/attack cycles and keyboard/touch Dash",
+        "Return Home"
+      ],
+      "screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/tactical-browser-combat-desktop.png",
+      "warning_screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/tactical-browser-warning-desktop.png",
+      "gfx": {
+        "canvas": {
+          "width": 900,
+          "height": 600
+        },
+        "css": {
+          "width": 900,
+          "height": 600
+        },
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "WebKit WebGL",
+        "context_lost": false
+      },
+      "errors": [],
+      "messages": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        },
+        {
+          "type": "log",
+          "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+        }
+      ]
+    },
+    {
+      "name": "phone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "dpr": 2,
+      "seconds": 20.8,
+      "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
+      "actions": [
+        "Home → Debug → new tactical enemies",
+        "Real three-species combat with warning/attack cycles and keyboard/touch Dash",
+        "Return Home"
+      ],
+      "screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/tactical-browser-combat-phone.png",
+      "warning_screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/tactical-browser-warning-phone.png",
+      "gfx": {
+        "canvas": {
+          "width": 780,
+          "height": 1688
+        },
+        "css": {
+          "width": 390,
+          "height": 844
+        },
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "WebKit WebGL",
+        "context_lost": false
+      },
+      "errors": [],
+      "messages": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        },
+        {
+          "type": "log",
+          "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+        }
+      ]
+    }
+  ],
+  "import_export": {
+    "import": {
+      "errors": []
+    },
+    "export": {
+      "errors": []
+    }
+  },
+  "assets": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "f94dbe7040a2ee17e2f10c01d593d476f51f2bdf01bd36bfd62acdd99deac3a4"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23455404,
+      "sha256": "c42a11474ca7a768effcd1332ad52f0ecf95aaaba3872c0a828d62f5adfc5767"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "attack_budget": {
+    "fixed_slots": 12,
+    "simultaneous_caps": {
+      "cleave": 3,
+      "boomerang": 4,
+      "mortar": 3
+    },
+    "per_attack_nodes": 0,
+    "shared_audio_players": 2,
+    "redraw_hz": 30,
+    "ranged_classification": "RANGED; shared existing alive limit",
+    "roster_size": 8
+  },
+  "gpu_capture": {
+    "marker": "TACTICAL ENEMIES GPU OK",
+    "shutdown_warnings": [
+      "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+      "ERROR: Texture with GL ID of 19: leaked 1364 bytes.",
+      "ERROR: Parameter \"RenderingServer::get_singleton()\" is null.",
+      "ERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit."
+    ]
+  },
+  "limits": [
+    "Chromium software WebGL2 with desktop/mobile DPR2 viewports tested the raw Godot export, not physical Safari or the hosting gzip wrapper.",
+    "No full61-script regression, phone frame-time/memory profile or player balance study.",
+    "Known ObjectDB/resources/GL/RID shutdown warnings are separately preserved; not resolved by this task."
+  ],
+  "screenshots": [
+    "tactical-enemies-warnings.png",
+    "tactical-enemies-attacks.png",
+    "tactical-enemies-blade-return.png",
+    "tactical-browser-warning-desktop.png",
+    "tactical-browser-warning-phone.png",
+    "tactical-browser-combat-desktop.png",
+    "tactical-browser-combat-phone.png"
+  ]
+}

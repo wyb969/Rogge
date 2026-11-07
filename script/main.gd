@@ -283,6 +283,8 @@ func _launch_run(mode: StringName) -> void :
 	game.diagnostic_mode = str(mode) if mode != &"" else "normal"
 	start_game()
 	match mode:
+		&"tactical_enemies":
+			game.prepare_tactical_enemy_debug()
 		&"ink_surf":
 			game.prepare_ink_surf_debug()
 		&"juice":

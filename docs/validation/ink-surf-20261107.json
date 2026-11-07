@@ -1,0 +1,428 @@
+{
+  "date_utc": "2026-11-07",
+  "version": "20261108-004105",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "branch": "feature/fan-black-hole-20261104",
+  "base_commit": "2330086",
+  "scope": "Directional airborne/landed death splashes and default Ink Surf dash mechanic; no itch publication",
+  "native_checks": [
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.13,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 275 checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.23,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 3991 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.96,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.68,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 29 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 14 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_fan_status",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.03,
+      "errors": [],
+      "markers": [
+        "FAN STATUS OK: exact crowd deduplication, snapshot-only burn/poison replay, unchanged clocks/natural spread, one popup, no recursive procs/crit/lifesteal, rewards, five real cooldowns, Boss and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_poison_trail",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.21,
+      "errors": [],
+      "markers": [
+        "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_resource_bounds",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.09,
+      "errors": [],
+      "markers": [
+        "RESOURCE BOUNDS OK: 1000 coins/500 orbs preserve rewards, shared GPU resources, projectile ownership/TTL, cosmetic budgets, single explosions and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.45,
+      "errors": [],
+      "markers": [
+        "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_runtime_optimization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.93,
+      "errors": [],
+      "markers": [
+        "RUNTIME OPTIMIZATION OK: live target lifecycle/nearest selection, exact pooled pause-safe chains/RNG, no child effects/timers, synchronous pickup indices, fixed cosmetic slots, cached geometry/audio and clean Retry"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_survival_growth",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.5,
+      "errors": [],
+      "markers": [
+        "SURVIVAL GROWTH OK: real XP/multi-level growth, HP HUD/shields, rest stacking, no duplicate/card/revive growth, fresh runs, bounded stage-three elite hits and multi-source escape window"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 14.11,
+      "errors": [],
+      "markers": [
+        "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.85,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 275 checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.21,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.42,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 3991 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.83,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.6,
+      "errors": [],
+      "markers": [
+        "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+      ],
+      "shutdown_warnings": []
+    }
+  ],
+  "browser": [
+    {
+      "name": "desktop",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "dpr": 1,
+      "seconds": 30.1,
+      "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
+      "actions": [
+        "Home → Debug → Ink Surf; actual arrow input + keyboard/touch Dash",
+        "Return Home → Debug → Wooden Trial → Start",
+        "15 seconds of actual horde combat and enemy deaths",
+        "Return Home"
+      ],
+      "screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/ink-surf-browser-desktop.png",
+      "surge_screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/ink-surf-browser-surge-desktop.png",
+      "gfx": {
+        "canvas": {
+          "width": 900,
+          "height": 600
+        },
+        "css": {
+          "width": 900,
+          "height": 600
+        },
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "WebKit WebGL",
+        "context_lost": false
+      },
+      "errors": [],
+      "messages": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        },
+        {
+          "type": "log",
+          "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+        }
+      ]
+    },
+    {
+      "name": "phone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "dpr": 2,
+      "seconds": 34.6,
+      "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
+      "actions": [
+        "Home → Debug → Ink Surf; actual arrow input + keyboard/touch Dash",
+        "Return Home → Debug → Wooden Trial → Start",
+        "15 seconds of actual horde combat and enemy deaths",
+        "Return Home"
+      ],
+      "screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/ink-surf-browser-phone.png",
+      "surge_screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/ink-surf-browser-surge-phone.png",
+      "gfx": {
+        "canvas": {
+          "width": 780,
+          "height": 1688
+        },
+        "css": {
+          "width": 390,
+          "height": 844
+        },
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "WebKit WebGL",
+        "context_lost": false
+      },
+      "errors": [],
+      "messages": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        },
+        {
+          "type": "log",
+          "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+        }
+      ]
+    }
+  ],
+  "desktop_ink_recheck": {
+    "scope": "Supplementary real Chromium keyboard dash after practice ink has landed",
+    "actions": [
+      "Home → Debug → Ink Surf",
+      "Wait for landed practice ink, ArrowRight + Shift",
+      "Return Home"
+    ],
+    "errors": []
+  },
+  "import_export": {
+    "import": {
+      "errors": []
+    },
+    "export": {
+      "errors": []
+    }
+  },
+  "assets": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "fffa4f88064f48de44d591c17699871808ec550d09072e03b35b12d40b2e6787"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23426524,
+      "sha256": "ee3c927f007e3e57feeda5116e87fa3f813c5557dd7f6ebceec560b9f04a0908"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "isolated_gpu": {
+    "active": 128,
+    "empty_draw_calls": 0.0,
+    "full_draw_calls": 1.0,
+    "increment": 1.0,
+    "instances": 1024,
+    "node_children": 1,
+    "renderer": "native OpenGL Compatibility / llvmpipe",
+    "slots": 128
+  },
+  "gpu_capture": {
+    "marker": "DIRECTIONAL SPLASH AND INK SURF GPU OK",
+    "shutdown_warnings": [
+      "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+      "ERROR: Texture with GL ID of 19: leaked 1364 bytes.",
+      "ERROR: Parameter \"RenderingServer::get_singleton()\" is null.",
+      "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 5 resources still in use at exit (run with --verbose for details).",
+      "ERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit."
+    ]
+  },
+  "limits": [
+    "Chromium software WebGL2 desktop/mobile viewport tests of raw Godot export; not physical Safari or hosting-wrapper browser QA.",
+    "One draw call for128 groups/1024 quads does not establish unchanged CPU/GPU time versus the previous128-quads renderer.",
+    "No full60-script regression or player balance/fun study; current mechanism is a first playable iteration.",
+    "Existing ObjectDB/resources/GL/RID shutdown warnings remain separately recorded, not resolved."
+  ],
+  "screenshots": [
+    "ink-splash-flight.png",
+    "ink-splash-landed.png",
+    "ink-splash-motion.gif",
+    "ink-surf-route.png",
+    "ink-surf-surge.png",
+    "ink-surf-browser-desktop.png",
+    "ink-surf-browser-phone.png",
+    "ink-surf-browser-surge-desktop.png",
+    "ink-surf-browser-surge-phone.png"
+  ]
+}

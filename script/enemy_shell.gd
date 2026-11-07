@@ -818,7 +818,10 @@ func _apply_health_loss(dealt: float, death_direction: Vector2 = Vector2.ZERO) -
 		_death_started = true
 		var feedback: = JUICE.find(self)
 		if feedback != null:
-			feedback.death_stains.splat(global_position,death_stain_color,death_direction,body_scale)
+			var force := death_direction
+			if force.is_zero_approx():
+				force = _airflow_velocity if _airflow_left>0 else (_blast_velocity if _blast_left>0 else (_gravity_velocity if _gravity_left>0 else Vector2.ZERO))
+			feedback.death_stains.splat(global_position,death_stain_color,force,body_scale)
 			feedback.kill(global_position, base_modulate, is_elite)
 		spaw_icon()
 		remove_from_group("EnemyGroup")

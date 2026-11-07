@@ -33,6 +33,8 @@ const ENVIRONMENT_WEATHER: = preload("res://script/environment_weather.gd")
 var weather: Node
 const RUN_VARIETY: = preload("res://script/run_variety.gd")
 var variety: Node2D
+const INK_SURF := preload("res://script/ink_surf.gd")
+var ink_surf: Node2D
 const METEOR_SHOWER: = preload("res://script/meteor_shower.gd")
 var meteors: Node2D
 const POISON_TRAIL: = preload("res://script/poison_trail.gd")
@@ -120,6 +122,9 @@ func _ready() -> void :
 	variety.name = "RunVariety"
 	add_child(variety)
 	player.dash_completed.connect(variety.on_dash_completed)
+	ink_surf = INK_SURF.new()
+	ink_surf.name = "InkSurf"
+	add_child(ink_surf)
 	meteors = METEOR_SHOWER.new()
 	meteors.name = "MeteorShower"
 	add_child(meteors)
@@ -194,6 +199,7 @@ func start_game() -> void :
 	_reset_skill_controllers()
 	RunDiagnostics.begin(self, diagnostic_mode)
 	variety.begin_run()
+	ink_surf.begin_run()
 	combat_lighting.begin_run()
 	meteors.begin_run()
 	pause_menu.reset_draft()
@@ -253,6 +259,7 @@ func _reset_skill_controllers() -> void :
 	if bomb_controller: bomb_controller.reset()
 	if arsenal_combo: arsenal_combo.reset()
 	if variety: variety.reset()
+	if ink_surf: ink_surf.reset()
 	if lightning_ring:
 		lightning_ring.reset()
 	if drone_controller and drone_controller.has_method("reset"):
@@ -738,6 +745,19 @@ func prepare_variety_debug() -> void :
 	variety._courier_left = 999
 	variety.spawn_courier()
 	variety.notify("已装备踏风徽记 / 回响火种\n冲刺结束触发风压 · 击杀 8 个敌人触发回响")
+
+func prepare_ink_surf_debug() -> void:
+	variety.notify("彩墨冲浪：向右冲刺，掠过3处溅痕\n终点60伤害+击退 · 6秒冷却 · 无需选卡")
+	ink_surf.enable_debug_training()
+	for offset in [Vector2(118,-22),Vector2(135,20),Vector2(160,-5)]:
+		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
+		actor.health = 240
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position+offset
 
 func _on_treasure_earned() -> void :
 

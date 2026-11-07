@@ -12,6 +12,7 @@ extends CharacterBody2D
 
 signal player_died()
 signal health_damaged(amount: float)
+signal dash_started(at: Vector2)
 signal dash_completed(at: Vector2)
 
 var ring_tween: Tween
@@ -537,6 +538,7 @@ func _start_dash(input_direction: Vector2) -> void :
 	shadow_timer.start()
 	var feedback: = JUICE.find(self)
 	if feedback != null: feedback.dash(global_position, dash_direction)
+	dash_started.emit(global_position)
 
 func _sync_dash_hurt_area() -> void :
 	if hurt_area:

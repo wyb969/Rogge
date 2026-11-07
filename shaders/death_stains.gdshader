@@ -4,8 +4,8 @@ varying vec4 pigment_color;
 
 void vertex() {
 	pigment_color = COLOR;
-	float tile = floor(INSTANCE_CUSTOM.r * 11.0 + 0.5);
-	UV = (UV + vec2(mod(tile, 4.0), floor(tile / 4.0))) / vec2(4.0, 3.0);
+	float tile = floor(INSTANCE_CUSTOM.r * 55.0 + 0.5);
+	UV = (UV + vec2(mod(tile, 8.0), floor(tile / 8.0))) / vec2(8.0, 7.0);
 }
 
 void fragment() {

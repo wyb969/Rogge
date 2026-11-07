@@ -35,7 +35,7 @@ func _run() -> void:
 	for path in ["HandWeapon","CircleWeapon","Weapon","DroneController","MolotovController","FreezeController"]:
 		game.get_node(path).process_mode=Node.PROCESS_MODE_DISABLED
 	var stains: Node = game.combat_feedback.death_stains
-	_expect(stains.stamps.size()==128 and stains.multimesh.instance_count==128 and not stains.is_processing(), "fixed128-slot instanced renderer sleeps when empty")
+	_expect(stains.stamps.size()==128 and stains.multimesh.instance_count==128*BLOOD.PARTS_PER_STAIN and not stains.is_processing(), "fixed128-slot instanced renderer sleeps when empty")
 	_expect(stains.z_index==-3 and not stains.z_as_relative and stains.process_mode==Node.PROCESS_MODE_PAUSABLE, "stains lie below actors/pickups and freeze on pause")
 	var pigments: Dictionary = {}
 	for kind in BLOOD.PALETTE:
@@ -127,6 +127,17 @@ func _run() -> void:
 		_expect(value>=0 and value<=1, "atlas variation uses normalized portable instance data")
 		_expect(stains.stamps[i].size.x>=1.6 and stains.stamps[i].size.x<=2.5 and stains.stamps[i].size.y>=1.3 and stains.stamps[i].size.y<=2.0, "splat dimensions are doubled without losing random stretch")
 	_expect(variants.size()>3 and sizes.size()>3, "splashes vary atlas pattern, rotation and stretch")
+	for heading in [Vector2.RIGHT,Vector2.LEFT,Vector2.UP,Vector2.DOWN,Vector2(0.6,-0.8)]:
+		await process_frame
+		stains.reset()
+		stains.splat(Vector2.ZERO,Color.MAGENTA,heading)
+		stains.set_process(false)
+		var stamp: RefCounted=stains.stamps[0]
+		_expect(absf(angle_difference(stamp.rotation,heading.angle()))<=0.121, "main pool follows impact heading without a broad random spin")
+		for drop in stamp.drops:
+			_expect(drop.goal.dot(heading)>0, "directed droplets always land on the force side, for horizontal/vertical/diagonal impacts")
+		_expect(stamp.drops.size()==7 and stamp.drops[0].delay+stamp.drops[0].flight<stains.AIR_SECONDS, "seven pooled droplets have bounded flight time")
+	stains.reset()
 	stains.set_process(false)
 	for _frame in 8:
 		await process_frame
@@ -134,7 +145,7 @@ func _run() -> void:
 		for _i in 20: stains.splat(Vector2(13,17),Color(0.2,0.5,0.7))
 		stains.set_process(false)
 	for i in 128: _expect(stains.stamps[i].get_instance_id()==references[i], "dense scenes reuse every slot")
-	_expect(stains.active_count==128 and stains.stamps.size()==128 and stains.multimesh.instance_count==128, "pool reuse remains bounded after wraparound")
+	_expect(stains.active_count==128 and stains.stamps.size()==128 and stains.multimesh.instance_count==128*BLOOD.PARTS_PER_STAIN, "pool reuse remains bounded after wraparound")
 	stains.reset()
 	stains.splat(Vector2(100,80),Color(0.7,0.2,0.4))
 	stains.set_process(false)

@@ -114,6 +114,10 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "木头人挑战 · 60秒怪潮"
 
+[node name="DebugInkSurfButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "彩墨冲浪 · 冲刺吸墨震波"
+
 [node name="DebugCriticalButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "暴击眼镜 · 1级"
@@ -186,6 +190,7 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/MenuCenter/VBoxContainer/SettingButton" to="." method="_on_setting_button_pressed"]
 [connection signal="pressed" from="mainUI/Control/MenuCenter/VBoxContainer/DebugButton" to="." method="_on_debug_button_pressed"]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugWoodenTrialButton" to="." method="_launch_run" binds= [&"trial_wooden"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugInkSurfButton" to="." method="_launch_run" binds= [&"ink_surf"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFanButton" to="." method="_launch_run" binds= [&"fan"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBombButton" to="." method="_launch_run" binds= [&"bomb"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBomb5Button" to="." method="_launch_run" binds= [&"bomb5"]]

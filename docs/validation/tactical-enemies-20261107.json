@@ -10,13 +10,13 @@
       "name": "smoke_tactical_enemies",
       "passed": true,
       "exit_code": 0,
-      "seconds": 1.94,
+      "seconds": 2.95,
       "errors": [],
       "markers": [
-        "TACTICAL ENEMIES OK: 71 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+        "TACTICAL ENEMIES OK: 72 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
       ],
       "shutdown_warnings": [
-        "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
         "ERROR: 12 resources still in use at exit (run with --verbose for details)."
       ]
     },
@@ -77,15 +77,12 @@
       "name": "smoke_archetypes",
       "passed": true,
       "exit_code": 0,
-      "seconds": 8.58,
+      "seconds": 8.08,
       "errors": [],
       "markers": [
         "SMOKE OK"
       ],
-      "shutdown_warnings": [
-        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
-        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
-      ]
+      "shutdown_warnings": []
     },
     {
       "name": "smoke_dasher_balance",
@@ -202,10 +199,38 @@
       "name": "smoke_tactical_enemies",
       "passed": true,
       "exit_code": 0,
-      "seconds": 3.74,
+      "seconds": 3.33,
       "errors": [],
       "markers": [
-        "TACTICAL ENEMIES OK: 71 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+        "TACTICAL ENEMIES OK: 72 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_stage_variation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.5,
+      "errors": [],
+      "markers": [
+        "STAGE VARIATION OK: 12 safe colors, stable/repeat-free opening rolls, 3 primary themes, 75% share, stage transition and ranged caps"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_difficulty",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.51,
+      "errors": [],
+      "markers": [
+        "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
       ],
       "shutdown_warnings": [
         "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
@@ -213,13 +238,24 @@
       ]
     },
     {
-      "name": "smoke_stage_variation",
+      "name": "smoke_control_cards",
       "passed": true,
       "exit_code": 0,
-      "seconds": 1.89,
+      "seconds": 5.81,
       "errors": [],
       "markers": [
-        "STAGE VARIATION OK: 12 safe colors, stable/repeat-free opening rolls, 3 primary themes, 75% share, stage transition and ranged caps"
+        "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.14,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 4173 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
       ],
       "shutdown_warnings": [
         "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
@@ -227,52 +263,10 @@
       ]
     },
     {
-      "name": "smoke_difficulty",
-      "passed": true,
-      "exit_code": 0,
-      "seconds": 7.81,
-      "errors": [],
-      "markers": [
-        "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
-      ],
-      "shutdown_warnings": [
-        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
-        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
-      ]
-    },
-    {
-      "name": "smoke_control_cards",
-      "passed": true,
-      "exit_code": 0,
-      "seconds": 5.6,
-      "errors": [],
-      "markers": [
-        "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
-      ],
-      "shutdown_warnings": [
-        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
-        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
-      ]
-    },
-    {
-      "name": "smoke_debug_menu",
-      "passed": true,
-      "exit_code": 0,
-      "seconds": 4.67,
-      "errors": [],
-      "markers": [
-        "DEBUG MENU OK: 4173 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
-      ],
-      "shutdown_warnings": [
-        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
-        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
-      ]
-    },
-    {
       "name": "smoke_ink_surf",
       "passed": true,
       "exit_code": 0,
-      "seconds": 3.73,
+      "seconds": 7.75,
       "errors": [],
       "markers": [
         "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
@@ -291,7 +285,7 @@
         "height": 600
       },
       "dpr": 1,
-      "seconds": 20.1,
+      "seconds": 22.1,
       "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
       "actions": [
         "Home → Debug → new tactical enemies",
@@ -336,7 +330,7 @@
         "height": 844
       },
       "dpr": 2,
-      "seconds": 20.8,
+      "seconds": 23.9,
       "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
       "actions": [
         "Home → Debug → new tactical enemies",
@@ -398,7 +392,7 @@
     },
     "index.html": {
       "bytes": 5437,
-      "sha256": "f94dbe7040a2ee17e2f10c01d593d476f51f2bdf01bd36bfd62acdd99deac3a4"
+      "sha256": "b1fe97cbdc9879971b4d8416aac71a74b206533fb93e38bcfb899ad207cc4901"
     },
     "index.icon.png": {
       "bytes": 3209,
@@ -409,8 +403,8 @@
       "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
     },
     "index.pck": {
-      "bytes": 23455404,
-      "sha256": "c42a11474ca7a768effcd1332ad52f0ecf95aaaba3872c0a828d62f5adfc5767"
+      "bytes": 23455676,
+      "sha256": "2d77a936b30c01e97455a55c3e83a07f42b5ae63d94e265a8824786f73503f69"
     },
     "index.png": {
       "bytes": 21443,
@@ -456,5 +450,6 @@
     "tactical-browser-warning-phone.png",
     "tactical-browser-combat-desktop.png",
     "tactical-browser-combat-phone.png"
-  ]
+  ],
+  "stance_validation": "Mantis stops at58 units while waiting to avoid body overlap; final native/PCK test has72 checks and browser captures were repeated."
 }

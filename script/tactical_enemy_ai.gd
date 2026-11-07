@@ -40,7 +40,7 @@ func steer(actor: Node2D, delta: float, dir: Vector2, distance: float, speed: fl
 		actor.velocity = Vector2.ZERO
 		return
 	if kind==&"cleave":
-		actor.velocity = dir*speed
+		actor.velocity = dir*speed if distance>58.0 else Vector2.ZERO
 	else:
 		var preferred: float = actor.preferred_range
 		if distance<preferred*0.78: actor.velocity = -dir*speed

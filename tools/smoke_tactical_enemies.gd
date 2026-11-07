@@ -155,6 +155,14 @@ func _run() -> void:
 	mantis._physics_process(0.016)
 	_expect(mantis.tactical_ai.recovery>0 and mantis.velocity.is_zero_approx(), "slash recovery creates a real punish window")
 	_clean()
+	mantis.global_position=Vector2(0,1000)
+	player.global_position=mantis.global_position+Vector2(45,0)
+	mantis.tactical_ai.slot=null
+	mantis.tactical_ai.recovery=0
+	mantis.tactical_ai.cooldown=1
+	mantis._physics_process(0.016)
+	_expect(mantis.velocity.is_zero_approx() and not mantis.tactical_ai.committed, "mantis waits at readable sword distance instead of hugging the player during cooldown")
+	_clean()
 	var objects_before: int=Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
 	var references: Array[int]=[]
 	for slot in field.slots: references.append(slot.get_instance_id())

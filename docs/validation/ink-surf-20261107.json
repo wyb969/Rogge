@@ -424,5 +424,23 @@
     "ink-surf-browser-phone.png",
     "ink-surf-browser-surge-desktop.png",
     "ink-surf-browser-surge-phone.png"
-  ]
+  ],
+  "game_commit": "20d2a46e6f34a20b2a7106d391fec39c0f3a781b",
+  "hosting_checks": {
+    "pck_sha256": "ee3c927f007e3e57feeda5116e87fa3f813c5557dd7f6ebceec560b9f04a0908",
+    "pck_equal": true,
+    "wasm_gzip_decodes_to_exact_export": true,
+    "files_under_25mib": true,
+    "loader": "unchanged; Node syntax checked",
+    "hosting_wrapper_browser_verified": false
+  },
+  "deployment": {
+    "site_source_commit": "e0e22d18709487a60a00b6b4ffb0a6c656efc5e1",
+    "deployment_id": "appgdep_6aef582b07488191a8c9acecb428f3bc",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_426a05f2979c819193f4b6f8ba85aec3",
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "audience": "owner-private; preserved",
+    "itch_updated": false
+  }
 }

@@ -12,6 +12,14 @@
 - 临时构件 `/workspace/Rogge-ink-surf-20261107/`；后续重点观察玩家是否会主动选择吸墨冲刺路线、3处/6秒是否合适，以及手机密集飞散帧耗时。本轮不触发itch工作流，下次发布应选测 `smoke_death_stains` 与 `smoke_ink_surf`。
 
 
+### 定向泼溅与彩墨冲浪试玩（已部署）
+
+- <https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，仍为所有者私有；普通对局默认启用，Debug第二项可用刷新墨迹练习。
+- 版本 `20261108-004105`，游戏源码 `20d2a46e6f34a20b2a7106d391fec39c0f3a781b`；之后仅文档。Site源 `e0e22d18709487a60a00b6b4ffb0a6c656efc5e1`。
+- Deployment `appgdep_6aef582b07488191a8c9acecb428f3bc` 已返回succeeded，version `appgprj_6aeb66ad64408191b317328a1063f65c~appgver_426a05f2979c819193f4b6f8ba85aec3`。
+- PCK `ee3c927f007e3e57feeda5116e87fa3f813c5557dd7f6ebceec560b9f04a0908`；托管PCK与原导出一致，gzip WASM解压字节相同，所有资产小于25MiB，加载脚本未改且语法通过。Sites适配器没有真浏览器验证；原始Web导出有上文Chromium验证。
+- 当前开发分支已推送GitHub，没有更新itch或触发PixelFishing工作流。
+
 ## 2026-11-07 荧光血迹与双倍尺寸（历史记录）
 
 - 版本 **`20261107-201644`**，基于 `c803311`，仍在 `feature/fan-black-hole-20261104`；没有合并master，itch保持182118。本轮按用户要求调整血迹表现，不改战斗数值。

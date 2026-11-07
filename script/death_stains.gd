@@ -7,17 +7,29 @@ const FADE_SECONDS := 0.5
 const LIFETIME := HOLD_SECONDS + FADE_SECONDS
 const TILE_SIZE := 32
 const VARIANTS := 12
-const TEXTURE_CACHE_LIMIT := 32
-const BURN := Color(0.56, 0.16, 0.085)
-const POISON := Color(0.48, 0.17, 0.43)
-const FROST := Color(0.17, 0.43, 0.54)
-const SHOCK := Color(0.34, 0.25, 0.49)
-const CHAR := Color(0.43, 0.16, 0.07)
-const VOID := Color(0.26, 0.16, 0.34)
+const SIZE_MULTIPLIER := 2.0
+# Stable species pigments, independent of hit flashes, status and killing weapon.
+const PALETTE := {
+	&"chaser": Color("ff52ce"),
+	&"chaser_brute": Color("a47cff"),
+	&"dasher": Color("ff9b52"),
+	&"tank": Color("5e8fff"),
+	&"ranged": Color("40e6ee"),
+	&"loot_courier": Color("f68cf0"),
+	&"treasure_guardian": Color("d6f25b"),
+	&"charger_boss": Color("ff70a6"),
+	&"knight": Color("a0a4ff"),
+	&"tide": Color("55cfff"),
+	&"thunder": Color("e1a0ff"),
+	&"gale": Color("69f0c8"),
+	&"gale_ranged": Color("63f0b0"),
+	&"gale_melee": Color("b5ed74"),
+	&"aegis": Color("ffb47d"),
+	&"power_trial": Color("e6f582"),
+	&"speed_trial": Color("cc64ff"),
+}
 static var _atlas: Texture2D
 static var _material: ShaderMaterial
-static var _texture_colors: Dictionary = {}
-static var textures_sampled := 0
 
 class Stamp:
 	extends RefCounted
@@ -38,40 +50,8 @@ var _in_frame := 0
 var _redraw_left := 0.0
 var _rng := RandomNumberGenerator.new()
 
-static func texture_color(source: Texture2D) -> Color:
-	if source == null: return Color(0.64, 0.28, 0.42)
-	var key := source.resource_path
-	if key.is_empty(): return Color(0.64, 0.28, 0.42)
-	if _texture_colors.has(key): return _texture_colors[key]
-	if _texture_colors.size() >= TEXTURE_CACHE_LIMIT: return Color(0.64, 0.28, 0.42)
-	var picture := source.get_image()
-	var sum := Vector3.ZERO
-	var weight := 0.0
-	if picture != null and not picture.is_empty():
-		if picture.is_compressed(): picture.decompress()
-		for y in 16:
-			for x in 16:
-				var color := picture.get_pixel(mini(picture.get_width()-1, int((x+0.5)*picture.get_width()/16.0)), mini(picture.get_height()-1, int((y+0.5)*picture.get_height()/16.0)))
-				var amount := color.a * color.s * color.s * color.v
-				sum += Vector3(color.r,color.g,color.b) * amount
-				weight += amount
-	var result := Color(0.64,0.28,0.42) if weight < 0.01 else Color(sum.x/weight,sum.y/weight,sum.z/weight)
-	_texture_colors[key] = result
-	textures_sampled += 1
-	return result
-
-static func color_for(body: Color, effect: StringName = &"") -> Color:
-	match effect:
-		&"burn": return BURN
-		&"poison_trail": return POISON
-		&"freeze": return FROST
-		&"shock", &"lightning": return SHOCK
-		&"bomb": return CHAR
-		&"black_hole": return VOID
-	var bounded := body.clamp(Color.BLACK,Color.WHITE)
-	# Dark body pigment, not the transient white hit flash or a neon pickup color.
-	bounded = bounded.lerp(Color(bounded.get_luminance(),bounded.get_luminance(),bounded.get_luminance()),0.14)
-	return bounded.darkened(0.26)
+static func color_for(kind: StringName) -> Color:
+	return PALETTE.get(kind, PALETTE[&"chaser"])
 
 static func _ellipse(picture: Image, center: Vector2, radius: Vector2, tint: Color) -> void:
 	for y in range(maxi(0,int(center.y-radius.y)),mini(picture.get_height(),int(ceil(center.y+radius.y+1)))):
@@ -136,7 +116,7 @@ func reset() -> void:
 	_redraw_left = 0
 	set_process(false)
 
-func splat(at: Vector2, body: Color, effect: StringName = &"", direction: Vector2 = Vector2.ZERO, body_size: float = 1.0) -> bool:
+func splat(at: Vector2, tint: Color, direction: Vector2 = Vector2.ZERO, body_size: float = 1.0) -> bool:
 	if get_tree().paused or not get_parent().is_processing(): return false
 	var frame := Engine.get_process_frames()
 	if frame != _frame:
@@ -149,10 +129,10 @@ func splat(at: Vector2, body: Color, effect: StringName = &"", direction: Vector
 	var stamp := stamps[_next]
 	if stamp.age >= LIFETIME: active_count += 1
 	stamp.at = to_local(at)
-	stamp.tint = color_for(body,effect)
+	stamp.tint = tint
 	stamp.tint.a = _rng.randf_range(0.68,0.85)
 	stamp.rotation = _rng.randf_range(-PI,PI) if direction.is_zero_approx() else direction.angle()+_rng.randf_range(-0.8,0.8)
-	stamp.size = Vector2(_rng.randf_range(0.8,1.25),_rng.randf_range(0.65,1.0))*clampf(body_size,0.65,1.8)
+	stamp.size = Vector2(_rng.randf_range(0.8,1.25),_rng.randf_range(0.65,1.0))*clampf(body_size,0.65,1.8)*SIZE_MULTIPLIER
 	stamp.age = 0
 	stamp.variant = _rng.randi_range(0,VARIANTS-1)
 	multimesh.set_instance_custom_data(_next,Color(float(stamp.variant)/float(VARIANTS-1),0,0,0))

@@ -10,6 +10,9 @@ var coordinator: Node
 var _shots_fired: = 0
 var _orbit_sign: = 1.0
 
+func _death_stain_kind() -> StringName:
+	return &"gale_ranged" if role == Role.RANGED else &"gale_melee"
+
 func configure_wind_role(value: int, host: Node) -> void :
 	role = value as Role
 	coordinator = host

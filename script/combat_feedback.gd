@@ -46,9 +46,6 @@ func _ready() -> void :
 	death_stains = DEATH_STAINS.new()
 	death_stains.name = "DeathStains"
 	add_child(death_stains)
-	var spawner := get_parent().get_node_or_null("Spawner")
-	if spawner != null:
-		for data in spawner.enemy_array: DEATH_STAINS.texture_color(data.sprite)
 	for _i in MAX_SHARDS:
 		_free_shards.append({"p": Vector2.ZERO, "v": Vector2.ZERO, "left": 0.0, "life": 0.0, "color": Color.WHITE, "size": 0.0})
 	for _i in MAX_RINGS:

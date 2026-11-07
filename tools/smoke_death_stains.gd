@@ -6,9 +6,9 @@ func _init() -> void: call_deferred("_run")
 func _expect(ok: bool, message: String) -> void:
 	checks += 1
 	if not ok: failures.append(message)
-func _enemy(game: Node, at: Vector2) -> Node:
+func _enemy(game: Node, at: Vector2, resource_path: String = "res://resource/Enemy2.tres") -> Node:
 	var actor: Node = load("res://scenes/enemy_shell.tscn").instantiate()
-	actor.set_enemy_data(load("res://resource/Enemy2.tres"))
+	actor.set_enemy_data(load(resource_path))
 	actor.set_player_ref(game.player)
 	actor.health=1
 	actor.add_to_group("EnemyGroup")
@@ -37,15 +37,19 @@ func _run() -> void:
 	var stains: Node = game.combat_feedback.death_stains
 	_expect(stains.stamps.size()==128 and stains.multimesh.instance_count==128 and not stains.is_processing(), "fixed128-slot instanced renderer sleeps when empty")
 	_expect(stains.z_index==-3 and not stains.z_as_relative and stains.process_mode==Node.PROCESS_MODE_PAUSABLE, "stains lie below actors/pickups and freeze on pause")
-	var samples_before: int = BLOOD.textures_sampled
-	for _i in 100: BLOOD.texture_color(load("res://resource/Enemy2.tres").sprite)
-	_expect(BLOOD.textures_sampled==samples_before and BLOOD._texture_colors.size()<=BLOOD.TEXTURE_CACHE_LIMIT, "prewarmed monster pigments never resample textures on death")
+	var pigments: Dictionary = {}
+	for kind in BLOOD.PALETTE:
+		var pigment: Color = BLOOD.color_for(kind)
+		pigments[pigment] = true
+		_expect(pigment.v>=0.9 and pigment.s>=0.3 and pigment.a==1.0, "species %s has a bright opaque fluorescent pigment" % kind)
+	_expect(pigments.size()==BLOOD.PALETTE.size(), "every named species has its own assigned pigment")
+	_expect(BLOOD.color_for(&"future_species")==BLOOD.color_for(&"chaser"), "unknown species uses a stable bright fallback")
 	var drops_before: int = game.pickup_container.get_child_count()
 	var kills: int = game.spawner.enemy_killed_num
 	var actor: Node = _enemy(game,Vector2(77,43))
-	var expected: Color = BLOOD.color_for(actor._blood_body_tint*actor.base_modulate)
+	var expected: Color = BLOOD.color_for(&"chaser_brute")
 	actor.apply_hit({"damage":1000,"direction":Vector2.RIGHT})
-	_expect(stains.emitted==1 and stains.stamps[0].tint.is_equal_approx(Color(expected,stains.stamps[0].tint.a)), "actual lethal hit leaves the monster's body pigment, not its white hit flash")
+	_expect(stains.emitted==1 and stains.stamps[0].tint.is_equal_approx(Color(expected,stains.stamps[0].tint.a)), "actual lethal hit leaves the assigned species pigment, not its white hit flash")
 	actor.apply_hit({"damage":1000})
 	_expect(stains.emitted==1 and game.spawner.enemy_killed_num==kills+1, "repeated hits on a dead target cannot duplicate the stain or reward")
 	await process_frame
@@ -56,22 +60,53 @@ func _run() -> void:
 		actor=_enemy(game,Vector2(20,10))
 		actor.apply_hit({"damage":1000,"effect":effect,"from_status":true})
 		var color: Color = stains.stamps[0].tint
-		_expect(stains.emitted==1 and color.is_equal_approx(Color(BLOOD.color_for(Color.WHITE,effect),color.a)), "fatal %s damage selects its own pigment" % effect)
+		_expect(stains.emitted==1 and color.is_equal_approx(Color(expected,color.a)), "fatal %s damage does not change the species pigment" % effect)
 	stains.reset()
 	actor=_enemy(game,Vector2.ZERO)
 	actor.freeze_time=1
 	actor.apply_hit({"damage":1000})
-	_expect(stains.stamps[0].tint.b==BLOOD.FROST.b, "ordinary hit on a frozen body leaves a cold stain")
+	_expect(stains.stamps[0].tint.r==expected.r, "frozen bodies retain the species pigment")
 	stains.reset()
 	actor=_enemy(game,Vector2.ZERO)
 	actor.set_poison_exposure(true,1,Color(1.2,0.5,1.2))
 	actor.apply_hit({"damage":1000})
-	_expect(stains.stamps[0].tint.r==BLOOD.POISON.r, "poison exposure supplies a pigment for an ordinary lethal hit")
+	_expect(stains.stamps[0].tint.r==expected.r, "poison exposure does not replace the species pigment")
 	stains.reset()
 	actor=_enemy(game,Vector2.ZERO)
 	actor.burn_stacks=1
 	actor._take_status_damage(1000)
-	_expect(stains.stamps[0].tint.r==BLOOD.BURN.r, "real burn tick uses the burn death path")
+	_expect(stains.stamps[0].tint.r==expected.r, "real burn tick retains the species pigment")
+	for path in ["Enemy_1", "Enemy2", "Enemy_3", "Enemy_4", "Enemy_5", "LootCourier"]:
+		stains.reset()
+		var resource_path := "res://resource/%s.tres" % path
+		var data: EnemyData = load(resource_path)
+		actor=_enemy(game,Vector2.ZERO,resource_path)
+		actor.base_modulate=Color.RED
+		actor.apply_hit({"damage":1000,"effect":"burn","from_status":true})
+		var pigment: Color = BLOOD.color_for(StringName(data.title))
+		_expect(BLOOD.PALETTE.has(StringName(data.title)) and stains.stamps[0].tint.r==pigment.r and stains.stamps[0].tint.g==pigment.g, "real resource %s has its own fixed palette entry, independent of status/tint" % path)
+	var guardian: Node = load("res://script/treasure_guardian.gd").new()
+	guardian.configure_guardian(300,60)
+	_expect(guardian.death_stain_color==BLOOD.color_for(&"treasure_guardian"), "treasure guardian overrides its borrowed chaser resource color")
+	guardian.free()
+	for script in ["boss", "knight_boss", "beast_boss", "wind_boss", "trial_enemy"]:
+		var fixture: Node = load("res://script/%s.gd" % script).new()
+		if script=="beast_boss":
+			for stage in range(3,7):
+				fixture.configure_stage(stage)
+				_expect(fixture._death_stain_kind()==StringName(fixture.IDS[stage-3]) and BLOOD.PALETTE.has(fixture._death_stain_kind()), "each beast resolves its explicit species pigment")
+		elif script=="wind_boss":
+			fixture.role=0
+			var first: StringName=fixture._death_stain_kind()
+			fixture.role=1
+			_expect(first!=fixture._death_stain_kind() and BLOOD.PALETTE.has(first) and BLOOD.PALETTE.has(fixture._death_stain_kind()), "wind ranged/melee roles have individually assigned pigments")
+		elif script=="trial_enemy":
+			fixture.kind="power"
+			var first: StringName=fixture._death_stain_kind()
+			fixture.kind="speed"
+			_expect(first!=fixture._death_stain_kind() and BLOOD.PALETTE.has(first) and BLOOD.PALETTE.has(fixture._death_stain_kind()), "both trial enemies resolve their own pigments")
+		else: _expect(BLOOD.PALETTE.has(fixture._death_stain_kind()), "boss %s resolves an explicit pigment" % script)
+		fixture.free()
 	stains.reset()
 	var references: Array[int] = []
 	for stamp in stains.stamps: references.append(stamp.get_instance_id())
@@ -90,6 +125,7 @@ func _run() -> void:
 		variants[snappedf(value,0.001)]=true
 		sizes[stains.stamps[i].size]=true
 		_expect(value>=0 and value<=1, "atlas variation uses normalized portable instance data")
+		_expect(stains.stamps[i].size.x>=1.6 and stains.stamps[i].size.x<=2.5 and stains.stamps[i].size.y>=1.3 and stains.stamps[i].size.y<=2.0, "splat dimensions are doubled without losing random stretch")
 	_expect(variants.size()>3 and sizes.size()>3, "splashes vary atlas pattern, rotation and stretch")
 	stains.set_process(false)
 	for _frame in 8:
@@ -129,13 +165,15 @@ func _run() -> void:
 	var boss: Node = get_nodes_in_group("EnemyGroup")[0]
 	boss.boss_current_health=1
 	boss.apply_hit({"damage":1000,"effect":"poison_trail","from_status":true})
-	_expect(stains.emitted==1 and stains.stamps[0].tint.r==BLOOD.POISON.r, "actual Boss damage/death uses the same fatal-effect colors")
+	var boss_color: Color = BLOOD.color_for(&"charger_boss")
+	_expect(stains.emitted==1 and stains.stamps[0].tint.r==boss_color.r and stains.stamps[0].tint.g==boss_color.g, "actual Boss poison death retains its fixed species color")
+	_expect(stains.stamps[0].size.x>=2.88 and stains.stamps[0].size.y>=2.34, "Boss splat also receives the full2x dimensions")
 	Engine.time_scale=1
 	main.fullscreen_toggle.home_button.pressed.emit()
 	await process_frame
 	await process_frame
 	_expect(main.game.combat_feedback.death_stains.active_count==0 and not main.game.combat_feedback.is_processing(), "return Home leaves no old stain or running cosmetic timer")
-	if failures.is_empty(): print("DEATH STAINS OK: %d checks; lethal paths/pigments/rewards, fixed instanced pool, burst bounds, RNG, random variation, world anchoring, pause/hitstop/hold/fade, Boss and lifecycle" % checks)
+	if failures.is_empty(): print("DEATH STAINS OK: %d checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle" % checks)
 	else:
 		for failure in failures: push_error(failure)
 	quit(0 if failures.is_empty() else 1)

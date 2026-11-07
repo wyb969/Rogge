@@ -31,6 +31,9 @@ var _caption_state: = -1
 var _caption_move: = ""
 var _active_duration: = 0.3
 
+func _death_stain_kind() -> StringName:
+	return StringName(IDS[element])
+
 func configure_stage(stage: int) -> void :
 	fight_stage = stage
 	element = clampi(stage - 3, 0, 3)

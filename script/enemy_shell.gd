@@ -39,8 +39,8 @@ var is_elite: bool = false
 var _death_started: bool = false
 var _hit_flash_left: = 0.0
 var _game_ref: WeakRef
-var _blood_body_tint := Color(0.64,0.28,0.42)
 const DEATH_STAINS := preload("res://script/death_stains.gd")
+var death_stain_color: Color = DEATH_STAINS.PALETTE[&"chaser"]
 signal death_signal
 
 var archetype: EnemyData.Archetype = EnemyData.Archetype.CHASER
@@ -163,7 +163,7 @@ func set_enemy_data(data: EnemyData) -> void :
 	speed = data.move_speed
 	defense = clampf(data.defense, 0.0, 0.75)
 	body_scale = maxf(data.body_scale, 0.4)
-	_blood_body_tint = DEATH_STAINS.texture_color(data.sprite)
+	death_stain_color = DEATH_STAINS.color_for(StringName(data.title))
 	base_modulate = data.tint
 	marker_color = data.marker_color
 	contact_damage = data.contact_damage
@@ -662,7 +662,7 @@ func get_status_echo_damage(poison_tick: float) -> float:
 		total += _mitigate(poison_tick)
 	return total
 
-func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false, death_effect: StringName = &"") -> float:
+func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false) -> float:
 	if _death_started or damage_value <= 0: return 0.0
 	var dealt: float = damage_value if damage_is_final else _mitigate(damage_value)
 	var feedback: = JUICE.find(self)
@@ -670,7 +670,7 @@ func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = 
 	play_hit_tween(direction)
 	show_damage_text(dealt, status_damage, critical)
 	AudioManager.play_enemy_hurt()
-	_apply_health_loss(dealt,death_effect,direction)
+	_apply_health_loss(dealt,direction)
 	return dealt
 
 func apply_hit(hit_data: Dictionary) -> void :
@@ -694,7 +694,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 	var crit_multiplier := 1.0
 	if not damage_is_final and player_node != null and player_node.has_method("roll_critical_multiplier"):
 		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
-	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("effect","")))
+	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final)
 	if not hit_data.get("from_status", false) and not damage_is_final:
 		_report_lifesteal(dealt)
 
@@ -792,7 +792,7 @@ func _take_status_damage(amount: float) -> void :
 		return
 	var dealt: = _mitigate(amount)
 	show_damage_text(dealt, true)
-	_apply_health_loss(dealt,&"burn")
+	_apply_health_loss(dealt)
 
 func play_hit_tween(direction: Vector2):
 	if not is_inside_tree():
@@ -810,7 +810,7 @@ func take_damage(damage_value: float) -> void :
 	AudioManager.play_enemy_hurt()
 	_apply_health_loss(_mitigate(damage_value))
 
-func _apply_health_loss(dealt: float, death_effect: StringName = &"", death_direction: Vector2 = Vector2.ZERO) -> void :
+func _apply_health_loss(dealt: float, death_direction: Vector2 = Vector2.ZERO) -> void :
 	if _death_started:
 		return
 	health -= dealt
@@ -818,10 +818,7 @@ func _apply_health_loss(dealt: float, death_effect: StringName = &"", death_dire
 		_death_started = true
 		var feedback: = JUICE.find(self)
 		if feedback != null:
-			var effect := death_effect
-			if effect not in [&"burn",&"poison_trail",&"freeze",&"shock",&"lightning",&"bomb",&"black_hole"]:
-				effect = &"freeze" if freeze_time>0 else (&"burn" if burn_stacks>0 else (&"poison_trail" if _poison_tint!=Color.WHITE else &""))
-			feedback.death_stains.splat(global_position,_blood_body_tint*base_modulate,effect,death_direction,body_scale)
+			feedback.death_stains.splat(global_position,death_stain_color,death_direction,body_scale)
 			feedback.kill(global_position, base_modulate, is_elite)
 		spaw_icon()
 		remove_from_group("EnemyGroup")

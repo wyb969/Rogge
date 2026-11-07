@@ -20,6 +20,9 @@ const LASER_HALF_WIDTH: = 14.0
 const SLASH_RADIUS: = 112.0
 const SLASH_HALF_ANGLE: = 1.08
 
+func _death_stain_kind() -> StringName:
+	return &"power_trial" if kind == "power" else &"speed_trial"
+
 func configure_trial(value: String, host: Node) -> void :
 	kind = value
 	director = host

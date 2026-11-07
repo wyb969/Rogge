@@ -7,9 +7,16 @@
 - `DeathStains.PALETTE` 为17个命名类型显式配置荧光颜色（16种实际出场种类，另有风系基础键）。普通怪按EnemyData.title；宝藏守卫覆盖借用的追击数据；Boss/骑士/四神兽/双风角色/两试炼使用 `_death_stain_kind()`。精英与怪潮保留种族色，未知类型回退荧光粉。
 - 已移除致命伤害/异常状态决定颜色的逻辑，也移除纹理颜色采样、缓存和预热。Shader使用浅色墨迹中心，不增加灯光/泛光/粒子。尺寸变大会增加像素填充量，不能仅凭绘制次数断言手机耗时不变。
 - 6项不同原生检查、3项实际导出PCK检查通过，血迹专项230项断言，含所有普通怪资源、特殊怪/Boss类型映射与异常击杀不变色。原生GPU已核对16种配色、淡出和128处密集画面；隔离满池仍只多1次绘制调用。
-- 报告 `docs/validation/neon-splashes-20261107.json`，设计/配色表 `docs/death-stains.md`，新截图 `docs/screenshots/neon-splashes-*.png`。原始Web导出的Chromium验证范围以报告为准；没有物理Safari实测。退出ObjectDB/资源警告仍单独记录。
+- 报告 `docs/validation/neon-splashes-20261107.json`，设计/配色表 `docs/death-stains.md`，新截图 `docs/screenshots/neon-splashes-*.png`。原始Web导出在真实Chromium桌面900×600与手机390×844/DPR2视口通过Debug木头人、15秒实战与返回主页，均无脚本/Shader错误或WebGL上下文丢失；没有物理Safari实测或Sites适配器浏览器验证。退出ObjectDB/资源警告仍单独记录。
 - 临时构件 `/workspace/Rogge-neon-splashes-20261107/`。后续新增怪种时明确补配色键，不能恢复按伤害变色；手机Safari群怪/天气叠加性能仍建议后续实测。本轮不触发itch工作流。
 
+
+### 双倍荧光泼溅试玩（已部署）
+
+- <https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，仍为所有者私有。版本 `20261107-201644`，游戏源码 `3e47faa8023199463d9f4a5c50c90382c11dd5c5`，后续仅文档记录。
+- Site源 `ec0c91deed96fee2dcf529bcaabd7d0d6f57db30`；deployment `appgdep_6aef1804de448191b2a4ee6bad9e7d6c` 已返回succeeded，version `appgprj_6aeb66ad64408191b317328a1063f65c~appgver_6182f208c53081918252337f3c5bf6cf`。
+- PCK `abefe582145be54fb7f457c5e1bfcd50a7b3d6fa4cc4f6d0e745e48838c51c67`；托管PCK与原导出相同，gzip WASM解压字节一致，所有资产小于25MiB，加载脚本未改且语法通过。托管适配器没有真浏览器验证，原始Godot导出有上文Chromium实战验证。
+- 当前开发分支已推送GitHub；没有更新itch或触发PixelFishing工作流。下一次明确要求更新itch时，将新版 `smoke_death_stains` 纳入实际PCK检查。
 
 ## 2026-11-07 死亡血迹首版（历史记录）
 

@@ -303,5 +303,23 @@
     "neon-splashes-dense.png",
     "neon-splashes-browser-desktop.png",
     "neon-splashes-browser-phone.png"
-  ]
+  ],
+  "game_commit": "3e47faa8023199463d9f4a5c50c90382c11dd5c5",
+  "hosting_checks": {
+    "pck_sha256": "abefe582145be54fb7f457c5e1bfcd50a7b3d6fa4cc4f6d0e745e48838c51c67",
+    "pck_equal": true,
+    "wasm_gzip_decodes_to_exact_export": true,
+    "files_under_25mib": true,
+    "loader": "unchanged; Node syntax checked",
+    "browser_verified": false
+  },
+  "deployment": {
+    "site_source_commit": "ec0c91deed96fee2dcf529bcaabd7d0d6f57db30",
+    "deployment_id": "appgdep_6aef1804de448191b2a4ee6bad9e7d6c",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_6182f208c53081918252337f3c5bf6cf",
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "audience": "owner-private; preserved",
+    "itch_updated": false
+  }
 }

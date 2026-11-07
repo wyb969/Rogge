@@ -452,5 +452,24 @@
     "death-stains-dense.png",
     "death-stains-browser-desktop.png",
     "death-stains-browser-phone.png"
-  ]
+  ],
+  "game_commit": "d0c9e4c0d8a0aaf2ec4a6f1f2dd924c39249eed9",
+  "hosting_checks": {
+    "pck_sha256": "cc8853e9b119cb81e998f5a521f1130445b677eb77a17d764c40fa42bbc46e69",
+    "pck_equal": true,
+    "wasm_gzip_decodes_to_exact_export": true,
+    "loader_syntax": "passed; unchanged",
+    "files_under_25mib": true,
+    "browser_verified": false
+  },
+  "deployment": {
+    "site_source_commit": "c735b4ea74e160c3fad53d556ace708cea8f0de1",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aeef83c6c74819189803de8c7201adb",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_ff3f51082ef88191b685cfd130da6878",
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "audience": "owner-private; preserved",
+    "itch_updated": false
+  }
 }

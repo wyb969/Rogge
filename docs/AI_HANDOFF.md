@@ -11,6 +11,15 @@
 - 报告 `docs/validation/death-stains-20261107.json`，截图 `docs/screenshots/death-stains-*.png`，临时日志/导出 `/workspace/Rogge-death-stains-20261107/`。已有退出ObjectDB/资源警告仍记录，未宣称解决。后续建议手机Safari观察群体死亡、雪雨/燃烧叠加性能；无额外新增功能待做。
 
 
+### 死亡血迹试玩（已部署）
+
+- <https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，继续所有者私有，未改变访问范围。普通开局或Debug木头人怪潮即可观察。
+- 游戏源码 `d0c9e4c0d8a0aaf2ec4a6f1f2dd924c39249eed9`，版本 `20261107-175332`；之后仅文档记录。Site源 `c735b4ea74e160c3fad53d556ace708cea8f0de1`。
+- Deployment `appgdep_6aeef83c6c74819189803de8c7201adb` 已返回succeeded；version `appgprj_6aeb66ad64408191b317328a1063f65c~appgver_ff3f51082ef88191b685cfd130da6878`。
+- PCK `cc8853e9b119cb81e998f5a521f1130445b677eb77a17d764c40fa42bbc46e69`；托管PCK和原导出一致，gzip WASM解压字节一致、各文件小于25MiB，原加载脚本语法通过且未修改。托管适配器没有真浏览器验证，原始Web导出有上文Chromium验证。
+- 已推送当前开发分支；本轮没有更新itch或触发PixelFishing发布工作流。下次明确要求更新itch时，应将 `smoke_death_stains` 加入实际PCK聚焦检查。
+
+
 ## 2026-11-06 最新itch发布（当前线上版本）
 
 本轮用户明确要求把最新包更新到itch；此前各轮“itch不更新”为历史发布边界。本次仅发布现有版本，没有新增玩法或改动版本号。

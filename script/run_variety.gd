@@ -120,6 +120,8 @@ func _refresh_charge() -> void :
 	_charge_label.visible = echo_level > 0 and _notice_left <= 0
 
 func clear_combat_effects() -> void :
+	if game.get("combat_feedback") != null and game.combat_feedback.death_stains != null:
+		game.combat_feedback.death_stains.reset()
 	if game.get("burn_spread") != null: game.burn_spread.reset()
 	if game.get("combat_lighting") != null: game.combat_lighting.clear_flashes()
 	if game.get("meteors") != null: game.meteors.clear_combat_effects()

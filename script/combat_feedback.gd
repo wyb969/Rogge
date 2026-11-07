@@ -1,5 +1,8 @@
 extends Node2D
 
+const DEATH_STAINS := preload("res://script/death_stains.gd")
+var death_stains: MultiMeshInstance2D
+
 const MAX_SHARDS: = 128
 const MAX_RINGS: = 16
 const MAX_GHOSTS: = 8
@@ -40,6 +43,12 @@ func _ready() -> void :
 	z_index = 9
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_rng.randomize()
+	death_stains = DEATH_STAINS.new()
+	death_stains.name = "DeathStains"
+	add_child(death_stains)
+	var spawner := get_parent().get_node_or_null("Spawner")
+	if spawner != null:
+		for data in spawner.enemy_array: DEATH_STAINS.texture_color(data.sprite)
 	for _i in MAX_SHARDS:
 		_free_shards.append({"p": Vector2.ZERO, "v": Vector2.ZERO, "left": 0.0, "life": 0.0, "color": Color.WHITE, "size": 0.0})
 	for _i in MAX_RINGS:
@@ -59,6 +68,7 @@ func start() -> void :
 	set_process(true)
 
 func reset() -> void :
+	if death_stains != null: death_stains.reset()
 	while not shards.is_empty(): _free_shards.append(shards.pop_back())
 	while not rings.is_empty(): _free_rings.append(rings.pop_back())
 	while not ghosts.is_empty():

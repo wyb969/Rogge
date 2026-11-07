@@ -1,5 +1,15 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-07 死亡血迹（最新开发）
+
+- 版本 **`20261107-175332`**，仍在 `feature/fan-black-hole-20261104`；基于 `85189c2`，没有合并master。本轮只开发死亡地面泼溅，itch保持下文182118版本。
+- `death_stains.gd` + `death_stains.gdshader`：一个MultiMesh节点、128槽、每帧最多20处，12种共享像素图案加独立随机旋转/拉伸/透明度，0.12秒展开、2秒停留、0.5秒淡出。世界绑定，位于角色/掉落下方，暂停冻结，空池停工；满池覆盖旧项，密集击杀可跳过超额装饰。
+- 普通死亡采样原贴图颜色与本体tint；致命灼烧/毒/冰/闪电/炸弹/黑洞有独立暗色调。普通击杀带异常小怪也有状态回退颜色。缓存最多32种纹理色，开局和Boss准备时预热，不读取受击闪白。
+- 小怪 `EnemyShell._apply_health_loss`、Boss致死分支统一接入；未改变伤害/异常触发/奖励。`CombatFeedback.reset` 与 `RunVariety.clear_combat_effects` 清理血迹。详见 `docs/death-stains.md`。
+- 本轮16项不同原生检查、5项实际Web PCK检查通过；新增死亡血迹测试176项断言，当前59个smoke脚本，未全量运行。覆盖致死类型/奖励去重、随机流隔离、固定池/限流、世界坐标、暂停/hitstop/淡出、Boss和返回主页。
+- 原生GPU核对调色/淡出/密集画面；隔离128处血迹只增加1次绘制调用。真实Chromium WebGL2分别用桌面与手机DPR2尺寸操作木头人、15秒群怪战斗和返回主页，无运行错误或上下文丢失。此为原始Web导出，不是Sites gzip适配器浏览器验证；软件渲染/手机视口模拟不代表Safari真机FPS。
+- 报告 `docs/validation/death-stains-20261107.json`，截图 `docs/screenshots/death-stains-*.png`，临时日志/导出 `/workspace/Rogge-death-stains-20261107/`。已有退出ObjectDB/资源警告仍记录，未宣称解决。后续建议手机Safari观察群体死亡、雪雨/燃烧叠加性能；无额外新增功能待做。
+
 
 ## 2026-11-06 最新itch发布（当前线上版本）
 

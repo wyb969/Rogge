@@ -120,6 +120,7 @@ func _aim_charge() -> void :
 	if rush_feedback != null: rush_feedback.path_changed()
 
 func _setup_health_bar() -> void :
+	preload("res://script/death_stains.gd").texture_color(sprite_2d.texture)
 	health_bar.z_index = 20
 	health_bar.visible = true
 	health_bar.show_percentage = false
@@ -315,6 +316,10 @@ func apply_hit(hit_data: Dictionary) -> void :
 		_apply_phase2_outline()
 
 	if boss_current_health <= 0.0:
+		var feedback := preload("res://script/combat_feedback.gd").find(self)
+		if feedback != null:
+			var body: Color = preload("res://script/death_stains.gd").texture_color(sprite_2d.texture)*sprite_tint
+			feedback.death_stains.splat(global_position,body,StringName(hit_data.get("effect","")),hit_data.get("direction",Vector2.ZERO),1.8)
 		await start_defeat_sequence()
 
 func _show_damage_number(amount: float, status_damage: bool, critical: bool) -> void :

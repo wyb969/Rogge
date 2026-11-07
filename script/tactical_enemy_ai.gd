@@ -47,7 +47,7 @@ func steer(actor: Node2D, delta: float, dir: Vector2, distance: float, speed: fl
 		elif distance>preferred*1.18: actor.velocity = dir*speed
 		else: actor.velocity = dir.orthogonal()*speed*0.55*(1.0 if actor.get_instance_id()%2==0 else -1.0)
 	var reach := 220.0 if kind==&"boomerang" else 280.0
-	var in_range := distance<=94.0 if kind==&"cleave" else distance>65.0 and distance<=reach
+	var in_range := distance<=80.0 if kind==&"cleave" else distance>65.0 and distance<=reach
 	if cooldown>0 or not in_range or dir.is_zero_approx(): return
 	slot = field.cast(actor,kind)
 	if slot==null:

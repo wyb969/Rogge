@@ -1,0 +1,194 @@
+{
+  "version": "20261109-192900",
+  "base_master": "c34a95792b417b00adf1a306855e8804c0585e7c",
+  "fixes": [
+    {
+      "problem": "Existing minions disappear when guardians enter",
+      "cause": "spawn_boss called _clear_minions for stages >=3",
+      "change": "Preserve minions/projectiles on boss entry; existing wave timers still stop and defeat/transition cleanup remains."
+    },
+    {
+      "problem": "CJK tooltip text renders as missing glyphs on beast/equipment icons",
+      "cause": "TooltipLabel default theme lacked the bundled CJK font chain",
+      "change": "Project tooltip Theme uses PixelOperator8 + bundled symbols/CJK, independent of host system fonts."
+    },
+    {
+      "problem": "Ink Surf pulse mistaken for hostile red warning",
+      "cause": "One of three pulse arcs was pink",
+      "change": "Mint/cyan/white arcs, no warm red/pink; damage, range and cooldown unchanged."
+    }
+  ],
+  "native_checks": [
+    {
+      "name": "smoke_encounter_readability",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.02,
+      "errors": [],
+      "markers": [
+        "ENCOUNTER READABILITY OK: 84 checks; four guardian entries retain minions/projectiles and stop new waves, cleanup, bundled CJK tooltips for all equipment and blessings"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.97,
+      "errors": [],
+      "markers": [
+        "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.93,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_equipment_badges",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.49,
+      "errors": [],
+      "markers": [
+        "EQUIPMENT BADGES OK: all22 equipment, bold corner digits including6, unobscured 1.5x perimeter and four screen layouts"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.97,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_menu_layout",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.39,
+      "errors": [],
+      "markers": [
+        "MENU LAYOUT OK"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_tactical_enemies",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.93,
+      "errors": [],
+      "markers": [
+        "TACTICAL ENEMIES OK: 72 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_encounter_readability",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.84,
+      "errors": [],
+      "markers": [
+        "ENCOUNTER READABILITY OK: 84 checks; four guardian entries retain minions/projectiles and stop new waves, cleanup, bundled CJK tooltips for all equipment and blessings"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.81,
+      "errors": [],
+      "markers": [
+        "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.85,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_menu_layout",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.21,
+      "errors": [],
+      "markers": [
+        "MENU LAYOUT OK"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "browser": {
+    "scope": "Actual exported PCK in local Chromium WebGL2, desktop 900x600. Equipment hover, real Ink Surf Dash, return Home. Not itch iframe, physical Safari, or beast-icon browser hover.",
+    "errors": [],
+    "gfx": {
+      "width": 900,
+      "height": 600,
+      "context_lost": false,
+      "renderer": "WebKit WebGL"
+    },
+    "screenshots": [
+      "tooltip-axe.png",
+      "tooltip-book.png",
+      "surge-0.png",
+      "surge-1.png",
+      "surge-2.png",
+      "surge-3.png"
+    ]
+  },
+  "import_errors": [],
+  "export_errors": [],
+  "limits": [
+    "No full regression or physical Safari play.",
+    "Beast-icon glyph coverage was checked on real controls in native/PCK checks; browser hover captured equipment icons only.",
+    "Actual browser Dash triggered Ink Surf cooldown; screenshot sampling missed the short pulse, so its palette is code-confirmed rather than screenshot-verified.",
+    "Existing exit ObjectDB/resource warnings retained."
+  ],
+  "test_harness_note": "Initial font coverage assertion read UTF-32 bytes as code points; corrected to unicode_at. Final 84 assertions pass; initial failure was in the new test harness."
+}

@@ -20,7 +20,7 @@
 
 ---
 
-**当前主分支构建：`20261109-191318`** · [浏览器试玩](https://ybwangrogger.itch.io/rogue-white)
+**当前主分支构建：`20261109-192900`** · [浏览器试玩](https://ybwangrogger.itch.io/rogue-white)
 
 ## 一局里会发生什么？
 

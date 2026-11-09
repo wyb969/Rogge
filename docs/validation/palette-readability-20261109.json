@@ -1250,5 +1250,7 @@
     "Gray screenshots are a visual/layout check, not a guarantee for every player or every weather combination.",
     "No release/upload or default-branch merge in this task."
   ],
-  "artifacts_directory_transient": "/workspace/Rogge-palette-20261109"
+  "artifacts_directory_transient": "/workspace/Rogge-palette-20261109",
+  "source_commit": "c25e98347633b0ca591419b4e6f6c4f82f7f8ec9",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/6"
 }

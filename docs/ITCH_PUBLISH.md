@@ -27,7 +27,7 @@ GitHub artifact 默认保留 30 天。长期需要的源码、验证概要和发
 
 ## 验证边界
 
-当前发布流程选取15项实际PCK检查：`smoke_menu_layout`、`smoke_fan_feedback`、`smoke_control_cards`、`smoke_session_toolbar`、`smoke_equipment_badges`、`smoke_wooden_trial`、`smoke_trials`、`smoke_growth_combo`、`smoke_bomb_card`、`smoke_arsenal_combo`、`smoke_death_stains`、`smoke_ink_surf`、`smoke_tactical_enemies`、`smoke_debug_menu`、`smoke_stage_variation`。它们覆盖布局、返回主页、装备组合、炸弹、三项试炼、定向泼溅/彩墨、新怪物与共享远程上限；由原生Godot加载实际Web PCK，不等于真实Web/Safari试玩，也不表示全量61个smoke脚本通过。
+当前发布流程选取17项实际PCK检查：`smoke_menu_layout`、`smoke_fan_feedback`、`smoke_control_cards`、`smoke_session_toolbar`、`smoke_equipment_badges`、`smoke_wooden_trial`、`smoke_trials`、`smoke_growth_combo`、`smoke_bomb_card`、`smoke_arsenal_combo`、`smoke_death_stains`、`smoke_ink_surf`、`smoke_tactical_enemies`、`smoke_debug_menu`、`smoke_stage_variation`、`smoke_encounter_readability`、`smoke_beasts`。它们覆盖布局、返回主页、装备组合、炸弹、三项试炼、定向泼溅/彩墨、新怪物与共享远程上限；由原生Godot加载实际Web PCK，不等于真实Web/Safari试玩，也不表示全量61个smoke脚本通过。
 
 现存脚本退出时的 ObjectDB / resources-in-use 警告保留在报告中，与运行中脚本/解析错误分开。若出现新运行时错误或检查断言失败，发布任务必须停止；不得将其混同于已知退出警告忽略。
 

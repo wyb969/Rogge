@@ -382,8 +382,6 @@ func spawn_boss() -> void :
 	timer.stop()
 	get_node("Elite").stop()
 	AudioManager.play_boss_bgm(stage)
-	if stage >= 3:
-		_clear_minions()
 	_wind_attacker = null
 	_wind_turn = 0
 	var count: = 2 if stage == 5 else 1

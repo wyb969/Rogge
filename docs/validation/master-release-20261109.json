@@ -1,0 +1,285 @@
+{
+  "date_asia_shanghai": "2026-11-09",
+  "version": "20261109-191318",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "master_before": "5971a4facf8dbddcebb2def4f2e2f8ba0079880d",
+  "feature_head": "44064637af1c9e3720419b16caa65542a118fbdf",
+  "integration_commit": "41f2ff15d5f27c1ddd6ea6ea579a35d4d8731b1e",
+  "gameplay_change_scope": "Feature gameplay preserved; documentation merge, README refresh and version metadata only.",
+  "readme_checks": {
+    "image_references_checked": 24,
+    "missing_images": [],
+    "equipment_cards": 22,
+    "itch_url": "https://ybwangrogger.itch.io/rogue-white",
+    "sections": [
+      "Ink Surf",
+      "new tactical species",
+      "bomb and equipment combos",
+      "campaign/trials",
+      "controls/source"
+    ]
+  },
+  "packed_checks": [
+    {
+      "name": "smoke_menu_layout",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.51,
+      "errors": [],
+      "markers": [
+        "MENU LAYOUT OK"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_fan_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.76,
+      "errors": [],
+      "markers": [
+        "FAN FEEDBACK OK: status-specific body colors, dual-status transition, shared bounded pool, exact fade/pause/delete/reset, unchanged combat channels, real gasoline cooldowns/upgrades and preview"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_control_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.3,
+      "errors": [],
+      "markers": [
+        "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.58,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_equipment_badges",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.31,
+      "errors": [],
+      "markers": [
+        "EQUIPMENT BADGES OK: all22 equipment, bold corner digits including6, unobscured 1.5x perimeter and four screen layouts"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.03,
+      "errors": [],
+      "markers": [
+        "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.3,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 32 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 14 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_growth_combo",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.74,
+      "errors": [],
+      "markers": [
+        "GROWTH COMBO OK: 61 checks; actual movement/healing/XP pickups/merge/difficulty, no stacking, shared green/gold phase, bounded border work, layout and Debug lifecycle"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_bomb_card",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.84,
+      "errors": [],
+      "markers": [
+        "BOMB CARD OK: 57 checks; real draft/upgrade/caps, area/fuse/unique hit, blast hop/force, rewards/crit, trial/Boss rules, fixed pools, pause/cleanup and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_arsenal_combo",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.74,
+      "errors": [],
+      "markers": [
+        "ARSENAL COMBO OK: 25 checks; real three-card ownership, exact 3s/1s cadence, damage/shield isolation, dash coexistence, pause/lag/rest/death/reset and Debug retry"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.75,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 281 checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.65,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_tactical_enemies",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.65,
+      "errors": [],
+      "markers": [
+        "TACTICAL ENEMIES OK: 72 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.12,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 4173 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_stage_variation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.37,
+      "errors": [],
+      "markers": [
+        "STAGE VARIATION OK: 12 safe colors, stable/repeat-free opening rolls, 3 primary themes, 75% share, stage transition and ranged caps"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "import_export": {
+    "cache_warmup_messages": [
+      "ERROR: Unable to open file: res://.godot/imported/tile_0056.png-f33a8817700226f393eef3d7518f8b7c.ctex.",
+      "ERROR: Failed loading resource: res://.godot/imported/tile_0056.png-f33a8817700226f393eef3d7518f8b7c.ctex.",
+      "ERROR: Failed loading resource: res://assest/tile_0056.png.",
+      "ERROR: Condition \"p_position > length\" is true.",
+      "ERROR: Condition \"p_position > length\" is true.",
+      "ERROR: Condition \"p_position > length\" is true.",
+      "ERROR: Condition \"p_position > length\" is true."
+    ],
+    "repeat_import_errors": [],
+    "export_errors": [],
+    "note": "Fresh worktree required importer cache initialization; messages did not recur after warmup. No asset or gameplay workaround was applied."
+  },
+  "local_assets": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "0ecefbb74af296c75341435bbc03e97bb1da07daf21f201836b325d28fb04164"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23455772,
+      "sha256": "74aafc48818983a2ce59dcb90d6ca3f5989e66f31cde0c59eef45e2c7051383a"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "limits": [
+    "No full61-script regression or physical Safari/device play in this release task.",
+    "CI rebuild has its own PCK hash; live verification must compare against CI manifest, not this local export.",
+    "Known ObjectDB/resources-in-use shutdown warnings are retained in per-check records."
+  ]
+}

@@ -448,5 +448,36 @@
     "tactical-browser-combat-desktop.png",
     "tactical-browser-combat-phone.png"
   ],
-  "stance_validation": "Mantis begins attacks only within80 of its84-unit slash radius and stops at58 units while waiting; final native/PCK test has72 checks and browser captures were repeated."
+  "stance_validation": "Mantis begins attacks only within80 of its84-unit slash radius and stops at58 units while waiting; final native/PCK test has72 checks and browser captures were repeated.",
+  "game_commit": "508c9d5321693bbe5b584a11c1f20a69e9f64367",
+  "hosting_checks": {
+    "pck_sha256": "c9ccf78d37c07b5db7bb684865e5030abf049479ff2df0dc88e9005f6c53ceac",
+    "pck_equal": true,
+    "wasm_gzip_decodes_to_exact_export": true,
+    "files_under_25mib": true,
+    "loader": "unchanged; Node syntax checked",
+    "hosting_wrapper_browser_verified": false
+  },
+  "resumption_verification": {
+    "date_utc": "2026-11-09",
+    "game_worktree_clean": true,
+    "game_remote_branch_matches": true,
+    "site_remote_head_matches": true,
+    "archive_matches_dist": true,
+    "archive_manifest_matches_pinned_source": true,
+    "archive_sha256": "0e3d2f3bce9a4a674f77815459375abfe53e40a704ca3f0f276b6e060325775c",
+    "pck_matches_validated_export": true,
+    "wasm_gzip_decodes_to_exact_export": true,
+    "validation_note": "Reused the retained validated build; no gameplay changes or new full regression on resumption."
+  },
+  "deployment": {
+    "site_source_commit": "18a3e65ba3b3176e78f85d6da29026a3cadb76c2",
+    "deployment_id": "appgdep_6af12ef132948191b52591876b5e0e9c",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_3e5078576100819185d67523b12d8afc",
+    "status": "succeeded",
+    "completed_at": "2026-11-09T02:25:01.131654+00:00",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "audience": "owner-private; preserved",
+    "itch_updated": false
+  }
 }

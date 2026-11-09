@@ -12,6 +12,15 @@
 - 临时产物 `/workspace/Rogge-new-enemies-20261107/`。后续重点收集支援怪频率、回旋返回是否看得懂、炮击/挥砍是否清楚可躲与手机密集场景性能。下次明确要求发布itch时纳入 `smoke_tactical_enemies`，本轮不触发跨仓库工作流。
 
 
+### 新怪物试玩（已部署，2026-11-09恢复收尾）
+
+- <https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site>，仍为所有者私有，访问范围未改。普通刷怪池会出现新怪；Debug第三项“新怪物 · 斩击 / 回旋 / 炮击”可直接练习。
+- 版本 `20261108-010552`，游戏源码 `508c9d5321693bbe5b584a11c1f20a69e9f64367`，包含刃螳58单位停步与80单位内才出刀的收尾修正；后续文档提交不改变已验证的游戏包。
+- Site源 `18a3e65ba3b3176e78f85d6da29026a3cadb76c2`；deployment `appgdep_6af12ef132948191b52591876b5e0e9c` 已返回succeeded；version `appgprj_6aeb66ad64408191b317328a1063f65c~appgver_3e5078576100819185d67523b12d8afc`。
+- PCK `c9ccf78d37c07b5db7bb684865e5030abf049479ff2df0dc88e9005f6c53ceac`。恢复时确认代码与打包产物完整、游戏/站点工作区干净、远端分支匹配；归档、manifest与dist字节一致，PCK匹配原始已验证导出，WASM解压一致、每文件小于25MiB。
+- 11-09仅复核现有源码/构件/远端状态并完成部署、更新文档，没有新增玩法或重新运行整套测试。上文14项原生、6项实际PCK和Chromium结果来自原开发验证；没有Safari真机性能或托管适配器浏览器QA。
+- GitHub继续当前开发分支，未合并master；本次没有更新itch或触发PixelFishing工作流。发布与恢复核验记录已写入 `docs/validation/tactical-enemies-20261107.json`。
+
 ## 2026-11-08 定向泼溅与彩墨冲浪（历史记录）
 
 - 版本 **`20261108-004105`**（UTC日期仍11-07），基于 `2330086`，继续 `feature/fan-black-hole-20261104`；没有合并master，没有更新itch。

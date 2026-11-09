@@ -43,6 +43,7 @@ func open_hub() -> void :
 	for btn in _buttons:
 		btn.disabled = false
 		btn.modulate = Color.WHITE
+	_refresh_reward_numbers()
 	_refresh_selection()
 	if next_button:
 		next_button.disabled = true
@@ -50,17 +51,31 @@ func open_hub() -> void :
 func close_hub() -> void :
 	visible = false
 
+func _refresh_reward_numbers() -> void:
+	var game := get_parent()
+	var player: Node = game.player
+	for button in _buttons:
+		var id: String = button.get_meta("reward_id")
+		var text := ""
+		match id:
+			"max_hp": text = CardNumbers.change("最大生命",player.max_player_health,player.max_player_health+MAX_HP_BONUS,"",false).text
+			"defense": text = CardNumbers.change("减伤",player.damage_reduction*100,player.rest_defense_for(DEFENSE_BONUS)*100,"%",false).text
+			"move_speed": text = CardNumbers.change("移速",player.effective_move_speed(),player.move_speed_for(player.SPEED+MOVE_SPEED_BONUS,player.growth_move_multiplier)).text
+			"cooldown": text = CardNumbers.change("冲刺冷却",player.DASH_COOLDOWN*player.cooldown_scale,player.DASH_COOLDOWN*player.rest_cooldown_for(COOLDOWN_SCALE),"s").text + "\n枪支使用相同冷却倍率"
+			_: text = str(game.equipment_panel.EQUIP_DEFS[id].title) + "\n" + str(preload("res://script/card_preview.gd").build(game,id).rows[0].text)
+		button.set_meta("reward_label",text)
+
 func _build_ui() -> void :
 	if _built:
 		return
 	_built = true
-	_idle_style = _button_style(Color(0.055, 0.08, 0.1), Color(0.25, 0.36, 0.37))
-	_hover_style = _button_style(Color(0.1, 0.16, 0.18), Color(0.48, 0.78, 0.84))
-	_selected_style = _button_style(Color(0.24, 0.63, 0.5), Color(0.72, 0.91, 0.75))
+	_idle_style = _button_style(GamePalette.UI_GREY_COOLDOWN, GamePalette.UI_GREY_BASE)
+	_hover_style = _button_style(GamePalette.UI_GREY_COOLDOWN, GamePalette.UI_GREY_BORDER)
+	_selected_style = _button_style(GamePalette.UI_GREY_BORDER, GamePalette.UI_GREY_ACTIVE)
 
 	var dim: = ColorRect.new()
 	dim.name = "Dim"
-	dim.color = Color(0.03, 0.05, 0.1, 0.8)
+	dim.color = GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.8)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dim)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -75,7 +90,7 @@ func _build_ui() -> void :
 	panel.name = "Panel"
 	center.add_child(panel)
 	_panel = panel
-	_panel_style = _button_style(Color(0.04, 0.06, 0.075), Color(0.25, 0.36, 0.37))
+	_panel_style = _button_style(GamePalette.UI_GREY_COOLDOWN, GamePalette.UI_GREY_BASE)
 	panel.add_theme_stylebox_override("panel", _panel_style)
 
 	var scroll: = ScrollContainer.new()
@@ -203,10 +218,10 @@ func _refresh_selection() -> void :
 		button.add_theme_stylebox_override("hover", _selected_style if chosen else _hover_style)
 		button.add_theme_stylebox_override("pressed", _selected_style)
 		button.add_theme_stylebox_override("disabled", _selected_style if chosen else _idle_style)
-		button.add_theme_color_override("font_color", Color(0.04, 0.1, 0.09) if chosen else Color(0.84, 0.88, 0.83))
-		button.add_theme_color_override("font_hover_color", Color(0.04, 0.1, 0.09) if chosen else Color.WHITE)
-		button.add_theme_color_override("font_pressed_color", Color(0.04, 0.1, 0.09))
-		button.add_theme_color_override("font_focus_color", Color(0.04, 0.1, 0.09) if chosen else Color.WHITE)
+		button.add_theme_color_override("font_color", GamePalette.UI_GREY_COOLDOWN if chosen else GamePalette.UI_GREY_BORDER)
+		button.add_theme_color_override("font_hover_color", GamePalette.UI_GREY_COOLDOWN if chosen else Color.WHITE)
+		button.add_theme_color_override("font_pressed_color", GamePalette.UI_GREY_COOLDOWN)
+		button.add_theme_color_override("font_focus_color", GamePalette.UI_GREY_COOLDOWN if chosen else Color.WHITE)
 	if _subtitle != null:
 		_subtitle.text = "已预选，可继续改选；确认后领取" if _picked else "预选一项奖励，可改选；进入下一关时领取"
 

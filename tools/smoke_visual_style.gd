@@ -30,7 +30,7 @@ func _run() -> void :
 	_expect(material != null and material == card.icon.material and material == lottery._reels[0].material and material == game.equipment_panel._slots.circle_up.icon.material, "world, card, equipment and lottery share one parchment treatment")
 	card.setup({"id": "axe_up", "icon": definitions.axe_up.icon})
 	lottery._set_reel(0, {"id": "axe_up", "icon": definitions.axe_up.icon})
-	_expect(card.icon.material == null and lottery._reels[0].material == null, "reused card/reel restores the next item's original art")
+	_expect(card.icon.material == GamePalette.ramp_material(&"ui") and lottery._reels[0].material == GamePalette.ramp_material(&"ui"), "reused card/reel restores the next item's neutral semantic treatment")
 	var shape: RectangleShape2D = book.get_node("Area2D/CollisionShape2D").shape
 	_expect(shape.size == Vector2(29, 29), "smaller book drawing preserves the existing collision footprint")
 	book.setLevel(0, 1)

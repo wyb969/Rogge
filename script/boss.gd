@@ -84,7 +84,7 @@ func _ready() -> void :
 
 	line = Line2D.new()
 	line.width = 1.2
-	line.default_color = Color(1.0, 0.28, 0.24, 0.7)
+	line.default_color = GamePalette.alpha(GamePalette.DANGER_RED, 0.7)
 	line.top_level = true
 	line.z_index = 6
 	add_child(line)
@@ -123,6 +123,7 @@ func _death_stain_kind() -> StringName:
 	return &"charger_boss"
 
 func _setup_health_bar() -> void :
+	health_bar.add_theme_stylebox_override("fill",GamePalette.surface(GamePalette.DANGER_RED,GamePalette.INK,1))
 	health_bar.z_index = 20
 	health_bar.visible = true
 	health_bar.show_percentage = false
@@ -166,7 +167,7 @@ func _physics_process(delta: float) -> void :
 				if _state_left <= lock_seconds():
 					warning_locked = true
 					AudioManager.play_juice("boss_lock")
-			line.default_color = Color(1, 0.25, 0.18, 0.9) if warning_locked else Color(1, 0.68, 0.26, 0.7)
+			line.default_color = GamePalette.alpha(GamePalette.DANGER_RED, 0.9) if warning_locked else GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.7)
 			if _state_left <= 0: start_moving_charge()
 		ChargeState.CHARGE:
 			var step: = minf(maxf(delta, 0), _state_left)
@@ -302,7 +303,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 	var status_damage := preload("res://script/demage_text.gd").is_status_hit(hit_data)
 	boss_current_health = max(0.0, boss_current_health - damage_value)
 	if damage_value > 0 and (status_damage or critical):
-		_show_damage_number(damage_value, status_damage, critical)
+		_show_damage_number(damage_value, status_damage, critical, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))))
 	if health_bar:
 		health_bar.visible = true
 		health_bar.set_health(boss_current_health)
@@ -324,14 +325,14 @@ func apply_hit(hit_data: Dictionary) -> void :
 			feedback.death_stains.splat(global_position,pigment,hit_data.get("direction",Vector2.ZERO),1.8)
 		await start_defeat_sequence()
 
-func _show_damage_number(amount: float, status_damage: bool, critical: bool) -> void :
+func _show_damage_number(amount: float, status_damage: bool, critical: bool, visual_effect: StringName = &"") -> void :
 	if not preload("res://script/feedback_budget.gd").allow_popup(get_tree()): return
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	var container: Node = feedback.get_parent().effect_container if feedback != null else get_parent()
 	var popup: Node = preload("res://scenes/damage_text.tscn").instantiate()
 	container.add_child(popup)
 	popup.global_position = global_position
-	popup.show_damage(str(int(floor(amount))), global_position, 0, 0, status_damage, critical)
+	popup.show_damage(str(int(floor(amount))), global_position, 0, 0, status_damage, critical, visual_effect)
 
 func _apply_phase2_outline() -> void :
 
@@ -410,7 +411,7 @@ func _request_hitstop(scale: float, duration_real: float) -> void :
 func _spawn_hit_particles(hit_dir: Vector2) -> void :
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null:
-		feedback.spray(global_position, - hit_dir, Color(1, 0.95, 0.75), 14, 220)
+		feedback.spray(global_position, - hit_dir, GamePalette.FRIENDLY_LIGHT, 14, 220)
 		return
 	var particles: = CPUParticles2D.new()
 	particles.one_shot = true
@@ -425,7 +426,7 @@ func _spawn_hit_particles(hit_dir: Vector2) -> void :
 	particles.gravity = Vector2(0, 280)
 	particles.scale_amount_min = 2.0
 	particles.scale_amount_max = 4.5
-	particles.color = Color(1.0, 0.95, 0.75, 1.0)
+	particles.color = GamePalette.FRIENDLY_LIGHT
 	particles.z_index = 20
 	particles.global_position = global_position
 	_add_to_effect_container(particles)
@@ -461,7 +462,7 @@ func start_defeat_sequence() -> void :
 
 	Engine.time_scale = 0.2
 	_play_defeat_deform()
-	_spawn_death_burst(40, Color(1.0, 0.55, 0.2, 1.0))
+	_spawn_death_burst(40, GamePalette.FRIENDLY_CYAN)
 	await get_tree().create_timer(0.77, true, false, true).timeout
 
 

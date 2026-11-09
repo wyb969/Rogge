@@ -32,6 +32,12 @@ func bind_player(player: Node) -> void :
 	dash_button.set_cooldown(player.dash_cooldown_progress(), player.can_dash, false)
 
 func _ready() -> void :
+	var base_style := GamePalette.surface(GamePalette.UI_GREY_BASE, GamePalette.UI_GREY_BORDER, 0.45)
+	var knob_style := GamePalette.surface(GamePalette.UI_GREY_BORDER, GamePalette.UI_GREY_ACTIVE, 0.5)
+	base_style.set_corner_radius_all(999)
+	knob_style.set_corner_radius_all(999)
+	stick_base.add_theme_stylebox_override("panel",base_style)
+	stick_knob.add_theme_stylebox_override("panel",knob_style)
 	layer = 80
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
@@ -214,7 +220,7 @@ func _juice_layout_widget(ctrl: Control, mouse: Vector2, dragging: bool, blend: 
 	var target_scale: = Vector2(1.08, 1.08) if dragging else (Vector2(1.05, 1.05) if hot else Vector2.ONE)
 	ctrl.pivot_offset = ctrl.size * 0.5
 	ctrl.scale = ctrl.scale.lerp(target_scale, blend)
-	var tint: = Color(1.18, 1.32, 1.12, _opacity) if hot else Color(1, 1, 1, _opacity)
+	var tint: = Color(1.16, 1.16, 1.16, _opacity) if hot else Color(1, 1, 1, _opacity)
 	ctrl.modulate = ctrl.modulate.lerp(tint, blend)
 
 func _reset_stick_visual() -> void :

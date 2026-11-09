@@ -86,7 +86,7 @@ func _run() -> void :
 	actor.apply_burn({"burn_stacks": 2, "burn_dps": 2})
 	actor.apply_freeze({"freeze_duration": 2, "slow_factor": 0.3})
 	actor._update_statuses(0)
-	_expect(actor.sprite_2d.modulate == Color(0.55, 0.85, 1.2, 1) and actor._poison_tint != Color.WHITE, "poison indication coexists with the unchanged freeze/status tint channel")
+	_expect(actor.sprite_2d.modulate == GamePalette.FRIENDLY_LIGHT and actor._poison_tint != Color.WHITE, "poison indication coexists with the separate freeze/status tint channel")
 	actor.freeze_time = 0
 	actor.burn_stacks = 0
 	actor._hit_flash_left = 0

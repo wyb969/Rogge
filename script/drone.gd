@@ -41,6 +41,7 @@ func setup(p: Node2D, dmg: float, cd: float, lifetime: float, angle: float) -> v
 		AudioManager.play_drone_spawn()
 
 func _ready() -> void :
+	sprite.material = GamePalette.ramp_material(&"friendly")
 	_light_owner = preload("res://script/combat_lighting.gd").find(self)
 	if _light_owner != null: _light_owner.register_drone(self)
 	if laser_line == null:
@@ -48,7 +49,7 @@ func _ready() -> void :
 		laser_line.name = "LaserLine"
 		add_child(laser_line)
 	laser_line.width = laser_width
-	laser_line.default_color = Color(0.45, 0.95, 1.0, 0.95)
+	laser_line.default_color = GamePalette.alpha(GamePalette.FRIENDLY_CYAN,0.95)
 	laser_line.begin_cap_mode = Line2D.LINE_CAP_ROUND
 	laser_line.end_cap_mode = Line2D.LINE_CAP_ROUND
 	laser_line.joint_mode = Line2D.LINE_JOINT_ROUND
@@ -151,7 +152,7 @@ func _draw_laser_to(target_pos: Vector2) -> void :
 
 	var pulse: = 0.5 + 0.5 * absf(sin(Time.get_ticks_msec() * 0.025))
 	laser_line.width = laser_width * 0.65
-	laser_line.default_color = Color(0.72, 0.94, 1.0, 0.8 + 0.15 * pulse)
+	laser_line.default_color = GamePalette.alpha(GamePalette.FRIENDLY_LIGHT,0.8 + 0.15 * pulse)
 
 func _clear_laser() -> void :
 	laser_time_left = 0.0

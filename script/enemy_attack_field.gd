@@ -7,8 +7,8 @@ const SLASH_HALF_ANGLE := 0.72
 const MORTAR_RADIUS := 44.0
 const BLADE_SPEED := 145.0
 const BLADE_RADIUS := 12.0
-const DANGER := Color("ff554d")
-const INK := Color("201e31")
+const DANGER := GamePalette.DANGER_PROJECTILE
+const INK := GamePalette.INK
 class Slot:
 	extends RefCounted
 	var active := false
@@ -185,18 +185,18 @@ func _draw() -> void:
 		var progress := clampf(slot.age/slot.windup,0,1)
 		if slot.kind==&"cleave":
 			draw_set_transform(to_local(slot.origin),slot.heading.angle())
-			draw_colored_polygon(_sector,Color(1,0.12,0.12,0.17+0.15*progress if warning else 0.48))
+			draw_colored_polygon(_sector,GamePalette.alpha(GamePalette.DANGER_RED, 0.17+0.15*progress if warning else 0.48))
 			draw_polyline(_border,INK,3,false)
 			draw_polyline(_border,DANGER,1.25,false)
-			if warning: draw_arc(Vector2.ZERO,SLASH_RADIUS*progress,-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,18,Color(1,0.62,0.57,0.7),1.5,false)
+			if warning: draw_arc(Vector2.ZERO,SLASH_RADIUS*progress,-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,18,GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.7),1.5,false)
 			else:
 				var swing := (slot.age-slot.windup)/0.18
-				draw_arc(Vector2.ZERO,SLASH_RADIUS*0.85,-SLASH_HALF_ANGLE+1.15*swing-0.35,-SLASH_HALF_ANGLE+1.15*swing+0.4,12,Color("ffe8d3"),5,false)
+				draw_arc(Vector2.ZERO,SLASH_RADIUS*0.85,-SLASH_HALF_ANGLE+1.15*swing-0.35,-SLASH_HALF_ANGLE+1.15*swing+0.4,12,GamePalette.PLAYER_DAMAGE_WHITE,5,false)
 			draw_set_transform(Vector2.ZERO)
 		elif slot.kind==&"boomerang":
 			if warning:
 				draw_line(to_local(slot.origin),to_local(slot.target),INK,5,false)
-				draw_line(to_local(slot.origin),to_local(slot.target),Color(1,0.22,0.28,0.5+0.4*progress),2,false)
+				draw_line(to_local(slot.origin),to_local(slot.target),GamePalette.alpha(GamePalette.DANGER_RED, 0.5+0.4*progress),2,false)
 				draw_circle(to_local(slot.target),5,DANGER,false,1.5,false)
 			else:
 				var at := to_local(blade_position(slot,slot.age))
@@ -204,22 +204,22 @@ func _draw() -> void:
 				draw_colored_polygon(_blade,INK)
 				draw_set_transform(at,(slot.age-slot.windup)*14,Vector2.ONE*0.72)
 				draw_colored_polygon(_blade,DANGER)
-				draw_line(Vector2(-3,-2),Vector2(4,1),Color("fff0db"),2,false)
+				draw_line(Vector2(-3,-2),Vector2(4,1),GamePalette.PLAYER_DAMAGE_WHITE,2,false)
 				draw_set_transform(Vector2.ZERO)
 		else:
 			var at := to_local(slot.target)
-			draw_circle(at,MORTAR_RADIUS,Color(1,0.12,0.16,0.14+0.14*progress if warning else 0.4))
+			draw_circle(at,MORTAR_RADIUS,GamePalette.alpha(GamePalette.DANGER_RED, 0.14+0.14*progress if warning else 0.4))
 			draw_arc(at,MORTAR_RADIUS,0,TAU,32,INK,3,false)
 			draw_arc(at,MORTAR_RADIUS,0,TAU,32,DANGER,1.4,false)
 			if warning:
-				draw_arc(at,MORTAR_RADIUS*progress,0,TAU,24,Color(1,0.55,0.56,0.65),1.1,false)
+				draw_arc(at,MORTAR_RADIUS*progress,0,TAU,24,GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.65),1.1,false)
 				var t := clampf((slot.age-0.25)/0.85,0,1)
 				var seed_at := to_local(slot.origin.lerp(slot.target,t)+Vector2.UP*sin(t*PI)*45)
 				draw_circle(seed_at,6,INK)
-				draw_circle(seed_at,4,Color("ff789f"))
+				draw_circle(seed_at,4,GamePalette.DANGER_RED)
 			else:
 				var burst := (slot.age-slot.windup)/0.18
-				draw_arc(at,MORTAR_RADIUS*(0.3+0.7*burst),0,TAU,24,Color(1,0.76,0.6,1-burst),4,false)
+				draw_arc(at,MORTAR_RADIUS*(0.3+0.7*burst),0,TAU,24,GamePalette.alpha(GamePalette.DANGER_ORANGE, 1-burst),4,false)
 				for i in 6:
 					var dir := Vector2.from_angle(i*TAU/6)
-					draw_line(at+dir*10,at+dir*(15+20*burst),Color(1,0.37,0.41,1-burst),2,false)
+					draw_line(at+dir*10,at+dir*(15+20*burst),GamePalette.alpha(GamePalette.DANGER_RED, 1-burst),2,false)

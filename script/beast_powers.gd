@@ -2,7 +2,7 @@ extends Node2D
 
 const IDS: = ["tide", "thunder", "gale", "aegis"]
 const TITLES: = ["潮汐复苏", "雷霆裁决", "苍风牵引", "玄岩壁垒"]
-const COLORS: = [Color(0.28, 0.85, 0.95), Color(1.0, 0.83, 0.3), Color(0.6, 1.0, 0.78), Color(1.0, 0.56, 0.26)]
+const COLORS := [GamePalette.HEAL_GREEN, GamePalette.FRIENDLY_BLUE, GamePalette.FRIENDLY_CYAN, GamePalette.SHIELD_YELLOW]
 const COOLDOWNS: = [35.0, 45.0, 22.0, 40.0]
 const BLESSING_FX: = preload("res://script/blessing_effect.gd")
 const SKILL_ICON: = preload("res://script/beast_skill_icon.gd")
@@ -47,7 +47,7 @@ func unlock(index: int) -> void :
 	unlocked.sort()
 	selected = index
 	var button: = SKILL_ICON.new()
-	button.configure(load("res://assest/sprites/beasts/skill_%s.svg" % IDS[index]), COLORS[index])
+	button.configure(load("res://assest/sprites/beasts/skill_%s.svg" % IDS[index]), GamePalette.UI_GREY_ACTIVE)
 	button.tooltip_text = TITLES[index] + "\n" + description_for(index) + "\n点击直接释放 / E 释放当前 / Q 键切换"
 	button.pressed.connect(cast.bind(index))
 	_column.add_child(button)
@@ -153,7 +153,7 @@ func _process(delta: float) -> void :
 	_notice_left = maxf(0, _notice_left - delta)
 	_notice.visible = _notice_left > 0
 	blessing_fx.advance(delta)
-	_screen_veil.color.a = BLESSING_FX.SCREEN_ALPHA * blessing_fx.opacity()
+	_screen_veil.color = GamePalette.alpha(COLORS[blessing_fx.kind], BLESSING_FX.SCREEN_ALPHA * blessing_fx.opacity())
 	_screen_veil.visible = _screen_veil.color.a > 0
 	global_position = player.global_position
 	_refresh()
@@ -168,10 +168,10 @@ func _notify(message: String) -> void :
 	_notice.text = message
 	_notice_left = 2.4
 
-func _style(color: Color, selected_style: bool = false) -> StyleBoxFlat:
+func _style(_color: Color, selected_style: bool = false) -> StyleBoxFlat:
 	var s: = StyleBoxFlat.new()
-	s.bg_color = Color(0.025, 0.04, 0.07, 0.92)
-	s.border_color = color if selected_style else Color(0.2, 0.26, 0.34)
+	s.bg_color = GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.92)
+	s.border_color = GamePalette.UI_GREY_ACTIVE if selected_style else GamePalette.UI_GREY_BORDER
 	s.set_border_width_all(3 if selected_style else 1)
 	s.set_corner_radius_all(8)
 	s.content_margin_left = 8
@@ -183,7 +183,7 @@ func _build_ui() -> void :
 	_canvas.layer = 85
 	add_child(_canvas)
 	_screen_veil = ColorRect.new()
-	_screen_veil.color = Color(BLESSING_FX.GREEN, 0)
+	_screen_veil.color = GamePalette.alpha(GamePalette.FRIENDLY_CYAN, 0)
 	_screen_veil.hide()
 	_screen_veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_canvas.add_child(_screen_veil)
@@ -283,6 +283,7 @@ func open_reward(stage: int, final: bool) -> void :
 			var icon: = TextureRect.new()
 			_reward_icon = icon
 			icon.texture = load("res://assest/sprites/beasts/skill_%s.svg" % IDS[i])
+			icon.material = GamePalette.ramp_material(&"ui")
 			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			icon.custom_minimum_size = Vector2(100, 100) * scale_ui

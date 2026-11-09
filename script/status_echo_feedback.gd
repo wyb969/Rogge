@@ -4,8 +4,8 @@ const MAX_FLASHES := 48
 const FLASH_SECONDS := 0.34
 const BURN := 1
 const POISON := 2
-const BURN_COLOR := Color(0.92, 0.09, 0.055)
-const POISON_COLOR := Color(0.72, 0.10, 0.94)
+const BURN_COLOR := GamePalette.FRIENDLY_BLUE
+const POISON_COLOR := GamePalette.POISON_PURPLE
 var _records: Array[Dictionary] = []
 var _indices: Dictionary = {}
 var _slot := 0
@@ -18,6 +18,7 @@ func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	var shared := ShaderMaterial.new()
 	shared.shader = preload("res://shaders/status_echo_flash.gdshader")
+	shared.set_shader_parameter("ink_color", GamePalette.INK)
 	material = shared
 	for _i in MAX_FLASHES:
 		_records.append({"actor": null, "sprite": null, "id": 0, "left": 0.0, "kind": 0})

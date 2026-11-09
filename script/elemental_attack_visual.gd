@@ -4,8 +4,8 @@ extends Node2D
 const MAX_SHAPES: = 5
 const MAX_DRAW_CALLS: = 112
 const RED: = preload("res://script/visual_style.gd").DANGER
-const INK: = Color(0.025, 0.035, 0.07, 0.9)
-const PALETTE: = [Color(0.2, 0.82, 1), Color(0.9, 0.62, 1), Color(0.55, 1, 0.84), Color(1, 0.39, 0.12)]
+const INK: = Color(GamePalette.INK, 0.9)
+const PALETTE: = [GamePalette.DANGER_ORANGE, GamePalette.DANGER_ORANGE, GamePalette.DANGER_ORANGE, GamePalette.DANGER_RED]
 var geometry: Array[Dictionary] = []
 var element: = 0
 var active: = false
@@ -146,30 +146,30 @@ func _water(shape: Dictionary, tint: Color) -> void :
 			var center: = a + delta * travel
 			var width: float = shape.width * 0.88
 			var forward: = delta.normalized()
-			_line(PackedVector2Array([center - side * width - forward * 4, center - side * width * 0.5 + forward * 2, center + forward * 4, center + side * width * 0.5 + forward * 2, center + side * width - forward * 4]), Color(0.78, 0.98, 1, 0.9), 3)
+			_line(PackedVector2Array([center - side * width - forward * 4, center - side * width * 0.5 + forward * 2, center + forward * 4, center + side * width * 0.5 + forward * 2, center + side * width - forward * 4]), GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.9), 3)
 		return
 	var radius: float = shape.radius
 	var center: Vector2 = shape.center
 	var rise: = sin(clampf(age / duration, 0, 1) * PI * 0.75)
-	_arc(center, radius * (0.45 + 0.45 * rise), 0, TAU, Color(0.72, 0.98, 1, 0.9), 2)
+	_arc(center, radius * (0.45 + 0.45 * rise), 0, TAU, GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.9), 2)
 	for side in [-1, 0, 1]:
 		var base: = center + Vector2(side * radius * 0.44, radius * 0.1)
 		var height: = radius * (0.95 if side == 0 else 0.65) * (0.5 + rise * 0.5)
 		var width: = radius * 0.15
 		_polygon(PackedVector2Array([base + Vector2( - width, 0), base + Vector2( - width * 0.65, - height * 0.7), base + Vector2( - width * 1.6, - height), base + Vector2(0, - height * 0.84), base + Vector2(width * 1.6, - height), base + Vector2(width * 0.6, - height * 0.65), base + Vector2(width, 0)]), Color(tint, 0.9))
-		_line(PackedVector2Array([base, base + Vector2( - width * 0.15, - height * 0.6), base + Vector2( - width * 0.8, - height * 0.9)]), Color(0.85, 1, 1), 2.3)
+		_line(PackedVector2Array([base, base + Vector2( - width * 0.15, - height * 0.6), base + Vector2( - width * 0.8, - height * 0.9)]), GamePalette.DANGER_ORANGE, 2.3)
 
 func _thunder(shape: Dictionary, detail: Dictionary, tint: Color) -> void :
 	var points: PackedVector2Array = detail.bolts[int(age / 0.055) % 3]
-	_line(points, Color(0.15, 0.035, 0.27, 0.9), 5)
+	_line(points, GamePalette.alpha(GamePalette.INK, 0.9), 5)
 	_line(points, Color(tint, 0.9), 2.8)
-	_line(points, Color(0.95, 0.93, 0.88), 1.0)
+	_line(points, GamePalette.PLAYER_DAMAGE_WHITE, 1.0)
 	if shape.kind == "lane":
 		var normal: Vector2 = (shape.b - shape.a).normalized().orthogonal()
 		for i in [4, 8, 12]:
 			_line(PackedVector2Array([points[i] - normal * shape.width * 0.7, points[i], points[i] + normal * shape.width * 0.7]), Color(tint, 0.85), 2)
 	else:
-		_arc(shape.center, shape.radius * (0.65 + sin(age * 40) * 0.12), age * 18, age * 18 + TAU * 0.8, Color(0.95, 0.83, 1), 2.5)
+		_arc(shape.center, shape.radius * (0.65 + sin(age * 40) * 0.12), age * 18, age * 18 + TAU * 0.8, GamePalette.DANGER_ORANGE, 2.5)
 
 func _fire(shape: Dictionary, tint: Color) -> void :
 	if shape.kind == "ring":
@@ -179,7 +179,7 @@ func _fire(shape: Dictionary, tint: Color) -> void :
 			_flame(shape.center + Vector2.from_angle(angle) * radius, 10, minf(25 + sin(age * 32 + i) * 6, shape.radius - radius - 3), tint, angle + PI * 0.5)
 		for i in 2:
 			var radius: float = lerpf(shape.inner + 3, shape.radius - 3, fposmod(age * 3 + i * 0.5, 1))
-			_arc(shape.center, radius, 0, TAU, Color(1, 0.79, 0.25, 0.7), 2)
+			_arc(shape.center, radius, 0, TAU, GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.7), 2)
 	else:
 		for i in 3:
 			var at: Vector2 = shape.center + Vector2((i - 1) * shape.radius * 0.3, shape.radius * 0.25)
@@ -191,7 +191,7 @@ func _flame(at: Vector2, width: float, height: float, tint: Color, angle: float 
 	for i in outer.size(): outer[i] = at + outer[i].rotated(angle)
 	for i in core.size(): core[i] = at + core[i].rotated(angle)
 	_polygon(outer, Color(tint, 0.95))
-	_polygon(core, Color(1, 0.9, 0.4))
+	_polygon(core, GamePalette.DANGER_ORANGE)
 
 func _wind_lane(shape: Dictionary, tint: Color) -> void :
 	if shape.kind != "lane": return
@@ -208,13 +208,13 @@ func _draw_dive(tint: Color) -> void :
 	for i in 3:
 		var start: = age * 21 + i * TAU / 3
 		_arc(_dive_to, 24 + i * 3, start, start + PI * 0.8, Color(tint, 0.9), 2.5)
-		_line(PackedVector2Array([_dive_to - direction * (12 + i * 7) - direction.orthogonal() * 8, _dive_to + direction * 12 + direction.orthogonal() * (i - 1) * 7]), Color(0.9, 1, 0.95, 0.6), 1.5)
+		_line(PackedVector2Array([_dive_to - direction * (12 + i * 7) - direction.orthogonal() * 8, _dive_to + direction * 12 + direction.orthogonal() * (i - 1) * 7]), GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 0.6), 1.5)
 	if element == 0:
-		_arc(_dive_to, 22, 0, TAU, Color(0.78, 0.98, 1, 0.7), 2)
+		_arc(_dive_to, 22, 0, TAU, GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.7), 2)
 	elif element == 1:
 		for i in 2:
 			var side: = direction.orthogonal() * float(i * 2 - 1)
-			_line(PackedVector2Array([_dive_to - side * 8, _dive_to + side * 10 - direction * 5, _dive_to + side * 18 + direction * 7]), Color(1, 0.86, 0.4, 0.85), 2)
+			_line(PackedVector2Array([_dive_to - side * 8, _dive_to + side * 10 - direction * 5, _dive_to + side * 18 + direction * 7]), GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.85), 2)
 	elif element == 3:
 		for i in 2: _flame(_dive_to - direction * (15 + i * 12), 7, 18, tint, direction.angle() - PI * 0.5)
 

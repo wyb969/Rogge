@@ -317,11 +317,11 @@ func _on_upgrade_selected(upgrade_id: String):
 		"circle_up":
 			circle_weapon.handle_level_up(current_level)
 		"speed_up":
-			player.speed_up(20)
+			player.speed_up(player.SPEED_CARD_BONUS)
 		"gun_up":
 			gun_weapon.upgrade()
 		"pickup_up":
-			player.pick_up_upgrade(1.2)
+			player.pick_up_upgrade(player.PICKUP_CARD_SCALE)
 		"left_fist":
 			player.upgrade_left_fist()
 		"right_fist":
@@ -873,7 +873,7 @@ func prepare_growth_debug(both: bool = false) -> void:
 		for id in EQUIPMENT_COMBOS.ARSENAL_MEMBERS: _on_upgrade_selected(id)
 	player.player_health = player.max_player_health - 60.0
 	player.health_bar.set_health(player.player_health)
-	variety.notify("生机组合：经验+30%% · 移速/回复+20%%\n%s" % ("两组图标已激活：荧光绿 / 金色同步流光" if both else "右侧拾取、移速、回复图标：荧光绿同步流光"))
+	variety.notify("生机组合：经验+30%% · 移速/回复+20%%\n%s" % ("两组图标已激活：浅蓝 / 护盾黄色同步流光" if both else "右侧拾取、移速、回复图标：浅蓝同步流光"))
 
 func _show_next_reward() -> void :
 	if _death_presented or player.player_health <= 0.0 or process_mode == Node.PROCESS_MODE_DISABLED:

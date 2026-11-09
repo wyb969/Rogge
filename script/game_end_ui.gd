@@ -30,11 +30,11 @@ func show_result(stats: Dictionary) -> void :
 	var victory: bool = stats.get("victory", false)
 	if victory:
 		result_title.text = "VICTORY"
-		result_title.modulate = Color(1.0, 0.86, 0.35, 1.0)
+		result_title.modulate = GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 1.0)
 		retry_button.text = "Play Again"
 	else:
 		result_title.text = "DEFEAT"
-		result_title.modulate = Color(1.0, 0.45, 0.45, 1.0)
+		result_title.modulate = GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 1.0)
 		retry_button.text = "Retry"
 
 	var minutes: int = stats.get("minutes", 0)

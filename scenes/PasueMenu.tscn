@@ -39,7 +39,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Continue"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel" unique_id=1341975459]
+[node name="HBoxContainer" type="GridContainer" parent="Panel" unique_id=1341975459]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

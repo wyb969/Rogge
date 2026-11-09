@@ -1,13 +1,15 @@
-[gd_resource type="Theme" load_steps=5 format=3]
+[gd_resource type="Theme" load_steps=6 format=3]
 
 [ext_resource type="FontFile" path="res://assest/fonts/PixelOperator8.ttf" id="1_pixel"]
 [ext_resource type="FontFile" path="res://assest/fonts/RoggeSymbols.ttf" id="2_symbols"]
 [ext_resource type="FontFile" path="res://assest/fonts/DroidSansFallback.ttf" id="3_cjk"]
+[ext_resource type="Script" path="res://script/game_ui_theme.gd" id="4_palette"]
 
 [sub_resource type="FontVariation" id="Font_tooltip"]
 base_font = ExtResource("1_pixel")
 fallbacks = Array[Font]([ExtResource("2_symbols"), ExtResource("3_cjk")])
 
 [resource]
+script = ExtResource("4_palette")
 TooltipLabel/fonts/font = SubResource("Font_tooltip")
 TooltipLabel/font_sizes/font_size = 14

@@ -13,12 +13,14 @@ func _ready() -> void :
 	visible = true
 	add_to_group("session_toolbar")
 	UiFonts.apply_to_button(home_button, 15)
+	GamePalette.apply_button(home_button)
 	home_button.pressed.connect(_request_home)
 	set_home_available(false)
 	if button == null:
 		button = get_node_or_null("Root/FullscreenButton")
 	if button:
 		UiFonts.apply_to_button(button, 15)
+		GamePalette.apply_button(button)
 		if not button.pressed.is_connected(_on_pressed):
 			button.pressed.connect(_on_pressed)
 	get_viewport().size_changed.connect(_refresh_label)

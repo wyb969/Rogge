@@ -94,7 +94,7 @@ func _sync_from_store() -> void :
 
 func _build_ui() -> void :
 	var dim: = ColorRect.new()
-	dim.color = Color(0.04, 0.07, 0.12, 0.55)
+	dim.color = GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.55)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dim)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -103,11 +103,11 @@ func _build_ui() -> void :
 	_panel.name = "Panel"
 	_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	var panel_style: = StyleBoxFlat.new()
-	panel_style.bg_color = Color(0.15, 0.17, 0.19, 0.96)
-	panel_style.border_color = Color(0.72, 0.84, 0.92, 0.4)
+	panel_style.bg_color = GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.96)
+	panel_style.border_color = GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 0.4)
 	panel_style.set_border_width_all(2)
 	panel_style.set_corner_radius_all(16)
-	panel_style.shadow_color = Color(0.25, 0.55, 0.9, 0.35)
+	panel_style.shadow_color = GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 0.35)
 	panel_style.shadow_size = 18
 	panel_style.content_margin_left = 16.0
 	panel_style.content_margin_right = 16.0
@@ -244,9 +244,9 @@ func _on_difficulty_choice(index: int) -> void :
 
 func _style_action(button: Button) -> void :
 	button.set_meta("juicy_glow", true)
-	button.add_theme_color_override("font_color", Color(0.96, 0.98, 1.0))
-	button.add_theme_color_override("font_hover_color", Color(1, 1, 1))
-	button.add_theme_color_override("font_pressed_color", Color(0.9, 0.97, 1.0))
+	button.add_theme_color_override("font_color", GamePalette.UI_GREY_ACTIVE)
+	button.add_theme_color_override("font_hover_color", GamePalette.UI_GREY_ACTIVE)
+	button.add_theme_color_override("font_pressed_color", GamePalette.UI_GREY_ACTIVE)
 	UiFonts.apply_to_button(button, 18)
 	JuicyHover.bind(button)
 
@@ -257,7 +257,7 @@ func _label(text: String, size: int, bold: bool) -> Label:
 	label.text = text
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.add_theme_color_override("font_color", Color(0.95, 0.97, 1.0))
+	label.add_theme_color_override("font_color", GamePalette.UI_GREY_ACTIVE)
 	UiFonts.apply_to_label(label, size, bold)
 	return label
 

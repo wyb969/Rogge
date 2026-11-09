@@ -89,12 +89,12 @@ func _draw() -> void:
 	if not unlocked or not game.variety._battle_active(): return
 	var at: Vector2 = to_local(game.player.global_position)
 	if shield_left <= 0.0:
-		draw_arc(at, 21.0, -PI * 0.5, -PI * 0.5 + TAU * _elapsed / CYCLE_SECONDS, 28, Color(STYLE.FRIENDLY, 0.28), 1.0, false)
+		draw_arc(at, 21.0, -PI * 0.5, -PI * 0.5 + TAU * _elapsed / CYCLE_SECONDS, 28, Color(GamePalette.SHIELD_YELLOW, 0.28), 1.0, false)
 		return
 	var envelope := minf(1.0, (SHIELD_SECONDS - shield_left) / 0.09) * minf(1.0, shield_left / 0.16)
 	draw_set_transform(at, 0.0, Vector2.ONE * lerpf(0.92, 1.0, envelope))
-	draw_colored_polygon(_hex_fill, Color(STYLE.FRIENDLY, 0.055 * envelope))
+	draw_colored_polygon(_hex_fill, Color(GamePalette.SHIELD_YELLOW, 0.055 * envelope))
 	draw_polyline(_hex, Color(STYLE.INK, 0.7 * envelope), 4.0, false)
-	draw_polyline(_hex, Color(STYLE.FRIENDLY, 0.95 * envelope), 2.0, false)
-	draw_arc(Vector2.ZERO, 28.0, -PI * 0.5, -PI * 0.5 + TAU * shield_left / SHIELD_SECONDS, 28, Color(0.86, 0.96, 0.94, envelope * 0.7), 1.2, false)
+	draw_polyline(_hex, Color(GamePalette.SHIELD_YELLOW, 0.95 * envelope), 2.0, false)
+	draw_arc(Vector2.ZERO, 28.0, -PI * 0.5, -PI * 0.5 + TAU * shield_left / SHIELD_SECONDS, 28, GamePalette.alpha(GamePalette.SHIELD_YELLOW, envelope * 0.7), 1.2, false)
 	draw_set_transform(Vector2.ZERO)

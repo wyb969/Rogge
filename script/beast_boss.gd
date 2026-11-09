@@ -3,7 +3,7 @@ extends "res://script/boss.gd"
 const NAMES: = ["潮汐巨象 / TIDE", "雷鬃狮王 / THUNDER", "苍穹灵隼 / GALE", "熔岩玄龟 / AEGIS"]
 const IDS: = ["tide", "thunder", "gale", "aegis"]
 const HP: = [3600.0, 4200.0, 4800.0, 5600.0]
-const COLORS: = [Color(0.28, 0.85, 0.95), Color(1.0, 0.83, 0.3), Color(0.6, 1.0, 0.78), Color(1.0, 0.56, 0.26)]
+const COLORS := [GamePalette.DANGER_RED,GamePalette.DANGER_ORANGE,GamePalette.DANGER_RED,GamePalette.DANGER_ORANGE]
 const ROAM_SPEEDS: = [65.0, 96.0, 80.0, 43.0]
 const STANDOFFS: = [170.0, 145.0, 180.0, 110.0]
 const DIVE_SPEEDS: = [330.0, 470.0, 450.0, 260.0]

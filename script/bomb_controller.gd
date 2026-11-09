@@ -152,7 +152,7 @@ func _detonate(bomb: Dictionary) -> void:
 	blast.phase = float(detonations) * 2.399963
 	_blast_slot = (_blast_slot + 1) % MAX_BLASTS
 	_audio.play()
-	game.combat_feedback.spray(at, Vector2.ZERO, Color(0.96, 0.84, 0.53), 12, 155)
+	game.combat_feedback.spray(at, Vector2.ZERO, GamePalette.FRIENDLY_CYAN, 12, 155)
 	game.combat_feedback.camera_impulse(1.7)
 	queue_redraw()
 	_targets.clear()
@@ -178,14 +178,14 @@ func _draw() -> void:
 		var ground: Vector2 = to_local(bomb.from).lerp(to_local(bomb.at), progress)
 		var lift := sin(progress * PI) * 44.0
 		draw_set_transform(ground, 0.0, Vector2(1.0, 0.35))
-		draw_circle(Vector2.ZERO, 6.0, Color(0.04, 0.07, 0.08, 0.28))
+		draw_circle(Vector2.ZERO, 6.0, GamePalette.alpha(GamePalette.INK, 0.28))
 		draw_set_transform(to_local(bomb.at))
 		draw_arc(Vector2.ZERO, 9.0, 0, TAU, 16, Color(STYLE.FRIENDLY, 0.45), 1.0, false)
 		draw_set_transform(ground - Vector2(0, lift), progress * TAU)
 		draw_texture_rect(_icon, Rect2(-11, -11, 22, 22), false)
 		if bomb.age > THROW_SECONDS:
 			var pulse: float = 0.4 + 0.4 * sin(float(bomb.age) * 40.0)
-			draw_circle(Vector2(-2, -9), 2.0, Color(1, 0.9, 0.58, pulse))
+			draw_circle(Vector2(-2, -9), 2.0, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, pulse))
 		draw_set_transform(Vector2.ZERO)
 	for blast in _blasts:
 		if blast.left <= 0.0: continue
@@ -194,9 +194,9 @@ func _draw() -> void:
 		var at: Vector2 = to_local(blast.at)
 		var alpha := pow(1.0 - progress, 1.5)
 		# A brief local core and thin friendly ring preserve hostile red telegraphs.
-		if progress < 0.32: draw_circle(at, radius * 0.52, Color(1.0, 0.91, 0.65, alpha * 0.35))
+		if progress < 0.32: draw_circle(at, radius * 0.52, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, alpha * 0.35))
 		draw_arc(at, radius, 0, TAU, 32, Color(STYLE.FRIENDLY, alpha * 0.9), lerpf(3.0, 0.8, progress), false)
-		draw_arc(at, radius * 0.72, 0, TAU, 24, Color(0.98, 0.86, 0.58, alpha * 0.6), 1.4, false)
+		draw_arc(at, radius * 0.72, 0, TAU, 24, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, alpha * 0.6), 1.4, false)
 		for i in 8:
 			var direction := Vector2.from_angle(float(blast.phase) + i * TAU / 8.0)
-			draw_line(at + direction * radius * 0.58, at + direction * radius * 0.9, Color(1, 0.9, 0.64, alpha), 2.0, false)
+			draw_line(at + direction * radius * 0.58, at + direction * radius * 0.9, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, alpha), 2.0, false)

@@ -80,8 +80,6 @@ _data = {
 size = Vector2(85, 125)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jncid"]
-bg_color = Color(0.7372549, 0.3019608, 0.30980393, 1)
-border_color = Color(0.29411766, 0.6039216, 0.15294118, 1)
 
 [node name="Boss" type="CharacterBody2D" unique_id=1458650795]
 collision_layer = 8

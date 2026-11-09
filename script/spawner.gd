@@ -576,9 +576,9 @@ func _refresh_stage_label() -> void :
 		return
 	_stage_label.text = "STAGE %d" % stage
 	if stage >= 2:
-		_stage_label.add_theme_color_override("font_color", Color(1.0, 0.55, 0.35, 1))
+		_stage_label.add_theme_color_override("font_color", GamePalette.UI_GREY_ACTIVE)
 	else:
-		_stage_label.add_theme_color_override("font_color", Color(0.95, 0.92, 0.8, 1))
+		_stage_label.add_theme_color_override("font_color", GamePalette.UI_GREY_ACTIVE)
 
 
 func debug_start_stage2_boss() -> void :
@@ -623,8 +623,8 @@ func spawn_treasure_guardian() -> Node2D:
 	guardian.global_position = player.global_position + Vector2(-110, -35)
 	var banner = boss_warning_scene.instantiate()
 	banner.banner_text = "TREASURE GUARDIAN"
-	banner.banner_color = Color(1.0, 0.84, 0.3)
-	banner.flash_tint = Color(0.28, 0.18, 0.04, 1.0)
+	banner.banner_color = GamePalette.FRIENDLY_CYAN
+	banner.flash_tint = GamePalette.INK
 	banner.play_alarm = false
 	_world_root().add_child(banner)
 	return guardian

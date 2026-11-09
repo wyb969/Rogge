@@ -1,0 +1,325 @@
+{
+  "version": "20261109-192900",
+  "source_commit": "d9855b14cbdb5e2ef090d90a4c3e6e79ec995140",
+  "source_branch": "master",
+  "merge_prs": [
+    "https://github.com/wyb969/Rogge/pull/4",
+    "https://github.com/wyb969/Rogge/pull/5"
+  ],
+  "feature_head": "44064637af1c9e3720419b16caa65542a118fbdf",
+  "fix_commit": "c990bd710734eea93ff83684720cb2d74b81e335",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "target": "ybwangrogger/rogue-white:html",
+  "upload_id": 20115514,
+  "build_id": 2339462,
+  "workflow_repository": "wyb969/PixelFishing",
+  "workflow_branch": "automation/rogge-itch-release",
+  "workflow_commit": "083383dce75297e6855dc266debda02850a0bf91",
+  "actions_run": {
+    "conclusion": "success",
+    "createdAt": "2026-11-09T11:33:18Z",
+    "databaseId": 42609961711,
+    "headSha": "083383dce75297e6855dc266debda02850a0bf91",
+    "status": "completed",
+    "updatedAt": "2026-11-09T11:34:24Z",
+    "url": "https://github.com/wyb969/PixelFishing/actions/runs/42609961711"
+  },
+  "artifact": {
+    "id": 13670171166,
+    "name": "ROGGE-20261109-192900",
+    "bytes": 30155795,
+    "sha256": "13905d4f12c53627e11fc1cef52bfed65690dff826ffeab90a4baa579a575124",
+    "expires_at": "2026-12-09T11:34:18Z",
+    "web_zip_assets_match_manifest": true
+  },
+  "packed_checks": [
+    {
+      "name": "smoke_menu_layout",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_fan_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_control_cards",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_equipment_badges",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_growth_combo",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_bomb_card",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 48 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 20 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_arsenal_combo",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_tactical_enemies",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_stage_variation",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_encounter_readability",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "web_manifest": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "700dc2ea8e23ad4dc5d342d6da51268f1447d22d3ccf8b817a27c60cf2ddc597"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23461420,
+      "sha256": "f40cd107d16316e620cb789d12ad28d66e71a54c5a4d1024200f4e55d6f63a9f"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "readiness": {
+    "run_id": 42610504578,
+    "job_id": 129137380642,
+    "workflow_commit": "b9b94d81a46cd8304628985a937c31cbbbd436ad",
+    "status": "success",
+    "target": "ybwangrogger/rogue-white:html",
+    "upload_id": 20115514,
+    "expected_build": 2339462,
+    "expected_version": "20261109-192900",
+    "observations": [
+      {
+        "attempt": 1,
+        "head": {
+          "createdAt": "2026-11-09T11:34:16Z",
+          "id": 2339462,
+          "parentBuildId": 2339415,
+          "state": "completed",
+          "updatedAt": "2026-11-09T11:34:26Z",
+          "userVersion": "20261109-192900",
+          "version": 33
+        },
+        "pending": {}
+      }
+    ],
+    "current_build_verified": true,
+    "verification_type": "Read-only Butler status in GitHub Actions; no re-upload or game tests; separate from storefront iframe verification"
+  },
+  "public_verification": {
+    "verified_utc": "2026-11-09T11:39:33.612343+00:00",
+    "page_url": "https://ybwangrogger.itch.io/rogue-white",
+    "version": "20261109-192900",
+    "itch_build": 2339462,
+    "upload_id": 20115514,
+    "source_commit": "d9855b14cbdb5e2ef090d90a4c3e6e79ec995140",
+    "current_channel_head_verified": true,
+    "readiness_report": "itch-readiness-20261109-192900.json",
+    "public_page_pointer_verified": false,
+    "resource_hashes_verified": false,
+    "public_page_http_status": 429,
+    "status": "public storefront verification blocked by HTTP 429",
+    "notes": [
+      "Two candidate CDN paths returned HTTP 404; their paths were inferred from previous releases, not extracted from the current storefront. This does not establish a broken published game.",
+      "No itch iframe browser play or physical-device play. Raw export Chromium checks are recorded separately."
+    ]
+  },
+  "import_export": {
+    "import-warmup": [
+      "ERROR: Unable to open file: res://.godot/imported/tile_0056.png-f33a8817700226f393eef3d7518f8b7c.ctex.",
+      "ERROR: Failed loading resource: res://.godot/imported/tile_0056.png-f33a8817700226f393eef3d7518f8b7c.ctex.",
+      "ERROR: Failed loading resource: res://assest/tile_0056.png.",
+      "ERROR: Cannot open file 'res://.godot/imported/PixelOperator8.ttf-4e212dd6bfc79c69687fd000dcdda74a.fontdata'.",
+      "ERROR: Failed loading resource: res://.godot/imported/PixelOperator8.ttf-4e212dd6bfc79c69687fd000dcdda74a.fontdata.",
+      "ERROR: Failed loading resource: res://assest/fonts/PixelOperator8.ttf.",
+      "ERROR: Cannot open file 'res://.godot/imported/RoggeSymbols.ttf-1a557c48c29d83c9e7e63a58411aa890.fontdata'.",
+      "ERROR: Failed loading resource: res://.godot/imported/RoggeSymbols.ttf-1a557c48c29d83c9e7e63a58411aa890.fontdata.",
+      "ERROR: Failed loading resource: res://assest/fonts/RoggeSymbols.ttf.",
+      "ERROR: Cannot open file 'res://.godot/imported/DroidSansFallback.ttf-ac6cbf4f342cc66dbb4f12a9306371fe.fontdata'.",
+      "ERROR: Failed loading resource: res://.godot/imported/DroidSansFallback.ttf-ac6cbf4f342cc66dbb4f12a9306371fe.fontdata.",
+      "ERROR: Failed loading resource: res://assest/fonts/DroidSansFallback.ttf.",
+      "ERROR: res://resource/ui_tooltip_theme.tres:8 - Parse Error: [ext_resource] referenced non-existent resource at: res://assest/fonts/PixelOperator8.ttf.",
+      "ERROR: res://resource/ui_tooltip_theme.tres:8 - Parse Error: [ext_resource] referenced non-existent resource at: res://assest/fonts/PixelOperator8.ttf.",
+      "ERROR: Failed loading resource: res://resource/ui_tooltip_theme.tres.",
+      "ERROR: Error loading custom project theme 'res://resource/ui_tooltip_theme.tres'",
+      "ERROR: Condition \"p_position > length\" is true.",
+      "ERROR: Condition \"p_position > length\" is true.",
+      "ERROR: Condition \"p_position > length\" is true.",
+      "ERROR: Condition \"p_position > length\" is true."
+    ],
+    "import": [],
+    "export": []
+  },
+  "local_validation": "encounter-readability-20261109.json",
+  "scope": "Current gameplay merged into master, README refreshed, followed by guardian/minion, tooltip and Ink Surf color fixes. Existing itch html channel updated. No itch storefront appearance changes.",
+  "credentials": "Existing Actions Secret consumed in CI only; value never retrieved",
+  "intermediate_release": {
+    "version": "20261109-191318",
+    "source_commit": "c34a95792b417b00adf1a306855e8804c0585e7c",
+    "run_id": 42608443204,
+    "build_id": 2339415,
+    "superseded_by": 2339462
+  },
+  "browser_qa": "Raw exported PCK Chromium equipment hover/dash/Home; no published iframe play",
+  "physical_device_qa": "not run"
+}

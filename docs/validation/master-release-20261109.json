@@ -281,5 +281,9 @@
     "No full61-script regression or physical Safari/device play in this release task.",
     "CI rebuild has its own PCK hash; live verification must compare against CI manifest, not this local export.",
     "Known ObjectDB/resources-in-use shutdown warnings are retained in per-check records."
-  ]
+  ],
+  "merged_master": "c34a95792b417b00adf1a306855e8804c0585e7c",
+  "merge_pr": "https://github.com/wyb969/Rogge/pull/4",
+  "superseded_by_version": "20261109-192900",
+  "final_release_report": "itch-release-20261109-192900.json"
 }

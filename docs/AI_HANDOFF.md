@@ -1,21 +1,25 @@
 # ROGGE · AI 开发交接
 
-## 2026-11-09 神兽入场 / 图标提示 / 彩墨辨识修复（当前任务）
+## 2026-11-09 主分支与itch最新版本（已完成）
 
 - 基于已合并的master `c34a957`（[PR #4](https://github.com/wyb969/Rogge/pull/4)），在 `fix/beast-hover-ink-20261109` 修复用户追加的三项反馈，版本 **`20261109-192900`**。原开发分支工作区保留，没有清理/重置。
 - `Spawner.spawn_boss` 删除神兽入场时的 `_clear_minions`；保留场上普通怪与已有敌弹，仍停止新刷怪。击败神兽、休整、跨关和Debug的显式清理保留，风系仍为两个Boss。
 - `project.godot` 引用 `resource/ui_tooltip_theme.tres`，为全局 `TooltipLabel` 明确设置打包的像素/符号/中文字体链。Control本身字体override不会自动修复独立悬停提示。四个神兽和22种装备、组合提示均有实际字符覆盖，不依赖系统中文字体。
 - 彩墨震波的粉红段改为青绿、浅蓝、白色三段，区别敌方红色预警。伤害60/半径90/冷却6秒与触发规则均未改。
 - 7项不同原生检查、4项实际Web PCK检查通过。新增 `smoke_encounter_readability` 84项断言，覆盖四类入场保留小怪/子弹、双风数量、停刷/清理与真实图标字体；已有神兽主线/彩墨/布局检查通过。浏览器900×600 Chromium实战已查看两种装备的中文hover、真实冲刺彩墨冷却和返回主页，无脚本错误/WebGL丢失。短震波截图未捕获，配色由代码确认；神兽图标字符覆盖由原生/PCK检查，未声称浏览器hover验证。详见 `validation/encounter-readability-20261109.json`。
-- 仍无Safari真机/全量回归结论；现有退出ObjectDB/资源警告保留。未新增灯光、粒子节点或持续遍历。后续发布从修复后的master构建，Actions/最终线上核验由本节收尾记录补充。
-- 首轮master包 `20261109-191318` 已通过Actions run `42608443204` 上传build `2339415`，但HTTP核验两次被itch 429限流。本轮追加修复后将上传192900取代该中间包；不要把首轮上传成功当作修复已上线。
+- 修复经 [PR #5](https://github.com/wyb969/Rogge/pull/5) 合入master `d9855b14cbdb5e2ef090d90a4c3e6e79ec995140`；README构建标识已同步192900，24处本地图均存在。今后从master继续切新功能分支，不要把旧开发工作区中的交接文档当作当前发布状态。
+- [发布Actions](https://github.com/wyb969/PixelFishing/actions/runs/42609961711) success，17项实际PCK检查全过，官方4.7引擎/模板重新导出，ZIP每个文件与CI清单一致。冷缓存首轮导入警告保留，第二次导入和导出无错误。工作流提交 `083383d`，密钥仍只在Actions中使用。
+- itch原通道 `ybwangrogger/rogue-white:html` / upload `20115514` 当前build **2339462**，版本 **20261109-192900**。[只读状态验证](https://github.com/wyb969/PixelFishing/actions/runs/42610504578) 已确认head为该build、state=completed且无pending，没有再次上传或重复游戏检查。
+- **线上核验边界：** 主页持续HTTP429，无法提取实际iframe，因此没有完成线上PCK/WASM/JS哈希或itch iframe试玩。按旧版规律推测的两次CDN路径返回404，路径未由本轮页面确认，不能据此认定包损坏。后续等限流解除后提取实际iframe，与本轮Actions清单比对。不能把Butler的completed写成“页面所有资源已实测”。
+- 报告：`validation/itch-release-20261109-192900.json`（CI清单/17检查）、`validation/itch-readiness-20261109-192900.json`（通道状态）、`validation/itch-live-20261109-192900.json`（未完成的页面核验）。仍无Safari真机/全量回归结论；现有退出ObjectDB/资源警告保留。未新增灯光、粒子节点或持续遍历。私有Sites试玩未同步此修复，最新正式入口为itch。
+- 首轮master包 `20261109-191318` 已通过Actions run `42608443204` 上传build `2339415`，但HTTP核验两次被itch 429限流。已由192900/build2339462替代；不要将首轮构建的15项检查或哈希用于最终修复包。
 
 ## 2026-11-09 主分支整合（已完成，首轮发布记录）
 
 用户本轮明确要求合入master、更新GitHub首页并上传最新itch包；下文各轮“未合并/不上传”是历史边界。
 
 - 已在隔离分支 `release/master-itch-20261109-191112` 整合开发分支 `4406463` 与旧master `5971a4f`，保留两边提交历史。两处add/add冲突均为AGENTS/交接文档，按较新的完整开发记录解决；游戏业务代码与开发分支一致。
-- 候选版本 **`20261109-191318`**，采用北京时间打包标识。README已更新为22张卡、军械/生机组合、彩墨冲浪、8种小怪与新截图，并保留itch入口、六关/三试炼与操作说明。
+- 首轮整合版本 **`20261109-191318`**，采用北京时间打包标识。README已更新为22张卡、军械/生机组合、彩墨冲浪、8种小怪与新截图，并保留itch入口、六关/三试炼与操作说明。
 - 发布选测15项实际Web PCK脚本，覆盖既有卡片/组合/试炼/菜单及新增血迹、彩墨、新怪与刷怪比例。不做全量61项回归；最终合并、Actions和线上资源核验以本节后续收尾记录为准。
 - 复用PixelFishing独立工作流和原 `ybwangrogger/rogue-white:html` 通道；密钥只由Actions的 `BUTLER_API_KEY` 供给，不读取或复制其值。
 
@@ -99,7 +103,7 @@
 - 已推送当前开发分支；本轮没有更新itch或触发PixelFishing发布工作流。下次明确要求更新itch时，应将 `smoke_death_stains` 加入实际PCK聚焦检查。
 
 
-## 2026-11-06 最新itch发布（当前线上版本）
+## 2026-11-06 itch发布（历史记录）
 
 本轮用户明确要求把最新包更新到itch；此前各轮“itch不更新”为历史发布边界。本次仅发布现有版本，没有新增玩法或改动版本号。
 

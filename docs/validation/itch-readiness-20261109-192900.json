@@ -1,0 +1,27 @@
+{
+  "run_id": 42610504578,
+  "job_id": 129137380642,
+  "workflow_commit": "b9b94d81a46cd8304628985a937c31cbbbd436ad",
+  "status": "success",
+  "target": "ybwangrogger/rogue-white:html",
+  "upload_id": 20115514,
+  "expected_build": 2339462,
+  "expected_version": "20261109-192900",
+  "observations": [
+    {
+      "attempt": 1,
+      "head": {
+        "createdAt": "2026-11-09T11:34:16Z",
+        "id": 2339462,
+        "parentBuildId": 2339415,
+        "state": "completed",
+        "updatedAt": "2026-11-09T11:34:26Z",
+        "userVersion": "20261109-192900",
+        "version": 33
+      },
+      "pending": {}
+    }
+  ],
+  "current_build_verified": true,
+  "verification_type": "Read-only Butler status in GitHub Actions; no re-upload or game tests; separate from storefront iframe verification"
+}

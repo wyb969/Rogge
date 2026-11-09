@@ -1,0 +1,18 @@
+{
+  "verified_utc": "2026-11-09T11:39:33.612343+00:00",
+  "page_url": "https://ybwangrogger.itch.io/rogue-white",
+  "version": "20261109-192900",
+  "itch_build": 2339462,
+  "upload_id": 20115514,
+  "source_commit": "d9855b14cbdb5e2ef090d90a4c3e6e79ec995140",
+  "current_channel_head_verified": true,
+  "readiness_report": "itch-readiness-20261109-192900.json",
+  "public_page_pointer_verified": false,
+  "resource_hashes_verified": false,
+  "public_page_http_status": 429,
+  "status": "public storefront verification blocked by HTTP 429",
+  "notes": [
+    "Two candidate CDN paths returned HTTP 404; their paths were inferred from previous releases, not extracted from the current storefront. This does not establish a broken published game.",
+    "No itch iframe browser play or physical-device play. Raw export Chromium checks are recorded separately."
+  ]
+}

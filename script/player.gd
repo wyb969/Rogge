@@ -31,6 +31,8 @@ var growth_move_multiplier := 1.0
 var growth_heal_multiplier := 1.0
 
 var SPEED = 100.0
+const SPEED_CARD_BONUS := 20.0
+const PICKUP_CARD_SCALE := 1.2
 const DASH_SPEED = 780.0
 const DASH_DURATION: = 0.14
 const DASH_GRACE_SECONDS: = 0.5
@@ -164,7 +166,10 @@ func total_healing_multiplier() -> float:
 	return healing_multiplier * growth_heal_multiplier
 
 func effective_move_speed() -> float:
-	return float(SPEED) * growth_move_multiplier
+	return move_speed_for(float(SPEED),growth_move_multiplier)
+
+static func move_speed_for(base: float, multiplier: float) -> float:
+	return base * multiplier
 
 func add_regen_level() -> void :
 	regen_level += 1
@@ -312,7 +317,7 @@ func _spawn_heal_spark() -> void :
 	_last_heal_spark_msec = now
 	var feedback: = JUICE.find(self)
 	if feedback != null:
-		feedback.spray(global_position + Vector2(0, -8), Vector2.UP, Color(0.45, 1, 0.55), 6, 46)
+		feedback.spray(global_position + Vector2(0, -8), Vector2.UP, GamePalette.HEAL_GREEN, 6, 46)
 		return
 	var particles: = CPUParticles2D.new()
 	particles.one_shot = true
@@ -327,7 +332,7 @@ func _spawn_heal_spark() -> void :
 	particles.initial_velocity_max = 46.0
 	particles.scale_amount_min = 1.4
 	particles.scale_amount_max = 2.8
-	particles.color = Color(0.45, 1.0, 0.55, 1)
+	particles.color = GamePalette.HEAL_GREEN
 	particles.z_index = 12
 	particles.global_position = global_position + Vector2(0, -8)
 	var container: = get_tree().get_first_node_in_group("effect_container")
@@ -346,14 +351,14 @@ func apply_rest_max_hp(bonus: float) -> void :
 		health_bar.init_health(max_player_health)
 
 func apply_rest_defense(amount: float) -> void :
-	damage_reduction = clampf(damage_reduction + amount, 0.0, 0.6)
+	damage_reduction = rest_defense_for(amount)
 
 func apply_rest_move_speed(bonus: float) -> void :
 	SPEED += bonus
 
 
 func apply_rest_cooldown(scale: float) -> float:
-	cooldown_scale = clampf(cooldown_scale * scale, 0.45, 1.0)
+	cooldown_scale = rest_cooldown_for(scale)
 	if can_dasing_timer:
 		can_dasing_timer.wait_time = DASH_COOLDOWN * cooldown_scale
 	return cooldown_scale
@@ -377,21 +382,23 @@ func get_side_damage_multiplier(target_global_pos: Vector2) -> float:
 	if left_fist_level <= 0 and right_fist_level <= 0:
 		return 1.0
 
-	var target_on_left: = target_global_pos.x < global_position.x
-	var both: = left_fist_level > 0 and right_fist_level > 0
+	return side_multiplier_for(target_global_pos.x < global_position.x, left_fist_level, right_fist_level)
+
+func side_multiplier_for(target_on_left: bool, left_level: int, right_level: int) -> float:
+	var both: = left_level > 0 and right_level > 0
 	var mult: = 1.0
 
-	if left_fist_level > 0:
+	if left_level > 0:
 		if target_on_left:
-			mult *= 1.0 + get_fist_bonus(left_fist_level)
+			mult *= 1.0 + get_fist_bonus(left_level)
 		elif not both:
-			mult *= 1.0 - get_fist_penalty(left_fist_level)
+			mult *= 1.0 - get_fist_penalty(left_level)
 
-	if right_fist_level > 0:
+	if right_level > 0:
 		if not target_on_left:
-			mult *= 1.0 + get_fist_bonus(right_fist_level)
+			mult *= 1.0 + get_fist_bonus(right_level)
 		elif not both:
-			mult *= 1.0 - get_fist_penalty(right_fist_level)
+			mult *= 1.0 - get_fist_penalty(right_level)
 
 	return mult
 
@@ -627,3 +634,9 @@ func play_ring_tween() -> void :
 	player_ring.scale = Vector2.ONE
 	player_ring.modulate = Color.WHITE
 	player_ring.queue_redraw()
+
+func rest_defense_for(amount: float) -> float:
+	return clampf(damage_reduction+amount,0.0,0.6)
+
+func rest_cooldown_for(scale: float) -> float:
+	return clampf(cooldown_scale*scale,0.45,1.0)

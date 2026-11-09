@@ -68,21 +68,26 @@ func _clear_drones() -> void :
 			d.queue_free()
 	active_drones.clear()
 
-func get_lifetime() -> float:
+func get_lifetime(rank: int = -1) -> float:
+	if rank < 0: rank = level
 
-	return 6.0 + float(level) * 1.6
+	return 6.0 + float(rank) * 1.6
 
-func get_fire_cd() -> float:
+func get_fire_cd(rank: int = -1) -> float:
+	if rank < 0: rank = level
 
-	return maxf(0.28, 0.95 - float(level) * 0.08)
+	return maxf(0.28, 0.95 - float(rank) * 0.08)
 
-func get_damage() -> float:
+func get_damage(rank: int = -1) -> float:
+	if rank < 0: rank = level
 
-	return 4.5 + float(level) * 3.2
+	return 4.5 + float(rank) * 3.2
 
-func get_drone_count() -> int:
-	return 1 + int((level - 1) / 3)
+func get_drone_count(rank: int = -1) -> int:
+	if rank < 0: rank = level
+	return 1 + int((rank - 1) / 3)
 
-func get_respawn_interval() -> float:
+func get_respawn_interval(rank: int = -1) -> float:
+	if rank < 0: rank = level
 
-	return maxf(2.5, 7.0 - float(level) * 0.55)
+	return maxf(2.5, 7.0 - float(rank) * 0.55)

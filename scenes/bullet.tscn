@@ -46,7 +46,6 @@ initial_velocity_min = 456.74
 initial_velocity_max = 1000.0
 scale_amount_min = 5.0
 scale_amount_max = 10.0
-color = Color(0.9066228, 0.3632029, 0.21004057, 1)
 
 [node name="LightingChain" parent="." unique_id=420467525 instance=ExtResource("4")]
 

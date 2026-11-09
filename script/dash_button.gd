@@ -2,8 +2,7 @@ extends Control
 
 
 const SEGMENTS: = 64
-const COOLING: = Color(0.21, 0.24, 0.27, 0.94)
-const GREEN: = Color(0.2, 0.84, 0.39, 0.94)
+const COOLING: = GamePalette.UI_GREY_COOLDOWN
 var progress: = 1.0
 var available: = true
 var _circle: = PackedVector2Array()
@@ -42,7 +41,7 @@ func play_ready_bounce() -> void :
 	reset_feedback()
 	ready_glow = 1
 	_bounce = create_tween().set_ignore_time_scale(true).set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	_bounce.tween_property(self, "visual_scale", 1.16, 0.09).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_bounce.tween_property(self, "visual_scale", 1.08, 0.09).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_bounce.tween_property(self, "visual_scale", 1.0, 0.24).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	_bounce.parallel().tween_property(self, "ready_glow", 0.0, 0.24)
 	_bounce.tween_callback( func(): _bounce = null)
@@ -62,7 +61,8 @@ func _refresh_scale() -> void :
 	var label: = get_node_or_null("Label") as Label
 	if label != null:
 		label.pivot_offset = size * 0.5
-		label.scale = Vector2.ONE * visual_scale * (0.94 if _pressed else 1.0)
+		label.scale = Vector2.ONE * visual_scale * (1.06 if _pressed else 1.0)
+		label.add_theme_color_override("font_color", GamePalette.UI_GREY_ACTIVE)
 	queue_redraw()
 
 func _rebuild_circle() -> void :
@@ -86,13 +86,15 @@ func _rebuild_fill() -> void :
 		previous = point
 
 func _draw() -> void :
-	draw_set_transform(size * 0.5, 0, Vector2.ONE * visual_scale * (0.94 if _pressed else 1.0))
-	draw_circle(Vector2.ZERO, _radius, GREEN if available else COOLING)
+	draw_set_transform(size * 0.5, 0, Vector2.ONE * visual_scale * (1.06 if _pressed else 1.0))
+	var glow := maxf(ready_glow * 0.5, 0.3 if _pressed else 0.0)
+	draw_circle(Vector2.ZERO, _radius, GamePalette.alpha(GamePalette.UI_GREY_BASE.lerp(GamePalette.UI_GREY_ACTIVE, glow), 0.45))
+	if not available: draw_circle(Vector2.ZERO, _radius, GamePalette.alpha(COOLING, 0.65))
 	if not available and _fill.size() >= 3:
-		draw_colored_polygon(_fill, GREEN)
+		draw_colored_polygon(_fill, GamePalette.alpha(GamePalette.UI_GREY_BASE, 0.8))
 		var level: = _radius * (1.0 - 2.0 * progress)
 		var half_width: = sqrt(maxf(0, _radius * _radius - level * level))
-		draw_line(Vector2( - half_width, level), Vector2(half_width, level), Color(0.58, 1, 0.72, 0.9), 1.5, true)
-	draw_arc(Vector2.ZERO, _radius, 0, TAU, SEGMENTS, Color(0.66, 1, 0.76) if available else Color(0.42, 0.46, 0.5), 2.5, true)
+		draw_line(Vector2( - half_width, level), Vector2(half_width, level), GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 0.65), 1.5, true)
+	draw_arc(Vector2.ZERO, _radius, 0, TAU, SEGMENTS, GamePalette.alpha(GamePalette.UI_GREY_BORDER.lerp(GamePalette.UI_GREY_ACTIVE, glow), 0.65), 2.5, true)
 	if ready_glow > 0:
-		draw_arc(Vector2.ZERO, _radius + 3, 0, TAU, SEGMENTS, Color(0.7, 1, 0.78, ready_glow * 0.8), 2, true)
+		draw_arc(Vector2.ZERO, _radius + 3, 0, TAU, SEGMENTS, GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, ready_glow * 0.8), 2, true)

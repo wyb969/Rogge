@@ -19,7 +19,10 @@ func setLevel(lev: int, cards: int = 1) -> void :
 	current_level = maxi(0, lev)
 
 
-	weapon_demage = 5.0 * (1.0 + 0.12 * current_level + 0.015 * current_level * current_level) * (1.0 + 0.15 * maxi(cards - 1, 0))
+	weapon_demage = damage_for(current_level, cards)
+
+static func damage_for(character_level: int, cards: int) -> float:
+	return 5.0 * (1.0 + 0.12 * character_level + 0.015 * character_level * character_level) * (1.0 + 0.15 * maxi(cards - 1, 0))
 
 func _on_area_2d_body_entered(body: Node2D) -> void :
 	if body.has_method("apply_hit"):

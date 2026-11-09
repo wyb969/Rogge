@@ -39,6 +39,12 @@ func _process(delta: float) -> void :
 func handle_level_up(character_level: int) -> void :
 	card_level += 1
 	current_level = maxi(current_level, character_level)
-	num_weapons = mini(_base_count + card_level - 1, MAX_WEAPONS)
-	rotation_speed = minf(_base_rotation * (1.0 + 0.1 * (card_level - 1)), MAX_ROTATION_SPEED)
+	num_weapons = count_for(card_level)
+	rotation_speed = rotation_for(card_level)
 	spawn_weapons()
+
+func count_for(rank: int) -> int:
+	return mini(_base_count + rank - 1, MAX_WEAPONS)
+
+func rotation_for(rank: int) -> float:
+	return minf(_base_rotation * (1.0 + 0.1 * (rank - 1)), MAX_ROTATION_SPEED)

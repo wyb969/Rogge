@@ -1,5 +1,24 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-09 统一颜色与卡牌比较（本轮PR）
+
+- 从最新主分支 `master` / `7e81adf` 新建 `feature/palette-card-readability-20261109`；仓库没有 `main`。本轮只做视觉/UI/文案，已提交 [PR #6](https://github.com/wyb969/Rogge/pull/6)，未合并、未更新itch，版本仍为 `20261109-192900`。已验证源码提交 `c25e98347633b0ca591419b4e6f6c4f82f7f8ec9`；后续仅补本交接和记录。
+- `GamePalette` 集中颜色与缓存材质：有益拾取/回血绿、毒紫、危险红橙、盾黄、控件灰白、友方攻击蓝白。毒染色/跳字与风追加毒伤一致；部分绿色敌人和武器原图通过共享ramp运行时重着色。玩家主体素材/场景与关卡地面、天气、音频、设置存储和战斗数值均未改。
+- 灰白摇杆/冲刺保留用户大小、透明度与位置；按下1.06视觉放大、冷却遮罩、就绪短亮，触摸边界固定。统一中性按钮/主题和CJK提示字体。红色小敌弹增加浅红亮部，保持12种地面原有4.5:1专项阈值。
+- `CardPreview`+`CardNumbers`覆盖22卡，读取真实控制器等级与共用数值helper，显示百分比/固定增幅及当前→下级；增益白、代价橙。用户明确确认**移速卡仍固定+20，只修文案**，首张100→120为+20%。纳入角色等级、双拳、生机组合、难度治疗倍率；不消耗战斗RNG。休息页同步。手机卡片可滚动，完整点击抬手才领取，固定换卡页脚。
+- 23项不同原生专项、10项实际Web PCK专项通过；新 `smoke_palette_cards` 347断言逐卡比对真实升级，其他专项覆盖伤害/异常/碰撞与既有生命周期。最终导入、导出无脚本/shader/构建错误；已有退出ObjectDB/资源警告仍保留。没有跑全部smoke。
+- Chromium/WebGL2的900×600、390×844/DPR2、844×390/DPR2，39张彩色/灰度/卡片/冲刺状态截图；实际触屏滑动不误选，点击选卡、正常Web入口短时战斗/移动/冲刺通过。截图使用隔离QA入口，游戏代码/资源与正常导出相同；不代表itch iframe、Safari真机、全流程或密集怪性能验证。18张精选截图有 `.gdignore`，只存Git不进入游戏包。
+- 设计、文件分组、测试命令与图库见 [palette-readability.md](palette-readability.md)，完整源码清单/23+10检查/浏览器结果/哈希/限制见 [validation/palette-readability-20261109.json](validation/palette-readability-20261109.json)。临时构件 `/workspace/Rogge-palette-20261109/` 不作为持久备份。
+- 后续：评审PR，重点真机检查手机竖屏滚动、不同天气下毒/经验/敌弹区分；本轮没有已确认的未修玩法bug。共享ramp不可逐怪修改，新增卡片应复用真实公式与统一formatter。发布itch需另按用户发布指令执行。
+
+
+### 颜色与卡牌试玩（用户追加要求，已部署）
+
+- <https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>，新建的所有者私有Sites试玩，内容为 [PR #6](https://github.com/wyb969/Rogge/pull/6) 已验证源码 `c25e98347633b0ca591419b4e6f6c4f82f7f8ec9`；正常游戏入口，不是冻结截图夹具。该用户追加要求仅发布试玩；未合并master或更新itch。
+- Site源 `9758813b365b394ae107910066197a84572d65e3`；deployment `appgdep_6af1e62ce8008191b4290a9d10773aea` 返回 **succeeded**，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_524d54826f648191a0d3fcd776bfaab2`。新Site默认私有，未更改受众或原有Sites。
+- PCK `e4a8febdb76acdbf3c2c89875dac6fb92ea1924090ee0247efb8e2dccb61c12f` 与原验证导出一致；WASM用gzip适配托管大小限制，解压字节完全一致。原始JS/资源也逐文件校验，所有单文件小于25MiB，loader/engine JS语法通过。只复用已验证导出，没有重跑完整回归。
+- 当前环境没有Sites提供的本地helper文件与managed `cua_repl.js`工具；用原生凭据经隐藏stdin完成Git/打包，未写入密钥；未另开浏览器路径。因此**托管gzip适配器和线上私有URL没有浏览器复测**；平台发布成功不等于Safari真机或线上完整游玩验证。记录见 [validation/palette-playtest-20261109.json](validation/palette-playtest-20261109.json)。临时Site源 `/workspace/sites/rogge-palette-playtest-20261109/`。
+
 ## 2026-11-09 主分支与itch最新版本（已完成）
 
 - 基于已合并的master `c34a957`（[PR #4](https://github.com/wyb969/Rogge/pull/4)），在 `fix/beast-hover-ink-20261109` 修复用户追加的三项反馈，版本 **`20261109-192900`**。原开发分支工作区保留，没有清理/重置。

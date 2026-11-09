@@ -22,6 +22,7 @@ func bind(bar: ProgressBar) -> void :
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_shader = ShaderMaterial.new()
 	_shader.shader = preload("res://shaders/xp_pickup_glow.gdshader")
+	GamePalette.configure_xp_shader(_shader)
 	material = _shader
 	_combo_label = Label.new()
 	_combo_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -65,7 +66,7 @@ func pulse(actual_pitch: float) -> void :
 	_shader.set_shader_parameter("heat", heat)
 	_shader.set_shader_parameter("kick", kick)
 	_combo_label.text = "%d COMBO%s" % [combo, "!" if tier >= 2 else ""]
-	_combo_label.add_theme_color_override("font_color", [Color(1, 0.88, 0.5), Color(1, 0.77, 0.3), Color(1, 0.48, 0.18), Color(1, 0.95, 0.7)][tier])
+	_combo_label.add_theme_color_override("font_color", [GamePalette.FRIENDLY_LIGHT,GamePalette.FRIENDLY_CYAN,GamePalette.FRIENDLY_BLUE,GamePalette.PLAYER_DAMAGE_WHITE][tier])
 	_combo_label.visible = combo >= 2
 	_combo_label.modulate = Color.WHITE
 	_combo_label.scale = Vector2.ONE * (1.1 + 0.06 * float(tier) / 3)

@@ -36,7 +36,7 @@ func _ready() -> void :
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		label.add_theme_constant_override("outline_size", 3)
-		label.add_theme_color_override("font_outline_color", Color(0.025, 0.035, 0.05))
+		label.add_theme_color_override("font_outline_color", GamePalette.INK)
 		_panel.add_child(label)
 	boss.health_bar.reparent(_panel, false)
 	boss.health_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -44,9 +44,9 @@ func _ready() -> void :
 	_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_progress.show_percentage = false
 	var back: = StyleBoxFlat.new()
-	back.bg_color = Color(0.03, 0.045, 0.06, 0.9)
+	back.bg_color = GamePalette.alpha(GamePalette.INK, 0.9)
 	var fill: = StyleBoxFlat.new()
-	fill.bg_color = Color(1, 0.66, 0.3)
+	fill.bg_color = GamePalette.DANGER_ORANGE
 	fill.set_corner_radius_all(3)
 	_progress.add_theme_stylebox_override("background", back)
 	_progress.add_theme_stylebox_override("fill", fill)
@@ -119,7 +119,7 @@ func _process(delta: float) -> void :
 	if caption != _last_caption:
 		_last_caption = caption
 		_status.text = caption
-		_status.add_theme_color_override("font_color", Color(1, 0.44, 0.3) if locked and warn else (Color(0.64, 0.96, 0.8) if recover and boss._combo_left == 0 else Color(1, 0.85, 0.56)))
+		_status.add_theme_color_override("font_color", GamePalette.DANGER_ORANGE if locked and warn else (GamePalette.UI_GREY_ACTIVE if recover and boss._combo_left == 0 else GamePalette.DANGER_ORANGE))
 	var chained: bool = boss._combo_left > 0 or (boss._chain_warning and (warn or boss.is_charging))
 	var title_stamp: int = int(boss.enraged()) * 2 + int(chained)
 	if _title_stamp != title_stamp:
@@ -137,9 +137,9 @@ func _draw() -> void :
 	if boss.is_dying: return
 	if boss.charge_state == boss.ChargeState.WARN and _polygon.size() > 2:
 		var locked: bool = boss.warning_locked
-		var color: = Color(1, 0.25, 0.18) if locked else Color(1, 0.68, 0.26)
+		var color: = GamePalette.DANGER_RED if locked else GamePalette.DANGER_ORANGE
 		draw_colored_polygon(_polygon, Color(color, 0.105 if locked else 0.055))
-		draw_polyline(_outline, Color(0.025, 0.035, 0.05, 0.9), 4, false)
+		draw_polyline(_outline, GamePalette.alpha(GamePalette.INK, 0.9), 4, false)
 		draw_polyline(_outline, Color(color, 0.9), 1.6, false)
 		var dir: Vector2 = boss.charge_direction
 		var side: = dir.orthogonal()
@@ -151,5 +151,5 @@ func _draw() -> void :
 			draw_line(p - dir * 8 + side * 6, p, Color(color, 0.95), 2, false)
 		draw_calls_last = 9
 	elif boss.charge_state == boss.ChargeState.RECOVER and boss._combo_left == 0:
-		draw_arc(boss.global_position, 45, 0, TAU, 32, Color(0.47, 0.85, 0.66, 0.4), 2, false)
+		draw_arc(boss.global_position, 45, 0, TAU, 32, GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.4), 2, false)
 		draw_calls_last = 1

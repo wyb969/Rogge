@@ -9,9 +9,9 @@ const MAX_SHADOWS: = 64
 const MAX_FLASHES: = 8
 const MAX_RINGS: = 6
 const ENEMY: = preload("res://script/enemy_shell.gd")
-const INK: = Color(0.015, 0.025, 0.035)
-const CYAN: = Color(0.48, 0.87, 1)
-const GOLD: = Color(1, 0.82, 0.48)
+const INK: = GamePalette.INK
+const CYAN: = GamePalette.FRIENDLY_CYAN
+const GOLD: = GamePalette.FRIENDLY_CYAN
 static var _texture: GradientTexture2D
 static var _additive: CanvasItemMaterial
 var _bullets: Array[Node2D] = []
@@ -53,7 +53,7 @@ static func glow_texture() -> Texture2D:
 	if _texture == null:
 		var gradient: = Gradient.new()
 		gradient.offsets = PackedFloat32Array([0, 0.22, 0.55, 1])
-		gradient.colors = PackedColorArray([Color(1, 1, 1, 1), Color(1, 1, 1, 0.65), Color(1, 1, 1, 0.15), Color(1, 1, 1, 0)])
+		gradient.colors = PackedColorArray([GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 1), GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 0.65), GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 0.15), GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 0)])
 		_texture = GradientTexture2D.new()
 		_texture.width = 64
 		_texture.height = 64
@@ -220,12 +220,12 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 		var p: = actor.global_position
 		var scale_light: = clampf(absf(actor.global_scale.x) / 0.4, 0.75, 1.8)
 		if kind == 1:
-			_halo(canvas, p, Vector2(16, 10) * scale_light, Color(1, 0.82, 0.47, 0.11 * _emission))
+			_halo(canvas, p, Vector2(16, 10) * scale_light, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, 0.11 * _emission))
 		else:
 			var dir: Vector2 = actor.velocity.normalized()
 			canvas.draw_set_transform(p, dir.angle())
-			_halo(canvas, Vector2.ZERO, Vector2(13, 5) * scale_light, Color(1, 0.9, 0.65, 0.22))
-			canvas.draw_line(Vector2(-7, 0), Vector2(4, 0), Color(1, 0.98, 0.85, 0.7), 1.1, false)
+			_halo(canvas, Vector2.ZERO, Vector2(13, 5) * scale_light, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, 0.22))
+			canvas.draw_line(Vector2(-7, 0), Vector2(4, 0), GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, 0.7), 1.1, false)
 			canvas.draw_set_transform(Vector2.ZERO)
 		bullets += 1
 		if bullets == BULLET_LIGHTS: break
@@ -242,7 +242,7 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 	for i in _orb_count:
 		var actor: = _orbs[i]
 		if not _visible(actor) or actor.collected: continue
-		_halo(canvas, actor.global_position, Vector2.ONE * (23 if kind == 1 else 12), Color(0.16, 0.95, 0.43, (0.16 * _emission if kind == 1 else 0.2) * actor.modulate.a))
+		_halo(canvas, actor.global_position, Vector2.ONE * (23 if kind == 1 else 12), GamePalette.alpha(GamePalette.PICKUP_GREEN, (0.16 * _emission if kind == 1 else 0.2) * actor.modulate.a))
 	for flash in _flashes:
 		if flash.left <= 0: continue
 		var at: Vector2 = flash.anchor.global_position if is_instance_valid(flash.anchor) else flash.at
@@ -250,7 +250,7 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 		_halo(canvas, at, Vector2.ONE * (27 if kind == 1 else 11), Color(GOLD, strength * (0.14 if kind == 1 else 0.48)))
 		if kind == 2:
 			var dir: Vector2 = flash.direction
-			canvas.draw_line(at - dir * 3, at + dir * 10, Color(1, 0.97, 0.8, strength * 0.8), 2, false)
+			canvas.draw_line(at - dir * 3, at + dir * 10, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, strength * 0.8), 2, false)
 	if kind == 2: _draw_rings(canvas)
 
 func _ring_glow(canvas: Node2D, at: Vector2, radius: float, color: Color, alpha: float) -> void :

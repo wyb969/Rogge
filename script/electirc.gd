@@ -6,6 +6,7 @@ extends Node2D
 
 
 func _ready() -> void :
+	modulate = GamePalette.FRIENDLY_LIGHT
 	animated_sprite_2d.play("raise")
 	animated_sprite_2d.connect("animation_finished", on_animation_finished);
 

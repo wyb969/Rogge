@@ -81,14 +81,14 @@ func _style(color: Color, border: Color) -> StyleBoxFlat:
 	return style
 
 func _build_styles() -> void:
-	_styles.normal = _style(Color("20343e"), Color("46636d"))
-	_styles.hover = _style(Color("2e5058"), Color("77c6b0"))
-	_styles.pressed = _style(Color("397d70"), Color("b1eed2"))
-	_styles.disabled = _style(Color("202b32"), Color("35444c"))
-	var focus: = _style(Color.TRANSPARENT, Color("b1eed2"))
+	_styles.normal = _style(GamePalette.UI_GREY_BASE, GamePalette.UI_GREY_BORDER)
+	_styles.hover = _style(GamePalette.UI_GREY_BASE, GamePalette.UI_GREY_ACTIVE)
+	_styles.pressed = _style(GamePalette.UI_GREY_BORDER, GamePalette.UI_GREY_ACTIVE)
+	_styles.disabled = _style(GamePalette.UI_GREY_COOLDOWN, GamePalette.UI_GREY_BASE)
+	var focus: = _style(Color.TRANSPARENT, GamePalette.UI_GREY_ACTIVE)
 	focus.draw_center = false
 	_styles.focus = focus
-	_styles.panel = _style(Color(0.045, 0.08, 0.11, 0.97), Color("46636d"))
+	_styles.panel = _style(GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.97), GamePalette.UI_GREY_BORDER)
 
 func _prepare_button(button: Button) -> void:
 	button.custom_minimum_size = Vector2.ZERO
@@ -97,8 +97,8 @@ func _prepare_button(button: Button) -> void:
 	button.tooltip_text = button.text
 	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
 		button.add_theme_stylebox_override(state, _styles[state])
-	button.add_theme_color_override("font_color", Color("ecf5ed"))
-	button.add_theme_color_override("font_disabled_color", Color("6b7e85"))
+	button.add_theme_color_override("font_color", GamePalette.UI_GREY_ACTIVE)
+	button.add_theme_color_override("font_disabled_color", GamePalette.UI_GREY_BORDER)
 
 func _new_button(node_name: String, text: String, direction: int) -> Button:
 	var button: = Button.new()

@@ -40,11 +40,14 @@ text = "Title"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="DescLabel" type="Label" parent="VBoxContainer" unique_id=560953898]
+[node name="DescLabel" type="RichTextLabel" parent="VBoxContainer" unique_id=560953898]
 custom_minimum_size = Vector2(156, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 12
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 text = "Desc"
 horizontal_alignment = 1
 autowrap_mode = 3

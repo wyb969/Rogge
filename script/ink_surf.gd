@@ -5,7 +5,7 @@ const COOLDOWN := 6.0
 const DAMAGE := 60.0
 const RADIUS := 90.0
 const PULSE_SECONDS := 0.34
-const SURGE_COLORS := [Color("68ffe2"),Color("79dfff"),Color("d9fff6")]
+const SURGE_COLORS := [GamePalette.FRIENDLY_CYAN,GamePalette.FRIENDLY_BLUE,GamePalette.FRIENDLY_LIGHT]
 var charge := 0
 var cooldown := 0.0
 var absorbed := 0
@@ -31,7 +31,7 @@ func _ready() -> void:
 	_caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	UiFonts.apply_to_label(_caption,9,true)
-	_caption.add_theme_color_override("font_color",Color("9fffe8"))
+	_caption.add_theme_color_override("font_color",GamePalette.FRIENDLY_LIGHT)
 	_caption.add_theme_color_override("font_outline_color",Color("172536"))
 	_caption.add_theme_constant_override("outline_size",2)
 	add_child(_caption)
@@ -133,7 +133,7 @@ func _on_dash_completed(at: Vector2) -> void:
 			actor.apply_blast_impulse(direction*200.0,0.18)
 		hits += 1
 	_targets.clear()
-	game.combat_feedback.spray(at,Vector2.ZERO,Color("75ffe1"),8,65)
+	game.combat_feedback.spray(at,Vector2.ZERO,GamePalette.FRIENDLY_CYAN,8,65)
 	AudioManager.play_juice("kill")
 	RunDiagnostics.mark("ink_surf",{"surges":surges,"absorbed":absorbed})
 	queue_redraw()
@@ -161,14 +161,14 @@ func _draw() -> void:
 	var player_at := to_local(game.player.global_position)
 	if charge>0 or _tracking or cooldown>0:
 		for i in REQUIRED:
-			var tint := Color("79ffe0") if i<charge else Color("233845")
+			var tint := GamePalette.FRIENDLY_CYAN if i<charge else Color("233845")
 			var size := 2.8+_gain_left*5 if i<charge else 2.8
 			var center := player_at+Vector2((i-1)*9,27)
 			draw_rect(Rect2(center-Vector2.ONE*(size+1),Vector2.ONE*(size+1)*2),Color("111c29"))
 			draw_rect(Rect2(center-Vector2.ONE*size,Vector2.ONE*size*2),tint)
 		if cooldown>0:
 			draw_line(player_at+Vector2(-14,48),player_at+Vector2(14,48),Color("162532"),2)
-			draw_line(player_at+Vector2(-14,48),player_at+Vector2(-14+28*(1-cooldown/COOLDOWN),48),Color("75ffe1"),2)
+			draw_line(player_at+Vector2(-14,48),player_at+Vector2(-14+28*(1-cooldown/COOLDOWN),48),GamePalette.FRIENDLY_CYAN,2)
 	if _pulse_left>0:
 		var t := 1-_pulse_left/PULSE_SECONDS
 		var at := to_local(_pulse_at)

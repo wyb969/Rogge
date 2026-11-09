@@ -39,13 +39,13 @@ class GoldBurst extends Control:
 			var a: = TAU * float(i) / float(count) + phase * 0.12
 			var reach: = radius * (0.8 + 0.1 * strength + 0.15 * sin(phase * 1.8 + i))
 			var points: = PackedVector2Array([center, center + Vector2.from_angle(a - 0.025) * reach, center + Vector2.from_angle(a + 0.025) * reach])
-			draw_colored_polygon(points, Color(1.0, 0.66, 0.12, 0.04 + 0.025 * strength))
+			draw_colored_polygon(points, GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 0.04 + 0.025 * strength))
 		for i in (6 + strength * 10):
 			var a: = float(i) * 2.39996 + phase * 0.06
 			var p: = center + Vector2.from_angle(a) * radius * (0.48 + float(i % 7) * 0.08)
 			var bright: = (0.5 + 0.5 * sin(phase * 3.0 + float(i)))
 			var extent: = 1.0 + bright * float(strength + 1)
-			var gold: = Color(1.0, 0.86, 0.36, bright * 0.85)
+			var gold: = GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, bright * 0.85)
 			draw_line(p - Vector2(extent, 0), p + Vector2(extent, 0), gold, 1.2)
 			draw_line(p - Vector2(0, extent), p + Vector2(0, extent), gold, 1.2)
 
@@ -85,7 +85,7 @@ func _label(text_value: String, font_size: int, bold: bool = false) -> Label:
 
 func _build_ui() -> void :
 	var dim: = ColorRect.new()
-	dim.color = Color(0.015, 0.02, 0.035, 0.92)
+	dim.color = GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.92)
 	add_child(dim)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_burst = GoldBurst.new()
@@ -97,13 +97,13 @@ func _build_ui() -> void :
 	add_child(center)
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_panel = PanelContainer.new()
-	_panel.add_theme_stylebox_override("panel", _style(Color(0.045, 0.055, 0.085, 0.97), Color(0.64, 0.43, 0.16)))
+	_panel.add_theme_stylebox_override("panel", _style(GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.97), GamePalette.UI_GREY_BORDER))
 	center.add_child(_panel)
 	_box = VBoxContainer.new()
 	_box.add_theme_constant_override("separation", 16)
 	_panel.add_child(_box)
 	var eyebrow: = _label("战利品  /  TREASURE", 14)
-	eyebrow.add_theme_color_override("font_color", Color(0.88, 0.69, 0.35))
+	eyebrow.add_theme_color_override("font_color", GamePalette.UI_GREY_BORDER)
 	_title = _label("宝藏老虎机", 30, true)
 	var row: = HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -111,7 +111,7 @@ func _build_ui() -> void :
 	_box.add_child(row)
 	for i in 3:
 		var panel: = PanelContainer.new()
-		panel.add_theme_stylebox_override("panel", _style(Color(0.018, 0.025, 0.045), Color(0.32, 0.28, 0.2)))
+		panel.add_theme_stylebox_override("panel", _style(GamePalette.UI_GREY_COOLDOWN, GamePalette.UI_GREY_BASE))
 		row.add_child(panel)
 		_reel_panels.append(panel)
 		var texture: = TextureRect.new()
@@ -125,7 +125,7 @@ func _build_ui() -> void :
 	_button = Button.new()
 	_button.custom_minimum_size.y = 54
 	UiFonts.apply_to_button(_button, 20)
-	_button.add_theme_stylebox_override("normal", _style(Color(0.46, 0.29, 0.07), Color(0.96, 0.74, 0.3)))
+	_button.add_theme_stylebox_override("normal", _style(GamePalette.UI_GREY_BASE, GamePalette.UI_GREY_ACTIVE))
 	_button.pressed.connect(_on_button)
 	_box.add_child(_button)
 	_tick = AudioStreamPlayer.new()
@@ -226,7 +226,7 @@ func _process(delta: float) -> void :
 				_set_reel(i, _pool[randi() % _pool.size()])
 			else:
 				_set_reel(i, reward)
-				_reel_panels[i].modulate = Color(1.25, 1.08, 0.65)
+				_reel_panels[i].modulate = GamePalette.UI_GREY_ACTIVE
 	if spin_time >= SPIN_SECONDS:
 		_reveal()
 
@@ -239,7 +239,7 @@ func _reveal() -> void :
 	_title.text = ["", "小小幸运", "幸运大奖", "超级大奖！"][bonus_levels]
 	var card_name: = str(reward.title).replace(" +1 级", "")
 	_result.text = "%s  +%d 级" % [card_name, bonus_levels]
-	_result.add_theme_color_override("font_color", Color(1.0, 0.78, 0.25))
+	_result.add_theme_color_override("font_color", GamePalette.UI_GREY_ACTIVE)
 	_detail.text = "Lv.%d  →  Lv.%d\n同一张卡连续升级 %d 次，领取后生效" % [old_level, old_level + bonus_levels, bonus_levels]
 	_button.text = "领取奖励 · 继续战斗"
 	_button.disabled = false

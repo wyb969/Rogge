@@ -128,7 +128,7 @@ func _run() -> void :
 	button.set_cooldown(1, true)
 	Engine.time_scale = 0.08
 	await create_timer(0.1, true, false, true).timeout
-	_expect(button.visual_scale > 1.1 and button.get_global_rect() == touch_rect and button.position == origin and button.size == original_size, "ready punch enlarges only drawing/label, leaving touch/layout bounds fixed through hitstop")
+	_expect(button.visual_scale > 1.02 and button.visual_scale <= 1.1 and button.get_global_rect() == touch_rect and button.position == origin and button.size == original_size, "ready punch enlarges only drawing/label, leaving touch/layout bounds fixed through hitstop")
 	var tween: Tween = button._bounce
 	for _repeat in 10: controls._process(0)
 	_expect(button._bounce == tween, "ready UI polling never restarts the one-time bounce")

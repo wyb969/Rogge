@@ -11,6 +11,6 @@ func _process(_delta: float) -> void :
 	rotation = 0
 
 func _draw() -> void :
-	draw_colored_polygon(_outer, Color(0.62, 0.79, 0.63, 0.035))
-	draw_polyline(_outline, Color(0.09, 0.13, 0.17, 0.65), 2.7, false)
-	draw_polyline(_outline, Color(0.75, 0.86, 0.66, 0.68), 1.0, false)
+	draw_colored_polygon(_outer, GamePalette.alpha(GamePalette.SHIELD_YELLOW, 0.035))
+	draw_polyline(_outline, GamePalette.alpha(GamePalette.INK, 0.65), 2.7, false)
+	draw_polyline(_outline, GamePalette.alpha(GamePalette.SHIELD_YELLOW, 0.68), 1.0, false)

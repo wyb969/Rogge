@@ -264,7 +264,7 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	level_label.z_index = 2
 	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	level_label.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.04))
+	level_label.add_theme_color_override("font_outline_color", GamePalette.INK)
 	level_label.add_theme_constant_override("outline_size", 2)
 	level_label.add_theme_color_override("font_color", LEVEL_COLOR)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -326,7 +326,7 @@ func _play_level_up_juice(upgrade_id: String) -> void :
 
 
 	tween.tween_callback( func():
-		label.modulate = Color(1.0, 1.0, 0.86)
+		label.modulate = Color.WHITE
 		icon_wrap.scale = Vector2(1.08, 1.08)
 	)
 	tween.set_parallel(true)

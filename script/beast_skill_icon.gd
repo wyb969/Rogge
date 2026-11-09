@@ -13,20 +13,21 @@ class CooldownMask:
 	var accent: = Color.WHITE
 	func _draw() -> void :
 		if fraction <= 0: return
-		draw_rect(Rect2(Vector2.ZERO, Vector2(size.x, size.y * fraction)), Color(0.015, 0.025, 0.04, 0.8))
+		draw_rect(Rect2(Vector2.ZERO, Vector2(size.x, size.y * fraction)), GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.8))
 		draw_rect(Rect2(3, size.y - 4, (size.x - 6) * (1 - fraction), 2), accent)
 
 func configure(texture: Texture2D, color: Color) -> void :
 	icon = texture
-	accent = color
+	material = GamePalette.ramp_material(&"ui")
+	accent = GamePalette.UI_GREY_ACTIVE
 	expand_icon = true
 	icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	text = ""
 	add_theme_color_override("icon_disabled_color", Color.WHITE)
 	for selected_style in [false, true]:
 		var style: = StyleBoxFlat.new()
-		style.bg_color = Color(0.025, 0.04, 0.07, 0.9)
-		style.border_color = color.lightened(0.28) if selected_style else color.darkened(0.28)
+		style.bg_color = GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.9)
+		style.border_color = GamePalette.UI_GREY_ACTIVE if selected_style else GamePalette.UI_GREY_BORDER
 		style.set_border_width_all(2)
 		style.set_corner_radius_all(7)
 		style.content_margin_left = 5

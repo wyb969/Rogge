@@ -35,6 +35,7 @@ static func stats_for(rank: int) -> Dictionary:
 		"interval": 3.0 * pow(COOLDOWN_SCALE, step), "push_speed": 300.0 + 25.0 * step}
 
 func _ready() -> void:
+	material = GamePalette.ramp_material(&"friendly")
 	z_index = 7
 	status_feedback = preload("res://script/status_echo_feedback.gd").new()
 	status_feedback.name = "StatusEchoFeedback"
@@ -169,7 +170,7 @@ func _scan_gust() -> void:
 		if not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_in_group("EnemyGroup"): continue
 		if extra_damage > 0.0:
 			# A final status-only hit cannot reapply statuses or reroll modifiers.
-			actor.apply_hit({"damage": extra_damage, "direction": _direction, "effect": "fan_status_bonus",
+			actor.apply_hit({"damage": extra_damage, "direction": _direction, "effect": "fan_status_bonus", "visual_effect": "poison_trail" if (echo_kind & 2) != 0 else "burn",
 				"from_status": true, "damage_is_final": true, "ignore_side_bonus": true, "source": self})
 			status_echoes += 1
 			if generation != _generation: return
@@ -189,14 +190,14 @@ func _draw() -> void:
 		var reach := lerpf(18.0, float(_stats.range), 1.0 - pow(1.0 - progress, 2.0))
 		var fade := minf(1.0, _wave_left / 0.18)
 		draw_set_transform(to_local(_origin), _direction.angle())
-		draw_arc(Vector2.ZERO, reach, -HALF_ANGLE, HALF_ANGLE, 22, Color(0.7, 0.94, 0.87, 0.55 * fade), 2.0)
+		draw_arc(Vector2.ZERO, reach, -HALF_ANGLE, HALF_ANGLE, 22, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, 0.55 * fade), 2.0)
 		for lane in 5:
 			var spread := (float(lane) - 2.0) * HALF_ANGLE * 0.42
 			for i in _stream.size():
 				var t := float(i) / float(_stream.size() - 1)
 				var radius := maxf(12.0, reach - 58.0) + t * minf(reach - 12.0, 58.0)
 				_stream[i] = Vector2.RIGHT.rotated(spread + sin(t * PI + progress * 7.0 + lane) * 0.04) * radius
-			draw_polyline(_stream, Color(0.79, 0.94, 0.88, fade * 0.52), 1.4)
+			draw_polyline(_stream, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, fade * 0.52), 1.4)
 		draw_set_transform(to_local(_origin), _direction.angle() + PI * 0.25 + sin(progress * PI) * 0.3)
 		draw_texture_rect(ICON, Rect2(-14.0, -14.0, 28.0, 28.0), false, Color(1, 1, 1, fade))
 		draw_set_transform(Vector2.ZERO)
@@ -208,4 +209,4 @@ func _draw() -> void:
 		var alpha: float = wake.left / 0.46 * 0.65
 		for i in 2:
 			var spin: float = wake.phase + (0.46 - wake.left) * 12.0 + i * PI
-			draw_arc(at - _direction * 5.0 + Vector2(0, float(i) * 5.0 - 3.0), 8.0 + i * 3.0, spin, spin + PI * 0.85, 9, Color(0.73, 0.92, 0.85, alpha), 1.1)
+			draw_arc(at - _direction * 5.0 + Vector2(0, float(i) * 5.0 - 3.0), 8.0 + i * 3.0, spin, spin + PI * 0.85, 9, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, alpha), 1.1)

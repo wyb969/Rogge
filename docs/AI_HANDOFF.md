@@ -12,6 +12,13 @@
 - 后续：评审PR，重点真机检查手机竖屏滚动、不同天气下毒/经验/敌弹区分；本轮没有已确认的未修玩法bug。共享ramp不可逐怪修改，新增卡片应复用真实公式与统一formatter。发布itch需另按用户发布指令执行。
 
 
+### 颜色与卡牌试玩（用户追加要求，已部署）
+
+- <https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>，新建的所有者私有Sites试玩，内容为 [PR #6](https://github.com/wyb969/Rogge/pull/6) 已验证源码 `c25e98347633b0ca591419b4e6f6c4f82f7f8ec9`；正常游戏入口，不是冻结截图夹具。该用户追加要求仅发布试玩；未合并master或更新itch。
+- Site源 `9758813b365b394ae107910066197a84572d65e3`；deployment `appgdep_6af1e62ce8008191b4290a9d10773aea` 返回 **succeeded**，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_524d54826f648191a0d3fcd776bfaab2`。新Site默认私有，未更改受众或原有Sites。
+- PCK `e4a8febdb76acdbf3c2c89875dac6fb92ea1924090ee0247efb8e2dccb61c12f` 与原验证导出一致；WASM用gzip适配托管大小限制，解压字节完全一致。原始JS/资源也逐文件校验，所有单文件小于25MiB，loader/engine JS语法通过。只复用已验证导出，没有重跑完整回归。
+- 当前环境没有Sites提供的本地helper文件与managed `cua_repl.js`工具；用原生凭据经隐藏stdin完成Git/打包，未写入密钥；未另开浏览器路径。因此**托管gzip适配器和线上私有URL没有浏览器复测**；平台发布成功不等于Safari真机或线上完整游玩验证。记录见 [validation/palette-playtest-20261109.json](validation/palette-playtest-20261109.json)。临时Site源 `/workspace/sites/rogge-palette-playtest-20261109/`。
+
 ## 2026-11-09 主分支与itch最新版本（已完成）
 
 - 基于已合并的master `c34a957`（[PR #4](https://github.com/wyb969/Rogge/pull/4)），在 `fix/beast-hover-ink-20261109` 修复用户追加的三项反馈，版本 **`20261109-192900`**。原开发分支工作区保留，没有清理/重置。

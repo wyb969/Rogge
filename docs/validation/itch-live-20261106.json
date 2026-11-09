@@ -1,0 +1,32 @@
+{
+  "page_url": "https://ybwangrogger.itch.io/rogue-white",
+  "iframe_url": "https://html.itch.zone/html/20115514-2307264/index.html?v=1793899714",
+  "version": "20261106-011424",
+  "itch_build": 2307264,
+  "upload_id": 20115514,
+  "source_commit": "4f8577fb7704426df5bae9d7eb147d042dcd431c",
+  "checks": [
+    {
+      "name": "index.pck",
+      "bytes": 23306424,
+      "sha256": "24de0b0de69c512b0e43fdd104f6c713e91860bc6d0c1321043da527ff7fa458",
+      "matches_ci_build": true,
+      "matches_html_file_size": true
+    },
+    {
+      "name": "index.wasm",
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656",
+      "matches_ci_build": true,
+      "matches_html_file_size": true
+    },
+    {
+      "name": "index.js",
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c",
+      "matches_ci_build": true
+    }
+  ],
+  "all_match": true,
+  "verification_type": "HTTP resource byte/hash verification; no browser or physical-device play"
+}

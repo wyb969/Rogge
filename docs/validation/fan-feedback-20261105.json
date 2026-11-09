@@ -1,0 +1,151 @@
+{
+  "version": "20261105-015239",
+  "source_parent": "461c8ad3ae7f5667f8ac3ecd0d89c48050bd6a41",
+  "native": {
+    "tests": 14,
+    "passed": 14,
+    "results": [
+      {
+        "test": "smoke_fan_feedback.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "FAN FEEDBACK OK: status-specific body colors, dual-status transition, shared bounded pool, exact fade/pause/delete/reset, unchanged combat channels, real gasoline cooldowns/upgrades and preview"
+      },
+      {
+        "test": "smoke_fan_status.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "FAN STATUS OK: exact crowd deduplication, snapshot-only burn/poison replay, unchanged clocks/natural spread, one popup, no recursive procs/crit/lifesteal, rewards, five real cooldowns, Boss and Debug lifecycle"
+      },
+      {
+        "test": "smoke_control_cards.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      },
+      {
+        "test": "smoke_molotov_spread.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "MOLOTOV SPREAD OK: exact real explosion/live radius/owner/once, shared assets, 240-source reference equivalence, cap/potency/RNG/pause, request and bucket overflow, deletion/clear and bounded allocation"
+      },
+      {
+        "test": "smoke_poison_trail.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+      },
+      {
+        "test": "smoke_critical_glasses.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "CRITICAL GLASSES OK: real draft/icon, rank probabilities, master damage, capped lottery, enemy/Boss damage and text, bonus composition, status exclusions, stage/menu/retry lifecycle"
+      },
+      {
+        "test": "smoke_status_numbers.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return"
+      },
+      {
+        "test": "smoke_combat_feedback.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "COMBAT FEEDBACK OK: real actions/settings/persistence, exact damage, independent RNG, stable colliders, bounded camera/batches/ghosts, rising pickups, floating text and teardown"
+      },
+      {
+        "test": "smoke_resource_bounds.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "RESOURCE BOUNDS OK: 1000 coins/500 orbs preserve rewards, shared GPU resources, projectile ownership/TTL, cosmetic budgets, single explosions and teardown"
+      },
+      {
+        "test": "smoke_runtime_optimization.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "RUNTIME OPTIMIZATION OK: live target lifecycle/nearest selection, exact pooled pause-safe chains/RNG, no child effects/timers, synchronous pickup indices, fixed cosmetic slots, cached geometry/audio and clean Retry"
+      },
+      {
+        "test": "smoke_trials.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      },
+      {
+        "test": "smoke_beasts.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      },
+      {
+        "test": "smoke_knight_boss.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate"
+      },
+      {
+        "test": "smoke_run_variety.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "RUN VARIETY OK: real wind/echo cards, landing damage/grace/cancel, exact queued pause-safe nonrecursive echo, lottery stacks, diverse independent draws, reroll UI/tokens, harmless bounded courier/rewards/escape, full HUD layout and Retry"
+      }
+    ]
+  },
+  "packed": [
+    {
+      "test": "smoke_fan_feedback",
+      "exit_code": 0,
+      "passed": true,
+      "markers": [
+        "FAN FEEDBACK OK: status-specific body colors, dual-status transition, shared bounded pool, exact fade/pause/delete/reset, unchanged combat channels, real gasoline cooldowns/upgrades and preview"
+      ],
+      "errors": []
+    },
+    {
+      "test": "smoke_fan_status",
+      "exit_code": 0,
+      "passed": true,
+      "markers": [
+        "FAN STATUS OK: exact crowd deduplication, snapshot-only burn/poison replay, unchanged clocks/natural spread, one popup, no recursive procs/crit/lifesteal, rewards, five real cooldowns, Boss and Debug lifecycle"
+      ],
+      "errors": []
+    },
+    {
+      "test": "smoke_control_cards",
+      "exit_code": 0,
+      "passed": true,
+      "markers": [
+        "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      ],
+      "errors": []
+    }
+  ],
+  "pck_bytes": 23306424,
+  "pck_sha256": "78b9c3a165eab04abc875cea57aeb94c8cebc84b0fa2ef7e1843d98a5784a6f8",
+  "visual_qa": {
+    "kind": "native software OpenGL capture",
+    "screenshots": [
+      "docs/screenshots/fan-status-colors.png",
+      "docs/screenshots/fan-status-dual.png"
+    ],
+    "checks": [
+      "burn deep-red body",
+      "poison deep-purple body",
+      "dual status red-to-purple",
+      "animated frame alignment and recovery"
+    ],
+    "shutdown_notes": "Prior native-capture shutdown GL texture/resource warnings remain; no script or shader runtime errors occurred during capture."
+  },
+  "browser_qa": "Not run: managed Sites browser tool unavailable. Native captures are not browser/device QA.",
+  "itch_uploaded": false,
+  "preview_deployment": {
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aeb72b13a90819192c6985e3fe01c73",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_fd42df795eb88191b5cfda71d29b18d0",
+    "site_source_commit": "48b7aacfaa0d81afbd0ff04ca7cb9f93882f3cfd",
+    "game_commit": "c6c0e600943f78da2a333b4f76486e5dbc378996",
+    "audience": "owner-private"
+  }
+}

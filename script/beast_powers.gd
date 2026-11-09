@@ -67,9 +67,13 @@ func cast(index: int) -> bool:
 
 func description_for(index: int) -> String:
 	if index == 0:
-		var percent: = ("%.1f" % (45.0 * player.healing_multiplier)).trim_suffix(".0")
+		var percent: = ("%.1f" % (45.0 * player.total_healing_multiplier())).trim_suffix(".0")
 		return "回复 %s%% 最大生命\n冷却 35 秒，满血不消耗" % percent
 	return DESCRIPTIONS[index]
+
+func refresh_healing_description() -> void:
+	if _buttons.has(0):
+		_buttons[0].tooltip_text = TITLES[0] + "\n" + description_for(0) + "\n点击直接释放 / E 释放当前 / Q 键切换"
 
 func cycle() -> void :
 	if unlocked.is_empty() or get_tree().paused:

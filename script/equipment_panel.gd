@@ -2,14 +2,27 @@ extends Control
 
 const SLOT_SIZE: = Vector2(48, 48)
 const ICON_SIZE: = Vector2(36, 36)
-const UI_FONT_SIZE: = 15
+const UI_FONT_SIZE: = 16
+const SLOT_FOOTPRINT := Vector2(64, 60)
 const LEVEL_COLOR: = preload("res://script/visual_style.gd").TEXT
 
 @onready var slot_list: GridContainer = $SlotList
 
 var _slots: Dictionary = {}
+var _arsenal_label: Label
+var _growth_label: Label
+const COMBOS := preload("res://script/equipment_combos.gd")
+const COMBO_BORDER := preload("res://script/equipment_combo_border.gd")
+const ARSENAL_HINT := COMBOS.ARSENAL_HINT
+var _active_combo_borders: Array[Control] = []
+var _combo_clock := 0.0
+var _border_tick_left := 0.0
 
 const EQUIP_DEFS: = {
+	"bomb": {"title": "炸弹", "icon": "res://assest/sprites/bomb.svg", "start_level": 0, "max_level": 5},
+	"critical_glasses": {"title": "暴击眼镜", "icon": "res://assest/sprites/critical_glasses.svg", "start_level": 0, "max_level": 5},
+	"banana_fan": {"title": "芭蕉扇", "icon": "res://assest/sprites/banana_fan.svg", "start_level": 0, "max_level": 5},
+	"black_hole": {"title": "黑洞", "icon": "res://assest/sprites/black_hole.svg", "start_level": 0, "max_level": 5},
 	"poison_trail": {"title": "剧毒踪迹", "icon": "res://assest/sprites/poison_trail.svg", "start_level": 0, "max_level": 5}, 
 	"wind_emblem": {"title": "踏风徽记", "icon": "res://assest/sprites/wind_emblem.svg", "start_level": 0}, 
 	"echo_ember": {"title": "回响火种", "icon": "res://assest/sprites/echo_ember.svg", "start_level": 0}, 
@@ -91,26 +104,46 @@ const EQUIP_DEFS: = {
 }
 
 func _ready() -> void :
+	_arsenal_label = Label.new()
+	_arsenal_label.size = Vector2(125, 20)
+	UiFonts.apply_to_label(_arsenal_label, 12)
+	_arsenal_label.tooltip_text = ARSENAL_HINT
+	add_child(_arsenal_label)
+	_growth_label = Label.new()
+	_growth_label.size = Vector2(125, 20)
+	UiFonts.apply_to_label(_growth_label, 12)
+	_growth_label.tooltip_text = COMBOS.GROWTH_HINT
+	_growth_label.modulate = COMBOS.GROWTH_COLOR
+	add_child(_growth_label)
 	get_viewport().size_changed.connect(_fit_equipment)
 	reset_equipment()
 
 func _fit_equipment() -> void :
 	var vp: = get_viewport().get_visible_rect().size
 	var count: = _slots.size()
-	slot_list.columns = 2 if count > 6 else 1
+	slot_list.columns = 2 if count > 1 else 1
 	var rows: = int(ceil(float(count) / slot_list.columns))
-	var height: = rows * 58.0
+	var status_rows := int(_arsenal_label.visible) + int(_growth_label.visible)
+	var icon_height := rows * (SLOT_FOOTPRINT.y + 10.0)
+	var height: = icon_height + status_rows * 20.0 + (4.0 if status_rows > 0 else 0.0)
 	var budget: = maxf(180, vp.y - 240)
-	var factor: = minf(1, budget / maxf(height, 1))
-	var width: = 128.0 * slot_list.columns
+	var factor: = minf(1.0, budget / maxf(height, 1))
+	var grid_width := SLOT_FOOTPRINT.x * slot_list.columns + 8.0 * (slot_list.columns - 1)
+	var width: = maxf(grid_width, 128.0 if status_rows > 0 else 0.0)
 	scale = Vector2.ONE * factor
 	global_position = Vector2(vp.x - width * factor - 18, 120)
-	slot_list.size = Vector2(width, height)
+	slot_list.position.x = width - grid_width
+	slot_list.size = Vector2(grid_width, icon_height)
+	_arsenal_label.position = Vector2(0, icon_height + 4)
+	_growth_label.position = Vector2(0, icon_height + 4 + (20 if _arsenal_label.visible else 0))
 
 func reset_equipment() -> void :
+	reset_combo_effects()
 	for child in slot_list.get_children():
 		child.queue_free()
 	_slots.clear()
+	set_arsenal_status(0, false, 0.0)
+	set_growth_status(0, false)
 
 	for id in ["axe_up", "circle_up"]:
 		_add_or_set_level(id, EQUIP_DEFS[id]["start_level"], false)
@@ -123,11 +156,63 @@ func apply_upgrade(upgrade_id: String) -> void :
 		_add_or_set_level(upgrade_id, int(_slots[upgrade_id]["level"]) + 1, true)
 	else:
 		_add_or_set_level(upgrade_id, 1, true)
+	refresh_combo_borders()
 
 func get_level(upgrade_id: String) -> int:
 	if _slots.has(upgrade_id):
 		return int(_slots[upgrade_id]["level"])
 	return 0
+
+func set_arsenal_status(owned: int, active: bool, seconds: float) -> void:
+	if _arsenal_label == null: return
+	var was_visible := _arsenal_label.visible
+	_arsenal_label.visible = owned > 0
+	_arsenal_label.text = ("无敌护盾 %.1fs" % seconds if active else "军械护盾 %.1fs" % seconds) if owned == 3 else "军械组合 %d/3" % owned
+	_arsenal_label.modulate = COMBOS.ARSENAL_COLOR.lightened(0.2 if active else 0.0) if owned == 3 else LEVEL_COLOR
+	if was_visible != _arsenal_label.visible: _fit_equipment()
+
+func set_growth_status(owned: int, active: bool) -> void:
+	if _growth_label == null: return
+	var was_visible := _growth_label.visible
+	_growth_label.visible = owned > 0
+	_growth_label.text = "生机组合 已激活" if active else "生机组合 %d/3" % owned
+	if was_visible != _growth_label.visible: _fit_equipment()
+
+func reset_combo_effects() -> void:
+	for slot in _slots.values():
+		var border: Control = slot.get("combo_border")
+		if is_instance_valid(border): border.visible = false
+	_active_combo_borders.clear()
+	_combo_clock = 0.0
+	_border_tick_left = 0.0
+	set_process(false)
+
+func refresh_combo_borders() -> void:
+	var growth := COMBOS.owned_count(self, COMBOS.GROWTH_MEMBERS) == COMBOS.GROWTH_MEMBERS.size()
+	var arsenal := COMBOS.owned_count(self, COMBOS.ARSENAL_MEMBERS) == COMBOS.ARSENAL_MEMBERS.size()
+	_active_combo_borders.clear()
+	for id in _slots:
+		var border: Control = _slots[id].get("combo_border")
+		if not is_instance_valid(border): continue
+		var group := COMBOS.group_for(id)
+		var active := growth if group == "growth" else arsenal
+		border.configure(group, COMBOS.color_for(group), active)
+		if active: _active_combo_borders.append(border)
+	_apply_combo_phases()
+	set_process(not _active_combo_borders.is_empty())
+
+func _apply_combo_phases() -> void:
+	for border in _active_combo_borders:
+		var period := 2.4 if border.combo_group == "growth" else 3.0
+		border.set_phase(fposmod(_combo_clock / period, 1.0))
+
+func _process(delta: float) -> void:
+	if get_tree().paused or not is_visible_in_tree() or _active_combo_borders.is_empty(): return
+	_combo_clock = fposmod(_combo_clock + delta, 12.0)
+	_border_tick_left -= delta
+	if _border_tick_left <= 0.0:
+		_border_tick_left = 1.0 / 30.0
+		_apply_combo_phases()
 
 func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> void :
 	if level <= 0:
@@ -136,31 +221,51 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	if _slots.has(upgrade_id):
 		_slots[upgrade_id]["level"] = level
 		var label: Label = _slots[upgrade_id]["level_label"]
-		label.text = "Lv.%d" % level
+		label.text = str(level)
 		if juice:
 			_play_level_up_juice(upgrade_id)
 		return
 
-	var root: = HBoxContainer.new()
-	root.custom_minimum_size = Vector2(120, SLOT_SIZE.y)
-	root.add_theme_constant_override("separation", 8)
+	var root: = Control.new()
+	root.custom_minimum_size = SLOT_FOOTPRINT
+	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var icon_wrap: = PanelContainer.new()
-	icon_wrap.custom_minimum_size = SLOT_SIZE
+	var icon_wrap: = Panel.new()
+	icon_wrap.position = Vector2(6, 6)
+	icon_wrap.size = SLOT_SIZE
+	icon_wrap.mouse_filter = Control.MOUSE_FILTER_PASS
 
 	var icon: = TextureRect.new()
 	icon.custom_minimum_size = ICON_SIZE
+	icon.position = Vector2(6, 6)
+	icon.size = ICON_SIZE
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = load(def["icon"])
+	var combo_hint := COMBOS.hint_for(upgrade_id)
+	icon_wrap.tooltip_text = str(def.title) + ("\n" + combo_hint if not combo_hint.is_empty() else "")
 	preload("res://script/visual_style.gd").style_icon(icon, upgrade_id)
 	if def.has("modulate"):
 		icon.modulate = def["modulate"]
 	icon_wrap.add_child(icon)
+	var combo_border: Control
+	if not COMBOS.group_for(upgrade_id).is_empty():
+		combo_border = COMBO_BORDER.new()
+		combo_border.name = "ComboBorder"
+		combo_border.visible = false
+		icon_wrap.add_child(combo_border)
 
 	var level_label: = Label.new()
-	level_label.text = "Lv.%d" % level
-	UiFonts.apply_to_label(level_label, UI_FONT_SIZE)
+	level_label.text = str(level)
+	UiFonts.apply_to_label(level_label, UI_FONT_SIZE, true)
+	level_label.position = Vector2(32, 32)
+	level_label.size = Vector2(18, 20)
+	level_label.z_index = 2
+	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	level_label.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.04))
+	level_label.add_theme_constant_override("outline_size", 2)
 	level_label.add_theme_color_override("font_color", LEVEL_COLOR)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
@@ -174,6 +279,7 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 		"icon_wrap": icon_wrap, 
 		"level_label": level_label, 
 		"level": level, 
+		"combo_border": combo_border,
 		"juice_tween": null
 	}
 	_fit_equipment()

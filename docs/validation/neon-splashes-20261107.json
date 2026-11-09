@@ -1,0 +1,325 @@
+{
+  "date_utc": "2026-11-07",
+  "version": "20261107-201644",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "branch": "feature/fan-black-hole-20261104",
+  "scope": "Double splat width/height; fixed fluorescent species palette; no combat changes or itch publication",
+  "native_checks": [
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.94,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 230 checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_resource_bounds",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.47,
+      "errors": [],
+      "markers": [
+        "RESOURCE BOUNDS OK: 1000 coins/500 orbs preserve rewards, shared GPU resources, projectile ownership/TTL, cosmetic budgets, single explosions and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.17,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_poison_trail",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.38,
+      "errors": [],
+      "markers": [
+        "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_fan_status",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.03,
+      "errors": [],
+      "markers": [
+        "FAN STATUS OK: exact crowd deduplication, snapshot-only burn/poison replay, unchanged clocks/natural spread, one popup, no recursive procs/crit/lifesteal, rewards, five real cooldowns, Boss and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.89,
+      "errors": [],
+      "markers": [
+        "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.01,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 230 checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_poison_trail",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.34,
+      "errors": [],
+      "markers": [
+        "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.16,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "browser": [
+    {
+      "name": "desktop",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "dpr": 1,
+      "seconds": 24,
+      "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
+      "actions": [
+        "Home → Debug → Wooden Trial → Start",
+        "15 seconds of actual horde combat and enemy deaths",
+        "Return Home"
+      ],
+      "screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/neon-splashes-browser-desktop.png",
+      "gfx": {
+        "canvas": {
+          "width": 900,
+          "height": 600
+        },
+        "css": {
+          "width": 900,
+          "height": 600
+        },
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "WebKit WebGL",
+        "context_lost": false
+      },
+      "errors": [],
+      "messages": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        },
+        {
+          "type": "log",
+          "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+        }
+      ]
+    },
+    {
+      "name": "phone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "dpr": 2,
+      "seconds": 26.9,
+      "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
+      "actions": [
+        "Home → Debug → Wooden Trial → Start",
+        "15 seconds of actual horde combat and enemy deaths",
+        "Return Home"
+      ],
+      "screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/neon-splashes-browser-phone.png",
+      "gfx": {
+        "canvas": {
+          "width": 780,
+          "height": 1688
+        },
+        "css": {
+          "width": 390,
+          "height": 844
+        },
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "WebKit WebGL",
+        "context_lost": false
+      },
+      "errors": [],
+      "messages": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        },
+        {
+          "type": "log",
+          "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+        }
+      ]
+    }
+  ],
+  "import_export": {
+    "import": {
+      "errors": []
+    },
+    "export": {
+      "errors": []
+    }
+  },
+  "assets": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "c1c7456948f25380a03b2ad39c48f3a4e7553fcedc1e732f739ee9f2477c0fad"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23408872,
+      "sha256": "abefe582145be54fb7f457c5e1bfcd50a7b3d6fa4cc4f6d0e745e48838c51c67"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "isolated_gpu": {
+    "active": 128,
+    "empty_draw_calls": 0.0,
+    "full_draw_calls": 1.0,
+    "increment": 1.0,
+    "node_children": 1,
+    "renderer": "native OpenGL Compatibility / llvmpipe",
+    "slots": 128
+  },
+  "gpu_capture": {
+    "markers": [
+      "NEON SPLASHES GPU OK"
+    ],
+    "shutdown_warnings": [
+      "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+      "ERROR: Texture with GL ID of 19: leaked 1364 bytes.",
+      "ERROR: Parameter \"RenderingServer::get_singleton()\" is null.",
+      "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 2 resources still in use at exit (run with --verbose for details).",
+      "ERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit."
+    ]
+  },
+  "limits": [
+    "Chromium software WebGL2 desktop/mobile viewport tests of raw Godot export; not physical Safari/device performance or hosting gzip-wrapper browser QA.",
+    "Doubling dimensions quadruples maximum covered pixels; one draw call does not prove identical GPU time.",
+    "No full59-script regression. Existing exit ObjectDB/resource/GL/RID warnings remain recorded, not resolved."
+  ],
+  "screenshots": [
+    "neon-splashes-palette.png",
+    "neon-splashes-fade.png",
+    "neon-splashes-dense.png",
+    "neon-splashes-browser-desktop.png",
+    "neon-splashes-browser-phone.png"
+  ],
+  "game_commit": "3e47faa8023199463d9f4a5c50c90382c11dd5c5",
+  "hosting_checks": {
+    "pck_sha256": "abefe582145be54fb7f457c5e1bfcd50a7b3d6fa4cc4f6d0e745e48838c51c67",
+    "pck_equal": true,
+    "wasm_gzip_decodes_to_exact_export": true,
+    "files_under_25mib": true,
+    "loader": "unchanged; Node syntax checked",
+    "browser_verified": false
+  },
+  "deployment": {
+    "site_source_commit": "ec0c91deed96fee2dcf529bcaabd7d0d6f57db30",
+    "deployment_id": "appgdep_6aef1804de448191b2a4ee6bad9e7d6c",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_6182f208c53081918252337f3c5bf6cf",
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "audience": "owner-private; preserved",
+    "itch_updated": false
+  }
+}

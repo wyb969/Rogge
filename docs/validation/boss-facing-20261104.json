@@ -1,0 +1,56 @@
+{
+  "scope": "First boss facing and walk animation; web loader and export preset unchanged.",
+  "version": "20261104-233814",
+  "tests": [
+    {
+      "test": "smoke_boss_facing",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.568
+    },
+    {
+      "test": "smoke_boss_rhythm",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.199
+    },
+    {
+      "test": "smoke_first_boss_overlap",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 7.264
+    },
+    {
+      "test": "smoke_knight_boss",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.677
+    },
+    {
+      "test": "smoke_wind_duo",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 19.259
+    },
+    {
+      "test": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.426
+    },
+    {
+      "test": "smoke_elemental_attacks",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.565
+    },
+    {
+      "test": "smoke_control_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.223
+    }
+  ],
+  "passed": 8,
+  "total": 8
+}

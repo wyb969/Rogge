@@ -24,6 +24,9 @@ var _sword: Node2D
 var _title: Label
 var _health_panel: Control
 
+func _death_stain_kind() -> StringName:
+	return &"knight"
+
 func configure_stage(_stage: int) -> void :
 	fight_stage = 2
 

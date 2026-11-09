@@ -12,7 +12,7 @@ func _run() -> void :
 	await process_frame
 	_expect( not main.game.weather.running and not main.game.weather._caption.visible, "prepared main menu has no gameplay weather leak")
 	main._on_debug_button_pressed()
-	main.get_node("mainUI/Control/DebugCenter/VBoxContainer/DebugWeatherButton").pressed.emit()
+	main._launch_run(&"weather")
 	await process_frame
 	await process_frame
 	var game: Node = main.game
@@ -23,7 +23,7 @@ func _run() -> void :
 	game.player.set_physics_process(false)
 	for name in ["HandWeapon", "CircleWeapon", "Weapon", "DroneController", "MolotovController", "FreezeController"]:
 		game.get_node(name).process_mode = Node.PROCESS_MODE_DISABLED
-	_expect(weather.running and weather._preview.visible and game.player.max_player_health == 50000, "real Debug entry starts a playable protected weather preview")
+	_expect(weather.running and weather._preview.visible and game.player.max_player_health == 50000, "legacy debug preset starts a playable protected weather preview")
 	var field_id: int = weather._field.get_instance_id()
 	var child_count: int = weather.get_child_count()
 	seed(969)
@@ -112,7 +112,7 @@ func _run() -> void :
 		_expect( not main.mobile_controls._handle_touch(touch), "touch joystick yields to weather preview controls")
 	weather._buttons.get_child(2).pressed.emit()
 	_expect(main.menu_page.visible and paused and not weather.running and not weather._caption.visible and not weather._field.visible, "preview Back fully clears weather and returns to the original menu")
-	if failures.is_empty(): print("WEATHER OK: real Debug/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle")
+	if failures.is_empty(): print("WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle")
 	else:
 		for failure in failures: push_error(failure)
 	paused = false

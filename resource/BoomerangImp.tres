@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" path="res://script/enemy_meta.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assest/sprites/enemies/boomerang_imp.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+title = "boomerang_imp"
+sprite = ExtResource("2")
+health = 40.0
+damage = 1.2
+archetype = 3
+move_speed = 39.0
+body_scale = 1.1
+marker_color = Color(0.86, 0.6, 1, 1)
+preferred_range = 185.0
+projectile_damage = 24.0
+projectile_speed = 145.0
+attack_cooldown = 4.4
+attack_style = &"boomerang"

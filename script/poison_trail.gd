@@ -161,6 +161,14 @@ func _scan(elapsed: float) -> void :
 			_remove_ids.append(id)
 	for id in _remove_ids: _exposed.erase(id)
 
+func extra_tick_damage_for(actor: Node2D) -> float:
+	if level <= 0 or not is_instance_valid(actor): return 0.0
+	var id := actor.get_instance_id()
+	if not _exposed.has(id): return 0.0
+	var entry: Dictionary = _exposed[id]
+	if not entry.inside or entry.actor.get_ref() != actor: return 0.0
+	return float(_stats.dps)
+
 func active_clouds() -> int:
 	var count: = 0
 	for cloud in _clouds:

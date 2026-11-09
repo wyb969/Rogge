@@ -33,10 +33,25 @@ const ENVIRONMENT_WEATHER: = preload("res://script/environment_weather.gd")
 var weather: Node
 const RUN_VARIETY: = preload("res://script/run_variety.gd")
 var variety: Node2D
+const INK_SURF := preload("res://script/ink_surf.gd")
+var ink_surf: Node2D
+const ENEMY_ATTACKS := preload("res://script/enemy_attack_field.gd")
+var enemy_attacks: Node2D
 const METEOR_SHOWER: = preload("res://script/meteor_shower.gd")
 var meteors: Node2D
 const POISON_TRAIL: = preload("res://script/poison_trail.gd")
 var poison_trail: Node2D
+const BANANA_FAN := preload("res://script/banana_fan.gd")
+const BLACK_HOLE := preload("res://script/black_hole.gd")
+const BOMB := preload("res://script/bomb_controller.gd")
+const ARSENAL_COMBO := preload("res://script/arsenal_combo.gd")
+var banana_fan: Node2D
+var black_hole: Node2D
+var bomb_controller: Node2D
+var arsenal_combo: Node2D
+const EQUIPMENT_COMBOS := preload("res://script/equipment_combos.gd")
+var growth_combo_active := false
+var _growth_xp_tenths := 0
 const BEAST_POWERS: = preload("res://script/beast_powers.gd")
 const LIGHTNING_FX: = preload("res://script/lightning_strike.gd")
 const LIGHTNING_RING: = preload("res://script/lightning_ring.gd")
@@ -109,12 +124,30 @@ func _ready() -> void :
 	variety.name = "RunVariety"
 	add_child(variety)
 	player.dash_completed.connect(variety.on_dash_completed)
+	ink_surf = INK_SURF.new()
+	ink_surf.name = "InkSurf"
+	add_child(ink_surf)
+	enemy_attacks = ENEMY_ATTACKS.new()
+	enemy_attacks.name = "EnemyAttackField"
+	add_child(enemy_attacks)
 	meteors = METEOR_SHOWER.new()
 	meteors.name = "MeteorShower"
 	add_child(meteors)
 	poison_trail = POISON_TRAIL.new()
 	poison_trail.name = "PoisonTrail"
 	add_child(poison_trail)
+	banana_fan = BANANA_FAN.new()
+	banana_fan.name = "BananaFan"
+	add_child(banana_fan)
+	black_hole = BLACK_HOLE.new()
+	black_hole.name = "BlackHole"
+	add_child(black_hole)
+	bomb_controller = BOMB.new()
+	bomb_controller.name = "BombController"
+	add_child(bomb_controller)
+	arsenal_combo = ARSENAL_COMBO.new()
+	arsenal_combo.name = "ArsenalCombo"
+	add_child(arsenal_combo)
 	spawner.beast_defeated.connect(_on_beast_defeated)
 	level_manager.signal_level_up.connect(on_level_up)
 	pause_menu.upgrade_selected.connect(_on_upgrade_selected)
@@ -171,6 +204,8 @@ func start_game() -> void :
 	_reset_skill_controllers()
 	RunDiagnostics.begin(self, diagnostic_mode)
 	variety.begin_run()
+	ink_surf.begin_run()
+	enemy_attacks.begin_run()
 	combat_lighting.begin_run()
 	meteors.begin_run()
 	pause_menu.reset_draft()
@@ -205,6 +240,13 @@ func end_game() -> void :
 	hide()
 
 func _reset_skill_controllers() -> void :
+	player.reset_critical_glasses()
+	growth_combo_active = false
+	_growth_xp_tenths = 0
+	player.growth_move_multiplier = 1.0
+	player.growth_heal_multiplier = 1.0
+	equipment_panel.reset_combo_effects()
+	equipment_panel.set_growth_status(0, false)
 
 	for entry in CombatTargets._entries:
 		var actor: Node = entry.actor
@@ -218,7 +260,13 @@ func _reset_skill_controllers() -> void :
 	if level_manager: level_manager.reset_feedback()
 	if meteors: meteors.reset()
 	if poison_trail: poison_trail.reset()
+	if banana_fan: banana_fan.reset()
+	if black_hole: black_hole.reset()
+	if bomb_controller: bomb_controller.reset()
+	if arsenal_combo: arsenal_combo.reset()
 	if variety: variety.reset()
+	if ink_surf: ink_surf.reset()
+	if enemy_attacks: enemy_attacks.reset()
 	if lightning_ring:
 		lightning_ring.reset()
 	if drone_controller and drone_controller.has_method("reset"):
@@ -292,28 +340,64 @@ func _on_upgrade_selected(upgrade_id: String):
 			player.add_shield_level()
 		"monster_necklace":
 			player.add_monster_necklace_level()
+		"critical_glasses":
+			player.add_critical_glasses_level()
 		"lightning_ring":
 			lightning_ring.upgrade()
 		"wind_emblem", "echo_ember":
 			variety.upgrade(upgrade_id)
 		"poison_trail":
 			poison_trail.upgrade()
+		"banana_fan":
+			banana_fan.upgrade()
+		"black_hole":
+			black_hole.upgrade()
+		"bomb":
+			bomb_controller.upgrade()
 
 	if spawner and spawner.has_method("note_offense_card") and upgrade_id in [
 		"axe_up", "circle_up", "gun_up", "left_fist", "right_fist", 
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
+		"banana_fan", "black_hole", "critical_glasses", "bomb",
 	]:
 		spawner.note_offense_card()
 
 	if equipment_panel and equipment_panel.has_method("apply_upgrade"):
 		equipment_panel.apply_upgrade(upgrade_id)
+	arsenal_combo.refresh_equipment()
+	_refresh_growth_combo()
 	combat_feedback.reward(player.global_position)
 	RunDiagnostics.mark("after_card", {"id": upgrade_id}, true)
 
 func on_coin_collected(amount: int = 2) -> void :
-	level_manager.add_coin(run_difficulty.experience_for(amount))
+	_award_prepared_experience(run_difficulty.experience_for(amount))
+
+func _refresh_growth_combo() -> void:
+	var owned := EQUIPMENT_COMBOS.owned_count(equipment_panel, EQUIPMENT_COMBOS.GROWTH_MEMBERS)
+	var active := owned == EQUIPMENT_COMBOS.GROWTH_MEMBERS.size()
+	if active != growth_combo_active:
+		_growth_xp_tenths = 0
+		if active: variety.notify("生机组合已激活\n经验 +30% · 移动速度与回复效果 +20%")
+	growth_combo_active = active
+	player.growth_move_multiplier = EQUIPMENT_COMBOS.MOVE_MULTIPLIER if active else 1.0
+	player.growth_heal_multiplier = EQUIPMENT_COMBOS.HEAL_MULTIPLIER if active else 1.0
+	equipment_panel.set_growth_status(owned, active)
+	beast_powers.refresh_healing_description()
+
+func _award_prepared_experience(base_amount: int) -> int:
+	if base_amount <= 0: return 0
+	var earned := base_amount
+	if growth_combo_active:
+		# Coins already contain the difficulty adjustment. Apply this bonus at collection only.
+		var tenths := base_amount * EQUIPMENT_COMBOS.XP_BONUS_TENTHS + _growth_xp_tenths
+		@warning_ignore("integer_division")
+		var bonus: int = tenths / 10
+		earned += bonus
+		_growth_xp_tenths = tenths % 10
+	level_manager.add_coin(earned)
+	return earned
 
 func spawn_xp_coin(at: Vector2, raw_xp: int) -> void :
 
@@ -342,7 +426,8 @@ func _spawn_xp_coin_now(at: Vector2, raw_xp: int) -> void :
 	coin.global_position = at
 
 func _on_prepared_coin_collected(_raw: int, coin: Node) -> void :
-	level_manager.add_coin(coin.prepared_xp)
+	var prepared: int = coin.prepared_xp if coin.prepared_xp >= 0 else run_difficulty.experience_for(_raw)
+	_award_prepared_experience(prepared)
 
 func on_player_died() -> void :
 	if trials.active_fight():
@@ -429,6 +514,8 @@ func _on_rest_reward(reward_id: String) -> void :
 				gun_weapon.apply_cooldown_scale(scale)
 		"regen_up":
 			player.add_regen_level()
+			equipment_panel.apply_upgrade(reward_id)
+			_refresh_growth_combo()
 		"lifesteal_up":
 			player.add_lifesteal_level()
 		"shield_up":
@@ -666,6 +753,37 @@ func prepare_variety_debug() -> void :
 	variety.spawn_courier()
 	variety.notify("已装备踏风徽记 / 回响火种\n冲刺结束触发风压 · 击杀 8 个敌人触发回响")
 
+func prepare_ink_surf_debug() -> void:
+	variety.notify("彩墨冲浪：向右冲刺，掠过3处溅痕\n终点60伤害+击退 · 6秒冷却 · 无需选卡")
+	ink_surf.enable_debug_training()
+	for offset in [Vector2(118,-22),Vector2(135,20),Vector2(160,-5)]:
+		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
+		actor.health = 240
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position+offset
+
+func prepare_tactical_enemy_debug() -> void:
+	spawner.timer.stop()
+	spawner.get_node("Elite").stop()
+	spawner.set_process(false)
+	variety._courier_left = 99999
+	variety.notify("新怪物：刃螳扇形斩 / 回旋镖妖 / 孢子炮击\n红区锁定后走开；风、冰冻与击退可打断")
+	var data = [load("res://resource/BladeMantis.tres"),load("res://resource/BoomerangImp.tres"),load("res://resource/SporeBomber.tres")]
+	var offsets = [Vector2(-82,30),Vector2(170,-65),Vector2(-170,-95)]
+	for i in data.size():
+		var actor: Node2D = spawner.enemy.instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(data[i])
+		actor.health = 320*run_difficulty.health_scale
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position+offsets[i]
+
 func _on_treasure_earned() -> void :
 
 	_lottery_pending = true
@@ -684,6 +802,78 @@ func prepare_poison_debug(rank: int) -> void :
 		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
 		add_child(actor)
 		actor.global_position = player.global_position + at
+
+func prepare_critical_debug(rank: int) -> void:
+	for _i in clampi(rank, 1, 5): _on_upgrade_selected("critical_glasses")
+	_on_upgrade_selected("gun_up")
+	variety.notify("暴击眼镜 %d 级 · 暴击率 %d%%\n大号金色伤害字与 ! 表示暴击" % [player.critical_glasses_level, roundi(player.CRITICAL_GLASSES.chance_for(player.critical_glasses_level) * 100.0)])
+	for offset in [Vector2(95, -28), Vector2(125, 22), Vector2(-100, -45)]:
+		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
+		actor.health = 600.0 * run_difficulty.health_scale
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position + offset
+
+func prepare_fan_status_debug() -> void:
+	prepare_control_debug(&"fan5")
+	_on_upgrade_selected("molotov_up")
+	_on_upgrade_selected("poison_trail")
+	var targets: Array[Node2D] = CombatTargets.in_radius(player.global_position, 240.0 * 240.0, self)
+	for actor in targets:
+		if actor.has_method("apply_burn"): actor.apply_burn({"burn_stacks": 3, "burn_dps": 4.0})
+	if not targets.is_empty():
+		poison_trail._clouds[0].at = targets[0].global_position
+		poison_trail._clouds[0].left = poison_trail.CLOUD_LIFE
+		poison_trail._scan(0.0)
+	variety.notify("芭蕉扇5级 + 汽油瓶 / 剧毒\n已有异常额外一跳 · 同次吹风不重复、不传播")
+
+func prepare_control_debug(mode: StringName) -> void:
+	var rank := 5 if mode in [&"fan5", &"black_hole5", &"control_cards"] else 1
+	var ids: Array[String] = []
+	if mode in [&"fan", &"fan5", &"control_cards"]: ids.append("banana_fan")
+	if mode in [&"black_hole", &"black_hole5", &"control_cards"]: ids.append("black_hole")
+	for id in ids:
+		for _i in rank: _on_upgrade_selected(id)
+	variety.notify("控场卡片 %d 级\n芭蕉扇沿移动方向吹风 · 黑洞自动聚怪" % rank)
+	for offset in [Vector2(95, -28), Vector2(125, 22), Vector2(165, 0), Vector2(-100, -45), Vector2(65, 105)]:
+		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
+		actor.health = 240.0 * run_difficulty.health_scale
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position + offset
+
+func prepare_bomb_debug(mode: StringName) -> void:
+	var rank := 5 if mode in [&"bomb5", &"arsenal"] else 1
+	for _i in rank: _on_upgrade_selected("bomb")
+	if mode == &"arsenal":
+		_on_upgrade_selected("gun_up")
+		_on_upgrade_selected("drone_up")
+	player.apply_rest_max_hp(250)
+	player.full_heal()
+	variety.notify("炸弹 %d 级 · 自动抛投、范围爆破与击飞\n%s" % [rank, "军械组合：每3秒获得1秒无敌" if mode == &"arsenal" else "集齐无人机 + 枪支 + 炸弹可激活军械护盾"])
+	for offset in [Vector2(125, -28), Vector2(145, 24), Vector2(175, 0), Vector2(-145, -35), Vector2(85, 130)]:
+		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
+		actor.set_player_ref(player)
+		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
+		actor.health = 400.0 * run_difficulty.health_scale
+		actor.add_to_group("EnemyGroup")
+		actor.death_signal.connect(spawner.on_enemy_killed.bind(actor))
+		add_child(actor)
+		actor.global_position = player.global_position + offset
+
+func prepare_growth_debug(both: bool = false) -> void:
+	for id in EQUIPMENT_COMBOS.GROWTH_MEMBERS: _on_upgrade_selected(id)
+	if both:
+		for id in EQUIPMENT_COMBOS.ARSENAL_MEMBERS: _on_upgrade_selected(id)
+	player.player_health = player.max_player_health - 60.0
+	player.health_bar.set_health(player.player_health)
+	variety.notify("生机组合：经验+30%% · 移速/回复+20%%\n%s" % ("两组图标已激活：荧光绿 / 金色同步流光" if both else "右侧拾取、移速、回复图标：荧光绿同步流光"))
 
 func _show_next_reward() -> void :
 	if _death_presented or player.player_health <= 0.0 or process_mode == Node.PROCESS_MODE_DISABLED:
@@ -778,6 +968,9 @@ func prepare_beast_debug(stage_num: int) -> void :
 func _on_trial_completed(kind: String, _passed: bool, settle: bool) -> void :
 	if kind == "power":
 		_rest_pending = true
+		call_deferred("_show_next_reward")
+	elif kind == "speed":
+		_trial_pending = "wooden"
 		call_deferred("_show_next_reward")
 	elif settle:
 		on_boss_defeated()

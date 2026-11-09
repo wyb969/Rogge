@@ -1,0 +1,212 @@
+{
+  "version": "20261105-003002",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "source_parent": "4780bea18bc56401dd199eebb6f01026efd20183",
+  "native": {
+    "tests": 27,
+    "passed": 27,
+    "results": [
+      {
+        "test": "smoke_critical_glasses.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "CRITICAL GLASSES OK: real draft/icon, rank probabilities, master damage, capped lottery, enemy/Boss damage and text, bonus composition, status exclusions, stage/menu/retry lifecycle"
+      },
+      {
+        "test": "smoke_axe.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "AXE OK: real level-five/later cards, nearest live aim, swept hits/return, no idle damage and no unowned burn/spread from either starting weapon"
+      },
+      {
+        "test": "smoke_status_numbers.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return"
+      },
+      {
+        "test": "smoke_control_cards.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      },
+      {
+        "test": "smoke_poison_trail.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+      },
+      {
+        "test": "smoke_molotov_spread.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "MOLOTOV SPREAD OK: exact real explosion/live radius/owner/once, shared assets, 240-source reference equivalence, cap/potency/RNG/pause, request and bucket overflow, deletion/clear and bounded allocation"
+      },
+      {
+        "test": "smoke_lightning_ring.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "LIGHTNING RING OK: real cards/stats, unique targets, range, mitigation, cooldown, color/audio, kill drops, lottery, bosses/trials and run reset"
+      },
+      {
+        "test": "smoke_survival_growth.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "SURVIVAL GROWTH OK: real XP/multi-level growth, HP HUD/shields, rest stacking, no duplicate/card/revive growth, fresh runs, bounded stage-three elite hits and multi-source escape window"
+      },
+      {
+        "test": "smoke_monster_necklace.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "MONSTER NECKLACE OK: card selection, stacking, real kill drops, pickup/heal/audio, boss/rest/stage flow and reset"
+      },
+      {
+        "test": "smoke_difficulty.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
+      },
+      {
+        "test": "smoke_resource_bounds.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "RESOURCE BOUNDS OK: 1000 coins/500 orbs preserve rewards, shared GPU resources, projectile ownership/TTL, cosmetic budgets, single explosions and teardown"
+      },
+      {
+        "test": "smoke_runtime_optimization.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "RUNTIME OPTIMIZATION OK: live target lifecycle/nearest selection, exact pooled pause-safe chains/RNG, no child effects/timers, synchronous pickup indices, fixed cosmetic slots, cached geometry/audio and clean Retry"
+      },
+      {
+        "test": "smoke_knight_boss.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate"
+      },
+      {
+        "test": "smoke_wind_duo.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "WIND DUO OK: two moving/attacking roles, real travelling blades, independent HP/HUD, both kill orders, survivor AI, one final reward, next stage and duplicate-spawn races"
+      },
+      {
+        "test": "smoke_beasts.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      },
+      {
+        "test": "smoke_trials.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      },
+      {
+        "test": "smoke_boss_facing.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "BOSS FACING OK: immediate recovery turn, live approach direction and walk loop, idle transitions, vertical stability and locked warning/dash facing"
+      },
+      {
+        "test": "smoke_combat_feedback.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "COMBAT FEEDBACK OK: real actions/settings/persistence, exact damage, independent RNG, stable colliders, bounded camera/batches/ghosts, rising pickups, floating text and teardown"
+      },
+      {
+        "test": "smoke_treasure_lottery.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "TREASURE LOTTERY OK: third stage, real mini-boss, safe warning, one reward, probability intervals, actual stacked stats, pause ordering, responsive UI and victory"
+      },
+      {
+        "test": "smoke_rest_selection.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "REST SELECTION OK: real boss rest, freely changing filled selections, deferred exact reward, one confirmation/advance, hidden and invalid guards, reset"
+      },
+      {
+        "test": "smoke_debug_menu.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "DEBUG MENU OK: home/back navigation, equipped necklace test, actual heal, rapid-tap guard, retry and normal-run reset"
+      },
+      {
+        "test": "smoke_global_pickup.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "GLOBAL PICKUP OK: actual skill, map-wide coins/orbs, offscreen and moving targets, expiring drops, exact XP/heal without necklace, pause/no-op and cooldown"
+      },
+      {
+        "test": "smoke_combo_gun.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "COMBO/GUN OK: short original cues, successful-shot-only audio, no restart storms, varied quiet bursts/pickup priority/shared mix, real-note 30 combo/fever beyond pitch cap, zero fake XP, portrait/landscape/pause and return"
+      },
+      {
+        "test": "smoke_blessing_feedback.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "BLESSING FEEDBACK OK: real four skill casts, distinct cached stream SFX, green fade-in/out, cooldown/no-op/pause, input/red hurt priority, 500 bounded replacements and teardown"
+      },
+      {
+        "test": "smoke_run_variety.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "RUN VARIETY OK: real wind/echo cards, landing damage/grace/cancel, exact queued pause-safe nonrecursive echo, lottery stacks, diverse independent draws, reroll UI/tokens, harmless bounded courier/rewards/escape, full HUD layout and Retry"
+      },
+      {
+        "test": "smoke_diagnostics.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "DIAGNOSTICS OK: bundled arrows, real final-boss stress entry, bounded reports, JSON export/reload, stop/back and run-owned cleanup"
+      },
+      {
+        "test": "smoke_book_growth.gd",
+        "exit_code": 0,
+        "passed": true,
+        "marker": "BOOK GROWTH OK: fifty actual cards including same-frame stacks, bounded count/speed, increasing finite damage and stable collider reuse"
+      }
+    ],
+    "notes": "Exit codes observed in the native runner output; markers rechecked from logs. Seven directly affected checks rerun after the final starting-book fix. No full 50-test run."
+  },
+  "packed_resource_tests": [
+    {
+      "test": "smoke_critical_glasses",
+      "exit_code": 0,
+      "passed": true,
+      "markers": [
+        "CRITICAL GLASSES OK: real draft/icon, rank probabilities, master damage, capped lottery, enemy/Boss damage and text, bonus composition, status exclusions, stage/menu/retry lifecycle"
+      ],
+      "errors": []
+    },
+    {
+      "test": "smoke_axe",
+      "exit_code": 0,
+      "passed": true,
+      "markers": [
+        "AXE OK: real level-five/later cards, nearest live aim, swept hits/return, no idle damage and no unowned burn/spread from either starting weapon"
+      ],
+      "errors": []
+    }
+  ],
+  "web": {
+    "export_succeeded": true,
+    "diagnostics_helper_bundled": true,
+    "pck_bytes": 23283036,
+    "pck_sha256": "3f0b5d95d3b1a10d3dbbd7b42fecf79c67331249811a97d1c0b673ad95f84933",
+    "browser": "155.0.8059.79",
+    "browser_error_count": 0,
+    "checks": [
+      "fresh Web boot",
+      "Debug critical5 via keyboard focus",
+      "equipped card and combat screenshot",
+      "left movement and Shift dash",
+      "portrait resize"
+    ],
+    "scope": "Local Chromium with software rendering; not itch CDN or physical Safari validation. Screenshots inspected."
+  },
+  "itch_uploaded": false,
+  "itch_blocker": "BUTLER_API_KEY is not configured in the current environment."
+}

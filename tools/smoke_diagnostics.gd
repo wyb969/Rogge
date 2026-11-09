@@ -12,13 +12,13 @@ func _run() -> void :
 	await process_frame
 	await process_frame
 	main._on_debug_button_pressed()
-	main.get_node("mainUI/Control/DebugCenter/VBoxContainer/DebugStabilityButton").pressed.emit()
+	main._launch_run(&"stability")
 	await process_frame
 	await process_frame
 	var game: Node = main.game
 	var test: Node = game.get_node("StabilityTest")
 	test.duration = 1.0
-	_expect(game.spawner.stage == 6 and game.spawner._active_bosses[0].phase == 2, "real Debug button enters the final beast's second phase")
+	_expect(game.spawner.stage == 6 and game.spawner._active_bosses[0].phase == 2, "legacy stability preset enters the final beast's second phase")
 	_expect(game.circle_weapon.get_child_count() == 12 and game.circle_weapon.card_level == 17, "stress fixture includes capped high-rank books")
 	var diag: Node = root.get_node("RunDiagnostics")
 	for i in range(180):

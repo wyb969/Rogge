@@ -120,10 +120,18 @@ func _refresh_charge() -> void :
 	_charge_label.visible = echo_level > 0 and _notice_left <= 0
 
 func clear_combat_effects() -> void :
+	if game.get("enemy_attacks")!=null: game.enemy_attacks.clear_combat_effects()
+	if game.get("ink_surf")!=null: game.ink_surf.clear_combat_effects()
+	if game.get("combat_feedback") != null and game.combat_feedback.death_stains != null:
+		game.combat_feedback.death_stains.reset()
 	if game.get("burn_spread") != null: game.burn_spread.reset()
 	if game.get("combat_lighting") != null: game.combat_lighting.clear_flashes()
 	if game.get("meteors") != null: game.meteors.clear_combat_effects()
 	if game.get("poison_trail") != null: game.poison_trail.clear_combat_effects()
+	if game.get("banana_fan") != null: game.banana_fan.clear_combat_effects()
+	if game.get("black_hole") != null: game.black_hole.clear_combat_effects()
+	if game.get("bomb_controller") != null: game.bomb_controller.clear_combat_effects()
+	if game.get("arsenal_combo") != null: game.arsenal_combo.clear_combat_effects()
 	_pending_echoes.clear()
 	for pulse in _pulses: pulse.left = 0.0
 	queue_redraw()

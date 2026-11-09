@@ -212,7 +212,7 @@ func _ensure_stage_theme() -> void :
 	if not _stage_themes.has(stage) or not enemy_array.has(_stage_themes[stage]):
 		var choices: Array[EnemyData] = []
 		for data in enemy_array:
-			if data.archetype == EnemyData.Archetype.CHASER or data.archetype == EnemyData.Archetype.DASHER:
+			if data.attack_style==&"" and (data.archetype == EnemyData.Archetype.CHASER or data.archetype == EnemyData.Archetype.DASHER):
 				choices.append(data)
 
 		if choices.is_empty():
@@ -246,6 +246,7 @@ func _rebuild_pattern() -> void :
 		elif data != primary_enemy_data:
 			support.append(data)
 	var ranged_slots: = 0 if ranged.is_empty() else (2 if stage >= 2 and current_level >= 5 else 1)
+	ranged.shuffle()
 	for _i in PRIMARY_ROSTER_SLOTS:
 		_pattern.append(primary_enemy_data)
 	for i in ranged_slots:
@@ -273,8 +274,7 @@ func _next_enemy_data() -> EnemyData:
 		_rebuild_pattern()
 	for _attempt in _pattern.size():
 		if _pattern_i >= _pattern.size():
-			_pattern.shuffle()
-			_pattern_i = 0
+			_rebuild_pattern()
 		var data: = _pattern[_pattern_i]
 		_pattern_i += 1
 		if data.archetype == EnemyData.Archetype.RANGED and _ranged_alive_count() >= ranged_alive_limit():

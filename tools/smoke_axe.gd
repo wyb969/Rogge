@@ -66,7 +66,7 @@ func _run() -> void :
 		axe._physics_process(1.0 / 60.0)
 	_expect(near.hits == 2 and far.hits == 2, "each enemy takes one hit per leg, with no overlap spam")
 	_expect( not axe.returning and not axe.flying_out and axe.global_position.is_equal_approx(player.global_position), "return clamps to the hand without oscillating")
-	_expect(near.last_hit.get("effect") == "burn" and near.last_hit.get("source") == axe, "hits retain the normal damage/passive pipeline")
+	_expect(near.last_hit.get("effect", "") == "" and near.last_hit.get("source") == axe, "physical axe hits keep their source without granting an unowned burn effect")
 	var hits_before: int = near.hits
 	axe._physics_process(0.5)
 	_expect(near.hits == hits_before, "idle axe cannot deal phantom damage")
@@ -82,8 +82,24 @@ func _run() -> void :
 	await process_frame
 	axe.start_attack()
 	_expect( not axe.flying_out and not axe.returning, "no target leaves axe ready at the hand")
+	player.global_position = Vector2(0, 1000)
+	var real_target: Node = _enemy(Vector2(80, 1000))
+	var neighbor: Node = _enemy(Vector2(80, 1055))
+	await physics_frame
+	await process_frame
+	axe.start_attack()
+	axe._physics_process(0.5)
+	axe._physics_process(0.5)
+	_expect(real_target.health == 980 and real_target.burn_stacks == 0, "real enemies receive two physical axe hits without being ignited")
+	real_target._update_statuses(0.9)
+	_expect(real_target.health == 980 and neighbor.health == 1000 and neighbor.burn_stacks == 0, "an unowned gasoline effect cannot deal delayed or spreading damage to the crowd")
+	var book: Node = game.circle_weapon.get_child(0)
+	book._on_area_2d_body_entered(real_target)
+	book._on_area_2d_body_entered(real_target)
+	real_target._update_statuses(0.9)
+	_expect(real_target.health == 970 and real_target.burn_stacks == 0 and neighbor.health == 1000, "starting books cannot reintroduce the same unowned burn during axe attacks")
 	if failures.is_empty():
-		print("AXE OK: real level-five/later cards, nearest live aim, swept multi-target hits, one hit per leg, clipped range, moving-hand catch and no idle damage")
+		print("AXE OK: real level-five/later cards, nearest live aim, swept hits/return, no idle damage and no unowned burn/spread from either starting weapon")
 	else:
 		for failure in failures:
 			push_error(failure)
@@ -104,6 +120,18 @@ func _target(at: Vector2) -> Target:
 	target.add_to_group("EnemyGroup")
 	game.add_child(target)
 	return target
+
+func _enemy(at: Vector2) -> Node:
+	var actor: Node = load("res://scenes/enemy_shell.tscn").instantiate()
+	actor.set_player_ref(player)
+	actor.set_enemy_data(load("res://resource/Enemy_1.tres"))
+	actor.health = 1000
+	actor.defense = 0.0
+	actor.add_to_group("EnemyGroup")
+	game.add_child(actor)
+	actor.global_position = at
+	actor.set_physics_process(false)
+	return actor
 
 func _expect(ok: bool, message: String) -> void :
 	if not ok:

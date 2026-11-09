@@ -5,12 +5,15 @@ extends Node2D
 var level: int = 0
 var throw_timer: float = 0.0
 const BOTTLE: = preload("res://scenes/molotov_bottle.tscn")
+const COOLDOWN_SCALE := 0.75
 @onready var _game: Node = get_parent()
 
 func upgrade() -> void :
 	level += 1
 	if level == 1:
 		throw_timer = 0.4
+	else:
+		throw_timer = minf(throw_timer, get_throw_interval())
 
 func reset() -> void :
 	level = 0
@@ -49,7 +52,10 @@ func _pick_target() -> Node2D:
 	return CombatTargets.nearest(player.global_position)
 
 func get_throw_interval() -> float:
-	return maxf(1.6, 4.2 - float(level) * 0.35)
+	return interval_for(level)
+
+static func interval_for(rank: int) -> float:
+	return maxf(1.6, 4.2 - float(rank) * 0.35) * COOLDOWN_SCALE
 
 func get_throw_speed() -> float:
 	return 220.0 + float(level) * 18.0

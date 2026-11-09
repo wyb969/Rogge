@@ -119,6 +119,9 @@ func _aim_charge() -> void :
 	line.set_point_position(1, target_position)
 	if rush_feedback != null: rush_feedback.path_changed()
 
+func _death_stain_kind() -> StringName:
+	return &"charger_boss"
+
 func _setup_health_bar() -> void :
 	health_bar.z_index = 20
 	health_bar.visible = true
@@ -147,10 +150,15 @@ func _physics_process(delta: float) -> void :
 	_contact_left = maxf(0, _contact_left - delta)
 	match charge_state:
 		ChargeState.WAIT:
+			update_facing_direction(player.global_position)
+			velocity = Vector2.ZERO
 			if not rush_timer.is_stopped():
 				var offset: = player.global_position - global_position
 				velocity = offset.normalized() * (72 if enraged() else 58) * poison_slow if offset.length() > 135 else offset.normalized().orthogonal() * 22 * poison_slow
 				move_and_collide(velocity * delta)
+			var animation: StringName = &"walk" if velocity.length_squared() > 1.0 else &"idle"
+			if animation_player.current_animation != animation or not animation_player.is_playing():
+				animation_player.play(animation)
 		ChargeState.WARN:
 			_state_left = maxf(0, _state_left - delta)
 			if not warning_locked:
@@ -173,6 +181,7 @@ func _physics_process(delta: float) -> void :
 			if collision != null or _distance_left <= 0.001 or _state_left <= 0:
 				stop_charge()
 		ChargeState.RECOVER:
+			update_facing_direction(player.global_position)
 			_state_left = maxf(0, _state_left - delta)
 			if _state_left <= 0:
 				charge_state = ChargeState.WAIT
@@ -207,11 +216,14 @@ func start_charge_attack(chained: bool = false) -> void :
 		_attack_round += 1
 		_combo_left = 1 if enraged() and _attack_round % 2 == 0 else 0
 	warning_locked = false
+	animation_player.play("idle")
 	_aim_charge()
 	show_warning_line_and_then_charge(target_position)
 
 func update_facing_direction(target_pos: Vector2) -> void :
-	sprite_2d.flip_h = target_pos.x < global_position.x
+	var offset_x := target_pos.x - global_position.x
+	if absf(offset_x) > 1.0:
+		sprite_2d.flip_h = offset_x < 0.0
 
 func show_warning_line_and_then_charge(target_pos: Vector2) -> void :
 	if is_dying:
@@ -231,6 +243,7 @@ func start_moving_charge() -> void :
 	_state_left = MAX_CHARGE_SECONDS
 	is_charging = true
 	charges_started += 1
+	update_facing_direction(global_position + charge_direction * MIN_CHARGE_DISTANCE)
 	AudioManager.play_juice("boss_rush")
 	animation_player.play("chase")
 
@@ -240,6 +253,7 @@ func stop_charge() -> void :
 	is_charging = false
 	animation_player.play("idle")
 	velocity = Vector2.ZERO
+	if is_instance_valid(player): update_facing_direction(player.global_position)
 	charge_state = ChargeState.RECOVER
 	_state_left = 0.34 if _combo_left > 0 else (0.8 if enraged() else 0.64)
 
@@ -252,30 +266,47 @@ func _on_rush_timer_timeout() -> void :
 		return
 	start_charge_attack()
 
+func get_status_echo_kind(poison_tick: float) -> int:
+	return 2 if poison_tick > 0.0 else 0
+
+func get_status_echo_damage(poison_tick: float) -> float:
+	var owner_player: Node = player if is_instance_valid(player) else get_tree().get_first_node_in_group("player")
+	if owner_player != null and owner_player.has_method("get_side_damage_multiplier"):
+		poison_tick *= owner_player.get_side_damage_multiplier(global_position)
+	return poison_tick
+
 func apply_hit(hit_data: Dictionary) -> void :
 	if is_dying:
 		return
 
 	AudioManager.play_enemy_hurt()
+	var damage_is_final: bool = hit_data.get("damage_is_final", false)
 	var damage_value: float = float(hit_data.get("damage", 0))
 	var damage_dir: Vector2 = hit_data.get("direction", Vector2.ZERO)
 	if damage_dir.length_squared() < 0.001:
 		damage_dir = Vector2.RIGHT
 
-	if not hit_data.get("ignore_side_bonus", false) and is_instance_valid(player) and player.has_method("get_side_damage_multiplier"):
+	if not damage_is_final and not hit_data.get("ignore_side_bonus", false) and is_instance_valid(player) and player.has_method("get_side_damage_multiplier"):
 		damage_value *= player.get_side_damage_multiplier(global_position)
-	elif not hit_data.get("ignore_side_bonus", false) and get_tree().get_first_node_in_group("player") != null:
+	elif not damage_is_final and not hit_data.get("ignore_side_bonus", false) and get_tree().get_first_node_in_group("player") != null:
 		var p: = get_tree().get_first_node_in_group("player")
 		if p.has_method("get_side_damage_multiplier"):
 			damage_value *= p.get_side_damage_multiplier(global_position)
 
+	var critical_player: Node = player if is_instance_valid(player) else get_tree().get_first_node_in_group("player")
+	var crit_multiplier := 1.0
+	if not damage_is_final and critical_player != null and critical_player.has_method("roll_critical_multiplier"):
+		crit_multiplier = critical_player.roll_critical_multiplier(hit_data)
+	damage_value *= crit_multiplier
+	var critical := crit_multiplier > 1.0
+	var status_damage := preload("res://script/demage_text.gd").is_status_hit(hit_data)
 	boss_current_health = max(0.0, boss_current_health - damage_value)
-	if damage_value > 0 and preload("res://script/demage_text.gd").is_status_hit(hit_data):
-		_show_status_damage(damage_value)
+	if damage_value > 0 and (status_damage or critical):
+		_show_damage_number(damage_value, status_damage, critical)
 	if health_bar:
 		health_bar.visible = true
 		health_bar.set_health(boss_current_health)
-	if not hit_data.get("from_status", false) and damage_value > 0.0:
+	if not hit_data.get("from_status", false) and not damage_is_final and damage_value > 0.0:
 		var steal_target: Node = player if is_instance_valid(player) else get_tree().get_first_node_in_group("player")
 		if steal_target != null and steal_target.has_method("notify_damage_dealt"):
 			steal_target.notify_damage_dealt(damage_value)
@@ -287,16 +318,20 @@ func apply_hit(hit_data: Dictionary) -> void :
 		_apply_phase2_outline()
 
 	if boss_current_health <= 0.0:
+		var feedback := preload("res://script/combat_feedback.gd").find(self)
+		if feedback != null:
+			var pigment: Color = preload("res://script/death_stains.gd").color_for(_death_stain_kind())
+			feedback.death_stains.splat(global_position,pigment,hit_data.get("direction",Vector2.ZERO),1.8)
 		await start_defeat_sequence()
 
-func _show_status_damage(amount: float) -> void :
+func _show_damage_number(amount: float, status_damage: bool, critical: bool) -> void :
 	if not preload("res://script/feedback_budget.gd").allow_popup(get_tree()): return
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	var container: Node = feedback.get_parent().effect_container if feedback != null else get_parent()
 	var popup: Node = preload("res://scenes/damage_text.tscn").instantiate()
 	container.add_child(popup)
 	popup.global_position = global_position
-	popup.show_damage(str(int(floor(amount))), global_position, 0, 0, true)
+	popup.show_damage(str(int(floor(amount))), global_position, 0, 0, status_damage, critical)
 
 func _apply_phase2_outline() -> void :
 

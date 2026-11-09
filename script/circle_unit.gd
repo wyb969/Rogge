@@ -26,7 +26,5 @@ func _on_area_2d_body_entered(body: Node2D) -> void :
 		body.apply_hit({
 			"damage": weapon_demage, 
 			"direction": (body.global_position - global_position).normalized(), 
-			"effect": "burn", 
-			"duration": 3.0, 
 			"source": self
 	})

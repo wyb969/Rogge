@@ -1,0 +1,362 @@
+{
+  "version": "20261106-170834",
+  "base_commit": "91410a4d63b63773b347a548f3a238a8cc5ed6db",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "verified_utc": "2026-11-06T09:13:18.106745+00:00",
+  "change": "Clean recovered Debug entries and add physically sized responsive pagination; gameplay presets retained",
+  "cleanup": {
+    "removed_test_buttons": 21,
+    "retained_test_buttons": 13,
+    "utilities": [
+      "Back",
+      "Export diagnostics"
+    ],
+    "date_evidence": "Retained entries traced to November 4-6 commits. Original dates of recovered baseline entries are unavailable; removal uses recovery boundary, not proven pre-November dates."
+  },
+  "native": {
+    "tests": 14,
+    "passed": 14,
+    "results": [
+      {
+        "name": "smoke_debug_menu",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.31,
+        "errors": [],
+        "markers": [
+          "DEBUG MENU OK: 3660 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_menu_layout",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.2,
+        "errors": [],
+        "markers": [
+          "MENU LAYOUT OK"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_control_cards",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.21,
+        "errors": [],
+        "markers": [
+          "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_growth_combo",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.5,
+        "errors": [],
+        "markers": [
+          "GROWTH COMBO OK: 61 checks; actual movement/healing/XP pickups/merge/difficulty, no stacking, shared green/gold phase, bounded border work, layout and Debug lifecycle"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 29 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_bomb_card",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.74,
+        "errors": [],
+        "markers": [
+          "BOMB CARD OK: 57 checks; real draft/upgrade/caps, area/fuse/unique hit, blast hop/force, rewards/crit, trial/Boss rules, fixed pools, pause/cleanup and Debug lifecycle"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 32 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 15 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_arsenal_combo",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.74,
+        "errors": [],
+        "markers": [
+          "ARSENAL COMBO OK: 25 checks; real three-card ownership, exact 3s/1s cadence, damage/shield isolation, dash coexistence, pause/lag/rest/death/reset and Debug retry"
+        ],
+        "shutdown_warnings": []
+      },
+      {
+        "name": "smoke_knight_boss",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 3.05,
+        "errors": [],
+        "markers": [
+          "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_beasts",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 13.61,
+        "errors": [],
+        "markers": [
+          "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 25 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_trials",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 5.29,
+        "errors": [],
+        "markers": [
+          "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_treasure_lottery",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 3.43,
+        "errors": [],
+        "markers": [
+          "TREASURE LOTTERY OK: third stage, real mini-boss, safe warning, one reward, probability intervals, actual stacked stats, pause ordering, responsive UI and victory"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 15 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_weather",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.85,
+        "errors": [],
+        "markers": [
+          "WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_weather_audio",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 4.73,
+        "errors": [],
+        "markers": [
+          "WEATHER AUDIO OK: four weather beds, day/night calls, thunder timing, real preview, bounded stream crossfades, pause/boss mix, RNG, volume, unlock, Back/result/Retry ownership"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_diagnostics",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.95,
+        "errors": [],
+        "markers": [
+          "DIAGNOSTICS OK: bundled arrows, real final-boss stress entry, bounded reports, JSON export/reload, stop/back and run-owned cleanup"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_adventure_music",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 5.24,
+        "errors": [],
+        "markers": [
+          "ADVENTURE MUSIC OK: eight arranged tracks, real preview/Back, bags/stages/no-repeat, isolated RNG, crossfades, browser unlock, pause/slowmo-safe switching, boss/result cancellation, volume and run/Retry"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ],
+    "followup": "After Web-DPR correction, reran Debug and menu checks; unrelated combat/preset results are unchanged earlier checks from this task."
+  },
+  "packed": {
+    "tests": 4,
+    "passed": 4,
+    "pck_sha256": "3669159b8004b981c340001e3f0fc480f8777951c720d1f007afee81c17b9689",
+    "results": [
+      {
+        "name": "smoke_debug_menu",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.03,
+        "errors": [],
+        "markers": [
+          "DEBUG MENU OK: 3660 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_menu_layout",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.83,
+        "errors": [],
+        "markers": [
+          "MENU LAYOUT OK"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_control_cards",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.12,
+        "errors": [],
+        "markers": [
+          "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_growth_combo",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.12,
+        "errors": [],
+        "markers": [
+          "GROWTH COMBO OK: 61 checks; actual movement/healing/XP pickups/merge/difficulty, no stacking, shared green/gold phase, bounded border work, layout and Debug lifecycle"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 27 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ]
+  },
+  "web_export": {
+    "import_errors": 0,
+    "export_errors": 0,
+    "assets": {
+      "index.apple-touch-icon.png": {
+        "bytes": 11441,
+        "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+      },
+      "index.icon.png": {
+        "bytes": 3209,
+        "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+      },
+      "index.pck": {
+        "bytes": 23367204,
+        "sha256": "3669159b8004b981c340001e3f0fc480f8777951c720d1f007afee81c17b9689"
+      },
+      "index.audio.worklet.js": {
+        "bytes": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+      },
+      "index.png": {
+        "bytes": 21443,
+        "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+      },
+      "index.html": {
+        "bytes": 5437,
+        "sha256": "ed6b59eb00a6e9606b188dfc9cb0c6da8e7c1f9bd93a1329e092353a084d54b4"
+      },
+      "index.audio.position.worklet.js": {
+        "bytes": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "index.wasm": {
+        "bytes": 39509339,
+        "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+      }
+    }
+  },
+  "native_gpu": {
+    "renderer": "OpenGL Compatibility, llvmpipe",
+    "captures": [
+      "docs/screenshots/debug-pages-portrait.png",
+      "docs/screenshots/debug-pages-last.png",
+      "docs/screenshots/debug-pages-landscape.png",
+      "docs/screenshots/debug-pages-small.png"
+    ],
+    "sizes": [
+      "390x844",
+      "844x390",
+      "320x568"
+    ],
+    "result": "All controls visible; bounded touch targets and stationary footer across pages",
+    "shutdown_warnings": "Capture exit logged one GL texture/RID, ObjectDB/resources-in-use and null RenderingServer warning; not a gameplay leak diagnosis.",
+    "captured_before_web_dpr_followup": true
+  },
+  "limitations": [
+    "No real browser or physical mobile QA; Sites-managed browser control is unavailable.",
+    "No full 55-script suite for this focused menu change.",
+    "Exit resource warnings retained in check records; no unaccounted runtime/script errors."
+  ],
+  "publication": {
+    "status": "succeeded",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aed99de54b4819185c3861007917a99",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_dac36fc48dec8191aa9994bd24a8429b",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "site_source_commit": "041fd16f1f9e44359aa7523e298024e33b33efa7",
+    "game_commit": "7c6ee122b5e3f68698a153ac84af4bf718a25d58",
+    "game_version": "20261106-170834",
+    "audience": "owner-private, unchanged",
+    "itch_updated": false
+  },
+  "followup_base_commit": "aa65a27f0e67585076b2c6b43065b5835c851257",
+  "web_css_unit_checks": {
+    "canvas_width_cases": 15,
+    "missing_id_fallback_cases": 5,
+    "result": "passed",
+    "scope": "Node VM evaluates the exact CSS width expression; native subclass simulates DPR 2/3 for portrait/landscape; not real browser integration."
+  }
+}

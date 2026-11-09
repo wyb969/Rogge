@@ -14,7 +14,7 @@ func _run() -> void :
 	var latest: int = main.game.spawner.FINAL_STAGE
 	for stage_num in range(3, latest + 1):
 		main._on_debug_button_pressed()
-		main.get_node("mainUI/Control/DebugCenter/VBoxContainer/DebugBeast%dButton" % stage_num).pressed.emit()
+		main._launch_run(StringName("beast_%d" % stage_num))
 		await process_frame
 		await process_frame
 		var game: Node = main.game
@@ -28,7 +28,7 @@ func _run() -> void :
 		spawner.set_process(false)
 		powers.set_process(false)
 		var bosses: = get_nodes_in_group("beast_boss")
-		_expect(bosses.size() == (2 if stage_num == 5 else 1), "correct live guardian count from debug button %d" % stage_num)
+		_expect(bosses.size() == (2 if stage_num == 5 else 1), "correct live guardian count from debug preset %d" % stage_num)
 		if bosses.is_empty():
 			_finish()
 			return
@@ -139,6 +139,11 @@ func _run() -> void :
 			spawner.timer.stop()
 			spawner.get_node("Elite").stop()
 		else:
+			_expect(game.trials.kind == "wooden" and game.trials.flow == game.trials.TrialFlow.INTRO, "final speed trial proceeds to the stationary challenge")
+			game.trials.set_process(false)
+			game.trials.start_button.pressed.emit()
+			game.trials._process(60.0)
+			game.trials.continue_button.pressed.emit()
 			_expect(spawner._endless_trial and powers.finish_button.visible and not paused, "last reward allows a free trial with earned powers")
 		spawner.timer.stop()
 		spawner.get_node("Elite").stop()

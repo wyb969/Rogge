@@ -39,7 +39,7 @@ func _run() -> void :
 	enemy.set_physics_process(false)
 	enemy.health = 100
 	book._on_area_2d_body_entered(enemy)
-	_expect(enemy.health == 95 and enemy.burn_stacks > 0, "restyled books retain real base damage and burn")
+	_expect(enemy.health == 95 and enemy.burn_stacks == 0, "restyled books retain real base damage without implicit burn")
 	var marker: Node = game.player.get_node("player_ring")
 	var collider_scale: Vector2 = game.player.scale
 	game.player.play_ring_tween()
@@ -61,7 +61,7 @@ func _run() -> void :
 	await process_frame
 	await process_frame
 	_expect(get_nodes_in_group("healing_orb").is_empty(), "restyled pickups leave no active run actors after teardown")
-	if failures.is_empty(): print("VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/damage/burn, fixed footprint, shared non-additive pickups and exact healing")
+	if failures.is_empty(): print("VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/direct damage without implicit burn, fixed footprint, shared non-additive pickups and exact healing")
 	else:
 		for failure in failures: push_error(failure)
 	quit(0 if failures.is_empty() else 1)

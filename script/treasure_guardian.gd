@@ -8,6 +8,7 @@ var warning_left: = 0.0
 var impact_left: = 0.0
 
 func configure_guardian(hp: float, attack_damage: float) -> void :
+	death_stain_color = DEATH_STAINS.color_for(&"treasure_guardian")
 	max_health = hp
 	health = hp
 	body_scale = 1.85

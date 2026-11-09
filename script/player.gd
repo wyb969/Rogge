@@ -12,6 +12,7 @@ extends CharacterBody2D
 
 signal player_died()
 signal health_damaged(amount: float)
+signal dash_started(at: Vector2)
 signal dash_completed(at: Vector2)
 
 var ring_tween: Tween
@@ -26,6 +27,8 @@ const HURT_INVULNERABILITY: = 0.45
 var growth_level: = 0
 var beast_damage_scale: = 1.0
 var healing_multiplier: = 1.0
+var growth_move_multiplier := 1.0
+var growth_heal_multiplier := 1.0
 
 var SPEED = 100.0
 const DASH_SPEED = 780.0
@@ -46,6 +49,9 @@ var pickup_range: float
 var left_fist_level: int = 0
 var right_fist_level: int = 0
 var hurt_lock: float = 0.0
+var arsenal_shield_active := false
+var movement_locked := false
+var _movement_lock_position := Vector2.ZERO
 
 var damage_reduction: float = 0.0
 var cooldown_scale: float = 1.0
@@ -66,6 +72,9 @@ const LIFESTEAL_MIN_HIT: = 8.0
 var regen_level: int = 0
 var lifesteal_level: int = 0
 var monster_necklace_level: int = 0
+const CRITICAL_GLASSES := preload("res://script/critical_glasses.gd")
+var critical_glasses_level := 0
+var _critical_rng := RandomNumberGenerator.new()
 var _regen_acc: float = 0.0
 
 const SHIELD_GAIN_BASE: = 2.0
@@ -89,6 +98,7 @@ var _hurt_tween: Tween
 var _hurt_punch: = 0.0
 
 func _ready() -> void :
+	_critical_rng.randomize()
 	_visual_base_scale = animated_sprite_2d.scale
 	health_bar.init_health(player_health)
 	max_player_health = player_health
@@ -100,6 +110,9 @@ func _ready() -> void :
 	right_fist_level = 0
 	var circle_shape: = pick_shape.shape as CircleShape2D
 	if circle_shape != null:
+		# Card upgrades must not mutate the PackedScene's shared pickup shape between runs.
+		circle_shape = circle_shape.duplicate() as CircleShape2D
+		pick_shape.shape = circle_shape
 		pickup_range = circle_shape.radius
 	_ensure_shield_gem()
 
@@ -145,7 +158,13 @@ func heal(amount: float) -> float:
 	return gained
 
 func effective_heal_amount(base_amount: float) -> float:
-	return base_amount * healing_multiplier
+	return base_amount * total_healing_multiplier()
+
+func total_healing_multiplier() -> float:
+	return healing_multiplier * growth_heal_multiplier
+
+func effective_move_speed() -> float:
+	return float(SPEED) * growth_move_multiplier
 
 func add_regen_level() -> void :
 	regen_level += 1
@@ -155,6 +174,15 @@ func add_lifesteal_level() -> void :
 
 func add_monster_necklace_level() -> void :
 	monster_necklace_level += 1
+
+func add_critical_glasses_level() -> void:
+	critical_glasses_level = mini(critical_glasses_level + 1, CRITICAL_GLASSES.MAX_LEVEL)
+
+func roll_critical_multiplier(hit: Dictionary) -> float:
+	return CRITICAL_GLASSES.roll_multiplier(critical_glasses_level, hit, _critical_rng)
+
+func reset_critical_glasses() -> void:
+	critical_glasses_level = 0
 
 func monster_necklace_heal_for(level: int) -> float:
 	return 5.0 * float(maxi(level, 0))
@@ -388,6 +416,17 @@ func reset_dash() -> void :
 	can_dash = true
 	velocity = Vector2.ZERO
 
+func set_movement_locked(locked: bool) -> void:
+	movement_locked = locked
+	reset_dash()
+	MobileInput.clear_move()
+	MobileInput.clear_dash()
+	if locked:
+		_movement_lock_position = global_position
+		can_dash = false
+		cpu_particles_2d.emitting = false
+		animated_sprite_2d.pause()
+
 func _process(delta: float) -> void :
 	_tick_visuals(delta)
 	_tick_regen(delta)
@@ -395,7 +434,7 @@ func _process(delta: float) -> void :
 
 func _tick_visuals(delta: float) -> void :
 	_hurt_punch = move_toward(_hurt_punch, 0, delta * 8)
-	var effort: = clampf(velocity.length() / maxf(SPEED, 1), 0, 1)
+	var effort: = clampf(velocity.length() / maxf(effective_move_speed(), 1), 0, 1)
 	var stretch: = Vector2(1.13, 0.88) if dashing else Vector2(1.0 + effort * 0.025, 1.0 - effort * 0.015)
 	stretch += Vector2(0.1, -0.08) * _hurt_punch
 	animated_sprite_2d.scale = animated_sprite_2d.scale.lerp(_visual_base_scale * stretch, 1.0 - exp( - delta * 25))
@@ -420,6 +459,12 @@ func _physics_process(delta: float) -> void :
 			_sync_dash_hurt_area()
 	if hurt_lock > 0.0:
 		hurt_lock = maxf(0.0, hurt_lock - delta)
+	if movement_locked:
+		global_position = _movement_lock_position
+		velocity = Vector2.ZERO
+		MobileInput.clear_move()
+		MobileInput.clear_dash()
+		return
 	var keys: = Input.get_vector("left", "right", "up", "down")
 	var input_direction: = keys
 
@@ -456,7 +501,7 @@ func _physics_process(delta: float) -> void :
 	if dashing:
 		velocity = dash_direction * DASH_SPEED
 	else:
-		max_speed = SPEED
+		max_speed = effective_move_speed()
 		acceleration = 900.0
 		if input_direction != Vector2.ZERO:
 			velocity = velocity.move_toward(input_direction.normalized() * max_speed, acceleration * delta)
@@ -469,7 +514,7 @@ func _physics_process(delta: float) -> void :
 	move_and_slide()
 
 func _start_dash(input_direction: Vector2) -> void :
-	if not can_dash or player_health <= 0: return
+	if movement_locked or not can_dash or player_health <= 0: return
 	can_dash = false
 	dashing = true
 	dash_grace_left = 0
@@ -493,6 +538,7 @@ func _start_dash(input_direction: Vector2) -> void :
 	shadow_timer.start()
 	var feedback: = JUICE.find(self)
 	if feedback != null: feedback.dash(global_position, dash_direction)
+	dash_started.emit(global_position)
 
 func _sync_dash_hurt_area() -> void :
 	if hurt_area:
@@ -517,11 +563,11 @@ func _on_dashing_timer_timeout() -> void :
 	dash_grace_left = DASH_GRACE_SECONDS
 	_sync_dash_hurt_area()
 	shadow_timer.stop()
-	velocity = dash_direction * minf(SPEED * 1.35, DASH_SPEED * 0.35)
+	velocity = dash_direction * minf(effective_move_speed() * 1.35, DASH_SPEED * 0.35)
 	dash_completed.emit(global_position)
 
 func _on_can_dasing_timer_timeout() -> void :
-	can_dash = true
+	can_dash = not movement_locked
 	var feedback: = JUICE.find(self)
 	if feedback != null and feedback.is_processing(): AudioManager.play_juice("ready")
 
@@ -534,7 +580,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void :
 	receive_attack(amount, body)
 
 func receive_attack(amount: float, _source: Node = null) -> void :
-	if is_dash_invulnerable() or amount <= 0.0 or hurt_lock > 0.0 or player_health <= 0.0:
+	if is_dash_invulnerable() or arsenal_shield_active or amount <= 0.0 or hurt_lock > 0.0 or player_health <= 0.0:
 		return
 	hurt_lock = HURT_INVULNERABILITY
 	AudioManager.play_hit()

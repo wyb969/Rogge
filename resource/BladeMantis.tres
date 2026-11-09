@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" path="res://script/enemy_meta.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assest/sprites/enemies/blade_mantis.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+title = "blade_mantis"
+sprite = ExtResource("2")
+health = 52.0
+damage = 2.0
+move_speed = 54.0
+defense = 0.05
+body_scale = 1.15
+marker_color = Color(0.5, 0.95, 0.8, 1)
+contact_damage = 20.0
+contact_cooldown = 1.0
+projectile_damage = 26.0
+attack_cooldown = 2.8
+attack_style = &"cleave"

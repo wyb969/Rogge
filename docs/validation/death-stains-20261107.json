@@ -1,0 +1,475 @@
+{
+  "date_utc": "2026-11-07",
+  "version": "20261107-175332",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "branch": "feature/fan-black-hole-20261104",
+  "scope": "Colored, world-bound death stains; no combat balance changes; no itch publication",
+  "native_checks": [
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_resource_bounds",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.19,
+      "errors": [],
+      "markers": [
+        "RESOURCE BOUNDS OK: 1000 coins/500 orbs preserve rewards, shared GPU resources, projectile ownership/TTL, cosmetic budgets, single explosions and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_critical_glasses",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.31,
+      "errors": [],
+      "markers": [
+        "CRITICAL GLASSES OK: real draft/icon, rank probabilities, master damage, capped lottery, enemy/Boss damage and text, bonus composition, status exclusions, stage/menu/retry lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 30 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 14 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.15,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 176 checks; lethal paths/pigments/rewards, fixed instanced pool, burst bounds, RNG, random variation, world anchoring, pause/hitstop/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_poison_trail",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.41,
+      "errors": [],
+      "markers": [
+        "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_status_numbers",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.53,
+      "errors": [],
+      "markers": [
+        "STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_fan_status",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.24,
+      "errors": [],
+      "markers": [
+        "FAN STATUS OK: exact crowd deduplication, snapshot-only burn/poison replay, unchanged clocks/natural spread, one popup, no recursive procs/crit/lifesteal, rewards, five real cooldowns, Boss and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_molotov_spread",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.03,
+      "errors": [],
+      "markers": [
+        "MOLOTOV SPREAD OK: exact real explosion/live radius/owner/once, shared assets, 240-source reference equivalence, cap/potency/RNG/pause, request and bucket overflow, deletion/clear and bounded allocation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.68,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.97,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 14.74,
+      "errors": [],
+      "markers": [
+        "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_wind_duo",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 19.84,
+      "errors": [],
+      "markers": [
+        "WIND DUO OK: two moving/attacking roles, real travelling blades, independent HP/HUD, both kill orders, survivor AI, one final reward, next stage and duplicate-spawn races"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_treasure_lottery",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.74,
+      "errors": [],
+      "markers": [
+        "TREASURE LOTTERY OK: third stage, real mini-boss, safe warning, one reward, probability intervals, actual stacked stats, pause ordering, responsive UI and victory"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_bomb_card",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.23,
+      "errors": [],
+      "markers": [
+        "BOMB CARD OK: 57 checks; real draft/upgrade/caps, area/fuse/unique hit, blast hop/force, rewards/crit, trial/Boss rules, fixed pools, pause/cleanup and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_runtime_optimization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.5,
+      "errors": [],
+      "markers": [
+        "RUNTIME OPTIMIZATION OK: live target lifecycle/nearest selection, exact pooled pause-safe chains/RNG, no child effects/timers, synchronous pickup indices, fixed cosmetic slots, cached geometry/audio and clean Retry"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_survival_growth",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.38,
+      "errors": [],
+      "markers": [
+        "SURVIVAL GROWTH OK: real XP/multi-level growth, HP HUD/shields, rest stacking, no duplicate/card/revive growth, fresh runs, bounded stage-three elite hits and multi-source escape window"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.14,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 176 checks; lethal paths/pigments/rewards, fixed instanced pool, burst bounds, RNG, random variation, world anchoring, pause/hitstop/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_poison_trail",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.07,
+      "errors": [],
+      "markers": [
+        "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_fan_status",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.12,
+      "errors": [],
+      "markers": [
+        "FAN STATUS OK: exact crowd deduplication, snapshot-only burn/poison replay, unchanged clocks/natural spread, one popup, no recursive procs/crit/lifesteal, rewards, five real cooldowns, Boss and Debug lifecycle"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.19,
+      "errors": [],
+      "markers": [
+        "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.5,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "import_export": {
+    "import": {
+      "errors": [],
+      "log": "/workspace/Rogge-death-stains-20261107/import.log"
+    },
+    "export": {
+      "errors": [],
+      "log": "/workspace/Rogge-death-stains-20261107/export.log"
+    }
+  },
+  "assets": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "bc85f296d936e5114d264579c8f1ebbc4b653e23d1c5689546186311b568e338"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23407496,
+      "sha256": "cc8853e9b119cb81e998f5a521f1130445b677eb77a17d764c40fa42bbc46e69"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "isolated_gpu": {
+    "active": 128,
+    "empty_draw_calls": 0.0,
+    "full_draw_calls": 1.0,
+    "increment": 1.0,
+    "node_children": 1,
+    "renderer": "native OpenGL Compatibility / llvmpipe",
+    "slots": 128
+  },
+  "browser": [
+    {
+      "name": "desktop",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "dpr": 1,
+      "seconds": 25.1,
+      "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
+      "actions": [
+        "Home → Debug → Wooden Trial → Start",
+        "15 seconds of actual horde combat and enemy deaths",
+        "Return Home"
+      ],
+      "screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/death-stains-browser-desktop.png",
+      "gfx": {
+        "canvas": {
+          "width": 900,
+          "height": 600
+        },
+        "css": {
+          "width": 900,
+          "height": 600
+        },
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "WebKit WebGL",
+        "context_lost": false
+      },
+      "errors": [],
+      "messages": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        },
+        {
+          "type": "log",
+          "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+        }
+      ]
+    },
+    {
+      "name": "phone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "dpr": 2,
+      "seconds": 26.1,
+      "scope": "Raw Godot Web export on local HTTP; real Chromium WebGL2 and GUI/touch, not the Sites gzip wrapper or a physical device",
+      "actions": [
+        "Home → Debug → Wooden Trial → Start",
+        "15 seconds of actual horde combat and enemy deaths",
+        "Return Home"
+      ],
+      "screenshot": "/workspace/Rogge-fan-blackhole-20261104/project/docs/screenshots/death-stains-browser-phone.png",
+      "gfx": {
+        "canvas": {
+          "width": 780,
+          "height": 1688
+        },
+        "css": {
+          "width": 390,
+          "height": 844
+        },
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "WebKit WebGL",
+        "context_lost": false
+      },
+      "errors": [],
+      "messages": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        },
+        {
+          "type": "log",
+          "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Chromium used software WebGL2; mobile viewport is emulated, not physical Safari.",
+    "The raw Godot Web export was browser-tested; Sites gzip-wrapper deployment is separately byte-checked, not browser-tested.",
+    "No physical-device FPS or memory profile; no full 59-script suite.",
+    "Existing ObjectDB/resources-in-use shutdown warnings are retained in check records; not fixed or treated as proof of a new leak."
+  ],
+  "screenshots": [
+    "death-stains-palette.png",
+    "death-stains-fade.png",
+    "death-stains-dense.png",
+    "death-stains-browser-desktop.png",
+    "death-stains-browser-phone.png"
+  ],
+  "game_commit": "d0c9e4c0d8a0aaf2ec4a6f1f2dd924c39249eed9",
+  "hosting_checks": {
+    "pck_sha256": "cc8853e9b119cb81e998f5a521f1130445b677eb77a17d764c40fa42bbc46e69",
+    "pck_equal": true,
+    "wasm_gzip_decodes_to_exact_export": true,
+    "loader_syntax": "passed; unchanged",
+    "files_under_25mib": true,
+    "browser_verified": false
+  },
+  "deployment": {
+    "site_source_commit": "c735b4ea74e160c3fad53d556ace708cea8f0de1",
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aeef83c6c74819189803de8c7201adb",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_ff3f51082ef88191b685cfd130da6878",
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "audience": "owner-private; preserved",
+    "itch_updated": false
+  }
+}

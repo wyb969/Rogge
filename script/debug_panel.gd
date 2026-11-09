@@ -26,7 +26,7 @@ func update_text() -> void :
 """ + \
 	"Level: %s\n" % level_manager.level + \
 	"HP: %s / %s\n" % [player.player_health, player.max_player_health] + \
-	"MoveSpeed: %s\n" % player.SPEED + \
+	"MoveSpeed: %s\n" % player.effective_move_speed() + \
 	"Enemy Killed: %s\n" % spawner.enemy_killed_num + \
 	"Enemy Alive: %s\n" % enemy_count + \
 	"Stage: %s\n" % spawner.stage

@@ -2,3 +2,4 @@
 .autoconverted/
 __pycache__/
 export/
+docs/**/*.import

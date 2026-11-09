@@ -10,6 +10,13 @@ const LIGHTNING_RING: = preload("res://script/lightning_ring.gd")
 var growth_hint: Label
 const VARIETY: = preload("res://script/run_variety.gd")
 const POISON: = preload("res://script/poison_trail.gd")
+const FAN := preload("res://script/banana_fan.gd")
+const VORTEX := preload("res://script/black_hole.gd")
+const CRITICAL := preload("res://script/critical_glasses.gd")
+const MOLOTOV := preload("res://script/molotov_controller.gd")
+const BOMB := preload("res://script/bomb_controller.gd")
+const GROWTH_HINT := "生机：拾取+移速+回复\n集齐后经验 +30%\n移速、回复效果 +20%"
+const ARSENAL_HINT := "军械：枪支+无人机+炸弹\n每3秒获得1秒无敌护盾"
 const MAX_REROLLS: = 3
 var rerolls: = 2
 var reroll_button: Button
@@ -19,6 +26,10 @@ var _draft_rng: = RandomNumberGenerator.new()
 var _fit_pending: = false
 
 var upgrade_pool: = [
+	{"id": "bomb", "title": "炸弹 +1 级", "desc": "", "icon": "res://assest/sprites/bomb.svg", "max_level": 5},
+	{"id": "critical_glasses", "title": "暴击眼镜 +1 级", "desc": "", "icon": "res://assest/sprites/critical_glasses.svg", "max_level": 5},
+	{"id": "banana_fan", "title": "芭蕉扇 +1 级", "desc": "", "icon": "res://assest/sprites/banana_fan.svg", "max_level": 5},
+	{"id": "black_hole", "title": "黑洞 +1 级", "desc": "", "icon": "res://assest/sprites/black_hole.svg", "max_level": 5},
 	{"id": "poison_trail", "title": "剧毒踪迹 +1 级", "desc": "", "icon": "res://assest/sprites/poison_trail.svg", "max_level": 5}, 
 	{"id": "wind_emblem", "title": "踏风徽记 +1 级", "desc": "", "icon": "res://assest/sprites/wind_emblem.svg"}, 
 	{"id": "echo_ember", "title": "回响火种 +1 级", "desc": "", "icon": "res://assest/sprites/echo_ember.svg"}, 
@@ -282,6 +293,31 @@ func available_upgrades() -> Array:
 func _build_card_data(data: Dictionary) -> Dictionary:
 	var card_data: = data.duplicate(true)
 	match str(card_data.get("id", "")):
+		"bomb":
+			var game := _get_game()
+			var rank: int = mini(BOMB.MAX_LEVEL, 1 + (game.bomb_controller.level if game != null else 0))
+			var stats := BOMB.stats_for(rank)
+			card_data["desc"] = "自动投弹 · 爆炸击飞\n伤害 %.0f · 半径 %.0f\n间隔 %.2fs · 最高5级\n%s" % [stats.damage, stats.radius, stats.interval, ARSENAL_HINT]
+		"gun_up":
+			card_data["desc"] = "强化枪支伤害与射速\n" + ARSENAL_HINT
+		"pickup_up":
+			card_data["desc"] = "拾取范围提高20%\n" + GROWTH_HINT
+		"speed_up":
+			card_data["desc"] = "基础移动速度 +20\n" + GROWTH_HINT
+		"critical_glasses":
+			var game := _get_game()
+			var rank: int = mini(CRITICAL.MAX_LEVEL, 1 + (game.player.critical_glasses_level if game != null else 0))
+			card_data["desc"] = "直接攻击暴击率 %d%%\n暴击造成 %d%% 伤害\n每级 +20%% · 最高5级\n满级：暴击伤害200%%\n持续伤害不触发暴击" % [roundi(CRITICAL.chance_for(rank) * 100.0), roundi(CRITICAL.damage_multiplier_for(rank) * 100.0)]
+		"banana_fan":
+			var game := _get_game()
+			var rank: int = mini(5, 1 + (game.banana_fan.level if game != null else 0))
+			var stats := FAN.stats_for(rank)
+			card_data["desc"] = "沿移动方向吹出气流\n伤害 %.0f · 距离 %.0f\n间隔 %.2f 秒 · 击退敌人\n已有灼烧/中毒额外一跳\n最高5级 · 追加不传播" % [stats.damage, stats.range, stats.interval]
+		"black_hole":
+			var game := _get_game()
+			var rank: int = mini(5, 1 + (game.black_hole.level if game != null else 0))
+			var stats := VORTEX.stats_for(rank)
+			card_data["desc"] = "自动召唤黑洞聚怪\n每秒伤害 %.0f · 半径 %.0f\n间隔 %.1f 秒 · 持续3秒\n升级增伤、扩围、减冷却\n最高 5 级" % [stats.dps, stats.radius, stats.interval]
 		"poison_trail":
 			var game: = _get_game()
 			var rank: int = mini(5, 1 + (game.poison_trail.level if game != null else 0))
@@ -292,13 +328,13 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 		"right_fist":
 			card_data["desc"] = _fist_desc(false)
 		"drone_up":
-			card_data["desc"] = _drone_desc()
+			card_data["desc"] = _drone_desc() + "\n" + ARSENAL_HINT
 		"molotov_up":
 			card_data["desc"] = _molotov_desc()
 		"freeze_up":
 			card_data["desc"] = _freeze_desc()
 		"regen_up":
-			card_data["desc"] = _regen_desc()
+			card_data["desc"] = _regen_desc() + "\n" + GROWTH_HINT
 		"lifesteal_up":
 			card_data["desc"] = _lifesteal_desc()
 		"shield_up":
@@ -356,11 +392,11 @@ func _molotov_desc() -> String:
 	if game and game.get("molotov_controller"):
 		lv = int(game.molotov_controller.level)
 	var next: = lv + 1
-	var interval: = maxf(1.6, 4.2 - float(next) * 0.35)
+	var interval: float = MOLOTOV.interval_for(next)
 	var stacks: = 2 + int((next - 1) / 2)
 	var dps: = 2.5 + float(next) * 1.8
 	var chance: = mini(0.18 + float(next) * 0.07, 0.65) * 100.0
-	return "投掷汽油瓶\n间隔 %.1fs 燃烧%d层\n击中附燃 %.0f%% DPS%.0f" % [interval, stacks, chance, dps]
+	return "投掷汽油瓶\n间隔 %.2fs 燃烧%d层\n击中附燃 %.0f%% DPS%.0f" % [interval, stacks, chance, dps]
 
 
 func _regen_desc() -> String:
@@ -380,9 +416,10 @@ func _lifesteal_desc() -> String:
 	if player != null:
 		next_level = int(player.lifesteal_level) + 1
 	if player != null and player.has_method("lifesteal_cap_for"):
-		var percent: float = player.lifesteal_percent_for(next_level) * 100.0 * player.healing_multiplier
+		var multiplier: float = player.total_healing_multiplier()
+		var percent: float = player.lifesteal_percent_for(next_level) * 100.0 * multiplier
 		var cap: float = player.effective_heal_amount(player.lifesteal_cap_for(next_level))
-		return "命中回复少量\n约 %s%% +%s  上限 %s" % [_heal_number(percent), _heal_number(player.healing_multiplier), _heal_number(cap)]
+		return "命中回复少量\n约 %s%% +%s  上限 %s" % [_heal_number(percent), _heal_number(multiplier), _heal_number(cap)]
 	return "命中回复少量\n约 3% +1  上限 2"
 
 func _shield_desc() -> String:
@@ -425,7 +462,7 @@ func _monster_necklace_desc() -> String:
 	var next_level: = 1
 	if player != null:
 		next_level = int(player.monster_necklace_level) + 1
-	var multiplier: float = player.healing_multiplier if player != null else 1.0
+	var multiplier: float = player.total_healing_multiplier() if player != null else 1.0
 	return "击杀掉落回血球\n拾取回复 +%s 生命\n每级增加 %s 点" % [_heal_number(next_level * 5 * multiplier), _heal_number(5 * multiplier)]
 
 func _heal_number(amount: float) -> String:

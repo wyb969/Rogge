@@ -13,6 +13,14 @@ var direction: Vector2
 var speed: float = 50
 var knockback: Vector2 = Vector2.ZERO
 var knockback_decay: float = 10.0
+var _airflow_velocity := Vector2.ZERO
+var _airflow_left := 0.0
+var _gravity_velocity := Vector2.ZERO
+var _gravity_left := 0.0
+var _blast_velocity := Vector2.ZERO
+var _blast_left := 0.0
+var _blast_duration := 0.3
+var _blast_height := 0.0
 
 const DASHER_MAX_HEALTH: = 20.0
 const DASH_AIM_SECONDS: = 0.4
@@ -31,6 +39,10 @@ var is_elite: bool = false
 var _death_started: bool = false
 var _hit_flash_left: = 0.0
 var _game_ref: WeakRef
+const DEATH_STAINS := preload("res://script/death_stains.gd")
+const TACTICAL_AI := preload("res://script/tactical_enemy_ai.gd")
+var tactical_ai: RefCounted
+var death_stain_color: Color = DEATH_STAINS.PALETTE[&"chaser"]
 signal death_signal
 
 var archetype: EnemyData.Archetype = EnemyData.Archetype.CHASER
@@ -86,6 +98,11 @@ func _ready() -> void :
 		sprite_2d.modulate = base_modulate
 
 func _draw() -> void :
+	if _blast_left > 0.0:
+		var unit := 1.0 / maxf(body_scale, 0.4)
+		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
+		draw_circle(Vector2.ZERO, 7.5, Color(0.015, 0.025, 0.03, 0.3))
+		draw_set_transform(Vector2.ZERO)
 	if archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0:
 		var unit: = 1.0 / maxf(body_scale, 0.4)
 		draw_arc(Vector2(0, 11) * unit, 8 * unit, - PI * 0.5, - PI * 0.5 + TAU * contact_recovery_left / DASHER_CONTACT_RECOVERY, 16, Color(0.85, 0.92, 1, 0.65), 1.2 * unit, false)
@@ -148,6 +165,7 @@ func set_enemy_data(data: EnemyData) -> void :
 	speed = data.move_speed
 	defense = clampf(data.defense, 0.0, 0.75)
 	body_scale = maxf(data.body_scale, 0.4)
+	death_stain_color = DEATH_STAINS.color_for(StringName(data.title))
 	base_modulate = data.tint
 	marker_color = data.marker_color
 	contact_damage = data.contact_damage
@@ -160,6 +178,10 @@ func set_enemy_data(data: EnemyData) -> void :
 	projectile_speed = data.projectile_speed
 	attack_cooldown = data.attack_cooldown
 	attack_timer = minf(0.55, attack_cooldown)
+	tactical_ai = null
+	if data.attack_style!=&"":
+		tactical_ai = TACTICAL_AI.new()
+		tactical_ai.setup(data.attack_style,get_instance_id())
 
 	dash_timer = randf_range(0.6, 1.4) if archetype == EnemyData.Archetype.DASHER else 0.35
 	_sprite_base_scale = ($Sprite2D as Sprite2D).scale
@@ -227,6 +249,83 @@ func set_poison_exposure(active: bool, slow: float, tint: Color) -> void :
 	if sprite_2d:
 		sprite_2d.self_modulate = _poison_tint * Color.WHITE.lerp(preload("res://script/visual_style.gd").HIT_FLASH, clampf(_hit_flash_left / 0.065, 0, 1))
 
+func crowd_control_scale() -> float:
+	# Larger bodies and elites resist displacement; bosses use a different base.
+	return clampf(1.0 / pow(maxf(body_scale, 1.0), 1.5), 0.25, 1.0) * (0.65 if is_elite else 1.0)
+
+func apply_airflow(push_velocity: Vector2, seconds: float) -> void:
+	if _death_started: return
+	_airflow_velocity = push_velocity.limit_length(500.0) * crowd_control_scale()
+	_airflow_left = clampf(seconds, 0.0, 0.45)
+	if archetype == EnemyData.Archetype.DASHER:
+		_finish_dash()
+		dash_timer = maxf(dash_timer, 0.75)
+	shot_windup = 0.0
+	slam_windup = 0.0
+	slam_time_left = 0.0
+	attack_timer = maxf(attack_timer, _airflow_left)
+	queue_redraw()
+
+func clear_airflow() -> void:
+	_airflow_velocity = Vector2.ZERO
+	_airflow_left = 0.0
+
+func apply_gravity_pull(pull_velocity: Vector2, seconds: float) -> void:
+	if _death_started: return
+	# Refresh a bounded velocity, never add impulses every scan.
+	_gravity_velocity = pull_velocity.limit_length(280.0) * crowd_control_scale()
+	_gravity_left = clampf(seconds, 0.0, 0.2)
+
+func clear_gravity_pull() -> void:
+	_gravity_velocity = Vector2.ZERO
+	_gravity_left = 0.0
+
+func apply_blast_impulse(push_velocity: Vector2, seconds: float) -> void:
+	if _death_started: return
+	var resistance := crowd_control_scale()
+	_blast_velocity = push_velocity.limit_length(480.0) * resistance
+	_blast_duration = clampf(seconds, 0.05, 0.35)
+	_blast_left = _blast_duration
+	_blast_height = 13.0 * resistance
+	if archetype == EnemyData.Archetype.DASHER:
+		_finish_dash()
+		dash_timer = maxf(dash_timer, 0.75)
+	shot_windup = 0.0
+	slam_windup = 0.0
+	slam_time_left = 0.0
+	attack_timer = maxf(attack_timer, _blast_left)
+	queue_redraw()
+
+func blast_jump_height() -> float:
+	return sin(clampf(1.0 - _blast_left / _blast_duration, 0.0, 1.0) * PI) * _blast_height if _blast_left > 0.0 else 0.0
+
+func clear_blast_impulse() -> void:
+	_blast_left = 0.0
+	_blast_velocity = Vector2.ZERO
+	_blast_height = 0.0
+	if sprite_2d != null: _apply_move_juice(0.0)
+	queue_redraw()
+
+func _apply_crowd_motion(delta: float) -> void:
+	if delta <= 0.0: return
+	if _airflow_left > 0.0:
+		var step := minf(delta, _airflow_left)
+		var decay := exp(-5.0 * step)
+		# Integrate the decaying push so displacement is stable across frame rates.
+		velocity = velocity * (1.0 - step / delta) + _airflow_velocity * ((1.0 - decay) / (5.0 * delta))
+		_airflow_velocity *= decay
+		_airflow_left = maxf(0.0, _airflow_left - delta)
+	if _gravity_left > 0.0:
+		velocity += _gravity_velocity * (minf(delta, _gravity_left) / delta)
+		_gravity_left = maxf(0.0, _gravity_left - delta)
+	if _blast_left > 0.0:
+		var step := minf(delta, _blast_left)
+		var decay := exp(-5.0 * step)
+		velocity = velocity * (1.0 - step / delta) + _blast_velocity * ((1.0 - decay) / (5.0 * delta))
+		_blast_velocity *= decay
+		_blast_left = maxf(0.0, _blast_left - delta)
+		queue_redraw()
+
 func _physics_process(delta: float) -> void :
 	if _death_started or not is_instance_valid(player_reference):
 		return
@@ -243,16 +342,19 @@ func _physics_process(delta: float) -> void :
 	var move_speed: = speed
 	move_speed *= status_move_scale()
 
-	match archetype:
-		EnemyData.Archetype.DASHER:
-			_steer_dasher(delta, dir, dist, move_speed)
-		EnemyData.Archetype.TANK:
-			_steer_tank(delta, dir, dist, move_speed)
-		EnemyData.Archetype.RANGED:
-			_steer_ranged(delta, dir, dist, move_speed)
-		_:
-			_steer_chaser(dir, move_speed)
-	if recovering:
+	if tactical_ai!=null:
+		tactical_ai.steer(self,delta,dir,dist,move_speed)
+	else:
+		match archetype:
+			EnemyData.Archetype.DASHER:
+				_steer_dasher(delta, dir, dist, move_speed)
+			EnemyData.Archetype.TANK:
+				_steer_tank(delta, dir, dist, move_speed)
+			EnemyData.Archetype.RANGED:
+				_steer_ranged(delta, dir, dist, move_speed)
+			_:
+				_steer_chaser(dir, move_speed)
+	if recovering and _airflow_left <= 0.0 and _gravity_left <= 0.0:
 
 
 		knockback = Vector2.ZERO
@@ -262,6 +364,7 @@ func _physics_process(delta: float) -> void :
 	if knockback.length() > 0.1:
 		velocity += knockback
 		knockback = knockback.move_toward(Vector2.ZERO, knockback_decay * delta)
+	_apply_crowd_motion(delta)
 	var collision = move_and_collide(velocity * delta)
 	if collision:
 		if collision.get_collider() is CharacterBody2D:
@@ -271,7 +374,10 @@ func _physics_process(delta: float) -> void :
 
 	if is_instance_valid(player_reference):
 		_try_contact(global_position.distance_to(player_reference.global_position))
-	_face(dash_dir if archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or is_dashing) else dir)
+	if tactical_ai!=null and tactical_ai.committed:
+		_face(tactical_ai.facing,false)
+	else:
+		_face(dash_dir if archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or is_dashing) else dir)
 	_apply_move_juice(delta)
 
 func _steer_chaser(dir: Vector2, move_speed: float) -> void :
@@ -429,7 +535,8 @@ func _fire_projectile(dir: Vector2) -> void :
 	shots_fired += 1
 
 func _try_contact(dist: float) -> void :
-	if _death_started or is_queued_for_deletion() or (archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or contact_recovery_left > 0.0)):
+	if tactical_ai!=null and (tactical_ai.committed or tactical_ai.recovery>0): return
+	if _death_started or _blast_left > 0.0 or is_queued_for_deletion() or (archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or contact_recovery_left > 0.0)):
 		return
 	if archetype == EnemyData.Archetype.RANGED:
 		return
@@ -517,10 +624,12 @@ func _apply_move_juice(delta: float) -> void :
 			sprite_2d.position.y += 2.0 / maxf(body_scale, 0.4)
 			sprite_2d.rotation = 0
 
-func _face(dir: Vector2) -> void :
+	sprite_2d.position.y -= blast_jump_height() / maxf(body_scale, 0.4)
+
+func _face(dir: Vector2, prefer_velocity: bool = true) -> void :
 	if sprite_2d == null:
 		return
-	var face: = velocity if absf(velocity.x) > 2.0 else dir
+	var face: = velocity if prefer_velocity and absf(velocity.x) > 2.0 else dir
 	if absf(face.x) > 0.01:
 		sprite_2d.flip_h = face.x < 0.0
 
@@ -551,35 +660,55 @@ func _mitigate(raw: float) -> float:
 		dealt = maxf(dealt, 1.0)
 	return dealt
 
-func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false) -> float:
+func get_status_echo_kind(poison_tick: float) -> int:
+	return (1 if burn_stacks > 0 else 0) | (2 if poison_tick > 0.0 else 0)
+
+func get_status_echo_damage(poison_tick: float) -> float:
+	var total := _mitigate(float(burn_stacks) * burn_dps * 0.45) if burn_stacks > 0 else 0.0
+	if poison_tick > 0.0:
+		var player_node := _player_owner()
+		if player_node != null and player_node.has_method("get_side_damage_multiplier"):
+			poison_tick *= player_node.get_side_damage_multiplier(global_position)
+		var game := _game_owner()
+		if is_frozen() and game != null and game.get("freeze_controller") != null and game.freeze_controller.level > 0:
+			poison_tick *= 1.0 + game.freeze_controller.get_frozen_bonus()
+		total += _mitigate(poison_tick)
+	return total
+
+func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false) -> float:
 	if _death_started or damage_value <= 0: return 0.0
-	var dealt: = _mitigate(damage_value)
+	var dealt: float = damage_value if damage_is_final else _mitigate(damage_value)
 	var feedback: = JUICE.find(self)
 	if feedback != null: feedback.hit(global_position, direction, is_elite)
 	play_hit_tween(direction)
-	show_damage_text(dealt, status_damage)
+	show_damage_text(dealt, status_damage, critical)
 	AudioManager.play_enemy_hurt()
-	_apply_health_loss(dealt)
+	_apply_health_loss(dealt,direction)
 	return dealt
 
 func apply_hit(hit_data: Dictionary) -> void :
+	if _death_started or is_queued_for_deletion(): return
 	var status_damage: = preload("res://script/demage_text.gd").is_status_hit(hit_data)
+	var damage_is_final: bool = hit_data.get("damage_is_final", false)
 	var damage_value = float(hit_data.get("damage", 0))
 	var damage_dir: Vector2 = hit_data.get("direction", Vector2.ZERO)
 	var player_node: = _player_owner()
-	if player_node != null and player_node.has_method("get_side_damage_multiplier"):
+	if not damage_is_final and player_node != null and player_node.has_method("get_side_damage_multiplier"):
 		damage_value *= player_node.get_side_damage_multiplier(global_position)
 
 
 	var game: = _game_owner()
-	if is_frozen() and game != null and game.get("freeze_controller") != null:
+	if not damage_is_final and is_frozen() and game != null and game.get("freeze_controller") != null:
 		var fc = game.freeze_controller
 		if fc != null and fc.level > 0:
 			damage_value *= 1.0 + fc.get_frozen_bonus()
 			status_damage = true
 
-	var dealt: float = receive_hit(damage_dir, damage_value, status_damage)
-	if not hit_data.get("from_status", false):
+	var crit_multiplier := 1.0
+	if not damage_is_final and player_node != null and player_node.has_method("roll_critical_multiplier"):
+		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
+	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final)
+	if not hit_data.get("from_status", false) and not damage_is_final:
 		_report_lifesteal(dealt)
 
 	var effect_type = hit_data.get("effect", "")
@@ -599,7 +728,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 
 func _try_passive_procs(game: Node, hit_data: Dictionary) -> void :
 
-	if hit_data.get("from_status", false):
+	if hit_data.get("from_status", false) or hit_data.get("damage_is_final", false):
 		return
 	var mc = game.get("molotov_controller")
 	if mc != null and mc.level > 0 and randf() < mc.get_on_hit_chance():
@@ -694,20 +823,25 @@ func take_damage(damage_value: float) -> void :
 	AudioManager.play_enemy_hurt()
 	_apply_health_loss(_mitigate(damage_value))
 
-func _apply_health_loss(dealt: float) -> void :
+func _apply_health_loss(dealt: float, death_direction: Vector2 = Vector2.ZERO) -> void :
 	if _death_started:
 		return
 	health -= dealt
 	if health <= 0:
 		_death_started = true
 		var feedback: = JUICE.find(self)
-		if feedback != null: feedback.kill(global_position, base_modulate, is_elite)
+		if feedback != null:
+			var force := death_direction
+			if force.is_zero_approx():
+				force = _airflow_velocity if _airflow_left>0 else (_blast_velocity if _blast_left>0 else (_gravity_velocity if _gravity_left>0 else Vector2.ZERO))
+			feedback.death_stains.splat(global_position,death_stain_color,force,body_scale)
+			feedback.kill(global_position, base_modulate, is_elite)
 		spaw_icon()
 		remove_from_group("EnemyGroup")
 		death_signal.emit()
 		queue_free()
 
-func show_damage_text(damage_value: float, status_damage: bool = false) -> void :
+func show_damage_text(damage_value: float, status_damage: bool = false, critical: bool = false) -> void :
 	var owner: = _game_owner()
 	var container: Node = owner.effect_container if owner != null else get_tree().get_first_node_in_group("effect_container")
 	if container == null or not FEEDBACK_BUDGET.allow_popup(get_tree()):
@@ -715,7 +849,7 @@ func show_damage_text(damage_value: float, status_damage: bool = false) -> void 
 	var d = damage_text.instantiate()
 	container.add_child(d)
 	d.position = self.position
-	d.show_damage(str(int(floor(damage_value))), self.global_position, 0, 0, status_damage)
+	d.show_damage(str(int(floor(damage_value))), self.global_position, 0, 0, status_damage, critical)
 
 func spaw_icon() -> void :
 	var game: = _game_owner()

@@ -18,6 +18,7 @@ var fullscreen_toggle: CanvasLayer = null
 var settings_page: CanvasLayer = null
 var _test_mode: StringName = &""
 var _starting_run: bool = false
+var _returning_home := false
 var _fitting_render_budget: = false
 
 func _ready() -> void :
@@ -90,17 +91,19 @@ func _ensure_mobile_controls() -> void :
 	mobile_controls.hide_controls()
 
 
-func _ensure_fullscreen_toggle() -> void :
-
+func _ensure_fullscreen_toggle() -> void:
 	fullscreen_toggle = get_node_or_null("FullscreenToggle")
-	if fullscreen_toggle != null and is_instance_valid(fullscreen_toggle):
-		return
-	fullscreen_toggle = FULLSCREEN_TOGGLE_SCENE.instantiate()
-	fullscreen_toggle.name = "FullscreenToggle"
-	add_child(fullscreen_toggle)
+	if fullscreen_toggle == null:
+		fullscreen_toggle = FULLSCREEN_TOGGLE_SCENE.instantiate()
+		fullscreen_toggle.name = "FullscreenToggle"
+		add_child(fullscreen_toggle)
+	if not fullscreen_toggle.home_requested.is_connected(_on_game_end_ui_main_menu_pressed):
+		fullscreen_toggle.home_requested.connect(_on_game_end_ui_main_menu_pressed)
+	fullscreen_toggle.set_home_available(false)
 
 
 func show_main_menu() -> void :
+	fullscreen_toggle.set_home_available(false)
 	_test_mode = &""
 	debug_page.hide()
 	menu_page.show()
@@ -125,6 +128,7 @@ func _layout_build_version() -> void :
 
 
 func start_game() -> void :
+	fullscreen_toggle.set_home_available(true)
 	_dismiss_settings()
 	Engine.time_scale = 1.0
 
@@ -176,6 +180,8 @@ func _dismiss_settings() -> void :
 
 
 func on_game_over(stat: Dictionary) -> void :
+	if _returning_home: return
+	fullscreen_toggle.set_home_available(false)
 	Engine.time_scale = 1.0
 
 	if game and is_instance_valid(game):
@@ -198,12 +204,21 @@ func _on_game_end_ui_retry_pressed() -> void :
 
 
 func _on_game_end_ui_main_menu_pressed() -> void :
+	if _returning_home: return
+	_returning_home = true
+	if get_tree().has_meta("player_death_slowmo"):
+		get_tree().remove_meta("player_death_slowmo")
+	fullscreen_toggle.set_home_available(false)
+	_dismiss_settings()
+	Engine.time_scale = 1.0
+	get_tree().paused = true
 	game_end_ui.hide_result()
 
 	await load_new_game()
 	game.prepare_game()
 
 	show_main_menu()
+	_returning_home = false
 
 
 func load_new_game() -> void :
@@ -224,12 +239,9 @@ func load_new_game() -> void :
 		game.game_over.connect(on_game_over)
 
 func _on_debug_button_pressed() -> void :
-	if not AudioManager.adventure_music.active:
-		$mainUI / Control / DebugCenter / VBoxContainer / DebugMusicButton.text = "音乐试听 / 下一首"
 	menu_page.hide()
 	build_version_label.hide()
-	debug_page.show()
-	$mainUI / Control / DebugCenter / VBoxContainer / DebugKnightButton.grab_focus()
+	debug_page.open_page()
 
 func _on_debug_back_pressed() -> void :
 	AudioManager.play_menu_bgm()
@@ -243,13 +255,14 @@ func _on_debug_music_pressed() -> void :
 	AudioManager.preview_game_bgm_next()
 
 func _on_debug_report_pressed() -> void :
-	$mainUI / Control / DebugCenter / VBoxContainer / DebugHint.text = RunDiagnostics.export_report()
+	debug_page.show_status(RunDiagnostics.export_report())
 
 func _on_game_track_changed(title: String) -> void :
-	if not debug_page.visible or not AudioManager.adventure_music.preview_mode:
+	var button: Button = debug_page.get_node_or_null("VBoxContainer/DebugMusicButton")
+	if button == null or not debug_page.visible or not AudioManager.adventure_music.preview_mode:
 		return
 	var index: int = AudioManager.adventure_music.track_index + 1
-	$mainUI / Control / DebugCenter / VBoxContainer / DebugMusicButton.text = "试听：%s（%d/8）· 下一首" % [title, index]
+	button.text = "试听：%s（%d/8）· 下一首" % [title, index]
 
 func _on_debug_knight_pressed() -> void :
 	await _launch_run(&"knight")
@@ -261,7 +274,7 @@ func _on_debug_treasure_pressed() -> void :
 	await _launch_run(&"treasure")
 
 func _launch_run(mode: StringName) -> void :
-	if _starting_run:
+	if _starting_run or _returning_home:
 		return
 	_starting_run = true
 	_test_mode = mode
@@ -270,6 +283,10 @@ func _launch_run(mode: StringName) -> void :
 	game.diagnostic_mode = str(mode) if mode != &"" else "normal"
 	start_game()
 	match mode:
+		&"tactical_enemies":
+			game.prepare_tactical_enemy_debug()
+		&"ink_surf":
+			game.prepare_ink_surf_debug()
 		&"juice":
 			game.prepare_feedback_debug()
 		&"lighting":
@@ -294,6 +311,16 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_meteor_debug()
 		&"poison", &"poison5":
 			game.prepare_poison_debug(5 if mode == &"poison5" else 1)
+		&"fan", &"fan5", &"black_hole", &"black_hole5", &"control_cards":
+			game.prepare_control_debug(mode)
+		&"fan_status":
+			game.prepare_fan_status_debug()
+		&"bomb", &"bomb5", &"arsenal":
+			game.prepare_bomb_debug(mode)
+		&"growth", &"equipment_combos":
+			game.prepare_growth_debug(mode == &"equipment_combos")
+		&"critical", &"critical5":
+			game.prepare_critical_debug(5 if mode == &"critical5" else 1)
 		&"stability":
 			var test: Node = load("res://script/stability_test.gd").new()
 			test.name = "StabilityTest"

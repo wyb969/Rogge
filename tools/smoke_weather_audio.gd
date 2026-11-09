@@ -27,7 +27,7 @@ func _run() -> void :
 	await process_frame
 	_expect( not ambience.active and _beds() == 0, "menu has no leaked weather voices")
 	main._on_debug_button_pressed()
-	main.get_node("mainUI/Control/DebugCenter/VBoxContainer/DebugWeatherButton").pressed.emit()
+	main._launch_run(&"weather")
 	await process_frame
 	await process_frame
 	var game: Node = main.game

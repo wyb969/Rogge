@@ -1,0 +1,180 @@
+{
+  "version": "20261105-011946",
+  "source_parent": "71ada606585cfe9fa4bff76ad3c59ea1aac38031",
+  "native": {
+    "tests": 19,
+    "passed": 19,
+    "results": [
+      {
+        "test": "smoke_fan_status.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "FAN STATUS OK: exact crowd deduplication, snapshot-only burn/poison replay, unchanged clocks/natural spread, one popup, no recursive procs/crit/lifesteal, rewards, five real cooldowns, Boss and Debug lifecycle"
+      },
+      {
+        "test": "smoke_control_cards.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      },
+      {
+        "test": "smoke_critical_glasses.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "CRITICAL GLASSES OK: real draft/icon, rank probabilities, master damage, capped lottery, enemy/Boss damage and text, bonus composition, status exclusions, stage/menu/retry lifecycle"
+      },
+      {
+        "test": "smoke_poison_trail.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+      },
+      {
+        "test": "smoke_molotov_spread.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "MOLOTOV SPREAD OK: exact real explosion/live radius/owner/once, shared assets, 240-source reference equivalence, cap/potency/RNG/pause, request and bucket overflow, deletion/clear and bounded allocation"
+      },
+      {
+        "test": "smoke_status_numbers.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return"
+      },
+      {
+        "test": "smoke_axe.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "AXE OK: real level-five/later cards, nearest live aim, swept hits/return, no idle damage and no unowned burn/spread from either starting weapon"
+      },
+      {
+        "test": "smoke_book_growth.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "BOOK GROWTH OK: fifty actual cards including same-frame stacks, bounded count/speed, increasing finite damage and stable collider reuse"
+      },
+      {
+        "test": "smoke_lightning_ring.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "LIGHTNING RING OK: real cards/stats, unique targets, range, mitigation, cooldown, color/audio, kill drops, lottery, bosses/trials and run reset"
+      },
+      {
+        "test": "smoke_runtime_optimization.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "RUNTIME OPTIMIZATION OK: live target lifecycle/nearest selection, exact pooled pause-safe chains/RNG, no child effects/timers, synchronous pickup indices, fixed cosmetic slots, cached geometry/audio and clean Retry"
+      },
+      {
+        "test": "smoke_resource_bounds.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "RESOURCE BOUNDS OK: 1000 coins/500 orbs preserve rewards, shared GPU resources, projectile ownership/TTL, cosmetic budgets, single explosions and teardown"
+      },
+      {
+        "test": "smoke_boss_facing.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "BOSS FACING OK: immediate recovery turn, live approach direction and walk loop, idle transitions, vertical stability and locked warning/dash facing"
+      },
+      {
+        "test": "smoke_knight_boss.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate"
+      },
+      {
+        "test": "smoke_beasts.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      },
+      {
+        "test": "smoke_trials.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      },
+      {
+        "test": "smoke_treasure_lottery.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "TREASURE LOTTERY OK: third stage, real mini-boss, safe warning, one reward, probability intervals, actual stacked stats, pause ordering, responsive UI and victory"
+      },
+      {
+        "test": "smoke_monster_necklace.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "MONSTER NECKLACE OK: card selection, stacking, real kill drops, pickup/heal/audio, boss/rest/stage flow and reset"
+      },
+      {
+        "test": "smoke_diagnostics.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "DIAGNOSTICS OK: bundled arrows, real final-boss stress entry, bounded reports, JSON export/reload, stop/back and run-owned cleanup"
+      },
+      {
+        "test": "smoke_run_variety.gd",
+        "passed": true,
+        "exit_code": 0,
+        "marker": "RUN VARIETY OK: real wind/echo cards, landing damage/grace/cancel, exact queued pause-safe nonrecursive echo, lottery stacks, diverse independent draws, reroll UI/tokens, harmless bounded courier/rewards/escape, full HUD layout and Retry"
+      }
+    ]
+  },
+  "packed": [
+    {
+      "test": "smoke_fan_status",
+      "exit_code": 0,
+      "passed": true,
+      "markers": [
+        "FAN STATUS OK: exact crowd deduplication, snapshot-only burn/poison replay, unchanged clocks/natural spread, one popup, no recursive procs/crit/lifesteal, rewards, five real cooldowns, Boss and Debug lifecycle"
+      ],
+      "errors": []
+    },
+    {
+      "test": "smoke_control_cards",
+      "exit_code": 0,
+      "passed": true,
+      "markers": [
+        "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      ],
+      "errors": []
+    },
+    {
+      "test": "smoke_critical_glasses",
+      "exit_code": 0,
+      "passed": true,
+      "markers": [
+        "CRITICAL GLASSES OK: real draft/icon, rank probabilities, master damage, capped lottery, enemy/Boss damage and text, bonus composition, status exclusions, stage/menu/retry lifecycle"
+      ],
+      "errors": []
+    }
+  ],
+  "pck_bytes": 23294568,
+  "pck_sha256": "c36b15187ee359217c26c8baf1eaf5121b075000eb2ad72be5fda4af213c8f23",
+  "preview_loader": {
+    "passed": true,
+    "decoded_bytes": 39509339,
+    "wasm_sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656",
+    "checks": [
+      "gzip bytes equal original WASM",
+      "host-decoded bytes accepted",
+      "streamed MIME type",
+      "same-origin options preserved",
+      "other assets unchanged"
+    ]
+  },
+  "browser_qa": "Not run for this version: managed Sites browser tool is unavailable. Native and packed checks are not browser/device QA.",
+  "itch_uploaded": false,
+  "itch_note": "User explicitly deferred itch upload until tomorrow.",
+  "preview_deployment": {
+    "project_id": "appgprj_6aeb66ad64408191b317328a1063f65c",
+    "deployment_id": "appgdep_6aeb6bada0b481918a4424d77e02b4b3",
+    "version_id": "appgprj_6aeb66ad64408191b317328a1063f65c~appgver_6f56be0a12f88191a026c346e6008f7a",
+    "status": "succeeded",
+    "url": "https://rogge-fan-status-playtest-20261105.whiteber.chatgpt.site",
+    "audience": "owner-private",
+    "site_source_commit": "ca65b2a15fc98501f7ae827ffe2e06710ed5351d",
+    "game_commit": "ebc67f49d6d46e821230d1da3a6b9bd849a6f72a"
+  }
+}

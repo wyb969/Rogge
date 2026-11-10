@@ -2,7 +2,7 @@
 
 ## 2026-11-10 玩家移动与跟随（最新）
 
-- 新分支 `feature/player-motion-20261110` 基于v4 `a5e3b0e`，PR #7尚未合并，因此本轮PR将以v4分支为base保持增量清晰；不合并master/不更新itch。PR与试玩发布信息收尾补入。
+- 新分支 `feature/player-motion-20261110` 基于v4 `a5e3b0e`，PR #7尚未合并，已提交 [PR #9](https://github.com/wyb969/Rogge/pull/9)，以v4分支为base保持增量清晰；不合并master/不更新itch。已验证游戏源码 `e24861d0f675c2a428fa817ae23d04794ea99217`，后续仅文档。
 - 代码确认旧问题：固定5/6FPS、鼠标8向动画且站立仍播；走路反复触发无贴图旋转大方块粒子；像素角色持续缩放/旋转；相机内置平滑叠加意图速度拖拽。未证明move_and_slide位置积分本身错误，也不声称所有设备锯齿原因已排除。
 - `player.gd`按move_and_slide之后实际位移驱动0/1/0/2侧向步态，50单位一周期，极快上限18姿态/秒。左右面向，不随鼠标转身；上下/停步保持上次侧向，停下/顶墙/锁定回中立帧，冲刺固定发力帧。360度移动/冲刺保留，闲置键盘冲刺改用最近移动方向。移速100、卡+20、加速900/摩擦600、dash780/0.14秒/结束0.5秒无敌/冷却均未改。
 - 走路旧粒子隐藏且不发射，常态不旋转/伸缩；仅受击/冲刺有短形变，Sprite5/3缩放配1.8相机约3倍源像素，AtlasTexture开启filter_clip，碰撞体不变。残影仍8槽，改0.10秒/0.16透明度/0.035秒采样，不新增脚步节点或噪音。
@@ -12,6 +12,13 @@
 - 文件/设计/命令/演示见 [player-motion.md](player-motion.md)，全部检查/原包哈希/QA源等价/视频记录见 [validation/player-motion-20261110.json](validation/player-motion-20261110.json)。截图/视频目录有 `.gdignore`不进入游戏包；测试入口preview_player_motion只在QA副本启用，普通游戏无测试键/遥测。临时产物 `/workspace/Rogge-player-motion-20261110/`。
 - 下一步重点收集真机行走/反向/冲刺恢复观感与相机舒适度。保持表现位移和物理/数值分离，不能恢复鼠标转身、空转步态或叠加第二个跟随平滑。
 
+
+### 移动优化试玩（已更新）
+
+- <https://rogge-palette-playtest-20261109.whiteber.chatgpt.site> 已更新为本轮移动/相机版本，正常游戏入口，保持所有者私有。下文v4/PR #6的同URL发布信息是历史版本。
+- Site源 `b9ce5cad9ad8e607d8180ba16f82c5f893c8e157`；deployment `appgdep_6af29d70514c8191ae932b511dd9e3f2` 返回succeeded（北京时间2026-11-10 12:28:52），version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_f11e69b5f9ec8191a62238a3687a73d0`。PCK `15a8dec5be3544b592eeb5e680ae99baa98a4b4970bee17ce10d88b8905247c3` 与已验证正常Web导出完全相同。
+- 11文件字节/大小/JS语法检查通过，WASM gzip解压等价；没有改游戏或重复完整回归。Sites专用helper和managed浏览器仍不可用，使用隐藏stdin凭据/Git打包；线上私有页/托管压缩适配器没有浏览器复测。原始Web导出的桌面/触屏检查与平台发布成功分开记录，不作Safari真机承诺。
+- 完整发布状态写入 [validation/player-motion-20261110.json](validation/player-motion-20261110.json) 的playtest字段；未改变itch或主分支。
 
 ## 2026-11-10 配色稿v4（本轮新PR）
 

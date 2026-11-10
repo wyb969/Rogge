@@ -1,6 +1,6 @@
 # 玩家移动、侧向步态与相机
 
-基于v4开发分支 `a5e3b0e` 新建 `feature/player-motion-20261110`。v4的PR #7尚未合并，本轮PR以该分支为base，只审阅移动表现增量；不合并主分支或更新itch。试玩沿用现有所有者私有站点，部署结果在交接/机器记录收尾补入。
+基于v4开发分支 `a5e3b0e` 新建 `feature/player-motion-20261110`。v4的PR #7尚未合并，本轮PR以该分支为base，只审阅移动表现增量；不合并主分支或更新itch。[PR #9](https://github.com/wyb969/Rogge/pull/9)已提交；[试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新并返回succeeded，保持所有者私有。原始Web包完成键盘/触屏检查，托管适配器与线上私有页尚未浏览器复测；发布身份/哈希见交接和机器记录。
 
 ## 原因与修改
 

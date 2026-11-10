@@ -3274,5 +3274,85 @@
     "Hosted gzip adapter and live private Site browser QA remain separate from original-export testing.",
     "No default-branch merge or itch upload in this task."
   ],
-  "artifact_directory_transient": "/workspace/Rogge-player-motion-20261110"
+  "artifact_directory_transient": "/workspace/Rogge-player-motion-20261110",
+  "source_commit": "e24861d0f675c2a428fa817ae23d04794ea99217",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/9",
+  "playtest": {
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "audience": "owner-private; unchanged",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_f11e69b5f9ec8191a62238a3687a73d0",
+    "deployment_id": "appgdep_6af29d70514c8191ae932b511dd9e3f2",
+    "status": "succeeded",
+    "deployed_at_beijing": "2026-11-10T12:28:52.507375+08:00",
+    "site_source_commit": "b9ce5cad9ad8e607d8180ba16f82c5f893c8e157",
+    "archive_sha256": "f84a7ac6e768abe3f6b1bbfc532b3047f27aec6fec71b7b382a41ad20795eda1",
+    "hosting_checks": {
+      "game_pr": "https://github.com/wyb969/Rogge/pull/9",
+      "game_source_commit": "e24861d0f675c2a428fa817ae23d04794ea99217",
+      "exact_export_bytes": {
+        "index.apple-touch-icon.png": true,
+        "index.audio.position.worklet.js": true,
+        "index.audio.worklet.js": true,
+        "index.html": true,
+        "index.icon.png": true,
+        "index.js": true,
+        "index.pck": true,
+        "index.png": true,
+        "index.wasm": true
+      },
+      "all_assets_under_25MiB": true,
+      "normal_main_entry": true,
+      "qa_fixture_excluded": true,
+      "js_syntax": "Original engine and unchanged gzip loader passed node --check",
+      "browser_scope": "Original Web export checked separately; managed Sites adapter/live private URL not browser-retested",
+      "files": {
+        "build-info.json": {
+          "bytes": 2018,
+          "sha256": "3659ef70c3558cc9605c9f670ad5d5d2462530134c6540def0bd30fca13cfd3a"
+        },
+        "index.apple-touch-icon.png": {
+          "bytes": 11441,
+          "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+        },
+        "index.audio.position.worklet.js": {
+          "bytes": 2973,
+          "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+        },
+        "index.audio.worklet.js": {
+          "bytes": 7298,
+          "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+        },
+        "index.html": {
+          "bytes": 5479,
+          "sha256": "28616e2caca55e2af5a7266b9cc5df53742bbe287a0c17ef0496b815cab1a559"
+        },
+        "index.icon.png": {
+          "bytes": 3209,
+          "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+        },
+        "index.pck": {
+          "bytes": 23513036,
+          "sha256": "15a8dec5be3544b592eeb5e680ae99baa98a4b4970bee17ce10d88b8905247c3"
+        },
+        "index.png": {
+          "bytes": 21443,
+          "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+        },
+        "index.wasm.gz": {
+          "bytes": 10052173,
+          "sha256": "d49553dad4d96ed902f15aaf53277c1537bc158d2355d4f26bbe344b9e25c63f"
+        },
+        "preview-loader.js": {
+          "bytes": 2293,
+          "sha256": "86a692076dbb65be99554b79c5a8f1c1aab78b87af0128b2f21689a70f450eea"
+        }
+      }
+    },
+    "verification_limit": "Managed Sites helper/cua_repl.js absent; secure-stdin Git packaging fallback. Native succeeded confirms publication. Hosted gzip adapter/live private URL not browser-retested; actual normal/QA game exports were tested separately."
+  }
 }

@@ -1363,5 +1363,7 @@
     "No physical Safari/iOS, high-density FPS/memory benchmark, full campaign, all-weather stress or itch iframe test.",
     "Only local normal/QA Web export tested; no new deployment or itch release in this task."
   ],
-  "artifact_directory_transient": "/workspace/Rogge-palette-v4-20261110"
+  "artifact_directory_transient": "/workspace/Rogge-palette-v4-20261110",
+  "source_commit": "1389bc80b1cc2ccc5f7dbfb8cc35aa877e2315be",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/7"
 }

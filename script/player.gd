@@ -37,13 +37,23 @@ const DASH_SPEED = 780.0
 const DASH_DURATION: = 0.14
 const DASH_GRACE_SECONDS: = 0.5
 const DASH_COOLDOWN: = 3.0
-const DASH_SHADOW_INTERVAL: = 0.028
+const DASH_SHADOW_INTERVAL: = 0.035
 var dashing: bool = false
 var can_dash: bool = true
 var dash_grace_left: = 0.0
 var dash_direction: Vector2 = Vector2.RIGHT
 var last_move_direction: Vector2 = Vector2.RIGHT
-var animation_directions = ["right", "right_down", "down", "left_down", "left", "left_up", "up", "right_up"]
+# One neutral pose between the two foot contacts. Distance, not a fixed FPS,
+# advances this cycle; high-speed builds cap the cadence rather than flickering.
+const WALK_POSES := [0, 1, 0, 2]
+const WALK_CYCLE_DISTANCE := 50.0
+const MAX_WALK_FPS := 18.0
+const WALK_STOP_SPEED := 2.0
+var locomotion_velocity := Vector2.ZERO
+var locomotion_speed := 0.0
+var _walk_phase := 0.0
+var _walking := false
+var _facing_left := false
 
 var pickup_range: float
 
@@ -101,6 +111,10 @@ var _hurt_punch: = 0.0
 
 func _ready() -> void :
 	animated_sprite_2d.material = GamePalette.ramp_material(&"player")
+	# Retain the old emitter node/API for saved scenes, but never emit walking quads.
+	cpu_particles_2d.emitting = false
+	cpu_particles_2d.hide()
+	_stop_locomotion()
 	_critical_rng.randomize()
 	_visual_base_scale = animated_sprite_2d.scale
 	health_bar.init_health(player_health)
@@ -423,6 +437,7 @@ func reset_dash() -> void :
 	can_dasing_timer.stop()
 	can_dash = true
 	velocity = Vector2.ZERO
+	_stop_locomotion()
 
 func set_movement_locked(locked: bool) -> void:
 	movement_locked = locked
@@ -442,11 +457,12 @@ func _process(delta: float) -> void :
 
 func _tick_visuals(delta: float) -> void :
 	_hurt_punch = move_toward(_hurt_punch, 0, delta * 8)
-	var effort: = clampf(velocity.length() / maxf(effective_move_speed(), 1), 0, 1)
-	var stretch: = Vector2(1.13, 0.88) if dashing else Vector2(1.0 + effort * 0.025, 1.0 - effort * 0.015)
+	# Constant scale and axis alignment while walking avoid crawling pixel edges.
+	# Deformation is reserved for brief dash/hit feedback, never the collider.
+	var stretch: = Vector2(1.10, 0.92) if dashing else Vector2.ONE
 	stretch += Vector2(0.1, -0.08) * _hurt_punch
 	animated_sprite_2d.scale = animated_sprite_2d.scale.lerp(_visual_base_scale * stretch, 1.0 - exp( - delta * 25))
-	animated_sprite_2d.rotation = lerpf(animated_sprite_2d.rotation, - velocity.x / maxf(DASH_SPEED, 1) * 0.09, 1.0 - exp( - delta * 20))
+	animated_sprite_2d.rotation = 0.0
 
 func speed_up(val: float):
 	SPEED += val
@@ -470,6 +486,7 @@ func _physics_process(delta: float) -> void :
 	if movement_locked:
 		global_position = _movement_lock_position
 		velocity = Vector2.ZERO
+		_stop_locomotion()
 		MobileInput.clear_move()
 		MobileInput.clear_dash()
 		return
@@ -484,16 +501,6 @@ func _physics_process(delta: float) -> void :
 
 	if not input_direction.is_zero_approx():
 		last_move_direction = input_direction.normalized()
-
-	var look_target: = get_global_mouse_position()
-
-	if MobileInput.controls_enabled:
-		if not input_direction.is_zero_approx():
-			look_target = global_position + input_direction
-		elif velocity.length_squared() > 1.0:
-			look_target = global_position + velocity
-	var look_direction: = look_target - global_position
-	playAnimation(look_direction)
 
 	var dash_input_direction: = input_direction
 	var want_dash: = Input.is_action_just_pressed("roll")
@@ -516,10 +523,9 @@ func _physics_process(delta: float) -> void :
 		else:
 			velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 
-	if velocity.length_squared() > 1.0:
-		cpu_particles_2d.emitting = true
-
+	var before_move := global_position
 	move_and_slide()
+	_update_locomotion(global_position - before_move, delta)
 
 func _start_dash(input_direction: Vector2) -> void :
 	if movement_locked or not can_dash or player_health <= 0: return
@@ -537,8 +543,7 @@ func _start_dash(input_direction: Vector2) -> void :
 	elif velocity.length_squared() > 100.0:
 		dash_direction = velocity.normalized()
 	else:
-		var mouse_dir: = get_global_mouse_position() - global_position
-		dash_direction = mouse_dir.normalized() if mouse_dir.length_squared() > 0.01 else last_move_direction
+		dash_direction = last_move_direction
 
 	velocity = dash_direction * DASH_SPEED
 	dashing_timer.start()
@@ -552,11 +557,43 @@ func _sync_dash_hurt_area() -> void :
 	if hurt_area:
 		hurt_area.set_deferred("monitoring", not is_dash_invulnerable())
 
-func playAnimation(direction: Vector2):
-	direction = direction.normalized()
-	var snap = snappedf(direction.angle(), PI / 4) / (PI / 4)
-	var index = wrapi(int(snap), 0, 8)
-	animated_sprite_2d.play(animation_directions[index])
+func playAnimation(direction: Vector2) -> void:
+	# Compatibility entry point: only the horizontal component changes the pose.
+	# Vertical travel and idle keep the last horizontal facing; mouse is irrelevant.
+	if absf(direction.x) > 0.02: _facing_left = direction.x < 0
+	var wanted: StringName = &"left" if _facing_left else &"right"
+	if animated_sprite_2d.animation != wanted: animated_sprite_2d.animation = wanted
+	animated_sprite_2d.pause()
+
+func _stop_locomotion() -> void:
+	locomotion_velocity = Vector2.ZERO
+	locomotion_speed = 0.0
+	_walk_phase = 0.0
+	_walking = false
+	playAnimation(Vector2.ZERO)
+	animated_sprite_2d.set_frame_and_progress(0, 0)
+
+func _update_locomotion(displacement: Vector2, delta: float) -> void:
+	if delta <= 0 or movement_locked:
+		_stop_locomotion()
+		return
+	locomotion_velocity = displacement / delta
+	locomotion_speed = locomotion_velocity.length()
+	if dashing:
+		playAnimation(dash_direction)
+		animated_sprite_2d.set_frame_and_progress(1, 0)
+		_walking = false
+		return
+	if locomotion_speed <= WALK_STOP_SPEED:
+		_stop_locomotion()
+		return
+	playAnimation(locomotion_velocity.normalized())
+	if not _walking: _walk_phase = 0.25 # first foot contact on departure
+	_walking = true
+	var cycles := minf(displacement.length() / WALK_CYCLE_DISTANCE, MAX_WALK_FPS * delta / WALK_POSES.size())
+	_walk_phase = fposmod(_walk_phase + cycles, 1.0)
+	var pose := _walk_phase * WALK_POSES.size()
+	animated_sprite_2d.set_frame_and_progress(WALK_POSES[int(pose)], fposmod(pose, 1))
 
 func _on_shadow_timer_timeout() -> void :
 	if not dashing or velocity.length_squared() <= 1e-05:

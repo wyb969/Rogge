@@ -22,7 +22,7 @@ func _ready() -> void :
 
 func show_heal(amount_text: String) -> void :
 	_healing = true
-	label.add_theme_color_override("font_color", Color(0.4, 1, 0.55))
+	label.add_theme_color_override("font_color", GamePalette.HEAL_TEXT)
 	show_damage(amount_text, Vector2.ZERO, 0, 0)
 
 func show_damage(text: String, _start_pos: Vector2, _height: float, _spread: float, status_damage: bool = false, critical: bool = false) -> void :

@@ -100,6 +100,7 @@ var _hurt_punch: = 0.0
 func _ready() -> void :
 	_critical_rng.randomize()
 	_visual_base_scale = animated_sprite_2d.scale
+	GamePalette.paint_actor(animated_sprite_2d, &"player")
 	health_bar.init_health(player_health)
 	max_player_health = player_health
 	play_ring_tween()

@@ -2,7 +2,7 @@ extends Node2D
 
 const IDS: = ["tide", "thunder", "gale", "aegis"]
 const TITLES: = ["潮汐复苏", "雷霆裁决", "苍风牵引", "玄岩壁垒"]
-const COLORS: = [Color(0.28, 0.85, 0.95), Color(1.0, 0.83, 0.3), Color(0.6, 1.0, 0.78), Color(1.0, 0.56, 0.26)]
+const COLORS: = [GamePalette.SKILL_TIDE, GamePalette.SKILL_THUNDER, GamePalette.SKILL_GALE, GamePalette.SKILL_AEGIS]
 const COOLDOWNS: = [35.0, 45.0, 22.0, 40.0]
 const BLESSING_FX: = preload("res://script/blessing_effect.gd")
 const SKILL_ICON: = preload("res://script/beast_skill_icon.gd")

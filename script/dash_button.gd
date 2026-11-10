@@ -2,8 +2,8 @@ extends Control
 
 
 const SEGMENTS: = 64
-const COOLING: = Color(0.21, 0.24, 0.27, 0.94)
-const GREEN: = Color(0.2, 0.84, 0.39, 0.94)
+const COOLING: = Color(GamePalette.UI_GREY_DARK, 0.94)
+const GREEN: = Color(GamePalette.UI_GREY, 0.94)
 var progress: = 1.0
 var available: = true
 var _circle: = PackedVector2Array()
@@ -92,7 +92,7 @@ func _draw() -> void :
 		draw_colored_polygon(_fill, GREEN)
 		var level: = _radius * (1.0 - 2.0 * progress)
 		var half_width: = sqrt(maxf(0, _radius * _radius - level * level))
-		draw_line(Vector2( - half_width, level), Vector2(half_width, level), Color(0.58, 1, 0.72, 0.9), 1.5, true)
-	draw_arc(Vector2.ZERO, _radius, 0, TAU, SEGMENTS, Color(0.66, 1, 0.76) if available else Color(0.42, 0.46, 0.5), 2.5, true)
+		draw_line(Vector2( - half_width, level), Vector2(half_width, level), Color(GamePalette.UI_GREY_ACTIVE, 0.9), 1.5, true)
+	draw_arc(Vector2.ZERO, _radius, 0, TAU, SEGMENTS, GamePalette.UI_GREY_ACTIVE if available else GamePalette.UI_GREY_BORDER, 2.5, true)
 	if ready_glow > 0:
-		draw_arc(Vector2.ZERO, _radius + 3, 0, TAU, SEGMENTS, Color(0.7, 1, 0.78, ready_glow * 0.8), 2, true)
+		draw_arc(Vector2.ZERO, _radius + 3, 0, TAU, SEGMENTS, Color(GamePalette.UI_GREY_ACTIVE, ready_glow * 0.8), 2, true)

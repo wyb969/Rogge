@@ -2,7 +2,7 @@ extends RefCounted
 
 const GROWTH_MEMBERS: Array[String] = ["pickup_up", "speed_up", "regen_up"]
 const ARSENAL_MEMBERS: Array[String] = ["gun_up", "drone_up", "bomb"]
-const GROWTH_COLOR := Color(0.4, 1.0, 0.24)
+const GROWTH_COLOR := GamePalette.PLAYER_CYAN
 const ARSENAL_COLOR := Color(1.0, 0.76, 0.22)
 const MOVE_MULTIPLIER := 1.2
 const HEAL_MULTIPLIER := 1.2

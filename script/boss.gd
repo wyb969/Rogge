@@ -78,6 +78,8 @@ func _ready() -> void :
 		sprite_2d.scale *= 1.06
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = sprite_2d.modulate
+	if fight_stage < 2:
+		GamePalette.paint_actor(sprite_2d, &"enemy")
 	_setup_health_bar()
 	health_bar.init_health(health_max_value)
 	boss_current_health = health_max_value

@@ -36,6 +36,7 @@ func _ready() -> void :
 	boss_current_health = health_max_value
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = Color.WHITE
+	GamePalette.paint_actor(sprite_2d, &"enemy")
 	animation_player.stop()
 	animation_player.active = false
 	rush_timer.stop()
@@ -196,11 +197,11 @@ func _draw() -> void :
 	var active: = attack_state == AttackState.SLASH
 	if not warning and not active:
 		return
-	var fill: = Color(1.0, 0.08, 0.12, 0.3 + 0.12 * (1.0 - state_left / maxf(state_duration, 0.001)))
-	var edge: = Color(1.0, 0.24, 0.28, 1.0)
+	var fill: = Color(GamePalette.TELEGRAPH_FILL, 0.3 + 0.12 * (1.0 - state_left / maxf(state_duration, 0.001)))
+	var edge: = GamePalette.TELEGRAPH_EDGE
 	if active:
-		fill = Color(1.0, 0.72, 0.22, 0.48)
-		edge = Color(1.0, 0.94, 0.68)
+		fill = Color(GamePalette.ENEMY_ORANGE, 0.48)
+		edge = GamePalette.TELEGRAPH_EDGE.lightened(0.2)
 	var points: = PackedVector2Array()
 	if attack_state == AttackState.DASH_WINDUP:
 		var dir: = Vector2.RIGHT.rotated(attack_angle)
@@ -218,7 +219,7 @@ func _draw() -> void :
 
 func draw_ellipse_shadow() -> void :
 	draw_set_transform(Vector2(0, 44), 0, Vector2(1.0, 0.35))
-	draw_circle(Vector2.ZERO, 42.0, Color(0.015, 0.015, 0.025, 0.5))
+	draw_circle(Vector2.ZERO, 42.0, GamePalette.shadow(0.82))
 	draw_set_transform(Vector2.ZERO)
 
 func _build_sword() -> void :

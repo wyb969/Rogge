@@ -5,7 +5,7 @@ const MAX_CLOUDS: = 64
 const SPACING: = 18.0
 const CLOUD_LIFE: = 4.0
 const SCAN_STEP: = 0.1
-const POISON_TINT: = Color(1.35, 0.42, 1.3)
+const POISON_TINT: = GamePalette.POISON_BODY
 var level: = 0
 var damage_ticks: = 0
 var clouds_emitted: = 0
@@ -183,9 +183,9 @@ func _draw() -> void :
 		var fade: = minf(1, cloud.left / 0.7)
 		var at: Vector2 = to_local(cloud.at)
 		var offset: = Vector2(sin(cloud.phase + _clock) * 5, -3)
-		draw_circle(at, radius, Color(0.18, 0.32, 0.17, 0.08 * fade))
-		draw_circle(at + offset, radius * 0.68, Color(0.34, 0.48, 0.2, 0.12 * fade))
-		draw_circle(at + Vector2(5, -7 - fposmod(_clock * 9 + cloud.phase, 12)), 1.4, Color(0.64, 0.78, 0.28, 0.4 * fade))
+		draw_circle(at, radius, Color(GamePalette.POISON_DARK, 0.34 * fade))
+		draw_circle(at + offset, radius * 0.68, Color(GamePalette.POISON, 0.48 * fade))
+		draw_circle(at + Vector2(5, -7 - fposmod(_clock * 9 + cloud.phase, 12)), 1.4, Color(GamePalette.POISON_LIGHT, 0.7 * fade))
 
 func draw_status(canvas: Node2D) -> void :
 	for entry in _exposed.values():
@@ -193,5 +193,5 @@ func draw_status(canvas: Node2D) -> void :
 		if not is_instance_valid(actor) or actor.is_queued_for_deletion(): continue
 		var at: Vector2 = canvas.to_local(actor.global_position) + Vector2(0, -16)
 		var bright: = 0.55 + 0.4 * (0.5 + 0.5 * sin(_clock * 8))
-		canvas.draw_circle(at + Vector2(-4, -2), 2.0, Color(0.9, 0.3, 0.78, bright))
-		canvas.draw_circle(at + Vector2(4, -5), 1.5, Color(0.93, 0.52, 0.9, bright))
+		canvas.draw_circle(at + Vector2(-4, -2), 2.0, Color(GamePalette.POISON, bright))
+		canvas.draw_circle(at + Vector2(4, -5), 1.5, Color(GamePalette.POISON_LIGHT, bright))

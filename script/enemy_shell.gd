@@ -678,11 +678,12 @@ func get_status_echo_damage(poison_tick: float) -> float:
 		total += _mitigate(poison_tick)
 	return total
 
-func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false, visual_effect: StringName = &"") -> float:
+func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false, visual_effect: StringName = &"", impact: bool = true) -> float:
 	if _death_started or damage_value <= 0: return 0.0
 	var dealt: float = damage_value if damage_is_final else _mitigate(damage_value)
 	var feedback: = JUICE.find(self)
 	if feedback != null: feedback.hit(global_position, direction, is_elite)
+	if feedback != null and dealt > 0 and impact: feedback.impact_feedback.pulse(self,sprite_2d)
 	play_hit_tween(direction)
 	show_damage_text(dealt, status_damage, critical, visual_effect)
 	AudioManager.play_enemy_hurt()
@@ -710,7 +711,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 	var crit_multiplier := 1.0
 	if not damage_is_final and player_node != null and player_node.has_method("roll_critical_multiplier"):
 		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
-	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))))
+	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))), not hit_data.get("from_status",false))
 	if not hit_data.get("from_status", false) and not damage_is_final:
 		_report_lifesteal(dealt)
 
@@ -818,9 +819,10 @@ func play_hit_tween(direction: Vector2):
 	_hit_squash = 1.0
 
 	_hit_recoil = direction.normalized() * 3.0 / maxf(body_scale, 0.4)
-	sprite_2d.self_modulate = preload("res://script/visual_style.gd").HIT_FLASH
-	_hit_flash_left = 0.1
-	set_process(true)
+	# The pooled silhouette now supplies white; keep status tint underneath intact.
+	sprite_2d.self_modulate = _poison_tint
+	_hit_flash_left = 0.0
+	set_process(false)
 
 func take_damage(damage_value: float) -> void :
 	AudioManager.play_enemy_hurt()

@@ -313,7 +313,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 		if steal_target != null and steal_target.has_method("notify_damage_dealt"):
 			steal_target.notify_damage_dealt(damage_value)
 
-	play_hit_feedback(damage_dir.normalized())
+	play_hit_feedback(damage_dir.normalized(),damage_value > 0 and not hit_data.get("from_status",false))
 
 	if boss_current_health <= health_max_value * 0.72:
 		rush_ready_time = 0.25
@@ -356,7 +356,7 @@ func _sync_outline_frame_uv() -> void :
 	var fh: = 1.0 / float(vf)
 	mat.set_shader_parameter("frame_uv_rect", Vector4(float(col) * fw, float(row) * fh, fw, fh))
 
-func play_hit_feedback(hit_dir: Vector2) -> void :
+func play_hit_feedback(hit_dir: Vector2, impact: bool = true) -> void :
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null: feedback.hit(global_position, hit_dir, true)
 	var now: = Time.get_ticks_msec()
@@ -364,7 +364,9 @@ func play_hit_feedback(hit_dir: Vector2) -> void :
 		_last_particle_msec = now
 		_spawn_hit_particles(hit_dir)
 	_play_hit_deform(hit_dir)
-	_request_hitstop(0.42, 0.022)
+	if impact and feedback != null:
+		feedback.impact_feedback.pulse(self,sprite_2d,false,false)
+		_request_hitstop(0.42,0.022)
 
 func _play_hit_deform(hit_dir: Vector2) -> void :
 	if hurt_tween != null and hurt_tween.is_valid():
@@ -396,18 +398,14 @@ func _play_hit_deform(hit_dir: Vector2) -> void :
 	hurt_tween.tween_property(sprite_2d, "scale", base_sprite_scale, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	hurt_tween.tween_property(sprite_2d, "position", origin, 0.06)
 
-func _request_hitstop(scale: float, duration_real: float) -> void :
+func _request_hitstop(_scale: float, _duration_real: float) -> void :
 	var now: = Time.get_ticks_msec()
 	if now - last_hitstop_msec < HITSTOP_COOLDOWN_MSEC:
 		return
 	last_hitstop_msec = now
 
-	hitstop_token += 1
-	var token: = hitstop_token
-	Engine.time_scale = scale
-	await get_tree().create_timer(duration_real, true, false, true).timeout
-	if token == hitstop_token and not is_dying and not get_tree().has_meta("player_death_slowmo"):
-		Engine.time_scale = 1.0
+	var feedback := preload("res://script/combat_feedback.gd").find(self)
+	if feedback != null: feedback.impact_feedback.request_stop()
 
 func _spawn_hit_particles(hit_dir: Vector2) -> void :
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)

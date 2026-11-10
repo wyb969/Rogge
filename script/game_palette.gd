@@ -5,6 +5,8 @@ extends RefCounted
 # Green is reserved for XP and healing pickups. Coins keep their original gold art.
 
 const PLAYER_CYAN := Color("5ec8ea")
+const HIT_FLASH_WHITE := Color("fffdf6")
+const HURT_FLASH_RED := Color("ffabb4")
 const MARKER_GOLD := Color("e6c15a")
 const ENEMY_RED := Color("e23b3b")
 const ENEMY_ORANGE := Color("f97316")

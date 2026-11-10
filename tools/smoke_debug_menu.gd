@@ -60,7 +60,7 @@ func _layout(page: Control, physical_size: Vector2i, ratio: float = 1.0) -> void
 		_expect(is_equal_approx(page.back_button.position.y, footer_y) and page.panel.get_global_rect() == panel_rect, "footer and panel stay fixed across pages")
 		if index < page.page_count - 1:
 			page.next_button.pressed.emit()
-	_expect(seen.size() == 17 and page.next_button.disabled and not page.prev_button.disabled, "all seventeen recent tests are reachable, last-page Next disabled")
+	_expect(seen.size() == 18 and page.next_button.disabled and not page.prev_button.disabled, "all eighteen recent tests are reachable, last-page Next disabled")
 	page.set_page(999)
 	_expect(page.page_index == page.page_count - 1, "large page request clamps")
 	page.prev_button.pressed.emit()
@@ -83,7 +83,7 @@ func _run() -> void:
 	main.get_node("mainUI/Control/MenuCenter/VBoxContainer/DebugButton").pressed.emit()
 	var page: Control = main.debug_page
 	_expect(page.visible and not main.menu_page.visible and paused, "Debug opens a separate paused page")
-	_expect(page.entries.size() == 17, "only seventeen recent test entries remain")
+	_expect(page.entries.size() == 18, "only eighteen recent test entries remain")
 	for old in ["DebugKnightButton", "DebugNecklaceButton", "DebugWeatherButton", "DebugBeast3Button", "DebugMusicButton", "DebugStabilityButton"]:
 		_expect(not page.box.has_node(old), "restored old entry removed: " + old)
 	for size in [Vector2i(390,844), Vector2i(320,568), Vector2i(280,480), Vector2i(844,390), Vector2i(640,360), Vector2i(900,500), Vector2i(1440,900)]:

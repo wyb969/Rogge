@@ -664,6 +664,7 @@ func receive_attack(amount: float, _source: Node = null) -> void :
 		if is_instance_valid(_source) and _source is Node2D:
 			direction = (_source.global_position - global_position).normalized()
 		feedback.hurt(global_position, direction, hp_loss <= 0)
+		if hp_loss > 0: feedback.impact_feedback.pulse(self,animated_sprite_2d,true)
 	player_health = max(0.0, player_health - hp_loss)
 	health_bar.set_health(player_health)
 	_sync_shield_visuals()
@@ -678,11 +679,8 @@ func get_hit() -> void :
 func play_hit_tween() -> void :
 	_hurt_punch = 1.0
 	if _hurt_tween != null and _hurt_tween.is_valid(): _hurt_tween.kill()
-	animated_sprite_2d.modulate = GamePalette.ENEMY_PROJECTILE
-	_hurt_tween = create_tween().set_loops(2)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.06)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", GamePalette.ENEMY_PROJECTILE.lerp(GamePalette.WHITE,0.35), 0.04)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.04)
+	# The shared silhouette overlay supplies pale red without multiplying dark art.
+	animated_sprite_2d.modulate = Color.WHITE
 
 func die() -> void :
 	player_died.emit()

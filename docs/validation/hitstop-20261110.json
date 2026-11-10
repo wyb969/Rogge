@@ -1,0 +1,2838 @@
+{
+  "version": "20261110-194311",
+  "base": "3f6375b08d378d7dafd8cbcc2d2a35ed97b7da5b",
+  "branch": "feature/vfx-motion-20261110",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "intent": "Enemy takes direct player damage: white flash/short stop; player loses HP: pale-red flash/stronger stop. User second clause repeated enemy; implemented the stated interpretation from the initial update.",
+  "native_checks": [
+    {
+      "name": "smoke_combat_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.87,
+      "errors": [],
+      "markers": [
+        "COMBAT FEEDBACK OK: real actions/settings/persistence, exact damage, independent RNG, stable colliders, bounded camera/batches/ghosts, rising pickups, floating text and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_status_numbers",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.36,
+      "errors": [],
+      "markers": [
+        "STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dash_grace",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.4,
+      "errors": [],
+      "markers": [
+        "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.15,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_bomb_card",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.31,
+      "errors": [],
+      "markers": [
+        "BOMB CARD OK: 57 checks; real draft/upgrade/caps, area/fuse/unique hit, blast hop/force, rewards/crit, trial/Boss rules, fixed pools, pause/cleanup and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 25 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_knight_boss",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.33,
+      "errors": [],
+      "markers": [
+        "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.76,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.49,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 4840 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_hitstop",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.42,
+      "errors": [],
+      "markers": [
+        "HITSTOP OK: 78 checks; real damage/white-red frames, anti-chain bounds, status/immunity/shields, death clock ownership, pause/trials, crowd pool and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_archetypes",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.08,
+      "errors": [],
+      "markers": [
+        "SMOKE OK"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_motion_vfx",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.34,
+      "errors": [],
+      "markers": [
+        "MOTION VFX OK: 170 checks; player-bound HUD, distance ghosts, 30/60/120Hz arcs, render-only clocks, fixed pools and actual Debug/retry/Home isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.33,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 347 checks; all22 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.64,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 281 checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.22,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_hitstop",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.31,
+      "errors": [],
+      "markers": [
+        "HITSTOP OK: 78 checks; real damage/white-red frames, anti-chain bounds, status/immunity/shields, death clock ownership, pause/trials, crowd pool and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_combat_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.58,
+      "errors": [],
+      "markers": [
+        "COMBAT FEEDBACK OK: real actions/settings/persistence, exact damage, independent RNG, stable colliders, bounded camera/batches/ghosts, rising pickups, floating text and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_status_numbers",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.22,
+      "errors": [],
+      "markers": [
+        "STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.58,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.96,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_death_stains",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.93,
+      "errors": [],
+      "markers": [
+        "DEATH STAINS OK: 281 checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.84,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "59c81988e9626523dc376c14bf6c434cafcd717d7557e1a5c3646ddcc286f8ca"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23550528,
+      "sha256": "5e5461fca143823b3bb7deb49340a273bc131b1a3c93c508d52aa5d5232db837"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "pck_sha256": "5e5461fca143823b3bb7deb49340a273bc131b1a3c93c508d52aa5d5232db837",
+  "qa_source_equivalence": {
+    "identical_source_asset_files": 772,
+    "different_files": [],
+    "main_scene_only_override": "tools/preview_hitstop.tscn"
+  },
+  "browser": [
+    {
+      "viewport": [
+        900,
+        600
+      ],
+      "dpr": 1,
+      "touch": false,
+      "errors": [],
+      "context_lost": false,
+      "captures": [
+        {
+          "player": false,
+          "path": "desktop-white-0.png",
+          "pixels": 797,
+          "baseline_pixels": 32,
+          "observed_flash": true,
+          "before": {
+            "active": [],
+            "flashes": 0,
+            "health": 500,
+            "mode": "hitstop",
+            "owns": false,
+            "paused": false,
+            "preset": [
+              300,
+              222,
+              292,
+              48
+            ],
+            "scale": 1,
+            "stops": 0
+          },
+          "after": {
+            "active": [],
+            "flashes": 1,
+            "health": 500,
+            "mode": "hitstop",
+            "owns": false,
+            "paused": false,
+            "preset": [
+              300,
+              222,
+              292,
+              48
+            ],
+            "scale": 1,
+            "stops": 1
+          },
+          "capture": "Godot frame_post_draw, actual render without freezing gameplay clock",
+          "captured_state": {
+            "bounds": [
+              {
+                "player": false,
+                "rect": [
+                  693,
+                  300,
+                  36,
+                  36
+                ],
+                "remaining_ms": 76.2
+              }
+            ],
+            "flashes": 1,
+            "scale": 0.05
+          }
+        },
+        {
+          "player": true,
+          "path": "desktop-pale-red-0.png",
+          "pixels": 1059,
+          "baseline_pixels": 0,
+          "observed_flash": true,
+          "before": {
+            "active": [],
+            "flashes": 1,
+            "health": 500,
+            "mode": "hitstop",
+            "owns": false,
+            "paused": false,
+            "preset": [
+              300,
+              222,
+              292,
+              48
+            ],
+            "scale": 1,
+            "stops": 1
+          },
+          "after": {
+            "active": [],
+            "flashes": 2,
+            "health": 490,
+            "mode": "hitstop",
+            "owns": false,
+            "paused": false,
+            "preset": [
+              300,
+              222,
+              292,
+              48
+            ],
+            "scale": 1,
+            "stops": 2
+          },
+          "capture": "Godot frame_post_draw, actual render without freezing gameplay clock",
+          "captured_state": {
+            "bounds": [
+              {
+                "player": true,
+                "rect": [
+                  426.000030517578,
+                  264,
+                  48,
+                  72
+                ],
+                "remaining_ms": 113.2
+              }
+            ],
+            "flashes": 2,
+            "scale": 0.05
+          }
+        }
+      ],
+      "samples": [
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [
+            {
+              "player": false,
+              "rect": [
+                693,
+                300,
+                36,
+                36
+              ],
+              "remaining_ms": 76.2
+            }
+          ],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": true,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 0.05,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": true,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 0.05,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [
+            {
+              "player": true,
+              "rect": [
+                426.000030517578,
+                264,
+                48,
+                72
+              ],
+              "remaining_ms": 113.2
+            }
+          ],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": true,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 0.05,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": true,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 0.05,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "scale": 1,
+          "stops": 2
+        }
+      ],
+      "checks": [
+        "actual first-page Debug navigation",
+        "real normal/elite damage and player HP damage",
+        "actual screenshot white/pale-red pixels above baseline",
+        "short stop and real-time recovery observed",
+        "Home clears state"
+      ],
+      "scope": "QA entry only adds telemetry; shared normal game and actual Debug damage buttons"
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "dpr": 2,
+      "touch": true,
+      "errors": [],
+      "context_lost": false,
+      "captures": [
+        {
+          "player": false,
+          "path": "phone-white-0.png",
+          "pixels": 574,
+          "baseline_pixels": 19,
+          "observed_flash": true,
+          "before": {
+            "active": [],
+            "flashes": 0,
+            "health": 500,
+            "mode": "hitstop",
+            "owns": false,
+            "paused": false,
+            "preset": [
+              390,
+              631.924621582031,
+              676,
+              96.0341339111328
+            ],
+            "scale": 1,
+            "stops": 0
+          },
+          "after": {
+            "active": [],
+            "flashes": 1,
+            "health": 500,
+            "mode": "hitstop",
+            "owns": false,
+            "paused": false,
+            "preset": [
+              390,
+              631.924621582031,
+              676,
+              96.0341339111328
+            ],
+            "scale": 1,
+            "stops": 1
+          },
+          "capture": "Godot frame_post_draw, actual render without freezing gameplay clock",
+          "captured_state": {
+            "bounds": [
+              {
+                "player": false,
+                "rect": [
+                  600.600036621094,
+                  844.000061035156,
+                  31.2000122070312,
+                  31.2111206054688
+                ],
+                "remaining_ms": 67.7
+              }
+            ],
+            "flashes": 1,
+            "scale": 0.05
+          }
+        },
+        {
+          "player": true,
+          "path": "phone-pale-red-0.png",
+          "pixels": 1193,
+          "baseline_pixels": 0,
+          "observed_flash": true,
+          "before": {
+            "active": [],
+            "flashes": 1,
+            "health": 500,
+            "mode": "hitstop",
+            "owns": false,
+            "paused": false,
+            "preset": [
+              390,
+              631.924621582031,
+              676,
+              96.0341339111328
+            ],
+            "scale": 1,
+            "stops": 1
+          },
+          "after": {
+            "active": [],
+            "flashes": 2,
+            "health": 490,
+            "mode": "hitstop",
+            "owns": false,
+            "paused": false,
+            "preset": [
+              390,
+              631.924621582031,
+              676,
+              96.0341339111328
+            ],
+            "scale": 1,
+            "stops": 2
+          },
+          "capture": "Godot frame_post_draw, actual render without freezing gameplay clock",
+          "captured_state": {
+            "bounds": [
+              {
+                "player": true,
+                "rect": [
+                  369.200042724609,
+                  812.788940429688,
+                  41.6000061035156,
+                  62.4221801757812
+                ],
+                "remaining_ms": 113
+              }
+            ],
+            "flashes": 2,
+            "scale": 0.05
+          }
+        }
+      ],
+      "samples": [
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "",
+          "owns": false,
+          "paused": true,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [],
+          "flashes": 0,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 0
+        },
+        {
+          "active": [
+            {
+              "player": false,
+              "rect": [
+                600.600036621094,
+                844.000061035156,
+                31.2000122070312,
+                31.2111206054688
+              ],
+              "remaining_ms": 67.7
+            }
+          ],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": true,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 0.05,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": true,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 0.05,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [],
+          "flashes": 1,
+          "health": 500,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 1
+        },
+        {
+          "active": [
+            {
+              "player": true,
+              "rect": [
+                369.200042724609,
+                812.788940429688,
+                41.6000061035156,
+                62.4221801757812
+              ],
+              "remaining_ms": 113
+            }
+          ],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": true,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 0.05,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": true,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 0.05,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 2
+        },
+        {
+          "active": [],
+          "flashes": 2,
+          "health": 490,
+          "mode": "hitstop",
+          "owns": false,
+          "paused": false,
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "scale": 1,
+          "stops": 2
+        }
+      ],
+      "checks": [
+        "actual first-page Debug navigation",
+        "real normal/elite damage and player HP damage",
+        "actual screenshot white/pale-red pixels above baseline",
+        "short stop and real-time recovery observed",
+        "Home clears state"
+      ],
+      "scope": "QA entry only adds telemetry; shared normal game and actual Debug damage buttons"
+    }
+  ],
+  "normal_browser": {
+    "entry": "normal unmodified Web export",
+    "viewport": [
+      900,
+      600
+    ],
+    "no_qa_telemetry": true,
+    "errors": [],
+    "context_lost": false,
+    "actions": [
+      "real Debug button",
+      "first hitstop preset",
+      "both real damage buttons",
+      "return Home"
+    ]
+  },
+  "limits": [
+    "Timed trials retain flashes without global hitstop, preserving existing countdown/lock/dodge windows.",
+    "Software WebGL2 Chromium, not physical Safari, dense-crowd or full campaign performance. Stop/flash deadlines quantize to actual rendering cadence.",
+    "Short flash frames are captured after Godot rendering without extending/freezing game clocks. Readback/PNG encoding exists only in QA and is not a performance benchmark; normal entry has no capture or telemetry.",
+    "Initial ordinary screenshots missed short flashes. QA compile typing was corrected; final export logs contain no script/shader/build errors.",
+    "Legacy unscaled visual timing assertions were rerun with a real display cadence; splash timing was moved to its own monotonic clock to avoid same-frame delta/time-scale mismatch.",
+    "Known CLI ObjectDB/resource-in-use exit warnings are retained separately from runtime errors."
+  ]
+}

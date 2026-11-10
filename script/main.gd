@@ -283,6 +283,8 @@ func _launch_run(mode: StringName) -> void :
 	game.diagnostic_mode = str(mode) if mode != &"" else "normal"
 	start_game()
 	match mode:
+		&"hitstop":
+			game.prepare_hitstop_debug()
 		&"motion_vfx":
 			game.prepare_motion_vfx_debug()
 		&"tactical_enemies":

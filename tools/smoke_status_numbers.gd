@@ -10,6 +10,7 @@ func admit() -> void :
 	BUDGET._frame = -1
 	BUDGET._stamp = Time.get_ticks_msec()
 func _run() -> void :
+	Engine.max_fps = 120 # Real-time popup/hitstop assertions need real display cadence.
 	var main: Node = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	current_scene = main

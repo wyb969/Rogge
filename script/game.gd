@@ -760,6 +760,11 @@ func prepare_motion_vfx_debug() -> void:
 	sandbox.name = "MotionVfxDebug"
 	add_child(sandbox)
 
+func prepare_hitstop_debug() -> void:
+	var sandbox := preload("res://script/hitstop_debug.gd").new()
+	sandbox.name = "MotionVfxDebug"
+	add_child(sandbox)
+
 func prepare_ink_surf_debug() -> void:
 	variety.notify("彩墨冲浪：向右冲刺，掠过3处溅痕\n终点60伤害+击退 · 6秒冷却 · 无需选卡")
 	ink_surf.enable_debug_training()

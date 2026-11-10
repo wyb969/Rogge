@@ -26,18 +26,10 @@ var coverage_rebuilds: = 0
 var decoration_rebuilds: = 0
 
 
-const PALETTE_NAMES: Array[String] = [
-	"Midnight", "Plum", "Deep teal", "Moss", "Warm slate", "Graphite", 
-	"Dusk blue", "Sage", "Mulberry", "Steel", "Olive", "Indigo", 
-]
-const PALETTE_TINTS: Array[Color] = [
-	Color(0.21, 0.25, 0.28), Color(0.26, 0.22, 0.27), 
-	Color(0.2, 0.28, 0.26), Color(0.24, 0.27, 0.21), 
-	Color(0.28, 0.25, 0.21), Color(0.25, 0.26, 0.28), 
-	Color(0.22, 0.23, 0.28), Color(0.23, 0.28, 0.25), 
-	Color(0.28, 0.22, 0.25), Color(0.21, 0.27, 0.28), 
-	Color(0.28, 0.27, 0.21), Color(0.24, 0.22, 0.28), 
-]
+const PALETTE_NAMES: Array[String] = GamePalette.STAGE_NAMES
+var PALETTE_TINTS: Array[Color]:
+	get:
+		return GamePalette.STAGE_TINTS
 static var _last_opening_palette: int = -1
 var palette_id: int = 0
 var _stage_palettes: Dictionary = {}
@@ -170,14 +162,9 @@ func begin_run() -> void :
 func apply_stage(stage_num: int) -> void :
 	var stage_i: = maxi(stage_num, 1)
 	if not _stage_palettes.has(stage_i):
-		var previous: int = _last_opening_palette if stage_i == 1 else int(_stage_palettes.get(stage_i - 1, -1))
-		var choices: Array[int] = []
-		for idx in PALETTE_TINTS.size():
-			if idx != previous:
-				choices.append(idx)
-		_stage_palettes[stage_i] = choices[randi() % choices.size()]
+		_stage_palettes[stage_i] = GamePalette.stage_index(stage_i)
 		if stage_i == 1:
-			_last_opening_palette = int(_stage_palettes[stage_i])
+			_last_opening_palette = GamePalette.STAGE_ONE
 	_apply_palette(int(_stage_palettes[stage_i]))
 
 func _apply_palette(idx: int) -> void :
@@ -185,11 +172,12 @@ func _apply_palette(idx: int) -> void :
 	stage_grade = 1.0
 
 	var color: = PALETTE_TINTS[idx]
-	_decor_modulate = Color(color.r + 0.04, color.g + 0.04, color.b + 0.04, 0.5)
+	_decor_modulate = Color(color.r + 0.08, color.g + 0.1, color.b + 0.07, 0.72)
 	_decor_dirty = true
 	set_stage_tint(color)
 	if _shader_mat:
 		_shader_mat.set_shader_parameter("grade", stage_grade)
+		_shader_mat.set_shader_parameter("vignette", GamePalette.stage_vignette(idx))
 
 func set_stage_tint(color: Color) -> void :
 	tint = color

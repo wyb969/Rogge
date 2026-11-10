@@ -133,15 +133,15 @@ func _ready():
 	growth_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	growth_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	growth_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	growth_hint.add_theme_color_override("font_color", Color(0.65, 1.0, 0.75))
+	growth_hint.add_theme_color_override("font_color", GamePalette.PLAYER_CYAN)
 	$Panel.add_child(growth_hint)
 	reroll_button = Button.new()
 	reroll_button.name = "RerollButton"
 	reroll_button.pressed.connect(_on_reroll)
 	$Panel.add_child(reroll_button)
 	var style: = StyleBoxFlat.new()
-	style.bg_color = Color(0.055, 0.19, 0.19)
-	style.border_color = Color(0.42, 0.83, 0.75)
+	style.bg_color = GamePalette.UI_GREY_DARK
+	style.border_color = GamePalette.UI_GREY_BORDER
 	style.set_border_width_all(2)
 	style.set_corner_radius_all(7)
 	reroll_button.add_theme_stylebox_override("normal", style)
@@ -154,7 +154,7 @@ func _ready():
 	reroll_hint.text = "每局 2 次 · 击败宝囊精可补充"
 	reroll_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	reroll_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	reroll_hint.modulate = Color(0.65, 0.8, 0.77)
+	reroll_hint.modulate = GamePalette.UI_GREY_ACTIVE
 	$Panel.add_child(reroll_hint)
 	_refresh_reroll()
 	get_viewport().size_changed.connect(_fit_cards)

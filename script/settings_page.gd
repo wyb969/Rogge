@@ -107,7 +107,7 @@ func _build_ui() -> void :
 	panel_style.border_color = Color(0.72, 0.84, 0.92, 0.4)
 	panel_style.set_border_width_all(2)
 	panel_style.set_corner_radius_all(16)
-	panel_style.shadow_color = Color(0.25, 0.55, 0.9, 0.35)
+	panel_style.shadow_color = Color(GamePalette.UI_GREY_DARK, 0.35)
 	panel_style.shadow_size = 18
 	panel_style.content_margin_left = 16.0
 	panel_style.content_margin_right = 16.0

@@ -95,13 +95,13 @@ func _ready() -> void :
 	_apply_body_scale()
 	if sprite_2d:
 		_sprite_base_scale = sprite_2d.scale
-		sprite_2d.modulate = base_modulate
+		sprite_2d.modulate = Color.WHITE
 
 func _draw() -> void :
 	if _blast_left > 0.0:
 		var unit := 1.0 / maxf(body_scale, 0.4)
 		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
-		draw_circle(Vector2.ZERO, 7.5, Color(0.015, 0.025, 0.03, 0.3))
+		draw_circle(Vector2.ZERO, 7.5, GamePalette.shadow(0.78))
 		draw_set_transform(Vector2.ZERO)
 	if archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0:
 		var unit: = 1.0 / maxf(body_scale, 0.4)
@@ -110,9 +110,9 @@ func _draw() -> void :
 		var unit: = 1.0 / maxf(body_scale, 0.4)
 		var lift: = dash_jump_height() / DASH_JUMP_HEIGHT
 		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
-		draw_circle(Vector2.ZERO, lerpf(9.0, 6.0, lift), Color(0.015, 0.01, 0.025, 0.4))
+		draw_circle(Vector2.ZERO, lerpf(9.0, 6.0, lift), GamePalette.shadow(0.82))
 		draw_set_transform(Vector2.ZERO)
-	draw_circle(Vector2(0, 14), 3.4, marker_color)
+	draw_circle(Vector2(0, 14), 3.4, GamePalette.ENEMY_RED)
 	if archetype == EnemyData.Archetype.DASHER and dash_windup > 0.0:
 
 
@@ -168,6 +168,9 @@ func set_enemy_data(data: EnemyData) -> void :
 	death_stain_color = DEATH_STAINS.color_for(StringName(data.title))
 	base_modulate = data.tint
 	marker_color = data.marker_color
+	GamePalette.paint_actor(sprite_2d, &"enemy")
+	if sprite_2d:
+		sprite_2d.modulate = Color.WHITE
 	contact_damage = data.contact_damage
 	contact_cooldown = data.contact_cooldown
 	contact_radius = data.contact_radius
@@ -447,7 +450,7 @@ func _finish_dash() -> void :
 	dash_time_left = 0.0
 	dash_timer = dash_cooldown + randf_range(0.0, 0.4)
 	if sprite_2d and freeze_time <= 0.0 and burn_stacks <= 0:
-		sprite_2d.modulate = base_modulate
+		sprite_2d.modulate = Color.WHITE
 
 func _begin_contact_recovery() -> void :
 	if is_dashing:
@@ -470,7 +473,7 @@ func _steer_tank(delta: float, dir: Vector2, dist: float, move_speed: float) -> 
 		if sprite_2d:
 			sprite_2d.modulate = Color(0.75, 0.85, 1.5, 1)
 		if slam_time_left <= 0.0 and sprite_2d and freeze_time <= 0.0 and burn_stacks <= 0:
-			sprite_2d.modulate = base_modulate
+			sprite_2d.modulate = Color.WHITE
 		return
 
 	if slam_windup > 0.0:
@@ -482,7 +485,7 @@ func _steer_tank(delta: float, dir: Vector2, dist: float, move_speed: float) -> 
 			slam_time_left = 0.22
 			slam_dir = dir if dir.length_squared() > 0.001 else Vector2.RIGHT
 		elif slam_windup <= 0.0 and sprite_2d:
-			sprite_2d.modulate = base_modulate
+			sprite_2d.modulate = Color.WHITE
 		return
 
 	attack_timer -= delta
@@ -501,7 +504,7 @@ func _steer_ranged(delta: float, dir: Vector2, dist: float, move_speed: float) -
 			if not is_frozen():
 				_fire_projectile(dir)
 			if sprite_2d and freeze_time <= 0.0 and burn_stacks <= 0:
-				sprite_2d.modulate = base_modulate
+				sprite_2d.modulate = Color.WHITE
 		return
 
 	attack_timer -= delta
@@ -639,7 +642,7 @@ func _update_statuses(delta: float) -> void :
 		if sprite_2d and not is_dashing and slam_windup <= 0.0 and shot_windup <= 0.0:
 			sprite_2d.modulate = Color(0.55, 0.85, 1.2, 1.0)
 		if freeze_time <= 0.0 and burn_stacks <= 0 and sprite_2d:
-			sprite_2d.modulate = base_modulate
+			sprite_2d.modulate = Color.WHITE
 
 	if burn_stacks > 0:
 		if sprite_2d and freeze_time <= 0.0 and not is_dashing and shot_windup <= 0.0 and slam_windup <= 0.0:
@@ -652,7 +655,7 @@ func _update_statuses(delta: float) -> void :
 			_try_spread_burn()
 			burn_stacks = max(burn_stacks - 1, 0)
 			if burn_stacks <= 0 and freeze_time <= 0.0 and sprite_2d and not is_dashing:
-				sprite_2d.modulate = base_modulate
+				sprite_2d.modulate = Color.WHITE
 
 func _mitigate(raw: float) -> float:
 	var dealt: = raw * (1.0 - clampf(defense, 0.0, 0.75))

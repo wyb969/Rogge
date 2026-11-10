@@ -234,6 +234,12 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	icon_wrap.position = Vector2(6, 6)
 	icon_wrap.size = SLOT_SIZE
 	icon_wrap.mouse_filter = Control.MOUSE_FILTER_PASS
+	var slot_style := StyleBoxFlat.new()
+	slot_style.bg_color = GamePalette.UI_SLOT
+	slot_style.border_color = GamePalette.icon_accent(upgrade_id)
+	slot_style.set_border_width_all(2)
+	slot_style.set_corner_radius_all(7)
+	icon_wrap.add_theme_stylebox_override("panel", slot_style)
 
 	var icon: = TextureRect.new()
 	icon.custom_minimum_size = ICON_SIZE

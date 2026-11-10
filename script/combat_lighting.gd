@@ -177,7 +177,7 @@ func _process(delta: float) -> void :
 	_canvas = get_viewport().get_canvas_transform()
 	var daylight: float = game.weather.daylight
 	_sun = Vector2(0.9, 0.35).rotated(sin(game.weather.solar_phase * TAU) * 0.35).normalized()
-	_shadow_alpha = lerpf(0.15, 0.3, daylight) * (0.7 if game.weather.current_weather == 1 else 1.0)
+	_shadow_alpha = lerpf(0.72, 0.88, daylight) * (0.82 if game.weather.current_weather == 1 else 1.0)
 	_emission = lerpf(1.2, 0.85, daylight)
 	_refresh_left -= delta
 	if _refresh_left <= 0:
@@ -197,18 +197,18 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 	if kind == 0:
 		shadows_last = 0
 		var offset: = _sun * lerpf(1, 6, game.weather.daylight)
-		_halo(canvas, game.player.global_position + Vector2(0, 17) + offset, Vector2(13, 4), Color(INK, _shadow_alpha))
+		_halo(canvas, game.player.global_position + Vector2(0, 17) + offset, Vector2(14, 5), GamePalette.shadow(_shadow_alpha))
 		shadows_last += 1
 		for i in _shadow_count:
 			var actor: = _shadows[i]
 			if not _visible(actor): continue
 			if actor.get_script() == ENEMY and actor.archetype == EnemyData.Archetype.DASHER and (actor.is_dashing or actor.dash_windup > 0): continue
-			_halo(canvas, actor.global_position + Vector2(0, _shadow_feet[i]) + offset, _shadow_sizes[i], Color(INK, _shadow_alpha))
+			_halo(canvas, actor.global_position + Vector2(0, _shadow_feet[i]) + offset, _shadow_sizes[i], GamePalette.shadow(_shadow_alpha))
 			shadows_last += 1
 		var flying: = 0
 		for drone in _drones:
 			if not _visible(drone): continue
-			_halo(canvas, drone.global_position + Vector2(0, 12) + offset, Vector2(8, 2.5), Color(INK, _shadow_alpha * 0.6 * drone.modulate.a))
+			_halo(canvas, drone.global_position + Vector2(0, 12) + offset, Vector2(8, 2.5), GamePalette.shadow(_shadow_alpha * 0.6 * drone.modulate.a))
 			shadows_last += 1
 			flying += 1
 			if flying == BEAM_LIGHTS: break

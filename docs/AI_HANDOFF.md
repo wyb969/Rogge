@@ -1,5 +1,12 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-10 颜色语义 v4（本分支，未合并）
+
+- 仓库没有 `main`。本分支 `cursor/color-palette-v4-4455` 从最新 `master` `7e81adf` 切出，没有推送或改写 `master`。工作区里没有 `uploads/rogge_color_spec.md`，颜色按 v4 目标图和明确规则落地：集中 `GamePalette`，玩家青、敌人与扇形预警红/橙、毒紫、金币保持原金色贴图、绿只给治疗/经验绿、地面第1关深青苔加暗角、其余关卡固定且互不相同、摇杆/DASH/顶栏按钮中性灰、技能图标按功能上色。没有改伤害、冷却、治疗量和刷怪数字。设置页的音量、音乐、音效、环境音、按键大小、透明度、镜头、天气和三档难度都还在。
+- 新文件：`script/game_palette.gd`、`shaders/body_tint.gdshader`、`tools/smoke_game_palette.gd`、`tools/capture_palette_v4.gd`。敌人/玩家用共享着色器改色，状态仍走原来的 `modulate` / `self_modulate`。第1关地面索引固定为青苔并写 `vignette` 0.68；第2关起用其余色板，暗角 0.18。
+- 本机 Godot `4.7.2.stable.official.ed1daf0bf`，`--rendering-method gl_compatibility`。导入退出码 0，无脚本错误。随后通过：`smoke_game_palette`、`smoke_stage_variation`（对比度仍 ≥4.5）、`smoke_poison_trail`、`smoke_visual_style`、`smoke_weather`、`smoke_archetypes`。退出时的 ObjectDB/资源警告仍是既有现象，不是本轮新的脚本错误。没有跑全量 smoke，没有浏览器或 Safari。
+- 截图（软件 OpenGL，隔离对局，冻结刷怪）：`docs/screenshots/palette-v4/landscape-stage1.png`（900×600）、`portrait-stage1.png`（390×844）、`landscape-stage2.png`（900×600，地面换色；HUD 的 STAGE 2 只在截图脚本里改了标签）。采样：第1关地面中心约 (26,48,38)、角部更暗；第2关约 (39,22,35)；玩家青 (108,209,255)；敌人红 (226,59,59)；预警边 (255,106,50)；毒 (168,85,247)；治疗绿；金币仍是金色贴图。
+
 ## 2026-11-09 主分支与itch最新版本（已完成）
 
 - 基于已合并的master `c34a957`（[PR #4](https://github.com/wyb969/Rogge/pull/4)），在 `fix/beast-hover-ink-20261109` 修复用户追加的三项反馈，版本 **`20261109-192900`**。原开发分支工作区保留，没有清理/重置。

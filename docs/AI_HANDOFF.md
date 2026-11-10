@@ -13,6 +13,13 @@
 - 后续重点：用户按稿试玩确认色彩；真机检查不同天气下的低饱和地面、怪物群/毒圈辨识与局部阴影开销。本轮没有新增玩法或已知未修脚本错误。PR评审/发布按新指令执行，不把PR #6旧试玩当v4包。
 
 
+### v4试玩（用户追加要求，已更新同一站点）
+
+- <https://rogge-palette-playtest-20261109.whiteber.chatgpt.site> 已更新至 **v4 / PR #7**，正常游戏入口；原所有者私有权限保留。下文PR #6曾在此URL部署的版本是历史记录。
+- Site源 `3afc9220f0fe595f529bdecf355b30b423ddd97f`；deployment `appgdep_6af27b8ade18819193a1d4d2230df965` 返回succeeded，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_7d3a43ad5490819199360a70c2677017`。游戏源码 `1389bc80b1cc2ccc5f7dbfb8cc35aa877e2315be`，PCK `5016e08eef0681e284b3675da654124630af93b0b91ee12f9abf07cf57b69087` 与已测试导出一致。
+- 仅复用原包/处理托管gzip，未改游戏、合并master或发布itch。11文件校验、WASM解压等价、单文件25MiB限制、JS语法通过；没有重复全量回归。Sites专用helper/浏览器工具仍缺失，凭据仅隐藏stdin/子进程内存使用；托管gzip适配器和线上私有URL未做浏览器复测。平台succeeded只确认发布，原游戏17+8专项与Chromium结果单独保留。
+- 发布记录：[validation/palette-v4-playtest-20261110.json](validation/palette-v4-playtest-20261110.json)。Site本地源仍为 `/workspace/sites/rogge-palette-playtest-20261109/`，不要仅按旧目录日期误判版本。
+
 ## 2026-11-09 统一颜色与卡牌比较（本轮PR）
 
 - 从最新主分支 `master` / `7e81adf` 新建 `feature/palette-card-readability-20261109`；仓库没有 `main`。本轮只做视觉/UI/文案，已提交 [PR #6](https://github.com/wyb969/Rogge/pull/6)，未合并、未更新itch，版本仍为 `20261109-192900`。已验证源码提交 `c25e98347633b0ca591419b4e6f6c4f82f7f8ec9`；后续仅补本交接和记录。

@@ -1,5 +1,7 @@
 # Cursor 配色与当前功能同步
 
+[最新试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)（现有所有者账号登录），版本 **20261110-150638**。已同步并推送当前分支，游戏源码 `ec012230bc0146e2b04653e25f9c36c48e198e9f`，后续仅文档。
+
 颜色源：`cursor/color-palette-v4-4455` / `137fa6d7968617eefed4e19fad76cf0983e408d1`。功能基线：`feature/vfx-motion-20261110` / `d9dcb3d`。本次以新增提交替换两轮旧配色，不删除历史、不回退游戏功能。
 
 ## 颜色生效路径

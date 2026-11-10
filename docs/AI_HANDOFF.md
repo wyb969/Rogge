@@ -2,12 +2,13 @@
 
 ## 2026-11-10 用 Cursor 配色替换两轮旧颜色（最新）
 
-- 用户指定将 `cursor/color-palette-v4-4455` 的颜色用于当前开发分支，替代先前两轮配色。颜色来源已从远端核对为 `137fa6d7968617eefed4e19fad76cf0983e408d1`；当前开发起点 `feature/vfx-motion-20261110` / `d9dcb3da2447be5807f357204f06e0b2383c9cd9`。先在隔离integration工作树整理，验证后快进同步当前分支；不改写历史、不合并master、不发布itch。
+- 用户指定将 `cursor/color-palette-v4-4455` 的颜色用于当前开发分支，替代先前两轮配色。颜色来源已从远端核对为 `137fa6d7968617eefed4e19fad76cf0983e408d1`；当前开发起点 `feature/vfx-motion-20261110` / `d9dcb3da2447be5807f357204f06e0b2383c9cd9`。已在隔离integration工作树完成整理与验证，并快进同步/推送当前分支，已验证游戏提交 `ec012230bc0146e2b04653e25f9c36c48e198e9f`；后续仅发布记录文档。已更新 [PR #10](https://github.com/wyb969/Rogge/pull/10)，保持以PR #9分支为base。不改写历史、不合并master、不发布itch。
 - 新版本 **20261110-150638**（北京时间）。`GamePalette`原始Cursor定义/方法保持完整，尾部只保留现有卡牌UI、脚下提示与残影所需的角色别名/中性样式包装；所有别名解析到同一套Cursor颜色。移除`semantic_ramp.gdshader`及全局`game_ui_theme.gd`，原贴图不再被上两轮色阶映射盖住。
 - 同步Cursor共享body_tint、角色/怪物/Boss染色及状态恢复、原武器/无人机/金币/书卷/图标色彩、紫毒、红橙预警、原生命/经验条、技能/组合颜色、黑色椭圆影子与共享局部光、分关地面/装饰/暗角、灰色摇杆和Dash。第一关地面固定深青苔、后续按Cursor表轮换，替代旧三组随机色族。绿色生命条/蓝色经验条等以用户本次选定样式为准，不再套旧版“绿仅拾取”等条款。
 - 保留卡牌数值前后比较、固定移速卡+20、实际参数共用计算、手机卡牌滑动与点击选择、17项Debug分页/设置持久化。移除全局主题后，卡牌独立使用Cursor中性面板，防止文字直接压在战斗画面上。普通伤害暖白、暴击金色及加大/加粗、异常黄→红恢复Cursor风格，同时保留当前的紫色毒伤通道。
 - 移动/冲刺/投弹修复保留：左右步态、实际位移步频、无走路粒子、单层相机跟随、脚下HUD固定在Player、0.22秒/0.48透明度/8槽按距离残影、双投弹渲染插值；物理伤害时钟不改。静态审计确认14个核心文件与当前起点逐字一致、22个关键移动/卡牌/命中方法逐字一致；GamePalette原Cursor前缀逐字一致。
 - 本轮专项与截图、构件哈希收尾见 [validation/palette-sync-20261110.json](validation/palette-sync-20261110.json) 和 [palette-sync.md](palette-sync.md)。原生已通过17项不同专项（含22卡347断言、运动表现170断言、真实120Hz渲染采样30Hz物理、Debug4654断言）；6项最终实际Web PCK专项通过；Chromium原始正常入口、横屏/竖屏固定场景（三种Cursor地面）、彩色与灰度、Dash四状态、数值卡牌、真实手机滑动不误选/点击选择均通过，无脚本/Shader错误或WebGL丢失。正常Web入口也保留键鼠/双指移动和Dash检查。仅QA副本启用固定场景与遥测，763个源/资源/素材文件逐字一致。旧配色文档已标记历史，数值/功能条款仍有效。
+- 最新试玩：<https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>（现有所有者私有权限，登录当前账号），版本20261110-150638；普通Start或Debug第一项动态表现均可。Site source `3c2a320bbf5b3bccdc815e4953eca5fa1ad9d585`，deployment `appgdep_6af2c579ccc481918e7dcf7d7d7b3550`，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_40aa335d30148191b706ba6466e252b3`；北京时间2026-11-10 15:19:34发布succeeded。PCK `aaf96070a6579a70a6c095860ece1eefac0310e40eab2135f078b34a059188ab`；WASM解压/原PCK字节一致，11资产均低于25MiB。官方helper/浏览器工具缺失，沿用隐藏stdin普通Git与精确dist tar；托管适配器/线上私有页未浏览器复测。
 - 边界：仅颜色/材质/UI外观替换，不回退卡牌功能、不调整伤害/冷却/移速/血量，不清理或覆盖用户工作区。CLI既有ObjectDB/资源退出警告独立记录；无Safari真机、全流程或密集怪性能结论。临时路径 `/workspace/Rogge-palette-sync-20261110T065217Z/` 不是持久依赖。
 
 ## 2026-11-10 彩墨提示 / 冲刺残影 / 投弹平滑（上一轮）

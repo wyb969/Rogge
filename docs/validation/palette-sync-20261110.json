@@ -959,5 +959,22 @@
     "Software WebGL2 Chromium, not physical Safari, dense-crowd or full campaign regression.",
     "Old color-only reference documents are marked historical; runtime uses the selected Cursor style rather than prior restrictive color roles.",
     "Known CLI ObjectDB/resource-in-use shutdown warnings are preserved separately from runtime errors."
-  ]
+  ],
+  "source_commit": "ec012230bc0146e2b04653e25f9c36c48e198e9f",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/10",
+  "playtest": {
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "audience": "existing owner-private, unchanged",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "site_source_commit": "3c2a320bbf5b3bccdc815e4953eca5fa1ad9d585",
+    "game_source_commit": "ec012230bc0146e2b04653e25f9c36c48e198e9f",
+    "deployment_id": "appgdep_6af2c579ccc481918e7dcf7d7d7b3550",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_40aa335d30148191b706ba6466e252b3",
+    "status": "succeeded",
+    "published_beijing": "2026-11-10T15:19:34+08:00",
+    "pck_sha256": "aaf96070a6579a70a6c095860ece1eefac0310e40eab2135f078b34a059188ab",
+    "hosting_archive_sha256": "baf17eb020b60393e721bd693bf7b842982c56d253cdb66ee27baf9b7ea1f2d2",
+    "hosting_checks": "Original PCK/WASM bytes equivalent; 11 assets below25MiB; unchanged gzip adapter and engine JS syntax checked",
+    "browser_scope": "Normal original export and isolated QA entry tested; hosted gzip adapter/live private Site not browser-retested; managed Sites browser/helper/open_in_codex unavailable"
+  }
 }

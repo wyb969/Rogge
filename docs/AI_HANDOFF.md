@@ -2,7 +2,7 @@
 
 ## 2026-11-10 彩墨提示 / 冲刺残影 / 投弹平滑（最新）
 
-- 分支 `feature/vfx-motion-20261110` 基于已核对的移动分支 `cca3e4551270bcb805fbb14e8977f58418b0d209`；PR #9仍未合并，默认分支为master `7e81adf`。本轮不合并master、不更新itch。版本 **20261110-132712**（北京时间）。
+- 分支 `feature/vfx-motion-20261110` 基于已核对的移动分支 `cca3e4551270bcb805fbb14e8977f58418b0d209`；PR #9仍未合并，默认分支为master `7e81adf`。已提交 [PR #10](https://github.com/wyb969/Rogge/pull/10)（以移动分支为base），已验证源码 `53b9906f6c2b33af9fd053d3b1e54f6fca6278af`，后续仅收尾文档。本轮不合并master、不更新itch。版本 **20261110-132712**（北京时间）。
 - 代码确认：彩墨提示与投弹均有30Hz重绘门限，提示另行采样玩家坐标；投弹年龄本来已经用physics delta推进，因此不称其为“没有使用delta”。旧残影仅0.10秒/0.16透明度，暗贴图乘色进一步削弱可见度。
 - `ink_surf.gd`的3格与Label移入Player下固定`InkFootHud`，不挂AnimatedSprite，不拷贝世界坐标、不受冲刺拉伸；只有数值/增益动画/冷却改变时重绘，冲浪震波仍留在世界坐标。3处彩墨/6秒/60伤害/90半径与实际dash信号判定未改。
 - `player.gd`沿move_and_slide后的真实路径每18世界单位留下残影，启动即有一帧，每物理步最多4次、总池8；0.22秒/0.48透明度。`combat_feedback.gd`新增一个共享绘制层和unshaded纯轮廓shader，青蓝色不再与暗贴图RGB相乘；保留旧ShadowTimer回调供兼容检查，正常冲刺不启动它。无走路残影/新粒子/逐残影节点。
@@ -11,7 +11,7 @@
 - 本轮**11项不同原生专项、4项最终Web PCK专项通过**。新增170断言：脚下坐标随真实玩家且不随sprite形变、30/60/120Hz等间隔残影/弧线、真实120Hz引擎帧对30Hz物理（双方各>10个物理tick内中间采样）、渲染不推进伤害时钟、池上限/清理/实际Debug按钮/Retry/Home。其余覆盖彩墨、炸弹、战术怪、dash无敌/方向、步态、相机、反馈、Debug 4654断言和工具栏。
 - 真实Chromium软件WebGL2：900×600及390×844/DPR2双指操作，实际Debug菜单/按钮、纵向HUD固定[-50,32]、冲刺残影、双方投弹、暂停/恢复、Home和普通原始Web入口通过；无脚本/Shader错误或WebGL丢失。正常入口不暴露QA遥测。763个脚本/场景/资源/素材文件与QA副本一致，仅QA main_scene加载专属观测入口。
 - 限制：软件录屏渲染较慢，最终浏览器未观察到30Hz物理tick内的连续渲染对，不能据此做60/120FPS或真机性能结论；插值引擎专项由上述原生实际帧确认。Dash截图可能晚于短暂拖尾，活跃残影由遥测和录屏确认。退出ObjectDB/资源仍被引用警告独立保留。未做Safari真机、密集怪负载或完整游戏回归。
-- 文档/命令：[motion-vfx.md](motion-vfx.md)；源/导出哈希、检查、浏览器数据：[validation/motion-vfx-20261110.json](validation/motion-vfx-20261110.json)。临时产物 `/workspace/Rogge-vfx-motion-20261110/`，不是持久依赖。试玩发布记录将由收尾文档补充；复用既有palette-playtest Site，不改变受众。
+- 文档/命令：[motion-vfx.md](motion-vfx.md)；源/导出哈希、检查、浏览器数据：[validation/motion-vfx-20261110.json](validation/motion-vfx-20261110.json)。临时产物 `/workspace/Rogge-vfx-motion-20261110/`，不是持久依赖。已更新既有所有者私有试玩：<https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>，当前所有者账号登录；主页→Debug→动态表现。Site source `81392fe86eead527db39049ef999ffdfef60545a`，deployment `appgdep_6af2ae797ea48191881a2d0420e9544f`，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_5781671132748191936bf6e3b95e4e13`，2026-11-10 13:41:33北京时间发布succeeded，受众不变。PCK `4dbe4bd19f751aa64df913b2c827212e0351645379c032a1bec035d410747932`；WASM解压/PCK原字节和11资产25MiB限制均校验。官方Site helper/浏览器工具缺失，沿用隐藏stdin普通Git和精确dist tar；托管适配器/线上私有页未浏览器复测。
 
 ## 2026-11-10 玩家移动与跟随（上一轮）
 

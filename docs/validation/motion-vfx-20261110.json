@@ -5214,5 +5214,25 @@
       "no_qa_telemetry": true,
       "actual_debug_buttons_clicked": true
     }
-  ]
+  ],
+  "source_commit": "53b9906f6c2b33af9fd053d3b1e54f6fca6278af",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/10",
+  "playtest": {
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "audience": "existing owner-private; unchanged",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "source_commit": "81392fe86eead527db39049ef999ffdfef60545a",
+    "game_source_commit": "53b9906f6c2b33af9fd053d3b1e54f6fca6278af",
+    "deployment_id": "appgdep_6af2ae797ea48191881a2d0420e9544f",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_5781671132748191936bf6e3b95e4e13",
+    "status": "succeeded",
+    "published_beijing": "2026-11-10T13:41:33+08:00",
+    "pck_sha256": "4dbe4bd19f751aa64df913b2c827212e0351645379c032a1bec035d410747932",
+    "archive_sha256": "89a153f3ab7257a4b47ee4528dd4fe7b0441333957078c0bc8de267224006e4a",
+    "original_export_and_hosted_gzip_equivalence": true,
+    "hosting_all_11_assets_under_25MiB": true,
+    "hosting_js_syntax": true,
+    "hosting_helper": "Official helper unavailable; ordinary Git with hidden-stdin short-lived credential, tracked source push + exact dist tar; accepted by native publishing tool",
+    "browser_scope": "Normal original export and isolated QA entry tested in Chromium; hosted gzip adapter/live private Site not browser-retested; managed Sites browser/open_in_codex tool unavailable"
+  }
 }

@@ -6,6 +6,8 @@ var death_stains: MultiMeshInstance2D
 const MAX_SHARDS: = 128
 const MAX_RINGS: = 16
 const MAX_GHOSTS: = 8
+const GHOST_LIFETIME := 0.10
+const GHOST_OPACITY := 0.16
 const MAX_BURSTS_PER_FRAME: = 8
 const BURSTS_PER_SECOND: = 42.0
 var shards: Array[Dictionary] = []
@@ -150,7 +152,7 @@ func ghost(sprite: AnimatedSprite2D) -> void :
 	ghost_image.scale = sprite.global_scale * Vector2(-1 if sprite.flip_h else 1, 1)
 	ghost_image.rotation = sprite.global_rotation - global_rotation
 	ghost_image.texture = texture
-	ghost_image.left = 0.18
+	ghost_image.left = GHOST_LIFETIME
 	ghosts.append(ghost_image)
 
 func pickup(at: Vector2, healing: bool = false) -> void :
@@ -225,7 +227,7 @@ func _draw() -> void :
 	for ghost_image in ghosts:
 		var texture: Texture2D = ghost_image.texture
 		draw_set_transform(ghost_image.p, ghost_image.rotation, ghost_image.scale)
-		draw_texture(texture, - texture.get_size() * 0.5, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, ghost_image.left / 0.18 * 0.28))
+		draw_texture(texture, - texture.get_size() * 0.5, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, ghost_image.left / GHOST_LIFETIME * GHOST_OPACITY))
 	draw_set_transform(Vector2.ZERO)
 	for ring in rings:
 		var progress: float = 1.0 - ring.left / ring.life

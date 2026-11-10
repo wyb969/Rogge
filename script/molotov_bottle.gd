@@ -11,7 +11,6 @@ var _feedback: Node2D
 var _run: Node
 
 func _ready() -> void :
-	$Sprite2D.material = GamePalette.ramp_material(&"friendly")
 	_feedback = preload("res://script/combat_feedback.gd").find(self)
 	_run = _feedback.get_parent() if _feedback != null else null
 	collision_layer = 4
@@ -61,7 +60,7 @@ func _explode() -> void :
 func _spawn_burst_fx() -> void :
 	var feedback: = _feedback
 	if feedback != null:
-		feedback.spray(global_position, Vector2.ZERO, GamePalette.FRIENDLY_CYAN, 18, 140)
+		feedback.spray(global_position, Vector2.ZERO, Color(1, 0.45, 0.15), 18, 140)
 		return
 	var p: = CPUParticles2D.new()
 	p.one_shot = true
@@ -76,7 +75,7 @@ func _spawn_burst_fx() -> void :
 	p.gravity = Vector2(0, 180)
 	p.scale_amount_min = 2.0
 	p.scale_amount_max = 4.0
-	p.color = GamePalette.alpha(GamePalette.FRIENDLY_CYAN, 1.0)
+	p.color = Color(1.0, 0.45, 0.15, 1.0)
 	p.z_index = 20
 	var container: = get_tree().get_first_node_in_group("effect_container")
 	if container:

@@ -110,7 +110,7 @@ var _hurt_tween: Tween
 var _hurt_punch: = 0.0
 
 func _ready() -> void :
-	animated_sprite_2d.material = GamePalette.ramp_material(&"player")
+	GamePalette.paint_actor(animated_sprite_2d, &"player")
 	# Retain the old emitter node/API for saved scenes, but never emit walking quads.
 	cpu_particles_2d.emitting = false
 	cpu_particles_2d.hide()

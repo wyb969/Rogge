@@ -13,7 +13,7 @@ class CooldownMask:
 	var accent: = Color.WHITE
 	func _draw() -> void :
 		if fraction <= 0: return
-		draw_rect(Rect2(Vector2.ZERO, Vector2(size.x, size.y * fraction)), GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.8))
+		draw_rect(Rect2(Vector2.ZERO, Vector2(size.x, size.y * fraction)), Color(0.015, 0.025, 0.04, 0.8))
 		draw_rect(Rect2(3, size.y - 4, (size.x - 6) * (1 - fraction), 2), accent)
 
 func configure(texture: Texture2D, color: Color) -> void :
@@ -22,26 +22,11 @@ func configure(texture: Texture2D, color: Color) -> void :
 	expand_icon = true
 	icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	text = ""
-	# Only recolor the icon; a material on Button would erase its functional border.
-	for state in ["icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_disabled_color", "icon_focus_color"]:
-		add_theme_color_override(state, Color.TRANSPARENT)
-	var picture := TextureRect.new()
-	picture.texture = texture
-	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	var kind: StringName = &"warm" if color == GamePalette.SKILL_HEAL else (&"lightning" if color == GamePalette.SKILL_LIGHTNING else (&"shield" if color == GamePalette.SHIELD_GOLD else &"cooldown"))
-	picture.material = GamePalette.ramp_material(kind)
-	add_child(picture)
-	picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	picture.offset_left = 7
-	picture.offset_top = 7
-	picture.offset_right = -7
-	picture.offset_bottom = -7
+	add_theme_color_override("icon_disabled_color", Color.WHITE)
 	for selected_style in [false, true]:
 		var style: = StyleBoxFlat.new()
-		style.bg_color = GamePalette.alpha(GamePalette.UI_PANEL, 0.8)
-		style.border_color = accent.lightened(0.15) if selected_style else accent
+		style.bg_color = Color(0.025, 0.04, 0.07, 0.9)
+		style.border_color = color.lightened(0.28) if selected_style else color.darkened(0.28)
 		style.set_border_width_all(2)
 		style.set_corner_radius_all(7)
 		style.content_margin_left = 5

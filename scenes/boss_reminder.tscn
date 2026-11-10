@@ -16,6 +16,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+color = Color(0.75, 0.05, 0.02, 0)
 
 [node name="Label" type="Label" parent="CanvasLayer" unique_id=914648028]
 anchors_preset = 8
@@ -29,6 +30,7 @@ offset_right = 420.0
 offset_bottom = 48.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
 theme_override_font_sizes/font_size = 40
 text = "BOSS IS COMING!!!"
 horizontal_alignment = 1

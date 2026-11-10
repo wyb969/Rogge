@@ -16,7 +16,7 @@ var current_damage: float
 func _ready():
 	line = Line2D.new()
 	line.width = 3
-	line.default_color = GamePalette.PLAYER_ATTACK
+	line.default_color = Color(0.7, 0.9, 1.0)
 	add_child(line)
 
 

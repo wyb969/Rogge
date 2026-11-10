@@ -14,6 +14,8 @@ const CARD_SIZE: = Vector2(240, 230)
 @onready var icon: TextureRect = $VBoxContainer / Icon
 
 func _ready() -> void :
+	# Keep readable card panels after removing the old global recoloring theme.
+	add_theme_stylebox_override("panel", GamePalette.neutral_surface(GamePalette.UI_SLOT, GamePalette.UI_GREY_BORDER))
 	custom_minimum_size = CARD_SIZE
 	size = CARD_SIZE
 	size_flags_horizontal = Control.SIZE_SHRINK_CENTER

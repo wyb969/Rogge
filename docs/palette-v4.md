@@ -1,5 +1,7 @@
 # Rogge · 配色稿 v4 落地
 
+> 颜色实现已由 [Cursor 配色同步](palette-sync.md) 替换。本文颜色与材质条款为历史记录；CardNumbers/CardPreview 数值文案及非配色功能仍保留。
+
 依据本轮目标稿与颜色语义实现，不做逐像素复制。分支 `feature/palette-v4-20261110` 从最新 `master` / `7e81adf` 新建；仓库没有 `main`。PR #6 尚未合并，因此本分支带入该PR的卡牌可比较文案与中性控件，继续实现v4。没有合入主分支或更新itch。
 
 ## 色彩用途

@@ -220,7 +220,7 @@ func _build_ui() -> void :
 	add_child(_hud)
 	_clock = Label.new()
 	_clock.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_clock.add_theme_color_override("font_outline_color", GamePalette.BLACK)
+	_clock.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.03))
 	_clock.add_theme_constant_override("outline_size", 5)
 	UiFonts.apply_to_label(_clock, 24, true)
 	_hud.add_child(_clock)
@@ -230,7 +230,7 @@ func _build_ui() -> void :
 	_modal.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_modal)
 	var dim: = ColorRect.new()
-	dim.color = GamePalette.alpha(GamePalette.UI_PANEL,0.95)
+	dim.color = Color(0.015, 0.025, 0.045, 0.95)
 	_modal.add_child(dim)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var center: = CenterContainer.new()
@@ -238,8 +238,8 @@ func _build_ui() -> void :
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_panel = PanelContainer.new()
 	var style: = StyleBoxFlat.new()
-	style.bg_color = GamePalette.UI_PANEL
-	style.border_color = GamePalette.UI_BORDER
+	style.bg_color = Color(0.035, 0.055, 0.09)
+	style.border_color = Color(0.55, 0.78, 0.94)
 	style.set_border_width_all(2)
 	style.set_corner_radius_all(12)
 	style.content_margin_left = 16

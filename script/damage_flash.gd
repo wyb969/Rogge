@@ -11,7 +11,7 @@ func _ready() -> void :
 	layer = 88
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_rect = ColorRect.new()
-	_rect.color = GamePalette.alpha(GamePalette.DANGER_RED, 0)
+	_rect.color = Color(0.95, 0.025, 0.055, 0)
 	_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_rect)
 	_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

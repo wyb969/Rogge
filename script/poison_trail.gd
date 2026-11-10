@@ -5,7 +5,7 @@ const MAX_CLOUDS: = 64
 const SPACING: = 18.0
 const CLOUD_LIFE: = 4.0
 const SCAN_STEP: = 0.1
-const POISON_TINT: = GamePalette.POISON_TINT
+const POISON_TINT: = GamePalette.POISON_BODY
 var level: = 0
 var damage_ticks: = 0
 var clouds_emitted: = 0
@@ -40,7 +40,6 @@ func _ready() -> void :
 	_markers = StatusMarkers.new()
 	_markers.z_index = 14
 	_markers.trail = self
-	_markers.material = GamePalette.silhouette_material()
 	add_child(_markers)
 	reset()
 
@@ -184,9 +183,9 @@ func _draw() -> void :
 		var fade: = minf(1, cloud.left / 0.7)
 		var at: Vector2 = to_local(cloud.at)
 		var offset: = Vector2(sin(cloud.phase + _clock) * 5, -3)
-		draw_circle(at, radius, GamePalette.alpha(GamePalette.POISON_PURPLE_DARK, 0.45 * fade))
-		draw_circle(at + offset, radius * 0.68, GamePalette.alpha(GamePalette.POISON_PURPLE, 0.55 * fade))
-		draw_circle(at + Vector2(5, -7 - fposmod(_clock * 9 + cloud.phase, 12)), 1.4, GamePalette.alpha(GamePalette.POISON_TINT, 0.75 * fade))
+		draw_circle(at, radius, Color(GamePalette.POISON_DARK, 0.34 * fade))
+		draw_circle(at + offset, radius * 0.68, Color(GamePalette.POISON, 0.48 * fade))
+		draw_circle(at + Vector2(5, -7 - fposmod(_clock * 9 + cloud.phase, 12)), 1.4, Color(GamePalette.POISON_LIGHT, 0.7 * fade))
 
 func draw_status(canvas: Node2D) -> void :
 	for entry in _exposed.values():
@@ -194,16 +193,5 @@ func draw_status(canvas: Node2D) -> void :
 		if not is_instance_valid(actor) or actor.is_queued_for_deletion(): continue
 		var at: Vector2 = canvas.to_local(actor.global_position) + Vector2(0, -16)
 		var bright: = 0.55 + 0.4 * (0.5 + 0.5 * sin(_clock * 8))
-		# One shared mask material and one quad per exposed actor, no per-actor Nodes.
-		var sprite: Sprite2D = actor.get("sprite_2d")
-		if is_instance_valid(sprite) and sprite.texture != null:
-			var region := sprite.region_rect if sprite.region_enabled else Rect2(Vector2.ZERO,sprite.texture.get_size())
-			var cell := region.size / Vector2(sprite.hframes,sprite.vframes)
-			var source := Rect2(region.position+Vector2(sprite.frame_coords)*cell,cell)
-			var transform := canvas.global_transform.affine_inverse()*sprite.global_transform
-			transform = transform.scaled_local(Vector2(-1 if sprite.flip_h else 1,-1 if sprite.flip_v else 1))
-			canvas.draw_set_transform_matrix(transform)
-			canvas.draw_texture_rect_region(sprite.texture,sprite.get_rect(),source,GamePalette.alpha(GamePalette.POISON_TINT,0.3+bright*0.35))
-			canvas.draw_set_transform(Vector2.ZERO)
-		canvas.draw_circle(at + Vector2(-4, -2), 2.0, GamePalette.alpha(GamePalette.POISON_PURPLE, bright))
-		canvas.draw_circle(at + Vector2(4, -5), 1.5, GamePalette.alpha(GamePalette.POISON_TINT, bright))
+		canvas.draw_circle(at + Vector2(-4, -2), 2.0, Color(GamePalette.POISON, bright))
+		canvas.draw_circle(at + Vector2(4, -5), 1.5, Color(GamePalette.POISON_LIGHT, bright))

@@ -8,11 +8,7 @@ the active frame UV rect so adjacent frames cannot bleed a vertical seam.
 
 shader_type canvas_item;
 // Stable elite accent for visual style v1; retained uniforms keep old materials compatible.
-uniform vec4 outline_color : source_color;
-uniform bool semantic_body = false;
-uniform vec4 body_dark : source_color;
-uniform vec4 body_main : source_color;
-uniform vec4 body_light : source_color;
+uniform vec4 outline_color : source_color = vec4(0.87,0.73,0.46,1.0);
 varying vec4 vertex_tint;
 void vertex() { vertex_tint = COLOR; }
 
@@ -75,10 +71,6 @@ void fragment() {
 	outline = min(outline, 1.0);
 
 	vec4 color = texture(TEXTURE, UV);
-	if (semantic_body) {
-		float light = dot(color.rgb,vec3(0.299,0.587,0.114));
-		color.rgb = light < 0.28 ? body_dark.rgb : (light < 0.72 ? body_main.rgb : body_light.rgb);
-	}
 	float mask = clamp(outline - color.a, 0.0, 1.0);
 	COLOR = mix(color,outline_color,mask)*vertex_tint;
 }

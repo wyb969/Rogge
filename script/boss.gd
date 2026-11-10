@@ -68,24 +68,25 @@ func get_touch_damage() -> float:
 	return 95.0 if fight_stage >= 2 else 60.0
 
 func _ready() -> void :
-	sprite_2d.material = GamePalette.ramp_material(&"enemy:charger_boss")
 	if fight_stage >= 2:
 		health_max_value = 3600.0
 		charge_speed = 760.0
 		rush_ready_time = 0.42
 		if rush_timer:
 			rush_timer.wait_time = 0.7
-		sprite_2d.modulate = Color.WHITE
+		sprite_2d.modulate = Color(1.2, 0.75, 1.3, 1.0)
 		sprite_2d.scale *= 1.06
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = sprite_2d.modulate
+	if fight_stage < 2:
+		GamePalette.paint_actor(sprite_2d, &"enemy")
 	_setup_health_bar()
 	health_bar.init_health(health_max_value)
 	boss_current_health = health_max_value
 
 	line = Line2D.new()
 	line.width = 1.2
-	line.default_color = GamePalette.alpha(GamePalette.DANGER_RED, 0.7)
+	line.default_color = Color(1.0, 0.28, 0.24, 0.7)
 	line.top_level = true
 	line.z_index = 6
 	add_child(line)
@@ -124,7 +125,6 @@ func _death_stain_kind() -> StringName:
 	return &"charger_boss"
 
 func _setup_health_bar() -> void :
-	health_bar.add_theme_stylebox_override("fill",GamePalette.surface(GamePalette.DANGER_RED,GamePalette.INK,1))
 	health_bar.z_index = 20
 	health_bar.visible = true
 	health_bar.show_percentage = false
@@ -168,7 +168,7 @@ func _physics_process(delta: float) -> void :
 				if _state_left <= lock_seconds():
 					warning_locked = true
 					AudioManager.play_juice("boss_lock")
-			line.default_color = GamePalette.alpha(GamePalette.DANGER_RED, 0.9) if warning_locked else GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.7)
+			line.default_color = Color(1, 0.25, 0.18, 0.9) if warning_locked else Color(1, 0.68, 0.26, 0.7)
 			if _state_left <= 0: start_moving_charge()
 		ChargeState.CHARGE:
 			var step: = minf(maxf(delta, 0), _state_left)
@@ -339,10 +339,8 @@ func _apply_phase2_outline() -> void :
 
 	if sprite_2d == null:
 		return
-	if not (sprite_2d.material is ShaderMaterial) or sprite_2d.material.shader != preload("res://shaders/enemy.gdshader"):
+	if not (sprite_2d.material is ShaderMaterial):
 		sprite_2d.material = load("res://shaders/rainbow_outline.tres").duplicate()
-	GamePalette.configure_enemy_material(sprite_2d.material,GamePalette.enemy_color_for(_death_stain_kind()))
-	sprite_2d.material.set_shader_parameter("outline_color",GamePalette.ENEMY_TELEGRAPH_EDGE)
 	_sync_outline_frame_uv()
 
 func _sync_outline_frame_uv() -> void :
@@ -372,7 +370,7 @@ func _play_hit_deform(hit_dir: Vector2) -> void :
 	if hurt_tween != null and hurt_tween.is_valid():
 		hurt_tween.kill()
 
-	sprite_2d.modulate = GamePalette.HIT_FLASH
+	sprite_2d.modulate = Color(1.45, 1.45, 1.35)
 	var squash: = Vector2(
 		base_sprite_scale.x * (1.0 + absf(hit_dir.x) * 0.18), 
 		base_sprite_scale.y * (1.0 - absf(hit_dir.x) * 0.1 + absf(hit_dir.y) * 0.14)
@@ -414,7 +412,7 @@ func _request_hitstop(scale: float, duration_real: float) -> void :
 func _spawn_hit_particles(hit_dir: Vector2) -> void :
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null:
-		feedback.spray(global_position, - hit_dir, GamePalette.FRIENDLY_LIGHT, 14, 220)
+		feedback.spray(global_position, - hit_dir, Color(1, 0.95, 0.75), 14, 220)
 		return
 	var particles: = CPUParticles2D.new()
 	particles.one_shot = true
@@ -429,7 +427,7 @@ func _spawn_hit_particles(hit_dir: Vector2) -> void :
 	particles.gravity = Vector2(0, 280)
 	particles.scale_amount_min = 2.0
 	particles.scale_amount_max = 4.5
-	particles.color = GamePalette.FRIENDLY_LIGHT
+	particles.color = Color(1.0, 0.95, 0.75, 1.0)
 	particles.z_index = 20
 	particles.global_position = global_position
 	_add_to_effect_container(particles)
@@ -458,14 +456,14 @@ func start_defeat_sequence() -> void :
 
 
 	Engine.time_scale = 0.06
-	sprite_2d.modulate = GamePalette.BRIGHT_FLASH
-	_spawn_death_burst(28, Color.WHITE)
+	sprite_2d.modulate = Color(3.0, 3.0, 3.0, 1.0)
+	_spawn_death_burst(28, Color(1.0, 1.0, 1.0, 1.0))
 	await get_tree().create_timer(0.21, true, false, true).timeout
 
 
 	Engine.time_scale = 0.2
 	_play_defeat_deform()
-	_spawn_death_burst(40, GamePalette.FRIENDLY_CYAN)
+	_spawn_death_burst(40, Color(1.0, 0.55, 0.2, 1.0))
 	await get_tree().create_timer(0.77, true, false, true).timeout
 
 
@@ -481,7 +479,7 @@ func _play_defeat_deform() -> void :
 	hurt_tween.set_parallel(true)
 	hurt_tween.tween_property(sprite_2d, "scale", base_sprite_scale * Vector2(1.35, 0.55), 0.17)\
 	.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	hurt_tween.tween_property(sprite_2d, "modulate", GamePalette.ENEMY_ORANGE, 0.13)
+	hurt_tween.tween_property(sprite_2d, "modulate", Color(1.0, 0.35, 0.2, 1.0), 0.13)
 	hurt_tween.set_parallel(false)
 	hurt_tween.tween_property(sprite_2d, "scale", base_sprite_scale * Vector2(0.35, 1.45), 0.23)\
 	.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)

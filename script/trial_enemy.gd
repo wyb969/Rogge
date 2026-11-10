@@ -30,7 +30,6 @@ func configure_trial(value: String, host: Node) -> void :
 
 func _ready() -> void :
 	super._ready()
-	sprite_2d.material = GamePalette.ramp_material(&"enemy:power_trial" if kind == "power" else &"enemy:speed_trial")
 	health_max_value = 5000.0 if kind == "power" else 2600.0
 	boss_current_health = health_max_value
 	health_bar.init_health(health_max_value)
@@ -135,7 +134,7 @@ func _step_speed() -> void :
 				trial_state = TrialState.RECOVER
 				left = 1.5
 		TrialState.RECOVER:
-			sprite_2d.modulate = GamePalette.DANGER_ORANGE if _exposed else Color.WHITE
+			sprite_2d.modulate = Color(1.2, 0.9, 1.35) if _exposed else Color.WHITE
 			if left <= 0:
 				_exposed = false
 				trial_state = TrialState.VANISH
@@ -185,7 +184,7 @@ func start_defeat_sequence() -> void :
 	_hud.hide()
 	remove_from_group("EnemyGroup")
 	remove_from_group("trial_enemy")
-	_spawn_death_burst(28, GamePalette.DANGER_ORANGE)
+	_spawn_death_burst(28, Color(0.8, 0.9, 1.0))
 
 	boss_defeated.emit()
 	queue_free()
@@ -196,19 +195,19 @@ func _update_title() -> void :
 		_title.text = "机械章鱼 / " + status
 	else:
 		_title.text = "巫刃术士 / " + ("闪避成功 · 反击！" if vulnerable() else ("0.5 秒后挥刀 · DASH！" if trial_state == TrialState.LOCK else "屏障关闭 · 等待冲刺时机"))
-	_title.add_theme_color_override("font_color", GamePalette.DANGER_ORANGE if kind == "power" else GamePalette.DANGER_ORANGE)
+	_title.add_theme_color_override("font_color", Color(0.6, 0.9, 1.0) if kind == "power" else Color(0.87, 0.65, 1.0))
 
 func _draw() -> void :
 	if is_dying:
 		return
 	draw_set_transform(Vector2(0, 42), 0, Vector2(1, 0.3))
-	draw_circle(Vector2.ZERO, 42, GamePalette.SHADOW)
+	draw_circle(Vector2.ZERO, 42, Color(0, 0, 0, 0.4))
 	draw_set_transform(Vector2.ZERO)
 	if kind == "power":
 		if trial_state == TrialState.TRACK:
 			var target: = player.global_position - global_position
-			draw_line(Vector2.ZERO, target, GamePalette.alpha(GamePalette.DANGER_RED, 0.8), 1.5, true)
-			draw_arc(target, 18, 0, TAU, 32, GamePalette.DANGER_RED, 2, true)
+			draw_line(Vector2.ZERO, target, Color(1.0, 0.12, 0.12, 0.8), 1.5, true)
+			draw_arc(target, 18, 0, TAU, 32, Color(1, 0.2, 0.15), 2, true)
 			draw_line(target - Vector2(24, 0), target + Vector2(24, 0), Color.WHITE, 1, true)
 			draw_line(target - Vector2(0, 24), target + Vector2(0, 24), Color.WHITE, 1, true)
 		elif trial_state == TrialState.LOCK or trial_state == TrialState.ACTIVE:
@@ -216,26 +215,26 @@ func _draw() -> void :
 			var end: = origin + Vector2.from_angle(aim_angle) * LASER_LENGTH
 			var side: = Vector2.from_angle(aim_angle).orthogonal() * LASER_HALF_WIDTH
 			var points: = PackedVector2Array([origin - side, end - side, end + side, origin + side])
-			draw_colored_polygon(points, GamePalette.alpha(GamePalette.DANGER_RED, 0.23 if trial_state == TrialState.LOCK else 0.7))
+			draw_colored_polygon(points, Color(1, 0.1, 0.1, 0.23 if trial_state == TrialState.LOCK else 0.7))
 			points.append(points[0])
-			draw_polyline(points, GamePalette.INK, 5, true)
-			draw_polyline(points, GamePalette.DANGER_RED, 2, true)
+			draw_polyline(points, Color(0.02, 0.02, 0.03), 5, true)
+			draw_polyline(points, Color(1, 0.3, 0.2), 2, true)
 			if trial_state == TrialState.ACTIVE:
-				draw_line(origin, end, GamePalette.DANGER_ORANGE, 8, true)
+				draw_line(origin, end, Color(0.85, 1.0, 1.0), 8, true)
 	else:
 		if not vulnerable():
-			draw_arc(Vector2.ZERO, 42, 0, TAU, 32, GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.65), 2, true)
+			draw_arc(Vector2.ZERO, 42, 0, TAU, 32, Color(0.66, 0.4, 0.95, 0.65), 2, true)
 		if trial_state == TrialState.LOCK or trial_state == TrialState.ACTIVE:
 			var points: = PackedVector2Array([Vector2.ZERO])
 			for i in 33:
 				points.append(Vector2.from_angle(aim_angle - SLASH_HALF_ANGLE + 2 * SLASH_HALF_ANGLE * i / 32.0) * SLASH_RADIUS)
-			draw_colored_polygon(points, GamePalette.alpha(GamePalette.DANGER_RED, 0.28 if trial_state == TrialState.LOCK else 0.55))
+			draw_colored_polygon(points, Color(1, 0.1, 0.13, 0.28 if trial_state == TrialState.LOCK else 0.55))
 			points.append(points[0])
-			draw_polyline(points, GamePalette.INK, 6, true)
-			draw_polyline(points, GamePalette.DANGER_RED, 2.5, true)
+			draw_polyline(points, Color(0.02, 0.02, 0.03), 6, true)
+			draw_polyline(points, Color(1.0, 0.35, 0.25), 2.5, true)
 			if trial_state == TrialState.ACTIVE:
 				var angle: = aim_angle - SLASH_HALF_ANGLE + 2 * SLASH_HALF_ANGLE * clampf(1 - left / 0.16, 0, 1)
-				draw_line(Vector2.from_angle(angle) * 15, Vector2.from_angle(angle) * SLASH_RADIUS, GamePalette.DANGER_ORANGE, 5, true)
+				draw_line(Vector2.from_angle(angle) * 15, Vector2.from_angle(angle) * SLASH_RADIUS, Color(1.0, 0.94, 0.76), 5, true)
 
 func _request_hitstop(_scale: float, _duration_real: float) -> void :
 	pass

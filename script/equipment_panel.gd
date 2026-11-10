@@ -234,7 +234,12 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	icon_wrap.position = Vector2(6, 6)
 	icon_wrap.size = SLOT_SIZE
 	icon_wrap.mouse_filter = Control.MOUSE_FILTER_PASS
-	icon_wrap.add_theme_stylebox_override("panel",GamePalette.surface(GamePalette.UI_PANEL,GamePalette.icon_border_for(upgrade_id),0.8))
+	var slot_style := StyleBoxFlat.new()
+	slot_style.bg_color = GamePalette.UI_SLOT
+	slot_style.border_color = GamePalette.icon_accent(upgrade_id)
+	slot_style.set_border_width_all(2)
+	slot_style.set_corner_radius_all(7)
+	icon_wrap.add_theme_stylebox_override("panel", slot_style)
 
 	var icon: = TextureRect.new()
 	icon.custom_minimum_size = ICON_SIZE
@@ -265,7 +270,7 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	level_label.z_index = 2
 	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	level_label.add_theme_color_override("font_outline_color", GamePalette.BLACK)
+	level_label.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.04))
 	level_label.add_theme_constant_override("outline_size", 2)
 	level_label.add_theme_color_override("font_color", LEVEL_COLOR)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -327,7 +332,7 @@ func _play_level_up_juice(upgrade_id: String) -> void :
 
 
 	tween.tween_callback( func():
-		label.modulate = Color.WHITE
+		label.modulate = Color(1.0, 1.0, 0.86)
 		icon_wrap.scale = Vector2(1.08, 1.08)
 	)
 	tween.set_parallel(true)

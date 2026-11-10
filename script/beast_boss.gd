@@ -3,7 +3,7 @@ extends "res://script/boss.gd"
 const NAMES: = ["潮汐巨象 / TIDE", "雷鬃狮王 / THUNDER", "苍穹灵隼 / GALE", "熔岩玄龟 / AEGIS"]
 const IDS: = ["tide", "thunder", "gale", "aegis"]
 const HP: = [3600.0, 4200.0, 4800.0, 5600.0]
-const COLORS := [GamePalette.DANGER_RED,GamePalette.DANGER_ORANGE,GamePalette.DANGER_RED,GamePalette.DANGER_ORANGE]
+const COLORS: = [GamePalette.SKILL_TIDE, GamePalette.SKILL_THUNDER, GamePalette.SKILL_GALE, GamePalette.SKILL_AEGIS]
 const ROAM_SPEEDS: = [65.0, 96.0, 80.0, 43.0]
 const STANDOFFS: = [170.0, 145.0, 180.0, 110.0]
 const DIVE_SPEEDS: = [330.0, 470.0, 450.0, 260.0]
@@ -39,7 +39,6 @@ func configure_stage(stage: int) -> void :
 	element = clampi(stage - 3, 0, 3)
 
 func _ready() -> void :
-	sprite_2d.material = GamePalette.ramp_material(StringName("enemy:" + IDS[element]))
 	animation_player.stop()
 	animation_player.active = false
 	rush_timer.stop()
@@ -50,6 +49,7 @@ func _ready() -> void :
 	sprite_2d.vframes = 1
 	sprite_2d.texture = load("res://assest/sprites/beasts/%s.svg" % IDS[element])
 	sprite_2d.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	GamePalette.paint_actor(sprite_2d, &"enemy")
 	sprite_2d.scale = Vector2.ONE * 0.9
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = Color.WHITE
@@ -291,7 +291,7 @@ func _draw() -> void :
 	if is_dying:
 		return
 	draw_set_transform(Vector2(0, 44), 0, Vector2(1, 0.3))
-	draw_circle(Vector2.ZERO, 46, GamePalette.SHADOW)
+	draw_circle(Vector2.ZERO, 46, Color(0, 0, 0, 0.45))
 	draw_set_transform(Vector2.ZERO)
 	if phase == 2:
 		draw_arc(Vector2.ZERO, 62.0 + sin(_elapsed * 5) * 3, 0, TAU, 48, Color(COLORS[element], 0.6), 2.0, true)
@@ -308,14 +308,14 @@ func _build_hud() -> void :
 	_title.text = NAMES[element] + " / I"
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	UiFonts.apply_to_label(_title, 18, true)
-	_title.add_theme_color_override("font_outline_color", GamePalette.BLACK)
+	_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.03))
 	_title.add_theme_constant_override("outline_size", 5)
 	_hud.add_child(_title)
 	_action_label = Label.new()
 	_action_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_action_label.add_theme_color_override("font_color", GamePalette.UI_TEXT)
+	_action_label.add_theme_color_override("font_color", Color(0.88, 0.9, 0.84))
 	_action_label.add_theme_constant_override("outline_size", 3)
-	_action_label.add_theme_color_override("font_outline_color", GamePalette.BLACK)
+	_action_label.add_theme_color_override("font_outline_color", Color(0.025, 0.035, 0.05))
 	UiFonts.apply_to_label(_action_label, 12, true)
 	_hud.add_child(_action_label)
 	get_viewport().size_changed.connect(_layout_hud)

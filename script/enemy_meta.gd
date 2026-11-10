@@ -14,7 +14,7 @@ enum Archetype{CHASER, DASHER, TANK, RANGED}
 @export var defense: float = 0.0
 @export var body_scale: float = 1.0
 @export var tint: Color = Color.WHITE
-@export var marker_color: Color = GamePalette.DANGER_PROJECTILE
+@export var marker_color: Color = Color(0.8, 0.8, 0.85, 1)
 @export var contact_damage: float = 46.0
 @export var contact_cooldown: float = 0.8
 @export var contact_radius: float = 26.0

@@ -19,32 +19,29 @@ func _run() -> void :
 	var bg: Node = game.get_node("InfiniteBackground")
 	var spawner: Node = game.spawner
 	var palette_script = load("res://script/infinite_background.gd")
-	var seen_colors: = {}
-	var last_opening: = -1
-	for _run_id in 64:
+	for _run_id in 4:
 		var sample: Node = palette_script.new()
 		sample.begin_run()
-		var opening: int = sample.palette_id
-		seen_colors[opening] = true
-		_expect(opening != last_opening, "consecutive opening rolls avoid the previous palette")
+		_expect(sample.palette_id == 0 and sample.tint == GamePalette.stage_tint(1), "stage 1 is always dark teal moss")
 		for _repeat in 4:
 			sample.apply_stage(1)
-			_expect(sample.palette_id == opening, "same-stage palette stays fixed")
-		sample.apply_stage(2)
-		var second: int = sample.palette_id
-		_expect(second != opening, "adjacent stages have distinct colors")
-		sample.apply_stage(1)
-		sample.apply_stage(2)
-		_expect(sample.palette_id == second, "reapplying stages restores their cached colors")
-		last_opening = opening
+			_expect(sample.palette_id == 0, "same-stage palette stays fixed")
+		var seen: Dictionary = {0: true}
+		for stage_num in range(2, 7):
+			sample.apply_stage(stage_num)
+			_expect(sample.palette_id != 0 and not seen.has(sample.palette_id), "later stages stay distinct from moss and each other")
+			var locked: int = sample.palette_id
+			sample.apply_stage(1)
+			sample.apply_stage(stage_num)
+			_expect(sample.palette_id == locked, "reapplying stages restores their cached colors")
+			seen[locked] = true
 		sample.free()
-	_expect(seen_colors.size() == 4, "opening selection reaches all four teal moss variants")
 	for color in bg.PALETTE_TINTS:
 		var values: Vector2 = bg._shader_mat.get_shader_parameter("ground_values")
 		var floor_color: Color = color * (values.x + values.y)
-		for highlight in [GamePalette.UI_TEXT, GamePalette.PICKUP_GREEN]:
+		for highlight in [load("res://resource/Enemy_4.tres").marker_color, Color(0.2, 0.95, 0.48)]:
 			var contrast: = (_luminance(highlight) + 0.05) / (_luminance(floor_color) + 0.05)
-			_expect(contrast >= 4.5, "white projectile cores and green experience pickups contrast with every floor palette")
+			_expect(contrast >= 4.5, "bright projectiles and healing orbs contrast with every floor palette")
 
 	var seen_themes: = {}
 	for _run_id in 64:
@@ -102,7 +99,7 @@ func _run() -> void :
 	spawner.timer.stop()
 	spawner.get_node("Elite").stop()
 	if failures.is_empty():
-		print("STAGE VARIATION OK: 12 safe colors in three stage families, stable/repeat-free teal opening rolls, 3 primary themes, 75% share, stage transition and ranged caps")
+		print("STAGE VARIATION OK: fixed teal-moss opening, distinct later floors, projectile/heal contrast, 3 primary themes, 75% share, stage transition and ranged caps")
 	else:
 		for failure in failures:
 			push_error(failure)

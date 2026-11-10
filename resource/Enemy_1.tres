@@ -7,4 +7,5 @@
 script = ExtResource("1")
 title = "chaser"
 sprite = ExtResource("2")
+marker_color = Color(0.82, 0.82, 0.9, 1)
 metadata/_custom_type_script = "uid://dsf6o758y6et0"

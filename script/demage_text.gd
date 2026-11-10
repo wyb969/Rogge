@@ -4,10 +4,10 @@ var tween: Tween
 var _healing: = false
 var _status: = false
 var _critical := false
-# Legacy popup constants remain aliases; new visual code uses GamePalette roles.
-const CRITICAL_GOLD := GamePalette.PLAYER_DAMAGE_WHITE
-const STATUS_YELLOW: = GamePalette.PLAYER_DAMAGE_WHITE
-const STATUS_RED: = GamePalette.PLAYER_DAMAGE_WHITE
+# Cursor popup colors; poison retains its distinct purple channel.
+const CRITICAL_GOLD := Color(1.0, 0.79, 0.32)
+const STATUS_YELLOW: = Color(1.0, 0.84, 0.25)
+const STATUS_RED: = Color(1.0, 0.23, 0.12)
 
 static func is_status_hit(data: Dictionary) -> bool:
 	var effect: String = data.get("effect", "")
@@ -23,7 +23,7 @@ func _ready() -> void :
 
 func show_heal(amount_text: String) -> void :
 	_healing = true
-	label.add_theme_color_override("font_color", GamePalette.HEAL_GREEN)
+	label.add_theme_color_override("font_color", GamePalette.HEAL_TEXT)
 	show_damage(amount_text, Vector2.ZERO, 0, 0)
 
 func show_damage(text: String, _start_pos: Vector2, _height: float, _spread: float, status_damage: bool = false, critical: bool = false, visual_effect: StringName = &"") -> void :

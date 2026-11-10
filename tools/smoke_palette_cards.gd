@@ -127,7 +127,7 @@ func _run() -> void:
 	expect(controls.stick_base.size.is_equal_approx(Vector2.ONE*112*1.15) and is_equal_approx(controls.stick_base.modulate.a,0.62),"custom control scale/opacity preserved")
 	expect(settings.stick_norm == Vector2(0.2,0.72) and settings.dash_norm == Vector2(0.8,0.73),"custom positions preserved")
 	var style: StyleBoxFlat = controls.stick_base.get_theme_stylebox("panel")
-	expect(style.bg_color.is_equal_approx(GamePalette.alpha(GamePalette.UI_GREY_BASE,0.45)),"actual stick uses neutral semantic style")
+	expect(style.bg_color.is_equal_approx(Color(0.22,0.24,0.27,0.4)),"actual stick uses neutral semantic style")
 	controls.dash_button.set_pressed_visual(true)
 	controls.dash_button.set_cooldown(0.5,false,false)
 	expect(not controls.dash_button.available and controls.dash_button.progress == 0.5,"cooldown presentation does not change gameplay state")

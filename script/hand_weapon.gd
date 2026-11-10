@@ -22,7 +22,6 @@ var _sweep_shape: = CapsuleShape2D.new()
 var _sweep_query: = PhysicsShapeQueryParameters2D.new()
 
 func _ready() -> void :
-	sprite_2d.material = GamePalette.ramp_material(&"friendly")
 	_sweep_query.shape = _sweep_shape
 
 	area_2d.monitoring = false

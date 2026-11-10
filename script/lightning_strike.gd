@@ -1,7 +1,7 @@
 extends Node2D
 
-const GOLD: = GamePalette.FRIENDLY_LIGHT
-const VIOLET: = GamePalette.FRIENDLY_BLUE
+const GOLD: = Color(1.0, 0.78, 0.22)
+const VIOLET: = Color(0.58, 0.51, 1.0)
 const LIFETIME: = 0.46
 var tint: = GOLD
 var age: = 0.0
@@ -71,9 +71,9 @@ func _draw() -> void :
 		draw_arc(end, 4 + elapsed * 18, 0, TAU, 16, Color(tint, alpha * 0.38), 1.0, false)
 		for i in 5:
 			var direction: = Vector2.from_angle(bolt.spark_angle + TAU * i / 5.0)
-			draw_line(end + direction * (3 + elapsed * 22), end + direction * (7 + elapsed * 36), GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, alpha), 1.5, true)
+			draw_line(end + direction * (3 + elapsed * 22), end + direction * (7 + elapsed * 36), Color(0.94, 0.97, 1.0, alpha), 1.5, true)
 
 func _stroke(points: PackedVector2Array, alpha: float, width: float) -> void :
-	draw_polyline(points, GamePalette.alpha(GamePalette.INK, alpha * 0.8), 5 * width, false)
+	draw_polyline(points, Color(0.06, 0.09, 0.14, alpha * 0.8), 5 * width, false)
 	draw_polyline(points, Color(tint, alpha * 0.9), 2.7 * width, false)
-	draw_polyline(points, GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, alpha * 0.9), 0.9 * width, false)
+	draw_polyline(points, Color(0.93, 0.94, 0.87, alpha * 0.9), 0.9 * width, false)

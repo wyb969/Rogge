@@ -68,9 +68,9 @@ func _run() -> void:
 		var actor: Node = pair[0]
 		var record: Dictionary = feedback._records[feedback._indices[actor.get_instance_id()]]
 		_expect(record.kind == pair[1] and record.sprite == actor.sprite_2d and record.left == FX.FLASH_SECONDS, "flash uses the pre-hit status kind and the actual animated sprite")
-	_expect(FX.color_for(FX.BURN, 0).is_equal_approx(GamePalette.FRIENDLY_BLUE), "friendly burn replay uses the cool combat palette")
-	_expect(FX.color_for(FX.POISON, 0).is_equal_approx(GamePalette.POISON_PURPLE), "poison replay is a saturated purple distinct from freeze")
-	_expect(FX.color_for(3, 0) == FX.BURN_COLOR and FX.color_for(3, 0.25).is_equal_approx(FX.POISON_COLOR), "dual status progresses from blue to purple")
+	_expect(FX.color_for(FX.BURN, 0).r > 0.8 and FX.color_for(FX.BURN, 0).g < 0.15, "burn replay is a deep saturated red")
+	_expect(FX.color_for(FX.POISON, 0).b > 0.85 and FX.color_for(FX.POISON, 0).g < 0.15, "poison replay is a saturated purple distinct from freeze")
+	_expect(FX.color_for(3, 0) == FX.BURN_COLOR and FX.color_for(3, 0.25).is_equal_approx(FX.POISON_COLOR), "dual status progresses from red to purple")
 	_expect(int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)) - node_count <= 8 and feedback.material.get_instance_id() == shared_material, "replays share one drawing material without per-enemy effect nodes")
 	var burn_tint: Color = burn.sprite_2d.modulate
 	var poison_tint: Color = poison._poison_tint

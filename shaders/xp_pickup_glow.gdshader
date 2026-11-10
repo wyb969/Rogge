@@ -6,11 +6,6 @@ uniform float energy = 0.0;
 uniform float tone = 0.0;
 uniform float heat = 0.0;
 uniform float kick = 0.0;
-uniform vec4 edge_base : source_color;
-uniform vec4 edge_hot : source_color;
-uniform vec4 flare_base : source_color;
-uniform vec4 flare_tip : source_color;
-uniform vec4 spark_color : source_color;
 float box_distance(vec2 p,vec2 half_size,float r) {
 	vec2 q = abs(p)-half_size+vec2(r);
 	return length(max(q,vec2(0.0)))+min(max(q.x,q.y),0.0)-r;
@@ -39,11 +34,11 @@ void fragment() {
 		at.x += sin(life*5.0+f*2.1)*2.0;
 		sparks += (1.0-smoothstep(0.4,1.5,length(p-at)))*(1.0-life)*heat*0.25;
 	}
-	vec3 edge_color = mix(edge_base.rgb,edge_hot.rgb,tone);
-	edge_color = mix(edge_color,edge_hot.rgb,heat*0.6);
-	vec3 fire_color = mix(flare_base.rgb,flare_tip.rgb,clamp(1.0-above/18.0,0.0,1.0));
+	vec3 edge_color = mix(vec3(0.45,0.88,0.93),vec3(1.0,0.86,0.42),tone);
+	edge_color = mix(edge_color,vec3(1.0,0.64,0.23),heat*0.6);
+	vec3 fire_color = mix(vec3(1.0,0.32,0.08),vec3(1.0,0.89,0.38),clamp(1.0-above/18.0,0.0,1.0));
 	float base = outer+rim+flow;
 	float total = base+flame+sparks;
-	vec3 color = (edge_color*base+fire_color*flame+spark_color.rgb*sparks)/max(total,0.001);
+	vec3 color = (edge_color*base+fire_color*flame+vec3(1.0,0.94,0.6)*sparks)/max(total,0.001);
 	COLOR = vec4(color,min(0.58,total*energy));
 }

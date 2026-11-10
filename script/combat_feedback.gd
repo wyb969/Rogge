@@ -142,20 +142,20 @@ func spray(at: Vector2, direction: Vector2, tint: Color, count: int, speed: floa
 
 func hit(at: Vector2, direction: Vector2, heavy: bool = false) -> void :
 	if not _admit(): return
-	_burst(at, direction, GamePalette.FRIENDLY_LIGHT, 5 if heavy else 3, 105 if heavy else 75)
-	if heavy: _ring(at, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, 0.65), 13, 0.14)
+	_burst(at, direction, Color(0.94, 0.9, 0.76), 5 if heavy else 3, 105 if heavy else 75)
+	if heavy: _ring(at, Color(1, 0.93, 0.78, 0.65), 13, 0.14)
 
 func kill(at: Vector2, tint: Color, elite: bool = false) -> void :
 	if not _admit(): return
-	_burst(at, Vector2.ZERO, GamePalette.FRIENDLY_LIGHT, 9 if elite else 5, 100)
-	_ring(at, GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 0.42), 22 if elite else 14, 0.18)
+	_burst(at, Vector2.ZERO, tint.clamp(Color(0, 0, 0, 0), Color.WHITE).lightened(0.12), 9 if elite else 5, 100)
+	_ring(at, Color(0.84, 0.88, 0.83, 0.42), 22 if elite else 14, 0.18)
 	if elite: camera_impulse(1.8)
 	AudioManager.play_juice("kill")
 
 func dash(at: Vector2, direction: Vector2) -> void :
 	if not _admit(): return
-	_burst(at, - direction, GamePalette.FRIENDLY_CYAN, 6, 80)
-	_ring(at, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, 0.65), 23, 0.18)
+	_burst(at, - direction, Color(0.48, 0.78, 0.84), 6, 80)
+	_ring(at, Color(0.65, 0.96, 1, 0.65), 23, 0.18)
 	camera_impulse(0.7, direction)
 	AudioManager.play_juice("dash")
 
@@ -173,7 +173,7 @@ func ghost(sprite: AnimatedSprite2D, world_at: Vector2 = Vector2.INF) -> void :
 
 func pickup(at: Vector2, healing: bool = false) -> void :
 	if not _admit(): return
-	var color: = GamePalette.HEAL_GREEN if healing else GamePalette.COIN_GOLD
+	var color: = Color(0.45, 1, 0.65) if healing else Color(1, 0.87, 0.35)
 	_burst(at, Vector2.UP, color, 3, 55)
 	_ring(at, Color(color, 0.38), 10, 0.14)
 
@@ -182,16 +182,16 @@ func reward(at: Vector2, major: bool = false) -> void :
 	if now - _last_reward < 400 or not _admit(): return
 	_last_reward = now
 	if not major: AudioManager.play_upgrade()
-	_burst(at, Vector2.ZERO, GamePalette.PLAYER_DAMAGE_WHITE, 14 if major else 8, 125)
-	_ring(at, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, 0.7), 75 if major else 48, 0.4)
-	_ring(at, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, 0.6), 53 if major else 32, 0.28)
+	_burst(at, Vector2.ZERO, Color(0.84, 0.88, 0.76), 14 if major else 8, 125)
+	_ring(at, Color(0.7, 1, 0.9, 0.7), 75 if major else 48, 0.4)
+	_ring(at, Color(1, 0.88, 0.48, 0.6), 53 if major else 32, 0.28)
 	camera_impulse(2.2 if major else 1.0)
 
 func hurt(at: Vector2, direction: Vector2, shielded: bool) -> void :
 
 	camera_impulse(4.5 if not shielded else 2.5, - direction)
 	if not _admit(): return
-	_burst(at, direction, GamePalette.SHIELD_YELLOW if shielded else GamePalette.DANGER_RED, 12, 115)
+	_burst(at, direction, Color(1, 0.85, 0.35) if shielded else Color(1, 0.5, 0.45), 12, 115)
 
 func camera_impulse(strength: float, direction: Vector2 = Vector2.ZERO) -> void :
 	_shake = maxf(_shake, minf(strength, 5.0))

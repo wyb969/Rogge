@@ -69,7 +69,6 @@ func _run() -> void :
 		orb.set_physics_process(false)
 	lights._process(0.11)
 	_expect(lights._orb_count <= 8 and game._healing_actors.size() == 96, "many healing drops keep the pickup cap and a separate small glow budget")
-	_expect(lights._pickup_shadow_count <= 32 and lights._pickup_shadows.size() == 32, "pickup shadows use a fixed cache independent of drop count")
 	for i in lights._orb_count:
 		for j in i: _expect(lights._cells[i] != lights._cells[j], "healing lights cluster by ground cell instead of stacking into a wash")
 	var node_count: int = lights.get_child_count()

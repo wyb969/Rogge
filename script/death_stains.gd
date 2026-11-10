@@ -14,7 +14,28 @@ const PARTS_PER_STAIN := 8
 const AIR_SECONDS := 0.42
 const SIZE_MULTIPLIER := 2.0
 # Stable species pigments, independent of hit flashes, status and killing weapon.
-const PALETTE := GamePalette.INK_PIGMENTS
+const PALETTE := {
+	&"chaser": Color("ff52ce"),
+	&"chaser_brute": Color("a47cff"),
+	&"dasher": Color("ff9b52"),
+	&"tank": Color("5e8fff"),
+	&"ranged": Color("40e6ee"),
+	&"blade_mantis": Color("8cffbc"),
+	&"boomerang_imp": Color("ff6de0"),
+	&"spore_bomber": Color("779dff"),
+	&"loot_courier": Color("f68cf0"),
+	&"treasure_guardian": Color("d6f25b"),
+	&"charger_boss": Color("ff70a6"),
+	&"knight": Color("a0a4ff"),
+	&"tide": Color("55cfff"),
+	&"thunder": Color("e1a0ff"),
+	&"gale": Color("69f0c8"),
+	&"gale_ranged": Color("63f0b0"),
+	&"gale_melee": Color("b5ed74"),
+	&"aegis": Color("ffb47d"),
+	&"power_trial": Color("e6f582"),
+	&"speed_trial": Color("cc64ff"),
+}
 static var _atlas: Texture2D
 static var _material: ShaderMaterial
 

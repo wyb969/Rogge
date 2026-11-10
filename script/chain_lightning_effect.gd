@@ -118,5 +118,5 @@ func draw_line_between(start: Vector2, end: Vector2) -> void :
 func _draw() -> void :
 	var i: = 0
 	while i < MAX_VISIBLE_LINKS:
-		if _lives[i] > 0: draw_polyline(_points[i], GamePalette.alpha(GamePalette.PLAYER_ATTACK,_lives[i] / maxf(line_lifetime, 0.001)), 1.8, false)
+		if _lives[i] > 0: draw_polyline(_points[i], Color(0.48, 0.78, 0.84, _lives[i] / maxf(line_lifetime, 0.001)), 1.8, false)
 		i += 1

@@ -6,6 +6,8 @@ func _ready() -> void :
 	z_index = -1
 	queue_redraw()
 func _draw() -> void :
-	draw_set_transform(Vector2.ZERO, 0, Vector2(1, 0.42))
-	draw_arc(Vector2.ZERO, 10, 0.12, PI - 0.12, 16, GamePalette.alpha(GamePalette.PLAYER_PRIMARY,0.8), 1.2, false)
-	draw_arc(Vector2.ZERO, 10, PI + 0.12, TAU - 0.12, 16, GamePalette.alpha(GamePalette.PLAYER_PRIMARY,0.8), 1.2, false)
+	draw_set_transform(Vector2(0, 12), 0, Vector2(1.15, 0.38))
+	draw_circle(Vector2.ZERO, 11.0, GamePalette.shadow(0.82))
+	draw_set_transform(Vector2.ZERO)
+	var diamond := PackedVector2Array([Vector2(0, -16), Vector2(12, 0), Vector2(0, 13), Vector2(-12, 0)])
+	draw_polyline(diamond, GamePalette.MARKER_GOLD, 1.6, true)

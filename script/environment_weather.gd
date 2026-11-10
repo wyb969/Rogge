@@ -82,8 +82,8 @@ func _ready() -> void :
 	_caption = Label.new()
 	_caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_caption.add_theme_color_override("font_color", GamePalette.UI_BORDER)
-	_caption.add_theme_color_override("font_outline_color", GamePalette.BLACK)
+	_caption.add_theme_color_override("font_color", Color(0.8, 0.88, 0.94))
+	_caption.add_theme_color_override("font_outline_color", Color(0.02, 0.035, 0.05))
 	_caption.add_theme_constant_override("outline_size", 3)
 	_ui.add_child(_caption)
 	get_viewport().size_changed.connect(_fit)
@@ -215,9 +215,9 @@ func _camera_center() -> Vector2:
 func _update_environment() -> void :
 	solar_phase = fposmod(_start_phase + elapsed / CYCLE_SECONDS, 1)
 	daylight = smoothstep(0.18, 0.82, 0.5 + cos(solar_phase * TAU) * 0.5)
-	ambient = GamePalette.WEATHER_NIGHT.lerp(GamePalette.WEATHER_DAY, daylight)
+	ambient = Color(0.7, 0.77, 0.86).lerp(Color(0.92, 0.94, 0.96), daylight)
 	var horizon: = pow(1.0 - absf(daylight * 2 - 1), 3) * 0.18
-	ambient = ambient.lerp(GamePalette.WEATHER_HORIZON, horizon)
+	ambient = ambient.lerp(Color(0.94, 0.86, 0.76), horizon)
 	var overcast: float = _weights[1] * 0.06 + _weights[2] * 0.1 + _weights[3] * 0.05
 	ambient *= 1.0 - overcast
 	var intensity: float = SettingsStore.weather_intensity
@@ -253,7 +253,7 @@ func draw_weather(canvas: Node2D) -> void :
 		var y: = fposmod(seed.y * vp.y + elapsed * (460 + seed.z * 300) + _wind_offset.y, vp.y + 64) - 32
 		var point: = Vector2(x, y)
 		var alpha: = (0.12 + seed.w * 0.1) * lerpf(0.25, 1, smoothstep(20, 85, point.distance_to(hero)))
-		canvas.draw_line(point, point + Vector2(-2.0, 9.0 + seed.z * 9), GamePalette.alpha(GamePalette.WEATHER_RAIN,alpha), 0.8 + seed.w * 0.4, false)
+		canvas.draw_line(point, point + Vector2(-2.0, 9.0 + seed.z * 9), Color(0.64, 0.79, 0.95, alpha), 0.8 + seed.w * 0.4, false)
 
 func draw_snow(canvas: Node2D) -> void :
 	if not running or not _snow_seeded: return
@@ -266,15 +266,15 @@ func draw_snow(canvas: Node2D) -> void :
 
 
 		var size: = Vector2.ONE * (1.4 + seed.z * 2.0) / zoom
-		canvas.draw_rect(Rect2(point - size * 0.5, size), GamePalette.alpha(GamePalette.WEATHER_SNOW,alpha))
+		canvas.draw_rect(Rect2(point - size * 0.5, size), Color(0.85, 0.94, 1, alpha))
 		if i % 4 == 0:
 			_snow_stars[i / 4] = Vector3(point.x, point.y, alpha)
 
 	for i in (snow_count + 3) / 4:
 		var star: Vector3 = _snow_stars[i]
 		var point: = Vector2(star.x, star.y)
-		canvas.draw_line(point - Vector2(2.8, 0) / zoom, point + Vector2(2.8, 0) / zoom, GamePalette.alpha(GamePalette.WEATHER_STAR,star.z * 0.8), 1.0 / zoom.x, false)
-		canvas.draw_line(point - Vector2(0, 2.8) / zoom, point + Vector2(0, 2.8) / zoom, GamePalette.alpha(GamePalette.WEATHER_STAR,star.z * 0.8), 1.0 / zoom.y, false)
+		canvas.draw_line(point - Vector2(2.8, 0) / zoom, point + Vector2(2.8, 0) / zoom, Color(0.92, 0.98, 1, star.z * 0.8), 1.0 / zoom.x, false)
+		canvas.draw_line(point - Vector2(0, 2.8) / zoom, point + Vector2(0, 2.8) / zoom, Color(0.92, 0.98, 1, star.z * 0.8), 1.0 / zoom.y, false)
 
 func describe() -> Dictionary:
 	return {"running": running, "stage": stage, "weather": NAMES[current_weather], "solar_phase": snappedf(solar_phase, 0.001), "daylight": snappedf(daylight, 0.001), "rain": rain_count, "snow": snow_count, "intensity": SettingsStore.weather_intensity, "audio": AudioManager.weather_audio.describe()}

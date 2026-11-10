@@ -6,14 +6,12 @@ const BULLET_LIGHTS: = 8
 const BEAM_LIGHTS: = 4
 const ORB_LIGHTS: = 8
 const MAX_SHADOWS: = 64
-const MAX_PICKUP_SHADOWS: = 32
-const COIN_LIGHTS: = 8
 const MAX_FLASHES: = 8
 const MAX_RINGS: = 6
 const ENEMY: = preload("res://script/enemy_shell.gd")
-const INK: = GamePalette.INK
-const CYAN: = GamePalette.FRIENDLY_CYAN
-const GOLD: = GamePalette.FRIENDLY_CYAN
+const INK: = Color(0.015, 0.025, 0.035)
+const CYAN: = Color(0.48, 0.87, 1)
+const GOLD: = Color(1, 0.82, 0.48)
 static var _texture: GradientTexture2D
 static var _additive: CanvasItemMaterial
 var _bullets: Array[Node2D] = []
@@ -21,9 +19,6 @@ var _drones: Array[Node2D] = []
 var _orbs: Array[Node2D] = []
 var _cells: Array[Vector2i] = []
 var _shadows: Array[Node2D] = []
-var _pickup_shadows: Array[Node2D] = []
-var _pickup_is_coin := PackedByteArray()
-var _pickup_shadow_count := 0
 var _shadow_sizes: = PackedVector2Array()
 var _shadow_feet: = PackedFloat32Array()
 var _flashes: Array[Dictionary] = []
@@ -58,7 +53,7 @@ static func glow_texture() -> Texture2D:
 	if _texture == null:
 		var gradient: = Gradient.new()
 		gradient.offsets = PackedFloat32Array([0, 0.22, 0.55, 1])
-		gradient.colors = PackedColorArray([GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 1), GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 0.65), GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 0.15), GamePalette.alpha(GamePalette.PLAYER_DAMAGE_WHITE, 0)])
+		gradient.colors = PackedColorArray([Color(1, 1, 1, 1), Color(1, 1, 1, 0.65), Color(1, 1, 1, 0.15), Color(1, 1, 1, 0)])
 		_texture = GradientTexture2D.new()
 		_texture.width = 64
 		_texture.height = 64
@@ -78,8 +73,6 @@ func _ready() -> void :
 	_shadows.resize(MAX_SHADOWS)
 	_shadow_sizes.resize(MAX_SHADOWS)
 	_shadow_feet.resize(MAX_SHADOWS)
-	_pickup_shadows.resize(MAX_PICKUP_SHADOWS)
-	_pickup_is_coin.resize(MAX_PICKUP_SHADOWS)
 	for _i in MAX_FLASHES: _flashes.append({"at": Vector2.ZERO, "direction": Vector2.RIGHT, "anchor": null, "left": 0.0})
 	for kind in 3:
 		var field: = Field.new()
@@ -111,9 +104,7 @@ func reset() -> void :
 	shadows_last = 0
 	_shadow_count = 0
 	_orb_count = 0
-	_pickup_shadow_count = 0
 	for i in MAX_SHADOWS: _shadows[i] = null
-	for i in MAX_PICKUP_SHADOWS: _pickup_shadows[i] = null
 	for i in ORB_LIGHTS: _orbs[i] = null
 	for field in _fields:
 		field.hide()
@@ -167,7 +158,7 @@ func _refresh_sources() -> void :
 		if not CombatTargets._live(entry, &"EnemyGroup") or not game.is_ancestor_of(actor) or not _visible(actor): continue
 		var size: = Vector2(8, 3)
 		var foot: = 11.0
-		if is_instance_of(actor, ENEMY):
+		if actor.get_script() == ENEMY:
 			size *= clampf(absf(actor.global_scale.x), 0.5, 2)
 			foot *= clampf(absf(actor.global_scale.y), 0.5, 2)
 		elif actor.has_signal("boss_defeated") and actor.fight_stage <= 2:
@@ -179,16 +170,6 @@ func _refresh_sources() -> void :
 		_shadow_feet[_shadow_count] = foot
 		_shadow_count += 1
 		if _shadow_count == MAX_SHADOWS: break
-	_pickup_shadow_count = 0
-	for collection in [game._healing_actors, game._xp_actors]:
-		var sampled := 0
-		for actor in collection:
-			sampled += 1
-			if sampled > 128 or _pickup_shadow_count == MAX_PICKUP_SHADOWS: break
-			if not _visible(actor): continue
-			_pickup_shadows[_pickup_shadow_count] = actor
-			_pickup_is_coin[_pickup_shadow_count] = int(actor is Area2D)
-			_pickup_shadow_count += 1
 
 func _process(delta: float) -> void :
 	if not _running or get_tree().paused: return
@@ -196,7 +177,7 @@ func _process(delta: float) -> void :
 	_canvas = get_viewport().get_canvas_transform()
 	var daylight: float = game.weather.daylight
 	_sun = Vector2(0.9, 0.35).rotated(sin(game.weather.solar_phase * TAU) * 0.35).normalized()
-	_shadow_alpha = GamePalette.SHADOW.a * lerpf(0.75, 1, daylight)
+	_shadow_alpha = lerpf(0.72, 0.88, daylight) * (0.82 if game.weather.current_weather == 1 else 1.0)
 	_emission = lerpf(1.2, 0.85, daylight)
 	_refresh_left -= delta
 	if _refresh_left <= 0:
@@ -216,49 +197,35 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 	if kind == 0:
 		shadows_last = 0
 		var offset: = _sun * lerpf(1, 6, game.weather.daylight)
-		_halo(canvas, game.player.global_position + Vector2(0, 17) + offset, Vector2(13, 4), GamePalette.alpha(GamePalette.BLACK, _shadow_alpha))
+		_halo(canvas, game.player.global_position + Vector2(0, 17) + offset, Vector2(14, 5), GamePalette.shadow(_shadow_alpha))
 		shadows_last += 1
 		for i in _shadow_count:
 			var actor: = _shadows[i]
 			if not _visible(actor): continue
-			if is_instance_of(actor, ENEMY) and actor.archetype == EnemyData.Archetype.DASHER and (actor.is_dashing or actor.dash_windup > 0): continue
-			_halo(canvas, actor.global_position + Vector2(0, _shadow_feet[i]) + offset, _shadow_sizes[i], GamePalette.alpha(GamePalette.BLACK, _shadow_alpha))
+			if actor.get_script() == ENEMY and actor.archetype == EnemyData.Archetype.DASHER and (actor.is_dashing or actor.dash_windup > 0): continue
+			_halo(canvas, actor.global_position + Vector2(0, _shadow_feet[i]) + offset, _shadow_sizes[i], GamePalette.shadow(_shadow_alpha))
 			shadows_last += 1
 		var flying: = 0
 		for drone in _drones:
 			if not _visible(drone): continue
-			_halo(canvas, drone.global_position + Vector2(0, 12) + offset, Vector2(8, 2.5), GamePalette.alpha(GamePalette.BLACK, _shadow_alpha * 0.6 * drone.modulate.a))
+			_halo(canvas, drone.global_position + Vector2(0, 12) + offset, Vector2(8, 2.5), GamePalette.shadow(_shadow_alpha * 0.6 * drone.modulate.a))
 			shadows_last += 1
 			flying += 1
 			if flying == BEAM_LIGHTS: break
-		for i in _pickup_shadow_count:
-			var actor := _pickup_shadows[i]
-			if not _visible(actor): continue
-			_halo(canvas,actor.global_position+Vector2(1,6),Vector2(5,2),GamePalette.SHADOW)
-			shadows_last += 1
 		return
 	if kind == 1: light_quads_last = 0
-	if kind == 1:
-		_halo(canvas,game.player.global_position,Vector2(17,22),GamePalette.alpha(GamePalette.PLAYER_PRIMARY,0.08))
-		var coins := 0
-		for i in _pickup_shadow_count:
-			var actor := _pickup_shadows[i]
-			if _pickup_is_coin[i] == 0 or not _visible(actor): continue
-			_halo(canvas,actor.global_position,Vector2(10,10),GamePalette.alpha(GamePalette.COIN_GOLD,0.12))
-			coins += 1
-			if coins == COIN_LIGHTS: break
 	var bullets: = 0
 	for actor in _bullets:
 		if not _visible(actor): continue
 		var p: = actor.global_position
 		var scale_light: = clampf(absf(actor.global_scale.x) / 0.4, 0.75, 1.8)
 		if kind == 1:
-			_halo(canvas, p, Vector2(16, 10) * scale_light, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, 0.11 * _emission))
+			_halo(canvas, p, Vector2(16, 10) * scale_light, Color(1, 0.82, 0.47, 0.11 * _emission))
 		else:
 			var dir: Vector2 = actor.velocity.normalized()
 			canvas.draw_set_transform(p, dir.angle())
-			_halo(canvas, Vector2.ZERO, Vector2(13, 5) * scale_light, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, 0.22))
-			canvas.draw_line(Vector2(-7, 0), Vector2(4, 0), GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, 0.7), 1.1, false)
+			_halo(canvas, Vector2.ZERO, Vector2(13, 5) * scale_light, Color(1, 0.9, 0.65, 0.22))
+			canvas.draw_line(Vector2(-7, 0), Vector2(4, 0), Color(1, 0.98, 0.85, 0.7), 1.1, false)
 			canvas.draw_set_transform(Vector2.ZERO)
 		bullets += 1
 		if bullets == BULLET_LIGHTS: break
@@ -275,7 +242,7 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 	for i in _orb_count:
 		var actor: = _orbs[i]
 		if not _visible(actor) or actor.collected: continue
-		_halo(canvas, actor.global_position, Vector2.ONE * (23 if kind == 1 else 12), GamePalette.alpha(GamePalette.HEAL_GREEN, (0.16 * _emission if kind == 1 else 0.2) * actor.modulate.a))
+		_halo(canvas, actor.global_position, Vector2.ONE * (23 if kind == 1 else 12), Color(0.16, 0.95, 0.43, (0.16 * _emission if kind == 1 else 0.2) * actor.modulate.a))
 	for flash in _flashes:
 		if flash.left <= 0: continue
 		var at: Vector2 = flash.anchor.global_position if is_instance_valid(flash.anchor) else flash.at
@@ -283,7 +250,7 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 		_halo(canvas, at, Vector2.ONE * (27 if kind == 1 else 11), Color(GOLD, strength * (0.14 if kind == 1 else 0.48)))
 		if kind == 2:
 			var dir: Vector2 = flash.direction
-			canvas.draw_line(at - dir * 3, at + dir * 10, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, strength * 0.8), 2, false)
+			canvas.draw_line(at - dir * 3, at + dir * 10, Color(1, 0.97, 0.8, strength * 0.8), 2, false)
 	if kind == 2: _draw_rings(canvas)
 
 func _ring_glow(canvas: Node2D, at: Vector2, radius: float, color: Color, alpha: float) -> void :

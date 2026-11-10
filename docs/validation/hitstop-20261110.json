@@ -2834,5 +2834,22 @@
     "Initial ordinary screenshots missed short flashes. QA compile typing was corrected; final export logs contain no script/shader/build errors.",
     "Legacy unscaled visual timing assertions were rerun with a real display cadence; splash timing was moved to its own monotonic clock to avoid same-frame delta/time-scale mismatch.",
     "Known CLI ObjectDB/resource-in-use exit warnings are retained separately from runtime errors."
-  ]
+  ],
+  "source_commit": "2bc121dd64e5c84c92a8cd0ff563fff080e1a9a9",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/10",
+  "playtest": {
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "audience": "existing owner-private, unchanged",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "site_source_commit": "560c995d874016a0204292a44d3a3e08d184c6b9",
+    "game_source_commit": "2bc121dd64e5c84c92a8cd0ff563fff080e1a9a9",
+    "deployment_id": "appgdep_6af30946706c81918127f0cbff7e8675",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_a6d0af061d5881918249c5a0b21fc8a6",
+    "status": "succeeded",
+    "published_beijing": "2026-11-10T20:08:48+08:00",
+    "pck_sha256": "5e5461fca143823b3bb7deb49340a273bc131b1a3c93c508d52aa5d5232db837",
+    "archive_sha256": "e8788d0a678a98a21d2ecbfa3c0660a4f3fc772966f29821d270194df07a28f6",
+    "hosting_checks": "Original PCK/WASM byte equivalence; 11 assets below25MiB; unchanged gzip adapter and engine JS syntax checked",
+    "browser_scope": "Normal original export and isolated QA entry tested; hosted adapter/live private Site not browser-retested; managed Sites browser/helper/open_in_codex unavailable"
+  }
 }

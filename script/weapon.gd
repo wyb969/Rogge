@@ -38,9 +38,6 @@ var _base_shot_lock: float = 0.064
 
 
 func _ready() -> void :
-	sprite_2d.material = GamePalette.ramp_material(&"friendly")
-	muzzle_flash.color_ramp = GamePalette.weapon_gradient()
-	bullet_shell.color = GamePalette.FRIENDLY_LIGHT
 	line_2d.clear_points()
 	if player:
 		global_position = player.global_position + relative_pos

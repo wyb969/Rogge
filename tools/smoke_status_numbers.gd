@@ -10,6 +10,7 @@ func admit() -> void :
 	BUDGET._frame = -1
 	BUDGET._stamp = Time.get_ticks_msec()
 func _run() -> void :
+	Engine.max_fps = 120 # Real-time popup/hitstop assertions need real display cadence.
 	var main: Node = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	current_scene = main
@@ -36,8 +37,8 @@ func _run() -> void :
 		actor.apply_hit({"damage": 10, "effect": effect, "from_status": effect == "poison_trail"})
 		var popup: Node = game.effect_container.get_children().back()
 		expect(actor.health == hp - 10 and popup._status == (effect != ""), "real burn/frost/poison and plain hits route to their intended text without damage changes")
-		if effect != "": expect(popup.label.get_theme_color("font_color") == (GamePalette.POISON_TINT if effect == "poison_trail" else GamePalette.PLAYER_DAMAGE_WHITE), "poison is purple while other player damage is white")
-		else: expect(popup.label.get_theme_color("font_color") == GamePalette.PLAYER_DAMAGE_WHITE, "plain damage stays white")
+		if effect != "": expect(popup.label.get_theme_color("font_color") == (GamePalette.POISON_TINT if effect == "poison_trail" else TEXT.STATUS_YELLOW), "poison remains purple; burn and frost follow Cursor yellow-to-red colors")
+		else: expect(popup.label.get_theme_color("font_color") == Color(1, 0.96, 0.83), "plain damage stays cream")
 	admit()
 	actor._take_status_damage(5)
 	var burn: Node = game.effect_container.get_children().back()
@@ -53,11 +54,11 @@ func _run() -> void :
 	var heal: Node = load("res://scenes/damage_text.tscn").instantiate()
 	game.effect_container.add_child(heal)
 	heal.show_heal("+5")
-	expect( not heal._status and heal.label.get_theme_color("font_color") == GamePalette.HEAL_GREEN, "healing text remains green")
+	expect( not heal._status and heal.label.get_theme_color("font_color") == Color(0.4, 1, 0.55), "healing text remains green")
 	await create_timer(0.13, true, false, true).timeout
-	expect(is_instance_valid(burn) and burn.label.get_theme_color("font_color").is_equal_approx(GamePalette.PLAYER_DAMAGE_WHITE), "player burn numbers remain white throughout the original lifetime")
+	expect(is_instance_valid(burn) and burn.label.get_theme_color("font_color").g < TEXT.STATUS_YELLOW.g and burn.label.get_theme_color("font_color").g > TEXT.STATUS_RED.g, "the real existing popup tween transitions through orange")
 	await create_timer(0.13, true, false, true).timeout
-	expect(is_instance_valid(burn) and burn.label.get_theme_color("font_color").is_equal_approx(TEXT.STATUS_RED), "player burn numbers remain white before expiry")
+	expect(is_instance_valid(burn) and burn.label.get_theme_color("font_color").is_equal_approx(TEXT.STATUS_RED), "abnormal numbers finish red before expiry")
 	await create_timer(0.14, true, false, true).timeout
 	expect( not is_instance_valid(burn), "gradient adds no extra popup lifetime")
 	var boss: Node = load("res://scenes/boss.tscn").instantiate()
@@ -71,9 +72,9 @@ func _run() -> void :
 	var boss_hp: float = boss.boss_current_health
 	boss.apply_hit({"damage": 5, "effect": "poison_trail", "from_status": true})
 	var popup: Node = game.effect_container.get_children().back()
-	expect(boss.boss_current_health == boss_hp - 5 and popup._status, "real boss poison uses the same bounded purple popup")
+	expect(boss.boss_current_health == boss_hp - 5 and popup._status, "real boss poison uses the same bounded yellow/red popup")
 	main.show_main_menu()
-	if failures.is_empty(): print("STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, semantic colors and unchanged lifetime, bounded boss status routing and return")
+	if failures.is_empty(): print("STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return")
 	else:
 		for failure in failures: push_error(failure)
 	quit(0 if failures.is_empty() else 1)

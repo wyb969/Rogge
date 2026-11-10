@@ -528,9 +528,9 @@ func _show_stage_banner(next_stage: int) -> void :
 		return
 	var banner = boss_warning_scene.instantiate()
 	banner.banner_text = "STAGE %d" % next_stage
-	banner.banner_color = GamePalette.ENEMY_TELEGRAPH_EDGE
-	banner.flash_tint = GamePalette.ENEMY_CRIMSON
-	banner.outline_color = GamePalette.BLACK
+	banner.banner_color = Color(0.55, 0.95, 1.0, 1.0)
+	banner.flash_tint = Color(0.12, 0.34, 0.85, 1.0)
+	banner.outline_color = Color(0.04, 0.1, 0.28, 1.0)
 	banner.shake_strength = 7.0
 	banner.shake_duration = 0.75
 	banner.play_alarm = false
@@ -566,7 +566,7 @@ func _ensure_stage_label() -> void :
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	UiFonts.apply_to_label(label, 22, true)
-	label.add_theme_color_override("font_outline_color", GamePalette.BLACK)
+	label.add_theme_color_override("font_outline_color", Color(0.04, 0.04, 0.06, 1))
 	label.add_theme_constant_override("outline_size", 6)
 	_stage_label = label
 	_refresh_stage_label()
@@ -576,9 +576,9 @@ func _refresh_stage_label() -> void :
 		return
 	_stage_label.text = "STAGE %d" % stage
 	if stage >= 2:
-		_stage_label.add_theme_color_override("font_color", GamePalette.UI_GREY_ACTIVE)
+		_stage_label.add_theme_color_override("font_color", Color(1.0, 0.55, 0.35, 1))
 	else:
-		_stage_label.add_theme_color_override("font_color", GamePalette.UI_GREY_ACTIVE)
+		_stage_label.add_theme_color_override("font_color", Color(0.95, 0.92, 0.8, 1))
 
 
 func debug_start_stage2_boss() -> void :
@@ -623,8 +623,8 @@ func spawn_treasure_guardian() -> Node2D:
 	guardian.global_position = player.global_position + Vector2(-110, -35)
 	var banner = boss_warning_scene.instantiate()
 	banner.banner_text = "TREASURE GUARDIAN"
-	banner.banner_color = GamePalette.UI_TEXT
-	banner.flash_tint = GamePalette.INK
+	banner.banner_color = Color(1.0, 0.84, 0.3)
+	banner.flash_tint = Color(0.28, 0.18, 0.04, 1.0)
 	banner.play_alarm = false
 	_world_root().add_child(banner)
 	return guardian

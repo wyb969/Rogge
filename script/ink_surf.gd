@@ -17,10 +17,15 @@ var _last_at := Vector2.ZERO
 var _pulse_at := Vector2.ZERO
 var _pulse_left := 0.0
 var _gain_left := 0.0
-var _redraw_left := 0.0
 var _generation := 0
 var _targets: Array[Node2D] = []
 var _caption: Label
+var _foot_hud: Node2D
+class FootHud:
+	extends Node2D
+	var ink: Node2D
+	func _draw() -> void:
+		if is_instance_valid(ink): ink._draw_foot(self)
 var debug_training := false
 var _debug_left := 0.0
 @onready var game: Node = get_parent()
@@ -34,7 +39,15 @@ func _ready() -> void:
 	_caption.add_theme_color_override("font_color",GamePalette.FRIENDLY_LIGHT)
 	_caption.add_theme_color_override("font_outline_color",GamePalette.BLACK)
 	_caption.add_theme_constant_override("outline_size",2)
-	add_child(_caption)
+	# Inherit the player's transform directly, never a separately sampled world position.
+	_foot_hud = FootHud.new()
+	_foot_hud.name = "InkFootHud"
+	_foot_hud.ink = self
+	_foot_hud.z_index = 7
+	game.player.add_child(_foot_hud)
+	_foot_hud.add_child(_caption)
+	_caption.position = Vector2(-50,32)
+	_caption.size = Vector2(100,14)
 	game.player.dash_started.connect(_on_dash_started)
 	game.player.dash_completed.connect(_on_dash_completed)
 	reset()
@@ -65,8 +78,13 @@ func clear_combat_effects() -> void:
 	_pulse_left = 0
 	_gain_left = 0
 	_targets.clear()
-	if _caption!=null: _caption.hide()
+	if is_instance_valid(_foot_hud):
+		_foot_hud.hide()
+		_foot_hud.queue_redraw()
 	queue_redraw()
+
+func _exit_tree() -> void:
+	if is_instance_valid(_foot_hud): _foot_hud.queue_free()
 
 func enable_debug_training() -> void:
 	debug_training = true
@@ -141,34 +159,39 @@ func _on_dash_completed(at: Vector2) -> void:
 func _process(delta: float) -> void:
 	if not _running or get_tree().paused: return
 	if not _active():
-		_caption.hide()
+		_foot_hud.hide()
 		return
 	_refresh_debug_ink(delta)
+	var hud_animated := cooldown>0 or _gain_left>0
+	var pulse_animated := _pulse_left>0
 	cooldown = maxf(0,cooldown-delta)
 	_pulse_left = maxf(0,_pulse_left-delta)
 	_gain_left = maxf(0,_gain_left-delta)
-	_redraw_left -= delta
-	if _redraw_left<=0:
-		_redraw_left = 1.0/30.0
-		_caption.position = to_local(game.player.global_position)+Vector2(-50,32)
-		_caption.size = Vector2(100,14)
-		_caption.text = "彩墨冷却" if cooldown>0 else "彩墨 %d/3" % charge
-		_caption.visible = charge>0 or _tracking or cooldown>0
-		queue_redraw()
+	var show_hud := charge>0 or _tracking or cooldown>0
+	var changed := _foot_hud.visible != show_hud
+	_foot_hud.visible = show_hud
+	var caption := "彩墨冷却" if cooldown>0 else "彩墨 %d/3" % charge
+	if _caption.text != caption:
+		_caption.text = caption
+		changed = true
+	if changed or hud_animated: _foot_hud.queue_redraw()
+	if pulse_animated: queue_redraw()
 
-func _draw() -> void:
+func _draw_foot(canvas: Node2D) -> void:
 	if not is_node_ready() or not _active(): return
-	var player_at := to_local(game.player.global_position)
 	if charge>0 or _tracking or cooldown>0:
 		for i in REQUIRED:
 			var tint := GamePalette.FRIENDLY_CYAN if i<charge else GamePalette.UI_GREY_COOLDOWN
 			var size := 2.8+_gain_left*5 if i<charge else 2.8
-			var center := player_at+Vector2((i-1)*9,27)
-			draw_rect(Rect2(center-Vector2.ONE*(size+1),Vector2.ONE*(size+1)*2),GamePalette.UI_PANEL)
-			draw_rect(Rect2(center-Vector2.ONE*size,Vector2.ONE*size*2),tint)
+			var center := Vector2((i-1)*9,27)
+			canvas.draw_rect(Rect2(center-Vector2.ONE*(size+1),Vector2.ONE*(size+1)*2),GamePalette.UI_PANEL)
+			canvas.draw_rect(Rect2(center-Vector2.ONE*size,Vector2.ONE*size*2),tint)
 		if cooldown>0:
-			draw_line(player_at+Vector2(-14,48),player_at+Vector2(14,48),GamePalette.UI_BUTTON,2)
-			draw_line(player_at+Vector2(-14,48),player_at+Vector2(-14+28*(1-cooldown/COOLDOWN),48),GamePalette.FRIENDLY_CYAN,2)
+			canvas.draw_line(Vector2(-14,48),Vector2(14,48),GamePalette.UI_BUTTON,2)
+			canvas.draw_line(Vector2(-14,48),Vector2(-14+28*(1-cooldown/COOLDOWN),48),GamePalette.FRIENDLY_CYAN,2)
+
+func _draw() -> void:
+	if not is_node_ready() or not _active(): return
 	if _pulse_left>0:
 		var t := 1-_pulse_left/PULSE_SECONDS
 		var at := to_local(_pulse_at)

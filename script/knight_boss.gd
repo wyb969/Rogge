@@ -31,12 +31,12 @@ func configure_stage(_stage: int) -> void :
 	fight_stage = 2
 
 func _ready() -> void :
-	sprite_2d.material = GamePalette.ramp_material(&"enemy:knight")
 	fight_stage = 2
 	health_max_value = MAX_HEALTH
 	boss_current_health = health_max_value
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = Color.WHITE
+	GamePalette.paint_actor(sprite_2d, &"enemy")
 	animation_player.stop()
 	animation_player.active = false
 	rush_timer.stop()
@@ -47,7 +47,7 @@ func _ready() -> void :
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_title.z_index = 21
 	UiFonts.apply_to_label(_title, 17, true)
-	_title.add_theme_color_override("font_outline_color", GamePalette.INK)
+	_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.04))
 	_title.add_theme_constant_override("outline_size", 4)
 	_title.text = "IRON KNIGHT  /  I"
 	_build_boss_hud()
@@ -81,7 +81,7 @@ func _process(delta: float) -> void :
 	var sweep: = clampf(1.0 - state_left / maxf(state_duration, 0.001), 0.0, 1.0)
 	if _sword:
 		_sword.rotation = attack_angle + lerpf( - SLASH_HALF_ANGLE, SLASH_HALF_ANGLE, sweep) if attack_state == AttackState.SLASH else attack_angle - SLASH_HALF_ANGLE
-		_sword.modulate = GamePalette.DANGER_ORANGE if phase == 2 else Color.WHITE
+		_sword.modulate = Color(1.2, 0.92, 0.65) if phase == 2 else Color.WHITE
 	queue_redraw()
 
 func _physics_process(delta: float) -> void :
@@ -176,7 +176,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 	if not is_dying and phase == 1 and boss_current_health <= health_max_value * PHASE_TWO_HEALTH:
 		phase = 2
 		_title.text = "PHASE II  /  ENRAGED"
-		_title.add_theme_color_override("font_color", GamePalette.DANGER_ORANGE)
+		_title.add_theme_color_override("font_color", Color(1.0, 0.62, 0.25))
 		_apply_phase2_outline()
 
 		_set_state(AttackState.PHASE_SHIFT, 1.1)
@@ -197,11 +197,11 @@ func _draw() -> void :
 	var active: = attack_state == AttackState.SLASH
 	if not warning and not active:
 		return
-	var fill: = GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_FILL,0.3 + 0.12 * (1.0 - state_left / maxf(state_duration, 0.001)))
-	var edge: = GamePalette.ENEMY_TELEGRAPH_EDGE
+	var fill: = Color(GamePalette.TELEGRAPH_FILL, 0.3 + 0.12 * (1.0 - state_left / maxf(state_duration, 0.001)))
+	var edge: = GamePalette.TELEGRAPH_EDGE
 	if active:
-		fill = GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_FILL, 0.48)
-		edge = GamePalette.ENEMY_TELEGRAPH_EDGE
+		fill = Color(GamePalette.ENEMY_ORANGE, 0.48)
+		edge = GamePalette.TELEGRAPH_EDGE.lightened(0.2)
 	var points: = PackedVector2Array()
 	if attack_state == AttackState.DASH_WINDUP:
 		var dir: = Vector2.RIGHT.rotated(attack_angle)
@@ -214,12 +214,12 @@ func _draw() -> void :
 			points.append(Vector2.RIGHT.rotated(angle) * SLASH_RADIUS)
 	draw_colored_polygon(points, fill)
 	points.append(points[0])
-	draw_polyline(points, GamePalette.alpha(GamePalette.INK, 0.95), 6.0, true)
+	draw_polyline(points, Color(0.08, 0.01, 0.03, 0.95), 6.0, true)
 	draw_polyline(points, edge, 2.5, true)
 
 func draw_ellipse_shadow() -> void :
 	draw_set_transform(Vector2(0, 44), 0, Vector2(1.0, 0.35))
-	draw_circle(Vector2.ZERO, 42.0, GamePalette.SHADOW)
+	draw_circle(Vector2.ZERO, 42.0, GamePalette.shadow(0.82))
 	draw_set_transform(Vector2.ZERO)
 
 func _build_sword() -> void :
@@ -230,11 +230,11 @@ func _build_sword() -> void :
 	add_child(_sword)
 
 	for part in [
-		[PackedVector2Array([Vector2(20, -8), Vector2(82, -8), Vector2(92, 0), Vector2(82, 8), Vector2(20, 8)]), GamePalette.INK],
-		[PackedVector2Array([Vector2(24, -5), Vector2(80, -5), Vector2(88, 0), Vector2(80, 5), Vector2(24, 5)]), GamePalette.DANGER_ORANGE],
-		[PackedVector2Array([Vector2(25, -4), Vector2(78, -4), Vector2(85, 0), Vector2(25, 0)]), GamePalette.PLAYER_DAMAGE_WHITE],
-		[PackedVector2Array([Vector2(18, -14), Vector2(25, -14), Vector2(25, 14), Vector2(18, 14)]), GamePalette.DANGER_ORANGE],
-		[PackedVector2Array([Vector2(4, -4), Vector2(18, -4), Vector2(18, 4), Vector2(4, 4)]), GamePalette.DANGER_ORANGE],
+		[PackedVector2Array([Vector2(20, -8), Vector2(82, -8), Vector2(92, 0), Vector2(82, 8), Vector2(20, 8)]), Color(0.08, 0.1, 0.17)],
+		[PackedVector2Array([Vector2(24, -5), Vector2(80, -5), Vector2(88, 0), Vector2(80, 5), Vector2(24, 5)]), Color(0.8, 0.89, 1.0)],
+		[PackedVector2Array([Vector2(25, -4), Vector2(78, -4), Vector2(85, 0), Vector2(25, 0)]), Color(1, 1, 1)],
+		[PackedVector2Array([Vector2(18, -14), Vector2(25, -14), Vector2(25, 14), Vector2(18, 14)]), Color(0.95, 0.65, 0.2)],
+		[PackedVector2Array([Vector2(4, -4), Vector2(18, -4), Vector2(18, 4), Vector2(4, 4)]), Color(0.38, 0.2, 0.12)],
 	]:
 		var polygon: = Polygon2D.new()
 		polygon.polygon = part[0]

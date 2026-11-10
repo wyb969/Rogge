@@ -22,6 +22,7 @@ theme_override_font_sizes/font_size = 15
 text = "Level: 0  "
 
 [node name="ProgressBar" type="ProgressBar" parent="UI/HBoxContainer" unique_id=546719097]
+modulate = Color(1, 0.0470588, 0.470588, 1)
 custom_minimum_size = Vector2(200, 30)
 layout_mode = 2
 size_flags_horizontal = 4

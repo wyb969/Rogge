@@ -7,8 +7,8 @@ const FALL: = 0.28
 const CRATER: = 1.1
 const RADIUS: = 43.0
 const REWARD_PER_FRAME: = 2
-const GOLD: = GamePalette.FRIENDLY_CYAN
-const PAPER: = GamePalette.FRIENDLY_LIGHT
+const GOLD: = Color(0.94, 0.75, 0.38)
+const PAPER: = Color(0.96, 0.92, 0.77)
 var _meteors: Array[Dictionary] = []
 var _running: = false
 var _rng: = RandomNumberGenerator.new()
@@ -165,7 +165,7 @@ func _draw() -> void :
 			if elapsed >= WARNING:
 				var t: = clampf((elapsed - WARNING) / FALL, 0, 1)
 				var head: Vector2 = to_local(meteor.from.lerp(meteor.at, t * t))
-				draw_line(head - Vector2(18, 40), head, GamePalette.alpha(GamePalette.PLAYER_ATTACK,0.35), 5, false)
+				draw_line(head - Vector2(18, 40), head, Color(0.48, 0.78, 0.84, 0.35), 5, false)
 				draw_line(head - Vector2(18, 40), head, Color(PAPER, 0.9), 1.6, false)
 				draw_circle(head, 5, GOLD)
 				draw_circle(head, 2.5, PAPER)
@@ -173,7 +173,7 @@ func _draw() -> void :
 			var age: float = elapsed - WARNING - FALL
 			var alpha: = clampf(1 - age / CRATER, 0, 1)
 			draw_set_transform(at, 0, Vector2(1, 0.45))
-			draw_circle(Vector2.ZERO, 11, GamePalette.alpha(GamePalette.BLACK,alpha * 0.55))
+			draw_circle(Vector2.ZERO, 11, Color(0.04, 0.06, 0.07, alpha * 0.55))
 			draw_set_transform(Vector2.ZERO)
 			if age < 0.28:
 				draw_arc(at, lerpf(7, RADIUS, age / 0.28), 0, TAU, 28, Color(GOLD, (1 - age / 0.28) * 0.7), 1.5, false)

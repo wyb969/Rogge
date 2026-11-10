@@ -69,7 +69,7 @@ var shots_fired: int = 0
 var slam_windup: float = 0.0
 var slam_time_left: float = 0.0
 var slam_dir: Vector2 = Vector2.ZERO
-var marker_color: Color = GamePalette.ENEMY_PROJECTILE
+var marker_color: Color = Color(0.8, 0.8, 0.85, 1)
 
 
 var burn_stacks: int = 0
@@ -84,8 +84,6 @@ var freeze_slow: float = 0.5
 var poison_slow: = 1.0
 var _poison_tint: = Color.WHITE
 var base_modulate: Color = Color.WHITE
-var _semantic_kind: StringName = &"chaser"
-var _semantic_body := false
 var _sprite_base_scale: Vector2 = Vector2.ONE
 var _wobble: float = 0.0
 var _move_effort: float = 0.0
@@ -97,23 +95,24 @@ func _ready() -> void :
 	_apply_body_scale()
 	if sprite_2d:
 		_sprite_base_scale = sprite_2d.scale
-		sprite_2d.modulate = base_modulate
+		sprite_2d.modulate = Color.WHITE
 
 func _draw() -> void :
 	if _blast_left > 0.0:
 		var unit := 1.0 / maxf(body_scale, 0.4)
 		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
-		draw_circle(Vector2.ZERO, 7.5, GamePalette.SHADOW)
+		draw_circle(Vector2.ZERO, 7.5, GamePalette.shadow(0.78))
 		draw_set_transform(Vector2.ZERO)
 	if archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0:
 		var unit: = 1.0 / maxf(body_scale, 0.4)
-		draw_arc(Vector2(0, 11) * unit, 8 * unit, - PI * 0.5, - PI * 0.5 + TAU * contact_recovery_left / DASHER_CONTACT_RECOVERY, 16, GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_EDGE,0.65), 1.2 * unit, false)
+		draw_arc(Vector2(0, 11) * unit, 8 * unit, - PI * 0.5, - PI * 0.5 + TAU * contact_recovery_left / DASHER_CONTACT_RECOVERY, 16, Color(0.85, 0.92, 1, 0.65), 1.2 * unit, false)
 	if archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or is_dashing):
 		var unit: = 1.0 / maxf(body_scale, 0.4)
 		var lift: = dash_jump_height() / DASH_JUMP_HEIGHT
 		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
-		draw_circle(Vector2.ZERO, lerpf(9.0, 6.0, lift), GamePalette.SHADOW)
+		draw_circle(Vector2.ZERO, lerpf(9.0, 6.0, lift), GamePalette.shadow(0.82))
 		draw_set_transform(Vector2.ZERO)
+	draw_circle(Vector2(0, 14), 3.4, GamePalette.ENEMY_RED)
 	if archetype == EnemyData.Archetype.DASHER and dash_windup > 0.0:
 
 
@@ -126,12 +125,12 @@ func _draw() -> void :
 			Vector2(length, 0), Vector2(length - 15, 9), Vector2(length - 15, 3.5), Vector2(7, 3.5), 
 		])
 		draw_set_transform(Vector2.ZERO, dash_dir.angle(), Vector2.ONE * unit)
-		draw_colored_polygon(arrow, GamePalette.alpha(GamePalette.DANGER_RED.darkened(0.25), 0.65).lerp(GamePalette.alpha(GamePalette.DANGER_RED, 0.95), eased))
+		draw_colored_polygon(arrow, Color(0.78, 0.035, 0.07, 0.65).lerp(Color(1.0, 0.24, 0.3, 0.95), eased))
 		var border: = arrow.duplicate()
 		border.append(arrow[0])
-		draw_polyline(border, GamePalette.alpha(GamePalette.BLACK,0.9), 2.0, true)
+		draw_polyline(border, Color(0.13, 0.01, 0.025, 0.9), 2.0, true)
 		var tip: = lerpf(10.0, length - 17.0, eased)
-		draw_line(Vector2(maxf(8.0, tip - 10.0), 0), Vector2(tip, 0), GamePalette.alpha(GamePalette.DANGER_RED.lightened(0.35), 0.8), 2.0, true)
+		draw_line(Vector2(maxf(8.0, tip - 10.0), 0), Vector2(tip, 0), Color(1.0, 0.7, 0.72, 0.8), 2.0, true)
 		draw_set_transform(Vector2.ZERO)
 
 func dash_warning_locked() -> bool:
@@ -167,11 +166,11 @@ func set_enemy_data(data: EnemyData) -> void :
 	defense = clampf(data.defense, 0.0, 0.75)
 	body_scale = maxf(data.body_scale, 0.4)
 	death_stain_color = DEATH_STAINS.color_for(StringName(data.title))
-	base_modulate = Color.WHITE
-	_semantic_kind = StringName(data.title)
-	_semantic_body = true
-	$Sprite2D.material = GamePalette.ramp_material(StringName("enemy:" + data.title))
+	base_modulate = data.tint
 	marker_color = data.marker_color
+	GamePalette.paint_actor(sprite_2d, &"enemy")
+	if sprite_2d:
+		sprite_2d.modulate = Color.WHITE
 	contact_damage = data.contact_damage
 	contact_cooldown = data.contact_cooldown
 	contact_radius = data.contact_radius
@@ -196,7 +195,6 @@ func set_elite_status() -> void :
 	var sprite: Sprite2D = $Sprite2D
 	var mat: ShaderMaterial = load("res://shaders/rainbow_outline.tres").duplicate()
 	mat.set_shader_parameter("outline_color", preload("res://script/visual_style.gd").ELITE)
-	GamePalette.configure_enemy_material(mat,GamePalette.enemy_color_for(_semantic_kind))
 	var hf: = maxi(1, sprite.hframes)
 	var vf: = maxi(1, sprite.vframes)
 
@@ -406,7 +404,7 @@ func _steer_dasher(delta: float, dir: Vector2, dist: float, move_speed: float) -
 
 		velocity = dash_dir * dash_speed * dash_mul * step_time / maxf(delta, 1e-06)
 		if sprite_2d:
-			sprite_2d.modulate = GamePalette.HIT_FLASH
+			sprite_2d.modulate = Color(1.7, 0.55, 0.35, 1)
 		return
 
 	if dash_windup > 0.0:
@@ -416,7 +414,7 @@ func _steer_dasher(delta: float, dir: Vector2, dist: float, move_speed: float) -
 		dash_windup = maxf(0.0, dash_windup - delta)
 		velocity = Vector2.ZERO
 		if sprite_2d:
-			sprite_2d.modulate = GamePalette.WHITE.lerp(GamePalette.ENEMY_ORANGE,0.25)
+			sprite_2d.modulate = Color(1.4, 0.85, 0.4, 1)
 		if dash_windup <= 1e-06 and not is_frozen():
 			dash_windup = 0.0
 			is_dashing = true
@@ -452,7 +450,7 @@ func _finish_dash() -> void :
 	dash_time_left = 0.0
 	dash_timer = dash_cooldown + randf_range(0.0, 0.4)
 	if sprite_2d and freeze_time <= 0.0 and burn_stacks <= 0:
-		sprite_2d.modulate = base_modulate
+		sprite_2d.modulate = Color.WHITE
 
 func _begin_contact_recovery() -> void :
 	if is_dashing:
@@ -473,21 +471,21 @@ func _steer_tank(delta: float, dir: Vector2, dist: float, move_speed: float) -> 
 		slam_time_left -= delta
 		velocity = slam_dir * move_speed * 3.4
 		if sprite_2d:
-			sprite_2d.modulate = GamePalette.HIT_FLASH
+			sprite_2d.modulate = Color(0.75, 0.85, 1.5, 1)
 		if slam_time_left <= 0.0 and sprite_2d and freeze_time <= 0.0 and burn_stacks <= 0:
-			sprite_2d.modulate = base_modulate
+			sprite_2d.modulate = Color.WHITE
 		return
 
 	if slam_windup > 0.0:
 		slam_windup -= delta
 		velocity = Vector2.ZERO
 		if sprite_2d:
-			sprite_2d.modulate = GamePalette.WHITE.lerp(GamePalette.ENEMY_RUST,0.25)
+			sprite_2d.modulate = Color(0.45, 0.6, 1.35, 1)
 		if slam_windup <= 0.0 and not is_frozen():
 			slam_time_left = 0.22
 			slam_dir = dir if dir.length_squared() > 0.001 else Vector2.RIGHT
 		elif slam_windup <= 0.0 and sprite_2d:
-			sprite_2d.modulate = base_modulate
+			sprite_2d.modulate = Color.WHITE
 		return
 
 	attack_timer -= delta
@@ -501,12 +499,12 @@ func _steer_ranged(delta: float, dir: Vector2, dist: float, move_speed: float) -
 		shot_windup -= delta
 		velocity = - dir * move_speed * 0.35
 		if sprite_2d:
-			sprite_2d.modulate = GamePalette.DANGER_ORANGE
+			sprite_2d.modulate = Color(1.45, 1.35, 0.45, 1)
 		if shot_windup <= 0.0:
 			if not is_frozen():
 				_fire_projectile(dir)
 			if sprite_2d and freeze_time <= 0.0 and burn_stacks <= 0:
-				sprite_2d.modulate = base_modulate
+				sprite_2d.modulate = Color.WHITE
 		return
 
 	attack_timer -= delta
@@ -642,13 +640,13 @@ func _update_statuses(delta: float) -> void :
 	if freeze_time > 0.0:
 		freeze_time = maxf(0.0, freeze_time - delta)
 		if sprite_2d and not is_dashing and slam_windup <= 0.0 and shot_windup <= 0.0:
-			sprite_2d.modulate = GamePalette.FRIENDLY_LIGHT
+			sprite_2d.modulate = Color(0.55, 0.85, 1.2, 1.0)
 		if freeze_time <= 0.0 and burn_stacks <= 0 and sprite_2d:
-			sprite_2d.modulate = base_modulate
+			sprite_2d.modulate = Color.WHITE
 
 	if burn_stacks > 0:
 		if sprite_2d and freeze_time <= 0.0 and not is_dashing and shot_windup <= 0.0 and slam_windup <= 0.0:
-			sprite_2d.modulate = GamePalette.FRIENDLY_BLUE
+			sprite_2d.modulate = Color(1.25, 0.55, 0.25, 1.0)
 		burn_tick += delta
 		if burn_tick >= 0.45:
 			burn_tick = 0.0
@@ -657,7 +655,7 @@ func _update_statuses(delta: float) -> void :
 			_try_spread_burn()
 			burn_stacks = max(burn_stacks - 1, 0)
 			if burn_stacks <= 0 and freeze_time <= 0.0 and sprite_2d and not is_dashing:
-				sprite_2d.modulate = base_modulate
+				sprite_2d.modulate = Color.WHITE
 
 func _mitigate(raw: float) -> float:
 	var dealt: = raw * (1.0 - clampf(defense, 0.0, 0.75))
@@ -680,11 +678,12 @@ func get_status_echo_damage(poison_tick: float) -> float:
 		total += _mitigate(poison_tick)
 	return total
 
-func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false, visual_effect: StringName = &"") -> float:
+func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false, visual_effect: StringName = &"", impact: bool = true) -> float:
 	if _death_started or damage_value <= 0: return 0.0
 	var dealt: float = damage_value if damage_is_final else _mitigate(damage_value)
 	var feedback: = JUICE.find(self)
 	if feedback != null: feedback.hit(global_position, direction, is_elite)
+	if feedback != null and dealt > 0 and impact: feedback.impact_feedback.pulse(self,sprite_2d)
 	play_hit_tween(direction)
 	show_damage_text(dealt, status_damage, critical, visual_effect)
 	AudioManager.play_enemy_hurt()
@@ -712,7 +711,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 	var crit_multiplier := 1.0
 	if not damage_is_final and player_node != null and player_node.has_method("roll_critical_multiplier"):
 		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
-	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))))
+	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))), not hit_data.get("from_status",false))
 	if not hit_data.get("from_status", false) and not damage_is_final:
 		_report_lifesteal(dealt)
 
@@ -768,13 +767,13 @@ func apply_burn(hit_data: Dictionary) -> void :
 	burn_stacks = mini(burn_stacks + add_stacks, MAX_BURN_STACKS)
 	burn_dps = maxf(burn_dps, float(hit_data.get("burn_dps", burn_dps)))
 	if sprite_2d and freeze_time <= 0.0 and not is_dashing:
-		sprite_2d.modulate = GamePalette.FRIENDLY_BLUE
+		sprite_2d.modulate = Color(1.25, 0.55, 0.25, 1.0)
 
 func apply_freeze(hit_data: Dictionary) -> void :
 	freeze_time = maxf(freeze_time, float(hit_data.get("freeze_duration", 1.2)))
 	freeze_slow = float(hit_data.get("slow_factor", 0.5))
 	if sprite_2d and not is_dashing:
-		sprite_2d.modulate = GamePalette.FRIENDLY_LIGHT
+		sprite_2d.modulate = Color(0.55, 0.85, 1.2, 1.0)
 
 func apply_shock(_hit_data: Dictionary) -> void :
 	pass
@@ -820,9 +819,10 @@ func play_hit_tween(direction: Vector2):
 	_hit_squash = 1.0
 
 	_hit_recoil = direction.normalized() * 3.0 / maxf(body_scale, 0.4)
-	sprite_2d.self_modulate = preload("res://script/visual_style.gd").HIT_FLASH
-	_hit_flash_left = 0.1
-	set_process(true)
+	# The pooled silhouette now supplies white; keep status tint underneath intact.
+	sprite_2d.self_modulate = _poison_tint
+	_hit_flash_left = 0.0
+	set_process(false)
 
 func take_damage(damage_value: float) -> void :
 	AudioManager.play_enemy_hurt()

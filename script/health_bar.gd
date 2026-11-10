@@ -71,14 +71,10 @@ func _apply_shield_layout() -> void :
 	shield_fill.size = Vector2(sh_w, maxf(size.y, 4.0))
 
 func _ready() -> void :
-	add_theme_stylebox_override("background",GamePalette.surface(GamePalette.UI_GREY_COOLDOWN,GamePalette.INK,1))
-	demage_bar.add_theme_stylebox_override("background",GamePalette.surface(GamePalette.UI_GREY_COOLDOWN,GamePalette.INK,1))
-	add_theme_stylebox_override("fill", GamePalette.surface(GamePalette.HEALTH_WHITE, GamePalette.INK, 1))
-	demage_bar.add_theme_stylebox_override("fill", GamePalette.surface(GamePalette.UI_GREY_BORDER, GamePalette.INK, 1))
 	shield_fill = ColorRect.new()
 	shield_fill.name = "ShieldFill"
 	shield_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	shield_fill.color = GamePalette.alpha(GamePalette.SHIELD_YELLOW, 0.95)
+	shield_fill.color = Color(0.98, 0.84, 0.18, 0.95)
 	shield_fill.visible = false
 	shield_fill.z_index = 1
 	add_child(shield_fill)

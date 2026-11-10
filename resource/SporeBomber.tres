@@ -12,6 +12,7 @@ damage = 1.0
 archetype = 3
 move_speed = 34.0
 body_scale = 1.15
+marker_color = Color(0.95, 0.5, 0.8, 1)
 preferred_range = 215.0
 projectile_damage = 30.0
 attack_cooldown = 4.6

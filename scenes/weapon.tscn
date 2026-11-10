@@ -68,6 +68,7 @@ point_count = 2
 
 [sub_resource type="Gradient" id="Gradient_2sme0"]
 offsets = PackedFloat32Array(0, 0.559574, 1)
+colors = PackedColorArray(0.913725, 0, 0, 1, 1, 0.984314, 0.317647, 1, 0.329412, 1, 1, 1)
 
 [node name="Weapon" type="Node2D" unique_id=782294834]
 script = ExtResource("1")
@@ -105,6 +106,7 @@ initial_velocity_min = 125.37
 initial_velocity_max = 200.0
 scale_amount_min = 2.0
 scale_amount_max = 6.0
+color = Color(0.421023, 0.661914, 0.8759, 1)
 
 [node name="CoolDownTimer" type="Timer" parent="." unique_id=1708898903]
 wait_time = 0.064

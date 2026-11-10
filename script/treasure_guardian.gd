@@ -18,11 +18,8 @@ func configure_guardian(hp: float, attack_damage: float) -> void :
 	contact_damage = attack_damage * 0.65
 	contact_cooldown = 1.0
 	slam_damage = attack_damage
-	base_modulate = Color.WHITE
-	_semantic_kind = &"treasure_guardian"
-	var body := get_node_or_null("Sprite2D") as Sprite2D
-	if body != null: body.material = GamePalette.ramp_material(&"enemy:treasure_guardian")
-	marker_color = GamePalette.ENEMY_TELEGRAPH_EDGE
+	base_modulate = Color(1.15, 0.9, 0.48)
+	marker_color = Color(1.0, 0.82, 0.3)
 
 func _physics_process(delta: float) -> void :
 	if _death_started:
@@ -54,12 +51,12 @@ func _draw() -> void :
 	var radius: = SLAM_RADIUS / body_scale
 	if warning_left > 0.0 or impact_left > 0.0:
 		var active: = impact_left > 0.0
-		draw_circle(Vector2.ZERO, radius, GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_FILL,0.4 if active else 0.3))
-		draw_arc(Vector2.ZERO, radius, 0, TAU, 64, GamePalette.BLACK, 3.0, true)
-		draw_arc(Vector2.ZERO, radius, 0, TAU, 64, GamePalette.ENEMY_TELEGRAPH_EDGE, 1.5, true)
-		draw_arc(Vector2.ZERO, radius * (1.0 - warning_left / 0.85), 0, TAU, 64, GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_INNER,0.7), 1.0, true)
+		draw_circle(Vector2.ZERO, radius, Color(1.0, 0.12, 0.08, 0.4 if active else 0.2))
+		draw_arc(Vector2.ZERO, radius, 0, TAU, 64, Color(0.02, 0.015, 0.02), 3.0, true)
+		draw_arc(Vector2.ZERO, radius, 0, TAU, 64, Color(1.0, 0.3, 0.18), 1.5, true)
+		draw_arc(Vector2.ZERO, radius * (1.0 - warning_left / 0.85), 0, TAU, 64, Color(1.0, 0.8, 0.6, 0.7), 1.0, true)
 
-	draw_arc(Vector2.ZERO, 15.0, 0, TAU, 48, GamePalette.alpha(GamePalette.ENEMY_ORANGE,0.8), 1.0, true)
-	draw_colored_polygon(PackedVector2Array([Vector2(-8, -17), Vector2(-9, -24), Vector2(-4, -21), Vector2(0, -27), Vector2(4, -21), Vector2(9, -24), Vector2(8, -17)]), GamePalette.ENEMY_RUST)
-	draw_rect(Rect2(-22, -34, 44, 5), GamePalette.UI_PANEL)
-	draw_rect(Rect2(-21, -33, 42.0 * clampf(health / max_health, 0, 1), 3), GamePalette.ENEMY_ORANGE)
+	draw_arc(Vector2.ZERO, 15.0, 0, TAU, 48, Color(1.0, 0.78, 0.2, 0.8), 1.0, true)
+	draw_colored_polygon(PackedVector2Array([Vector2(-8, -17), Vector2(-9, -24), Vector2(-4, -21), Vector2(0, -27), Vector2(4, -21), Vector2(9, -24), Vector2(8, -17)]), Color(1.0, 0.82, 0.25))
+	draw_rect(Rect2(-22, -34, 44, 5), Color(0.03, 0.025, 0.035))
+	draw_rect(Rect2(-21, -33, 42.0 * clampf(health / max_health, 0, 1), 3), Color(1.0, 0.76, 0.18))

@@ -14,7 +14,28 @@ const PARTS_PER_STAIN := 8
 const AIR_SECONDS := 0.42
 const SIZE_MULTIPLIER := 2.0
 # Stable species pigments, independent of hit flashes, status and killing weapon.
-const PALETTE := GamePalette.INK_PIGMENTS
+const PALETTE := {
+	&"chaser": Color("ff52ce"),
+	&"chaser_brute": Color("a47cff"),
+	&"dasher": Color("ff9b52"),
+	&"tank": Color("5e8fff"),
+	&"ranged": Color("40e6ee"),
+	&"blade_mantis": Color("8cffbc"),
+	&"boomerang_imp": Color("ff6de0"),
+	&"spore_bomber": Color("779dff"),
+	&"loot_courier": Color("f68cf0"),
+	&"treasure_guardian": Color("d6f25b"),
+	&"charger_boss": Color("ff70a6"),
+	&"knight": Color("a0a4ff"),
+	&"tide": Color("55cfff"),
+	&"thunder": Color("e1a0ff"),
+	&"gale": Color("69f0c8"),
+	&"gale_ranged": Color("63f0b0"),
+	&"gale_melee": Color("b5ed74"),
+	&"aegis": Color("ffb47d"),
+	&"power_trial": Color("e6f582"),
+	&"speed_trial": Color("cc64ff"),
+}
 static var _atlas: Texture2D
 static var _material: ShaderMaterial
 
@@ -106,6 +127,7 @@ func _ready() -> void:
 	reset()
 
 func reset() -> void:
+	_wall_stamp = Time.get_ticks_usec()
 	for i in MAX_STAINS:
 		stamps[i].age = LIFETIME
 		_hide_stamp(i)
@@ -158,6 +180,7 @@ func splat(at: Vector2, tint: Color, direction: Vector2 = Vector2.ZERO, body_siz
 	_next = (_next+1)%MAX_STAINS
 	emitted += 1
 	multimesh.visible_instance_count = MAX_STAINS*PARTS_PER_STAIN
+	if not is_processing(): _wall_stamp = Time.get_ticks_usec()
 	set_process(true)
 	return true
 
@@ -211,9 +234,16 @@ func consume_along_segment(from: Vector2, to: Vector2, limit: int) -> int:
 		set_process(false)
 	return collected
 
-func _process(delta: float) -> void:
+var _wall_stamp := 0
+
+func _process(_delta: float) -> void:
+	var now := Time.get_ticks_usec()
+	var seconds := maxf(0,float(now-_wall_stamp)/1000000.0)
+	_wall_stamp = now
+	advance_real(seconds)
+
+func advance_real(seconds: float) -> void:
 	if get_tree().paused: return
-	var seconds := delta/maxf(Engine.time_scale,0.001)
 	_redraw_left -= seconds
 	var update := _redraw_left <= 0
 	if update: _redraw_left = 1.0/30.0

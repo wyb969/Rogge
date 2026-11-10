@@ -23,7 +23,6 @@ var _light_owner: Node
 var velocity: Vector2 = Vector2(10, 0)
 
 func _ready() -> void :
-	$Sprite2D.material = GamePalette.ramp_material(&"friendly")
 	add_to_group("player_projectile")
 	_light_owner = preload("res://script/combat_lighting.gd").find(self)
 	if _light_owner != null: _light_owner.register_bullet(self)

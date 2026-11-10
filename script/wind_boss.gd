@@ -4,7 +4,7 @@ enum Role{RANGED, MELEE}
 const WIND_BLADE: = preload("res://scenes/wind_blade.tscn")
 const ROLE_HP: = [2200.0, 2600.0]
 const ROLE_NAMES: = ["苍风术隼 · 远程", "疾羽猎隼 · 近程"]
-const ROLE_COLORS := [GamePalette.DANGER_RED,GamePalette.DANGER_ORANGE]
+const ROLE_COLORS: = [Color(0.38, 0.78, 1.0), Color(0.98, 0.85, 0.38)]
 var role: Role = Role.RANGED
 var coordinator: Node
 var _shots_fired: = 0

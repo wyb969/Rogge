@@ -5,7 +5,6 @@ extends RefCounted
 static func bind(control: Control) -> void :
 	if control == null:
 		return
-	if control is Button: GamePalette.apply_button(control)
 	control.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	control.pivot_offset = control.size * 0.5
 	if not control.resized.is_connected(_sync_pivot.bind(control)):
@@ -26,7 +25,7 @@ static func _on_enter(control: Control) -> void :
 		return
 	var hover_scale: = 1.03 if control is HSlider else 1.05
 	_tween_scale(control, Vector2(hover_scale, hover_scale))
-	control.modulate = GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 1)
+	control.modulate = Color(1.14, 1.22, 1.08, 1)
 	if control.get_meta("juicy_glow", false) and control is Button:
 		_apply_glow(control, false)
 
@@ -65,7 +64,7 @@ static func _follow_pointer(control: Control, _screen_pos: Vector2) -> void :
 	var local: = control.get_local_mouse_position()
 	var nx: = clampf(local.x / maxf(control.size.x, 1.0), 0.0, 1.0)
 	var ny: = clampf(local.y / maxf(control.size.y, 1.0), 0.0, 1.0)
-	control.modulate = Color.WHITE * (1.06 + nx * 0.08 + (1.0 - ny) * 0.06)
+	control.modulate = Color(1.06 + nx * 0.14, 1.1 + (1.0 - ny) * 0.12, 1.04, 1.0)
 	if control is Button:
 		control.rotation = (nx - 0.5) * 0.07
 		control.pivot_offset = control.size * 0.5
@@ -81,11 +80,11 @@ static func _tween_scale(control: Control, target: Vector2) -> void :
 
 static func _apply_glow(control: Button, pressed: bool) -> void :
 	var box: = StyleBoxFlat.new()
-	box.bg_color = GamePalette.alpha(GamePalette.UI_GREY_BASE, 1.0) if pressed else GamePalette.alpha(GamePalette.UI_GREY_BASE, 0.98)
+	box.bg_color = Color(0.12, 0.2, 0.28, 1.0) if pressed else Color(0.2, 0.36, 0.46, 0.98)
 	box.set_border_width_all(2)
-	box.border_color = GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 0.9)
+	box.border_color = Color(0.62, 0.95, 1.0, 0.9)
 	box.set_corner_radius_all(10)
-	box.shadow_color = GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 0.4 if pressed else 0.7)
+	box.shadow_color = Color(0.35, 0.78, 1.0, 0.4 if pressed else 0.7)
 	box.shadow_size = 6 if pressed else 16
 	box.content_margin_left = 10.0
 	box.content_margin_right = 10.0

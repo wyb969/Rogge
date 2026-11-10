@@ -2,7 +2,8 @@ extends Control
 
 
 const SEGMENTS: = 64
-const COOLING: = GamePalette.UI_GREY_COOLDOWN
+const COOLING: = Color(GamePalette.UI_GREY_DARK, 0.94)
+const READY_FILL := Color(GamePalette.UI_GREY, 0.94)
 var progress: = 1.0
 var available: = true
 var _circle: = PackedVector2Array()
@@ -87,14 +88,12 @@ func _rebuild_fill() -> void :
 
 func _draw() -> void :
 	draw_set_transform(size * 0.5, 0, Vector2.ONE * visual_scale * (1.06 if _pressed else 1.0))
-	var glow := maxf(ready_glow * 0.5, 0.3 if _pressed else 0.0)
-	draw_circle(Vector2.ZERO, _radius, GamePalette.alpha(GamePalette.UI_GREY_BASE.lerp(GamePalette.UI_GREY_ACTIVE, glow), 0.45))
-	if not available: draw_circle(Vector2.ZERO, _radius, GamePalette.alpha(COOLING, 0.65))
+	draw_circle(Vector2.ZERO, _radius, READY_FILL if available else COOLING)
 	if not available and _fill.size() >= 3:
-		draw_colored_polygon(_fill, GamePalette.alpha(GamePalette.UI_GREY_BASE, 0.8))
+		draw_colored_polygon(_fill, READY_FILL)
 		var level: = _radius * (1.0 - 2.0 * progress)
 		var half_width: = sqrt(maxf(0, _radius * _radius - level * level))
-		draw_line(Vector2( - half_width, level), Vector2(half_width, level), GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, 0.65), 1.5, true)
-	draw_arc(Vector2.ZERO, _radius, 0, TAU, SEGMENTS, GamePalette.alpha(GamePalette.UI_GREY_BORDER.lerp(GamePalette.UI_GREY_ACTIVE, glow), 0.65), 2.5, true)
+		draw_line(Vector2( - half_width, level), Vector2(half_width, level), Color(GamePalette.UI_GREY_ACTIVE, 0.9), 1.5, true)
+	draw_arc(Vector2.ZERO, _radius, 0, TAU, SEGMENTS, GamePalette.UI_GREY_ACTIVE if available else GamePalette.UI_GREY_BORDER, 2.5, true)
 	if ready_glow > 0:
-		draw_arc(Vector2.ZERO, _radius + 3, 0, TAU, SEGMENTS, GamePalette.alpha(GamePalette.UI_GREY_ACTIVE, ready_glow * 0.8), 2, true)
+		draw_arc(Vector2.ZERO, _radius + 3, 0, TAU, SEGMENTS, Color(GamePalette.UI_GREY_ACTIVE, ready_glow * 0.8), 2, true)

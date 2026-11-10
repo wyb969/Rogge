@@ -4,20 +4,24 @@
 [ext_resource type="Script" uid="uid://c862q5tfe3hnq" path="res://script/dash_button.gd" id="2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_base"]
+bg_color = Color(0.22, 0.24, 0.27, 0.4)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
+border_color = Color(0.72, 0.75, 0.78, 0.7)
 corner_radius_top_left = 999
 corner_radius_top_right = 999
 corner_radius_bottom_right = 999
 corner_radius_bottom_left = 999
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knob"]
+bg_color = Color(0.55, 0.58, 0.62, 0.78)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
+border_color = Color(0.9, 0.91, 0.93, 0.9)
 corner_radius_top_left = 999
 corner_radius_top_right = 999
 corner_radius_bottom_right = 999
@@ -70,6 +74,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.92, 0.93, 0.95, 1)
 theme_override_font_sizes/font_size = 18
 text = "DASH"
 horizontal_alignment = 1

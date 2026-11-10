@@ -254,6 +254,8 @@ func _reset_skill_controllers() -> void :
 			actor.suspend_feedback()
 	var playground: = get_node_or_null("FeedbackPlayground")
 	if playground != null: playground.stop()
+	var motion_debug := get_node_or_null("MotionVfxDebug")
+	if motion_debug != null: motion_debug.stop()
 	AudioManager.stop_gun_audio()
 	if burn_spread: burn_spread.reset()
 	if combat_lighting: combat_lighting.reset()
@@ -753,6 +755,16 @@ func prepare_variety_debug() -> void :
 	variety.spawn_courier()
 	variety.notify("已装备踏风徽记 / 回响火种\n冲刺结束触发风压 · 击杀 8 个敌人触发回响")
 
+func prepare_motion_vfx_debug() -> void:
+	var sandbox := preload("res://script/motion_vfx_debug.gd").new()
+	sandbox.name = "MotionVfxDebug"
+	add_child(sandbox)
+
+func prepare_hitstop_debug() -> void:
+	var sandbox := preload("res://script/hitstop_debug.gd").new()
+	sandbox.name = "MotionVfxDebug"
+	add_child(sandbox)
+
 func prepare_ink_surf_debug() -> void:
 	variety.notify("彩墨冲浪：向右冲刺，掠过3处溅痕\n终点60伤害+击退 · 6秒冷却 · 无需选卡")
 	ink_surf.enable_debug_training()
@@ -873,7 +885,7 @@ func prepare_growth_debug(both: bool = false) -> void:
 		for id in EQUIPMENT_COMBOS.ARSENAL_MEMBERS: _on_upgrade_selected(id)
 	player.player_health = player.max_player_health - 60.0
 	player.health_bar.set_health(player.player_health)
-	variety.notify("生机组合：经验+30%% · 移速/回复+20%%\n%s" % ("两组图标已激活：浅蓝 / 护盾黄色同步流光" if both else "右侧拾取、移速、回复图标：浅蓝同步流光"))
+	variety.notify("生机组合：经验+30%% · 移速/回复+20%%\n%s" % ("两组图标已激活：荧光绿 / 金色同步流光" if both else "右侧拾取、移速、回复图标：荧光绿同步流光"))
 
 func _show_next_reward() -> void :
 	if _death_presented or player.player_health <= 0.0 or process_mode == Node.PROCESS_MODE_DISABLED:

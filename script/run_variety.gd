@@ -42,15 +42,15 @@ func _ready() -> void :
 	_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_notice.add_theme_color_override("font_color", GamePalette.FRIENDLY_LIGHT)
-	_notice.add_theme_color_override("font_outline_color", GamePalette.INK)
+	_notice.add_theme_color_override("font_color", Color(0.68, 1, 0.94))
+	_notice.add_theme_color_override("font_outline_color", Color(0.02, 0.035, 0.06))
 	_notice.add_theme_constant_override("outline_size", 3)
 	_hud.add_child(_notice)
 	_charge_label = Label.new()
 	_charge_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_charge_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_charge_label.add_theme_color_override("font_color", GamePalette.FRIENDLY_CYAN)
-	_charge_label.add_theme_color_override("font_outline_color", GamePalette.INK)
+	_charge_label.add_theme_color_override("font_color", Color(1, 0.79, 0.56))
+	_charge_label.add_theme_color_override("font_outline_color", Color(0.02, 0.035, 0.06))
 	_charge_label.add_theme_constant_override("outline_size", 3)
 	_hud.add_child(_charge_label)
 	get_viewport().size_changed.connect(_fit)
@@ -120,6 +120,8 @@ func _refresh_charge() -> void :
 	_charge_label.visible = echo_level > 0 and _notice_left <= 0
 
 func clear_combat_effects() -> void :
+	if game.get("combat_feedback") != null and game.combat_feedback.impact_feedback != null:
+		game.combat_feedback.impact_feedback.clear_combat_effects()
 	if game.get("enemy_attacks")!=null: game.enemy_attacks.clear_combat_effects()
 	if game.get("ink_surf")!=null: game.ink_surf.clear_combat_effects()
 	if game.get("combat_feedback") != null and game.combat_feedback.death_stains != null:
@@ -202,7 +204,7 @@ func _hit_area(at: Vector2, stats: Dictionary, wind: bool) -> void :
 	queue_redraw()
 	for actor in CombatTargets.in_radius(at, stats.radius * stats.radius, game):
 		actor.apply_hit({"damage": stats.damage, "direction": (actor.global_position - at).normalized(), "effect": "wind_emblem" if wind else "echo_ember", "source": self})
-	game.combat_feedback.spray(at, Vector2.ZERO, GamePalette.FRIENDLY_CYAN if wind else GamePalette.FRIENDLY_CYAN, 8, 68)
+	game.combat_feedback.spray(at, Vector2.ZERO, Color(0.5, 1, 0.95) if wind else Color(1, 0.68, 0.4), 8, 68)
 	AudioManager.play_juice("dash" if wind else "kill")
 
 func spawn_courier() -> Node2D:
@@ -239,7 +241,7 @@ func _draw() -> void :
 	for pulse in _pulses:
 		if pulse.left <= 0: continue
 		var alpha: float = pulse.left / 0.32
-		var tint: = GamePalette.FRIENDLY_CYAN if pulse.wind else GamePalette.FRIENDLY_CYAN
+		var tint: = Color(0.45, 1, 0.91) if pulse.wind else Color(1, 0.65, 0.38)
 		var at: Vector2 = to_local(pulse.at)
 
 		draw_arc(at, pulse.radius, 0, TAU, 40, Color(tint, alpha * 0.3), 1.0, false)

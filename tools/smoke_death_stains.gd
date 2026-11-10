@@ -155,17 +155,17 @@ func _run() -> void:
 	camera.force_update_scroll()
 	_expect(stains.stamps[0].at==position and stains.to_global(position)==Vector2(100,80), "camera motion cannot drag world-bound blood")
 	var alpha: float = stains.opacity_at(stains.stamps[0].age)
-	stains._process(1.9)
+	stains.advance_real(1.9)
 	_expect(stains.opacity_at(stains.stamps[0].age)==alpha and stains.active_count==1, "stain stays opaque for the two-second hold")
 	paused=true
-	stains._process(10)
+	stains.advance_real(10)
 	_expect(is_equal_approx(stains.stamps[0].age,1.9), "pause freezes stain age")
 	paused=false
 	Engine.time_scale=0.1
-	stains._process(0.02)
+	stains.advance_real(0.2)
 	Engine.time_scale=1
 	_expect(stains.opacity_at(stains.stamps[0].age)<alpha and stains.opacity_at(stains.stamps[0].age)>0, "blood fades after2s even during hitstop")
-	stains._process(0.5)
+	stains.advance_real(0.5)
 	_expect(stains.active_count==0 and stains.multimesh.visible_instance_count==0 and not stains.is_processing(), "stain vanishes by2.5s and renderer sleeps")
 	stains.splat(Vector2.ZERO,Color.RED)
 	game.variety.clear_combat_effects()

@@ -110,7 +110,7 @@ var _hurt_tween: Tween
 var _hurt_punch: = 0.0
 
 func _ready() -> void :
-	animated_sprite_2d.material = GamePalette.ramp_material(&"player")
+	GamePalette.paint_actor(animated_sprite_2d, &"player")
 	# Retain the old emitter node/API for saved scenes, but never emit walking quads.
 	cpu_particles_2d.emitting = false
 	cpu_particles_2d.hide()
@@ -427,6 +427,7 @@ func is_dash_invulnerable() -> bool:
 
 func _cancel_dash() -> void :
 	dashing = false
+	_dash_ghost_distance = 0.0
 	dash_grace_left = 0
 	dashing_timer.stop()
 	shadow_timer.stop()
@@ -526,6 +527,24 @@ func _physics_process(delta: float) -> void :
 	var before_move := global_position
 	move_and_slide()
 	_update_locomotion(global_position - before_move, delta)
+	if dashing: _emit_dash_ghosts(before_move, global_position)
+
+const DASH_GHOST_SPACING := 18.0
+var _dash_ghost_distance := 0.0
+
+func _emit_dash_ghosts(before: Vector2, after: Vector2) -> void:
+	var distance := before.distance_to(after)
+	if distance <= 0.001: return
+	var feedback := JUICE.find(self)
+	var sprite_offset := animated_sprite_2d.global_position - global_position
+	var along := DASH_GHOST_SPACING - _dash_ghost_distance
+	# Bounded even after a teleport/long physics step. Walking never enters here.
+	var emitted := 0
+	while along <= distance and emitted < 4:
+		if feedback != null: feedback.ghost(animated_sprite_2d, before.lerp(after, along / distance) + sprite_offset)
+		along += DASH_GHOST_SPACING
+		emitted += 1
+	_dash_ghost_distance = fposmod(_dash_ghost_distance + distance, DASH_GHOST_SPACING)
 
 func _start_dash(input_direction: Vector2) -> void :
 	if movement_locked or not can_dash or player_health <= 0: return
@@ -548,9 +567,14 @@ func _start_dash(input_direction: Vector2) -> void :
 	velocity = dash_direction * DASH_SPEED
 	dashing_timer.start()
 	can_dasing_timer.start()
-	shadow_timer.start()
+	shadow_timer.stop() # Compatibility timer remains callable; the trail uses actual distance.
+	_dash_ghost_distance = 0.0
+	playAnimation(dash_direction)
+	animated_sprite_2d.set_frame_and_progress(1, 0)
 	var feedback: = JUICE.find(self)
-	if feedback != null: feedback.dash(global_position, dash_direction)
+	if feedback != null:
+		feedback.dash(global_position, dash_direction)
+		feedback.ghost(animated_sprite_2d)
 	dash_started.emit(global_position)
 
 func _sync_dash_hurt_area() -> void :
@@ -640,6 +664,7 @@ func receive_attack(amount: float, _source: Node = null) -> void :
 		if is_instance_valid(_source) and _source is Node2D:
 			direction = (_source.global_position - global_position).normalized()
 		feedback.hurt(global_position, direction, hp_loss <= 0)
+		if hp_loss > 0: feedback.impact_feedback.pulse(self,animated_sprite_2d,true)
 	player_health = max(0.0, player_health - hp_loss)
 	health_bar.set_health(player_health)
 	_sync_shield_visuals()
@@ -654,11 +679,8 @@ func get_hit() -> void :
 func play_hit_tween() -> void :
 	_hurt_punch = 1.0
 	if _hurt_tween != null and _hurt_tween.is_valid(): _hurt_tween.kill()
-	animated_sprite_2d.modulate = GamePalette.ENEMY_PROJECTILE
-	_hurt_tween = create_tween().set_loops(2)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.06)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", GamePalette.ENEMY_PROJECTILE.lerp(GamePalette.WHITE,0.35), 0.04)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.04)
+	# The shared silhouette overlay supplies pale red without multiplying dark art.
+	animated_sprite_2d.modulate = Color.WHITE
 
 func die() -> void :
 	player_died.emit()

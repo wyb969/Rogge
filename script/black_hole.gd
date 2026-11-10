@@ -154,18 +154,18 @@ func _draw() -> void:
 	var fade := minf(minf(1.0, age / 0.2), _left / 0.3)
 	var center := to_local(_center)
 	var radius: float = _stats.radius
-	draw_circle(center, radius, GamePalette.alpha(GamePalette.INK, 0.13 * fade))
-	draw_arc(center, radius, age * 0.35, age * 0.35 + TAU * 0.86, 38, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, 0.3 * fade), 1.0)
+	draw_circle(center, radius, Color(0.08, 0.07, 0.16, 0.13 * fade))
+	draw_arc(center, radius, age * 0.35, age * 0.35 + TAU * 0.86, 38, Color(0.58, 0.56, 0.81, 0.3 * fade), 1.0)
 	for arm in 4:
 		for i in _spiral.size():
 			var t := float(i) / float(_spiral.size() - 1)
 			var angle := float(arm) * PI * 0.5 + age * 2.0 + t * 2.3
 			_spiral[i] = center + Vector2.RIGHT.rotated(angle) * lerpf(11.0, radius * 0.9, t)
-		draw_polyline(_spiral, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, 0.34 * fade), 1.25)
-	draw_circle(center, 13.0 + sin(age * 5.0) * 1.0, GamePalette.alpha(GamePalette.INK, fade))
-	draw_arc(center, 15.5, age * 2.2, age * 2.2 + TAU * 0.83, 24, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, 0.85 * fade), 2.0)
+		draw_polyline(_spiral, Color(0.63, 0.61, 0.86, 0.34 * fade), 1.25)
+	draw_circle(center, 13.0 + sin(age * 5.0) * 1.0, Color(0.035, 0.035, 0.08, fade))
+	draw_arc(center, 15.5, age * 2.2, age * 2.2 + TAU * 0.83, 24, Color(0.77, 0.73, 0.97, 0.85 * fade), 2.0)
 	for mote in 7:
 		var phase := fposmod(age * 0.52 + float(mote) / 7.0, 1.0)
 		var angle := float(mote) * 2.39996 + age * 1.8
 		var at := center + Vector2.RIGHT.rotated(angle) * lerpf(radius, 15.0, phase)
-		draw_rect(Rect2(at, Vector2(2, 2)), GamePalette.alpha(GamePalette.PLAYER_ATTACK,fade * sin(phase * PI) * 0.65))
+		draw_rect(Rect2(at, Vector2(2, 2)), Color(0.73, 0.7, 0.94, fade * sin(phase * PI) * 0.65))

@@ -2,6 +2,7 @@ extends Control
 
 # Only recent interactive tests live here. Older presets remain callable by smoke tests.
 const RECENT_ORDER: Array[String] = [
+	"DebugMotionVfxButton",
 	"DebugWoodenTrialButton",
 	"DebugInkSurfButton",
 	"DebugTacticalEnemiesButton",

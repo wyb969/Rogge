@@ -108,6 +108,10 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugMotionVfxButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "动态表现 · 彩墨 / 残影 / 投弹"
+
 [node name="DebugWoodenTrialButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "木头人挑战 · 60秒怪潮"
@@ -192,6 +196,7 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/MenuCenter/VBoxContainer/SettingButton" to="." method="_on_setting_button_pressed"]
 [connection signal="pressed" from="mainUI/Control/MenuCenter/VBoxContainer/DebugButton" to="." method="_on_debug_button_pressed"]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugWoodenTrialButton" to="." method="_launch_run" binds= [&"trial_wooden"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugMotionVfxButton" to="." method="_launch_run" binds= [&"motion_vfx"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugInkSurfButton" to="." method="_launch_run" binds= [&"ink_surf"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugTacticalEnemiesButton" to="." method="_launch_run" binds= [&"tactical_enemies"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugFanButton" to="." method="_launch_run" binds= [&"fan"]]

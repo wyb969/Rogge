@@ -47,7 +47,7 @@ func unlock(index: int) -> void :
 	unlocked.sort()
 	selected = index
 	var button: = SKILL_ICON.new()
-	button.configure(load("res://assest/sprites/beasts/skill_%s.svg" % IDS[index]), GamePalette.UI_GREY_ACTIVE)
+	button.configure(load("res://assest/sprites/beasts/skill_%s.svg" % IDS[index]), GamePalette.SKILL_ACCENTS[index])
 	button.tooltip_text = TITLES[index] + "\n" + description_for(index) + "\n点击直接释放 / E 释放当前 / Q 键切换"
 	button.pressed.connect(cast.bind(index))
 	_column.add_child(button)
@@ -254,7 +254,7 @@ func open_reward(stage: int, final: bool) -> void :
 	_reward.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_reward)
 	var dim: = ColorRect.new()
-	dim.color = Color(0.015, 0.025, 0.045, 0.95)
+	dim.color = GamePalette.alpha(GamePalette.UI_PANEL,0.95)
 	_reward.add_child(dim)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var center: = CenterContainer.new()

@@ -68,13 +68,14 @@ func get_touch_damage() -> float:
 	return 95.0 if fight_stage >= 2 else 60.0
 
 func _ready() -> void :
+	sprite_2d.material = GamePalette.ramp_material(&"enemy:charger_boss")
 	if fight_stage >= 2:
 		health_max_value = 3600.0
 		charge_speed = 760.0
 		rush_ready_time = 0.42
 		if rush_timer:
 			rush_timer.wait_time = 0.7
-		sprite_2d.modulate = Color(1.2, 0.75, 1.3, 1.0)
+		sprite_2d.modulate = Color.WHITE
 		sprite_2d.scale *= 1.06
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = sprite_2d.modulate
@@ -338,8 +339,10 @@ func _apply_phase2_outline() -> void :
 
 	if sprite_2d == null:
 		return
-	if not (sprite_2d.material is ShaderMaterial):
+	if not (sprite_2d.material is ShaderMaterial) or sprite_2d.material.shader != preload("res://shaders/enemy.gdshader"):
 		sprite_2d.material = load("res://shaders/rainbow_outline.tres").duplicate()
+	GamePalette.configure_enemy_material(sprite_2d.material,GamePalette.enemy_color_for(_death_stain_kind()))
+	sprite_2d.material.set_shader_parameter("outline_color",GamePalette.ENEMY_TELEGRAPH_EDGE)
 	_sync_outline_frame_uv()
 
 func _sync_outline_frame_uv() -> void :
@@ -369,7 +372,7 @@ func _play_hit_deform(hit_dir: Vector2) -> void :
 	if hurt_tween != null and hurt_tween.is_valid():
 		hurt_tween.kill()
 
-	sprite_2d.modulate = Color(1.45, 1.45, 1.35)
+	sprite_2d.modulate = GamePalette.HIT_FLASH
 	var squash: = Vector2(
 		base_sprite_scale.x * (1.0 + absf(hit_dir.x) * 0.18), 
 		base_sprite_scale.y * (1.0 - absf(hit_dir.x) * 0.1 + absf(hit_dir.y) * 0.14)
@@ -455,8 +458,8 @@ func start_defeat_sequence() -> void :
 
 
 	Engine.time_scale = 0.06
-	sprite_2d.modulate = Color(3.0, 3.0, 3.0, 1.0)
-	_spawn_death_burst(28, Color(1.0, 1.0, 1.0, 1.0))
+	sprite_2d.modulate = GamePalette.BRIGHT_FLASH
+	_spawn_death_burst(28, Color.WHITE)
 	await get_tree().create_timer(0.21, true, false, true).timeout
 
 
@@ -478,7 +481,7 @@ func _play_defeat_deform() -> void :
 	hurt_tween.set_parallel(true)
 	hurt_tween.tween_property(sprite_2d, "scale", base_sprite_scale * Vector2(1.35, 0.55), 0.17)\
 	.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	hurt_tween.tween_property(sprite_2d, "modulate", Color(1.0, 0.35, 0.2, 1.0), 0.13)
+	hurt_tween.tween_property(sprite_2d, "modulate", GamePalette.ENEMY_ORANGE, 0.13)
 	hurt_tween.set_parallel(false)
 	hurt_tween.tween_property(sprite_2d, "scale", base_sprite_scale * Vector2(0.35, 1.45), 0.23)\
 	.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)

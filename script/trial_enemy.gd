@@ -30,6 +30,7 @@ func configure_trial(value: String, host: Node) -> void :
 
 func _ready() -> void :
 	super._ready()
+	sprite_2d.material = GamePalette.ramp_material(&"enemy:power_trial" if kind == "power" else &"enemy:speed_trial")
 	health_max_value = 5000.0 if kind == "power" else 2600.0
 	boss_current_health = health_max_value
 	health_bar.init_health(health_max_value)
@@ -201,7 +202,7 @@ func _draw() -> void :
 	if is_dying:
 		return
 	draw_set_transform(Vector2(0, 42), 0, Vector2(1, 0.3))
-	draw_circle(Vector2.ZERO, 42, GamePalette.alpha(GamePalette.INK, 0.4))
+	draw_circle(Vector2.ZERO, 42, GamePalette.SHADOW)
 	draw_set_transform(Vector2.ZERO)
 	if kind == "power":
 		if trial_state == TrialState.TRACK:

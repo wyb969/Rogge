@@ -10,7 +10,7 @@ var line: Line2D
 func _ready():
 	line = Line2D.new()
 	line.width = 3
-	line.default_color = Color(0.7, 0.5, 1.0)
+	line.default_color = GamePalette.PLAYER_ATTACK
 	add_child(line)
 
 

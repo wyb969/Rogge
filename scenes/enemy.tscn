@@ -231,7 +231,6 @@ angular_velocity_max = 45.0
 angle_max = 50.0
 scale_amount_min = 4.0
 scale_amount_max = 6.0
-color = Color(0.909804, 0.823529, 0, 1)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1951763120]
 z_index = 1
@@ -241,7 +240,6 @@ animation = &"walk"
 autoplay = "walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1486814297]
-modulate = Color(0.380392, 0.396078, 0.423529, 1)
 position = Vector2(0, 2.5)
 shape = SubResource("RectangleShape2D_gdygc")
 

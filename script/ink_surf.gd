@@ -32,7 +32,7 @@ func _ready() -> void:
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	UiFonts.apply_to_label(_caption,9,true)
 	_caption.add_theme_color_override("font_color",GamePalette.FRIENDLY_LIGHT)
-	_caption.add_theme_color_override("font_outline_color",Color("172536"))
+	_caption.add_theme_color_override("font_outline_color",GamePalette.BLACK)
 	_caption.add_theme_constant_override("outline_size",2)
 	add_child(_caption)
 	game.player.dash_started.connect(_on_dash_started)
@@ -161,13 +161,13 @@ func _draw() -> void:
 	var player_at := to_local(game.player.global_position)
 	if charge>0 or _tracking or cooldown>0:
 		for i in REQUIRED:
-			var tint := GamePalette.FRIENDLY_CYAN if i<charge else Color("233845")
+			var tint := GamePalette.FRIENDLY_CYAN if i<charge else GamePalette.UI_GREY_COOLDOWN
 			var size := 2.8+_gain_left*5 if i<charge else 2.8
 			var center := player_at+Vector2((i-1)*9,27)
-			draw_rect(Rect2(center-Vector2.ONE*(size+1),Vector2.ONE*(size+1)*2),Color("111c29"))
+			draw_rect(Rect2(center-Vector2.ONE*(size+1),Vector2.ONE*(size+1)*2),GamePalette.UI_PANEL)
 			draw_rect(Rect2(center-Vector2.ONE*size,Vector2.ONE*size*2),tint)
 		if cooldown>0:
-			draw_line(player_at+Vector2(-14,48),player_at+Vector2(14,48),Color("162532"),2)
+			draw_line(player_at+Vector2(-14,48),player_at+Vector2(14,48),GamePalette.UI_BUTTON,2)
 			draw_line(player_at+Vector2(-14,48),player_at+Vector2(-14+28*(1-cooldown/COOLDOWN),48),GamePalette.FRIENDLY_CYAN,2)
 	if _pulse_left>0:
 		var t := 1-_pulse_left/PULSE_SECONDS

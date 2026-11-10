@@ -3,7 +3,7 @@ extends Node
 # Isolated visual fixture. Use tools/preview_palette.tscn as a QA entry; normal game scenes never invoke it.
 var main: Node
 var game: Node
-var backgrounds := [0,4,9]
+var backgrounds := [0,4,9] # teal moss, warm earth, dark violet
 var background_index := 0
 var held := {}
 var card_group := 0

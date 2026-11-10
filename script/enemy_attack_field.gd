@@ -185,10 +185,11 @@ func _draw() -> void:
 		var progress := clampf(slot.age/slot.windup,0,1)
 		if slot.kind==&"cleave":
 			draw_set_transform(to_local(slot.origin),slot.heading.angle())
-			draw_colored_polygon(_sector,GamePalette.alpha(GamePalette.DANGER_RED, 0.17+0.15*progress if warning else 0.48))
+			draw_colored_polygon(_sector,GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_FILL, 0.30 if warning else 0.48))
 			draw_polyline(_border,INK,3,false)
-			draw_polyline(_border,DANGER,1.25,false)
-			if warning: draw_arc(Vector2.ZERO,SLASH_RADIUS*progress,-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,18,GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.7),1.5,false)
+			draw_polyline(_border,GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_EDGE,0.16),6,false)
+			draw_polyline(_border,GamePalette.ENEMY_TELEGRAPH_EDGE,1.8,false)
+			if warning: draw_arc(Vector2.ZERO,SLASH_RADIUS*progress,-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,18,GamePalette.ENEMY_TELEGRAPH_INNER,1.5,false)
 			else:
 				var swing := (slot.age-slot.windup)/0.18
 				draw_arc(Vector2.ZERO,SLASH_RADIUS*0.85,-SLASH_HALF_ANGLE+1.15*swing-0.35,-SLASH_HALF_ANGLE+1.15*swing+0.4,12,GamePalette.PLAYER_DAMAGE_WHITE,5,false)
@@ -208,9 +209,10 @@ func _draw() -> void:
 				draw_set_transform(Vector2.ZERO)
 		else:
 			var at := to_local(slot.target)
-			draw_circle(at,MORTAR_RADIUS,GamePalette.alpha(GamePalette.DANGER_RED, 0.14+0.14*progress if warning else 0.4))
+			draw_circle(at,MORTAR_RADIUS,GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_FILL, 0.30 if warning else 0.4))
 			draw_arc(at,MORTAR_RADIUS,0,TAU,32,INK,3,false)
-			draw_arc(at,MORTAR_RADIUS,0,TAU,32,DANGER,1.4,false)
+			draw_arc(at,MORTAR_RADIUS,0,TAU,32,GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_EDGE,0.16),6,false)
+			draw_arc(at,MORTAR_RADIUS,0,TAU,32,GamePalette.ENEMY_TELEGRAPH_EDGE,1.8,false)
 			if warning:
 				draw_arc(at,MORTAR_RADIUS*progress,0,TAU,24,GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.65),1.1,false)
 				var t := clampf((slot.age-0.25)/0.85,0,1)

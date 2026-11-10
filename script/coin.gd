@@ -26,7 +26,7 @@ var is_bezier_started: = false
 
 
 func _ready() -> void :
-	animated_sprite_2d.material = GamePalette.ramp_material(&"pickup")
+	animated_sprite_2d.material = GamePalette.ramp_material(&"coin")
 	add_to_group("xp_coin")
 	base_scale = scale
 

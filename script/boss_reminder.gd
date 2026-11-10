@@ -6,9 +6,9 @@ extends Node2D
 @onready var flash: ColorRect = $CanvasLayer / Flash
 
 @export var banner_text: String = "BOSS IS COMING!!!"
-@export var banner_color: Color = Color(1.0, 0.82, 0.25, 1.0)
-@export var flash_tint: Color = Color(0.75, 0.05, 0.02, 1.0)
-@export var outline_color: Color = Color(0.55, 0.08, 0.05, 1.0)
+@export var banner_color: Color = GamePalette.ENEMY_TELEGRAPH_EDGE
+@export var flash_tint: Color = GamePalette.ENEMY_CRIMSON
+@export var outline_color: Color = GamePalette.BLACK
 @export var shake_strength: float = 14.0
 @export var shake_duration: float = 1.8
 @export var play_alarm: bool = true
@@ -110,8 +110,8 @@ func _play_banner_tween() -> void :
 	text_tw.tween_property(label, "scale", Vector2.ONE, 0.18)\
 	.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	for _i in 4:
-		text_tw.tween_property(label, "modulate", Color(1.25, 0.45, 0.25, 1.0), 0.07)
-		text_tw.tween_property(label, "modulate", Color(1.0, 0.88, 0.3, 1.0), 0.11)
+		text_tw.tween_property(label, "modulate", GamePalette.ENEMY_ORANGE, 0.07)
+		text_tw.tween_property(label, "modulate", GamePalette.ENEMY_TELEGRAPH_EDGE, 0.11)
 	text_tw.tween_interval(0.25)
 	text_tw.tween_property(label, "modulate:a", 0.0, 0.4)
 	await text_tw.finished

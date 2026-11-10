@@ -18,6 +18,9 @@ var is_death: bool = false
 
 
 func _ready() -> void :
+	animated_sprite_2d.material = GamePalette.ramp_material(&"enemy:chaser")
+	for child in get_children():
+		if child is CPUParticles2D: child.color = GamePalette.ENEMY_ORANGE
 	health_bar.init_health(health)
 
 func _physics_process(delta: float) -> void :
@@ -46,7 +49,7 @@ func play_hit_tween(direction: Vector2):
 	tween.set_loops(1)
 	tween.tween_property(self, "position", global_position, 0.1)
 	tween.tween_property(self, "position", global_position + direction * 8, 0.1)
-	tween.tween_property(animated_sprite_2d, "modulate", Color.RED, 0.2)
+	tween.tween_property(animated_sprite_2d, "modulate", GamePalette.ENEMY_PROJECTILE, 0.2)
 	tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.1)
 
 

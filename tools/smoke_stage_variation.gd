@@ -38,13 +38,13 @@ func _run() -> void :
 		_expect(sample.palette_id == second, "reapplying stages restores their cached colors")
 		last_opening = opening
 		sample.free()
-	_expect(seen_colors.size() == bg.PALETTE_TINTS.size(), "opening selection can reach every palette")
+	_expect(seen_colors.size() == 4, "opening selection reaches all four teal moss variants")
 	for color in bg.PALETTE_TINTS:
 		var values: Vector2 = bg._shader_mat.get_shader_parameter("ground_values")
 		var floor_color: Color = color * (values.x + values.y)
-		for highlight in [load("res://resource/Enemy_4.tres").marker_color, Color(0.2, 0.95, 0.48)]:
+		for highlight in [GamePalette.UI_TEXT, GamePalette.PICKUP_GREEN]:
 			var contrast: = (_luminance(highlight) + 0.05) / (_luminance(floor_color) + 0.05)
-			_expect(contrast >= 4.5, "bright projectiles and healing orbs contrast with every floor palette")
+			_expect(contrast >= 4.5, "white projectile cores and green experience pickups contrast with every floor palette")
 
 	var seen_themes: = {}
 	for _run_id in 64:
@@ -102,7 +102,7 @@ func _run() -> void :
 	spawner.timer.stop()
 	spawner.get_node("Elite").stop()
 	if failures.is_empty():
-		print("STAGE VARIATION OK: 12 safe colors, stable/repeat-free opening rolls, 3 primary themes, 75% share, stage transition and ranged caps")
+		print("STAGE VARIATION OK: 12 safe colors in three stage families, stable/repeat-free teal opening rolls, 3 primary themes, 75% share, stage transition and ranged caps")
 	else:
 		for failure in failures:
 			push_error(failure)

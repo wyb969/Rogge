@@ -24,7 +24,7 @@ func _ready() -> void :
 	if _shared_halo == null:
 		var gradient: = Gradient.new()
 		gradient.offsets = PackedFloat32Array([0.0, 0.35, 1.0])
-		gradient.colors = PackedColorArray([GamePalette.alpha(GamePalette.PICKUP_GREEN, 0.12), GamePalette.alpha(GamePalette.PICKUP_GREEN, 0.06), GamePalette.alpha(GamePalette.PICKUP_GREEN, 0)])
+		gradient.colors = PackedColorArray([GamePalette.alpha(GamePalette.HEAL_GREEN, 0.12), GamePalette.alpha(GamePalette.HEAL_GREEN, 0.06), GamePalette.alpha(GamePalette.HEAL_GREEN, 0)])
 		_shared_halo = GradientTexture2D.new()
 		_shared_halo.width = 64
 		_shared_halo.height = 64

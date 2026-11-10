@@ -43,8 +43,8 @@ func _run() -> void :
 	_expect(tank.body_scale > 1.6, "tank is large, scale=%s" % tank.body_scale)
 	_expect(dasher.deals_own_contact(), "dasher owns contact so player hurtbox does not double-hit")
 	_expect(_has_no_nameplate(dasher) and _has_no_nameplate(tank) and _has_no_nameplate(ranged) and _has_no_nameplate(chaser), "enemies have no floating name tags")
-	_expect(dasher.base_modulate.r > dasher.base_modulate.b, "dasher tint is warm")
-	_expect(tank.base_modulate.b > tank.base_modulate.r, "tank tint is cool")
+	_expect(dasher.sprite_2d.material.get_shader_parameter("main_color") == GamePalette.ENEMY_ORANGE, "dasher tint is warm")
+	_expect(tank.sprite_2d.material.get_shader_parameter("main_color") == GamePalette.ENEMY_RUST, "tank uses rust enemy pigment")
 	_expect(dasher.move_wobble_hz() > chaser.move_wobble_hz(), "dasher wobbles faster than a chaser, hz=%s" % dasher.move_wobble_hz())
 	_expect(chaser.move_wobble_hz() > tank.move_wobble_hz() * 1.2, "tank wobbles slower than a chaser, tank=%s chaser=%s" % [tank.move_wobble_hz(), chaser.move_wobble_hz()])
 	_expect(dasher.move_wobble_hz() <= 3.4, "fast enemies stay under a manic wobble, hz=%s" % dasher.move_wobble_hz())
@@ -63,6 +63,7 @@ func _run() -> void :
 	var fragile: = _spawn(spawner, load("res://resource/Enemy_5.tres"), Vector2(400, -400))
 	fragile.setHealth(fragile.health * spawner.threat_hp_multiplier_for(30, 900.0, 20, 2))
 	fragile.set_elite_status()
+	_expect(fragile.sprite_2d.material.get_shader_parameter("outline_color") == GamePalette.ENEMY_TELEGRAPH_EDGE, "elite outline retains enemy affiliation rather than player cyan")
 	_expect(fragile.health <= 20.0, "late elite dasher stays at two base axe hits")
 	fragile.take_damage(10.0)
 	fragile.take_damage(10.0)
@@ -175,7 +176,7 @@ func _run() -> void :
 
 		var values: Vector2 = bg._shader_mat.get_shader_parameter("ground_values")
 		var floor_color: Color = bg.tint * (values.x + values.y)
-		var bullet_color: Color = load("res://resource/Enemy_4.tres").marker_color
+		var bullet_color: Color = GamePalette.UI_TEXT # Visible white core of the red enemy projectile.
 		var contrast: = (_luminance(bullet_color) + 0.05) / (_luminance(floor_color) + 0.05)
 		_expect(contrast >= 4.5, "stage %d projectile contrast %.2f" % [stage_num, contrast])
 	bg.apply_stage(2)

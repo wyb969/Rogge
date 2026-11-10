@@ -4,7 +4,7 @@ extends Node2D
 
 @export var ground_texture: Texture2D
 @export var decoration_texture: Texture2D
-@export var tint: Color = Color(0.227451, 0.321569, 0.415686, 1.0)
+@export var tint: Color = GamePalette.GROUND_MOSS_DARK
 @export var tile_size: float = 16.0
 @export var cover_margin: float = 1.45
 @export var decor_cell: float = 96.0
@@ -17,7 +17,7 @@ var _shader_mat: ShaderMaterial
 var _decor_sprites: Array[Sprite2D] = []
 var _decor_regions: Array[Rect2] = []
 var _decor_atlases: Array[AtlasTexture] = []
-var _decor_modulate: Color = Color(0.78, 0.84, 0.72, 0.95)
+var _decor_modulate: Color = Color.WHITE
 var stage_grade: float = 0.0
 var _coverage_half: = Vector2(-1, -1)
 var _coverage_center: = Vector2(INF, INF)
@@ -27,17 +27,11 @@ var decoration_rebuilds: = 0
 
 
 const PALETTE_NAMES: Array[String] = [
-	"Midnight", "Plum", "Deep teal", "Moss", "Warm slate", "Graphite", 
-	"Dusk blue", "Sage", "Mulberry", "Steel", "Olive", "Indigo", 
+	"Moss shadow", "Teal moss", "Cool moss", "Moss light",
+	"Warm earth", "Clay", "Umber", "Bark",
+	"Deep plum", "Dusk violet", "Night violet", "Mulberry",
 ]
-const PALETTE_TINTS: Array[Color] = [
-	Color(0.21, 0.25, 0.28), Color(0.26, 0.22, 0.27), 
-	Color(0.2, 0.28, 0.26), Color(0.24, 0.27, 0.21), 
-	Color(0.28, 0.25, 0.21), Color(0.25, 0.26, 0.28), 
-	Color(0.22, 0.23, 0.28), Color(0.23, 0.28, 0.25), 
-	Color(0.28, 0.22, 0.25), Color(0.21, 0.27, 0.28), 
-	Color(0.28, 0.27, 0.21), Color(0.24, 0.22, 0.28), 
-]
+const PALETTE_TINTS: Array[Color] = GamePalette.GROUND_PALETTES
 static var _last_opening_palette: int = -1
 var palette_id: int = 0
 var _stage_palettes: Dictionary = {}
@@ -56,6 +50,10 @@ func _setup_ground() -> void :
 	_shader_mat = ShaderMaterial.new()
 	_shader_mat.shader = shader
 	_shader_mat.set_shader_parameter("ground_values", preload("res://script/visual_style.gd").GROUND_VALUES)
+	_shader_mat.set_shader_parameter("noise_amount", GamePalette.GROUND_NOISE)
+	_shader_mat.set_shader_parameter("patch_amount", GamePalette.GROUND_PATCH)
+	_shader_mat.set_shader_parameter("vignette_amount", GamePalette.GROUND_VIGNETTE)
+	_shader_mat.set_shader_parameter("sun_color", GamePalette.WEATHER_HORIZON)
 	_shader_mat.set_shader_parameter("ground_tex", ground_texture)
 	_shader_mat.set_shader_parameter("atlas_tex_size", Vector2(128, 240))
 	_shader_mat.set_shader_parameter("tile_pixel_size", Vector2(16, 16))
@@ -90,6 +88,7 @@ func _setup_decor_pool() -> void :
 		spr.z_index = -10
 		decor_root.add_child(spr)
 		_decor_sprites.append(spr)
+		spr.material = GamePalette.ramp_material(&"grass")
 
 func _process(_delta: float) -> void :
 	_update_coverage()
@@ -172,7 +171,9 @@ func apply_stage(stage_num: int) -> void :
 	if not _stage_palettes.has(stage_i):
 		var previous: int = _last_opening_palette if stage_i == 1 else int(_stage_palettes.get(stage_i - 1, -1))
 		var choices: Array[int] = []
-		for idx in PALETTE_TINTS.size():
+		# One visual random draw, as before. Each stage family has four safe variants.
+		var family := (stage_i - 1) % 3
+		for idx in range(family * 4, family * 4 + 4):
 			if idx != previous:
 				choices.append(idx)
 		_stage_palettes[stage_i] = choices[randi() % choices.size()]
@@ -185,7 +186,11 @@ func _apply_palette(idx: int) -> void :
 	stage_grade = 1.0
 
 	var color: = PALETTE_TINTS[idx]
-	_decor_modulate = Color(color.r + 0.04, color.g + 0.04, color.b + 0.04, 0.5)
+	_decor_modulate = GamePalette.alpha(Color.WHITE, GamePalette.GROUND_DECOR_ALPHA)
+	for sprite in _decor_sprites:
+		sprite.material = GamePalette.ramp_material(&"grass")
+		# Muted scenery stays below actor brightness on the warmer/later floors too.
+		sprite.self_modulate = Color.WHITE if idx < 4 else color.lightened(0.16)
 	_decor_dirty = true
 	set_stage_tint(color)
 	if _shader_mat:

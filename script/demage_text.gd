@@ -17,7 +17,7 @@ func _ready() -> void :
 	add_to_group("damage_popup")
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.add_theme_constant_override("outline_size", 2)
-	label.add_theme_color_override("font_outline_color", Color(0.04, 0.06, 0.08))
+	label.add_theme_color_override("font_outline_color", GamePalette.BLACK)
 	label.add_theme_color_override("font_color", GamePalette.PLAYER_DAMAGE_WHITE)
 	UiFonts.apply_to_label(label, 11, true)
 

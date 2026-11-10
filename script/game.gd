@@ -470,7 +470,7 @@ func _show_death_veil() -> CanvasLayer:
 	add_child(layer)
 	var rect: = ColorRect.new()
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rect.color = Color(0.7, 0.05, 0.04, 0.34)
+	rect.color = GamePalette.alpha(GamePalette.ENEMY_CRIMSON,0.34)
 	layer.add_child(rect)
 	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	return layer

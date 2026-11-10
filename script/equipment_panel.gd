@@ -234,6 +234,7 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	icon_wrap.position = Vector2(6, 6)
 	icon_wrap.size = SLOT_SIZE
 	icon_wrap.mouse_filter = Control.MOUSE_FILTER_PASS
+	icon_wrap.add_theme_stylebox_override("panel",GamePalette.surface(GamePalette.UI_PANEL,GamePalette.icon_border_for(upgrade_id),0.8))
 
 	var icon: = TextureRect.new()
 	icon.custom_minimum_size = ICON_SIZE
@@ -264,7 +265,7 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	level_label.z_index = 2
 	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	level_label.add_theme_color_override("font_outline_color", GamePalette.INK)
+	level_label.add_theme_color_override("font_outline_color", GamePalette.BLACK)
 	level_label.add_theme_constant_override("outline_size", 2)
 	level_label.add_theme_color_override("font_color", LEVEL_COLOR)
 	level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER

@@ -168,4 +168,4 @@ func _draw() -> void:
 		var phase := fposmod(age * 0.52 + float(mote) / 7.0, 1.0)
 		var angle := float(mote) * 2.39996 + age * 1.8
 		var at := center + Vector2.RIGHT.rotated(angle) * lerpf(radius, 15.0, phase)
-		draw_rect(Rect2(at, Vector2(2, 2)), Color(0.73, 0.7, 0.94, fade * sin(phase * PI) * 0.65))
+		draw_rect(Rect2(at, Vector2(2, 2)), GamePalette.alpha(GamePalette.PLAYER_ATTACK,fade * sin(phase * PI) * 0.65))

@@ -155,8 +155,8 @@ func _ready():
 	style.set_corner_radius_all(7)
 	reroll_button.add_theme_stylebox_override("normal", style)
 	var disabled_style: = style.duplicate() as StyleBoxFlat
-	disabled_style.bg_color = Color(0.08, 0.09, 0.1)
-	disabled_style.border_color = Color(0.25, 0.3, 0.32)
+	disabled_style.bg_color = GamePalette.UI_GREY_COOLDOWN
+	disabled_style.border_color = GamePalette.UI_GREY_BASE
 	reroll_button.add_theme_stylebox_override("disabled", disabled_style)
 	JuicyHover.bind(reroll_button)
 	reroll_hint = Label.new()

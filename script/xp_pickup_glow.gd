@@ -27,7 +27,7 @@ func bind(bar: ProgressBar) -> void :
 	_combo_label = Label.new()
 	_combo_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_combo_label.add_theme_constant_override("outline_size", 3)
-	_combo_label.add_theme_color_override("font_outline_color", Color(0.035, 0.045, 0.06))
+	_combo_label.add_theme_color_override("font_outline_color", GamePalette.BLACK)
 	add_child(_combo_label)
 	bar.resized.connect(_fit)
 	bar.value_changed.connect(_sync_fill)

@@ -18,16 +18,30 @@ class CooldownMask:
 
 func configure(texture: Texture2D, color: Color) -> void :
 	icon = texture
-	material = GamePalette.ramp_material(&"ui")
-	accent = GamePalette.UI_GREY_ACTIVE
+	accent = color
 	expand_icon = true
 	icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	text = ""
-	add_theme_color_override("icon_disabled_color", Color.WHITE)
+	# Only recolor the icon; a material on Button would erase its functional border.
+	for state in ["icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_disabled_color", "icon_focus_color"]:
+		add_theme_color_override(state, Color.TRANSPARENT)
+	var picture := TextureRect.new()
+	picture.texture = texture
+	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var kind: StringName = &"warm" if color == GamePalette.SKILL_HEAL else (&"lightning" if color == GamePalette.SKILL_LIGHTNING else (&"shield" if color == GamePalette.SHIELD_GOLD else &"cooldown"))
+	picture.material = GamePalette.ramp_material(kind)
+	add_child(picture)
+	picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	picture.offset_left = 7
+	picture.offset_top = 7
+	picture.offset_right = -7
+	picture.offset_bottom = -7
 	for selected_style in [false, true]:
 		var style: = StyleBoxFlat.new()
-		style.bg_color = GamePalette.alpha(GamePalette.UI_GREY_COOLDOWN, 0.9)
-		style.border_color = GamePalette.UI_GREY_ACTIVE if selected_style else GamePalette.UI_GREY_BORDER
+		style.bg_color = GamePalette.alpha(GamePalette.UI_PANEL, 0.8)
+		style.border_color = accent.lightened(0.15) if selected_style else accent
 		style.set_border_width_all(2)
 		style.set_corner_radius_all(7)
 		style.content_margin_left = 5

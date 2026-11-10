@@ -10,16 +10,16 @@ var pickup_glow: ColorRect
 func _ready() -> void :
 	progress_bar.modulate = Color.WHITE
 	var back: = StyleBoxFlat.new()
-	back.bg_color = Color(0.035, 0.055, 0.075, 0.95)
-	back.border_color = Color(0.22, 0.35, 0.39)
+	back.bg_color = GamePalette.alpha(GamePalette.UI_PANEL,0.95)
+	back.border_color = GamePalette.PLAYER_PRIMARY.darkened(0.35)
 	back.set_border_width_all(1)
 	back.set_corner_radius_all(4)
 	var fill: = StyleBoxFlat.new()
-	fill.bg_color = Color(0.2, 0.65, 0.72)
+	fill.bg_color = GamePalette.PLAYER_PRIMARY
 	fill.set_corner_radius_all(4)
 	progress_bar.add_theme_stylebox_override("background", back)
 	progress_bar.add_theme_stylebox_override("fill", fill)
-	progress_bar.add_theme_color_override("font_color", Color(0.9, 0.94, 0.9))
+	progress_bar.add_theme_color_override("font_color", GamePalette.UI_TEXT)
 	pickup_glow = preload("res://script/xp_pickup_glow.gd").new()
 	progress_bar.add_child(pickup_glow)
 	pickup_glow.bind(progress_bar)

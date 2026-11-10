@@ -137,8 +137,8 @@ func _draw() -> void :
 	if boss.is_dying: return
 	if boss.charge_state == boss.ChargeState.WARN and _polygon.size() > 2:
 		var locked: bool = boss.warning_locked
-		var color: = GamePalette.DANGER_RED if locked else GamePalette.DANGER_ORANGE
-		draw_colored_polygon(_polygon, Color(color, 0.105 if locked else 0.055))
+		var color: = GamePalette.ENEMY_TELEGRAPH_EDGE
+		draw_colored_polygon(_polygon, GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_FILL,0.30 if locked else 0.22))
 		draw_polyline(_outline, GamePalette.alpha(GamePalette.INK, 0.9), 4, false)
 		draw_polyline(_outline, Color(color, 0.9), 1.6, false)
 		var dir: Vector2 = boss.charge_direction

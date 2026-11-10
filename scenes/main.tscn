@@ -86,8 +86,6 @@ offset_left = 14.0
 offset_top = 564.0
 offset_right = 450.0
 offset_bottom = 588.0
-theme_override_colors/font_color = Color(0.94, 0.97, 1, 1)
-theme_override_colors/font_outline_color = Color(0.04, 0.07, 0.12, 0.95)
 theme_override_constants/outline_size = 3
 text = "vdev"
 

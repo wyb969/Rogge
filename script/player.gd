@@ -100,6 +100,7 @@ var _hurt_tween: Tween
 var _hurt_punch: = 0.0
 
 func _ready() -> void :
+	animated_sprite_2d.material = GamePalette.ramp_material(&"player")
 	_critical_rng.randomize()
 	_visual_base_scale = animated_sprite_2d.scale
 	health_bar.init_health(player_health)
@@ -616,10 +617,10 @@ func get_hit() -> void :
 func play_hit_tween() -> void :
 	_hurt_punch = 1.0
 	if _hurt_tween != null and _hurt_tween.is_valid(): _hurt_tween.kill()
-	animated_sprite_2d.modulate = Color(1, 0.3, 0.35)
+	animated_sprite_2d.modulate = GamePalette.ENEMY_PROJECTILE
 	_hurt_tween = create_tween().set_loops(2)
 	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.06)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color(1, 0.5, 0.5), 0.04)
+	_hurt_tween.tween_property(animated_sprite_2d, "modulate", GamePalette.ENEMY_PROJECTILE.lerp(GamePalette.WHITE,0.35), 0.04)
 	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.04)
 
 func die() -> void :

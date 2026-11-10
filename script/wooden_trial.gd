@@ -92,8 +92,8 @@ func alive_count() -> int:
 func _draw() -> void:
 	if not active: return
 	# Local ground mark only: no particles, lights, or full-screen haze.
-	draw_circle(Vector2.ZERO, 30, Color(0.04, 0.06, 0.07, 0.5))
-	draw_arc(Vector2.ZERO, 32, 0, TAU, 40, Color(0.8, 0.64, 0.37, 0.7), 2.0, false)
+	draw_circle(Vector2.ZERO, 30, GamePalette.SHADOW)
+	draw_arc(Vector2.ZERO, 32, 0, TAU, 40, GamePalette.alpha(GamePalette.UI_BORDER,0.7), 2.0, false)
 	for i in 8:
 		var direction := Vector2.from_angle(float(i) * TAU / 8.0)
-		draw_line(direction * 35, direction * 41, Color(0.9, 0.77, 0.5, 0.7), 2, false)
+		draw_line(direction * 35, direction * 41, GamePalette.alpha(GamePalette.UI_BORDER,0.7), 2, false)

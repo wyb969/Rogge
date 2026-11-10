@@ -184,8 +184,8 @@ func _draw() -> void :
 		var fade: = minf(1, cloud.left / 0.7)
 		var at: Vector2 = to_local(cloud.at)
 		var offset: = Vector2(sin(cloud.phase + _clock) * 5, -3)
-		draw_circle(at, radius, GamePalette.alpha(GamePalette.POISON_PURPLE_DARK, 0.28 * fade))
-		draw_circle(at + offset, radius * 0.68, GamePalette.alpha(GamePalette.POISON_PURPLE, 0.32 * fade))
+		draw_circle(at, radius, GamePalette.alpha(GamePalette.POISON_PURPLE_DARK, 0.45 * fade))
+		draw_circle(at + offset, radius * 0.68, GamePalette.alpha(GamePalette.POISON_PURPLE, 0.55 * fade))
 		draw_circle(at + Vector2(5, -7 - fposmod(_clock * 9 + cloud.phase, 12)), 1.4, GamePalette.alpha(GamePalette.POISON_TINT, 0.75 * fade))
 
 func draw_status(canvas: Node2D) -> void :

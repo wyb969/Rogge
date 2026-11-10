@@ -26,7 +26,8 @@ func launch(origin: Vector2, dir: Vector2, speed: float, dmg: float, _tint: Colo
 	queue_redraw()
 
 func _draw() -> void :
-
+	# Cheap local red halo plus white core; no Light2D or particles per projectile.
+	draw_circle(Vector2.ZERO, 11, GamePalette.alpha(GamePalette.ENEMY_PROJECTILE, 0.13))
 	draw_line(Vector2(-17, 0), Vector2(-8, 0), GamePalette.alpha(GamePalette.DANGER_RED, 0.7), 3.0, true)
 	draw_colored_polygon(PackedVector2Array([
 		Vector2(-10, -7), Vector2(4, -7), Vector2(12, 0), 

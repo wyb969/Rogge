@@ -31,6 +31,7 @@ func configure_stage(_stage: int) -> void :
 	fight_stage = 2
 
 func _ready() -> void :
+	sprite_2d.material = GamePalette.ramp_material(&"enemy:knight")
 	fight_stage = 2
 	health_max_value = MAX_HEALTH
 	boss_current_health = health_max_value
@@ -196,11 +197,11 @@ func _draw() -> void :
 	var active: = attack_state == AttackState.SLASH
 	if not warning and not active:
 		return
-	var fill: = Color(1.0, 0.08, 0.12, 0.3 + 0.12 * (1.0 - state_left / maxf(state_duration, 0.001)))
-	var edge: = GamePalette.alpha(GamePalette.DANGER_RED, 1.0)
+	var fill: = GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_FILL,0.3 + 0.12 * (1.0 - state_left / maxf(state_duration, 0.001)))
+	var edge: = GamePalette.ENEMY_TELEGRAPH_EDGE
 	if active:
-		fill = GamePalette.alpha(GamePalette.DANGER_ORANGE, 0.48)
-		edge = GamePalette.DANGER_ORANGE
+		fill = GamePalette.alpha(GamePalette.ENEMY_TELEGRAPH_FILL, 0.48)
+		edge = GamePalette.ENEMY_TELEGRAPH_EDGE
 	var points: = PackedVector2Array()
 	if attack_state == AttackState.DASH_WINDUP:
 		var dir: = Vector2.RIGHT.rotated(attack_angle)
@@ -218,7 +219,7 @@ func _draw() -> void :
 
 func draw_ellipse_shadow() -> void :
 	draw_set_transform(Vector2(0, 44), 0, Vector2(1.0, 0.35))
-	draw_circle(Vector2.ZERO, 42.0, GamePalette.alpha(GamePalette.INK, 0.5))
+	draw_circle(Vector2.ZERO, 42.0, GamePalette.SHADOW)
 	draw_set_transform(Vector2.ZERO)
 
 func _build_sword() -> void :

@@ -155,7 +155,7 @@ func ghost(sprite: AnimatedSprite2D) -> void :
 
 func pickup(at: Vector2, healing: bool = false) -> void :
 	if not _admit(): return
-	var color: = GamePalette.HEAL_GREEN if healing else GamePalette.PICKUP_GREEN
+	var color: = GamePalette.HEAL_GREEN if healing else GamePalette.COIN_GOLD
 	_burst(at, Vector2.UP, color, 3, 55)
 	_ring(at, Color(color, 0.38), 10, 0.14)
 

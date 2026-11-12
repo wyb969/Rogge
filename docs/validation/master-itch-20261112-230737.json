@@ -1,0 +1,158 @@
+{
+  "checked_utc": "2026-11-12T15:09:03.264027+00:00",
+  "version": "20261112-230737",
+  "latest_development_commit": "c6171513c438842ed4eade5a7bd5595aa51b6c79",
+  "scope": "release integration; no game logic edits",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "import_and_export": "pass, no SCRIPT ERROR / Parse Error / ERROR in final import or export",
+  "packed_checks": [
+    {
+      "name": "smoke_game_palette",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.42,
+      "errors": [],
+      "markers": [
+        "GAME PALETTE OK"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.86,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 347 checks; all22 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_player_motion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.49,
+      "errors": [],
+      "markers": [
+        "PLAYER MOTION OK: 32 checks; real30/60Hz input, travel/acceleration, actual-distance gait, speed card, stop/wall/vertical/mouse, last-direction dash, lock/reset, no walking particles, clipped frames and stable collider"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_motion_vfx",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.63,
+      "errors": [],
+      "markers": [
+        "MOTION VFX OK: 170 checks; player-bound HUD, distance ghosts, 30/60/120Hz arcs, render-only clocks, fixed pools and actual Debug/retry/Home isolation"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_hitstop",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.39,
+      "errors": [],
+      "markers": [
+        "HITSTOP OK: 78 checks; real damage/white-red frames, anti-chain bounds, status/immunity/shields, death clock ownership, pause/trials, crowd pool and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_status_numbers",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.59,
+      "errors": [],
+      "markers": [
+        "STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_dash_grace",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.21,
+      "errors": [],
+      "markers": [
+        "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "local_web_manifest": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "59c81988e9626523dc376c14bf6c434cafcd717d7557e1a5c3646ddcc286f8ca"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23550528,
+      "sha256": "36d592734673ad4eeca1e88325750b92ce9f1baaf0095cdd31255550be2238f0"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "browser": {
+    "entry": "normal unmodified Web export",
+    "viewport": [
+      900,
+      600
+    ],
+    "no_qa_telemetry": true,
+    "errors": [],
+    "context_lost": false,
+    "actions": [
+      "real Debug button",
+      "first hitstop preset",
+      "both real damage buttons",
+      "return Home"
+    ]
+  },
+  "limits": [
+    "software Chromium; no physical Safari device QA",
+    "known CLI shutdown resource warnings recorded separately",
+    "CI export/upload and live itch verification pending"
+  ]
+}

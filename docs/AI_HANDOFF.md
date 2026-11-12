@@ -1,5 +1,13 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-12 主分支发布整合（进行中）
+
+- 用户授权将最新版合入主分支并更新itch。仓库实际默认分支为`master`，不存在`main`；不另建竞争主分支。已核对远端最新开发提交为`c6171513c438842ed4eade5a7bd5595aa51b6c79`，与11月10日一致。
+- 隔离发布分支`release/master-itch-20261112`从master `7e81adf`合并完整开发历史，保留Cursor配色、22卡数值比较、移动/相机、脚下HUD、残影/投弹与命中反馈。仅更新版本与README发布说明，不修改游戏逻辑。新版本 **20261112-230737**（北京时间）。原工作树与未跟踪文件保留。
+- 本轮Godot4.7两次导入、正常入口Web导出通过；7项实际导出PCK专项全过：palette、347项卡牌、32项移动、170项运动VFX、78项顿帧、异常跳字、dash无敌。正常Web Chromium900×600进入Debug第一项、两种真实受击按钮、Home通过，无脚本错误/WebGL丢失、无QA遥测。截图与本地构件哈希见`validation/master-itch-20261112-230737.json`。既有CLI退出ObjectDB/资源引用警告单独记录；没有Safari真机/完整流程结论。
+- 下一步：PR合入master后，将最终master SHA与版本钉在PixelFishing `automation/rogge-itch-release`工作流；从17项扩至24项实际PCK检查，上传原`ybwangrogger/rogue-white:html`（upload20115514），使用Actions已有Secret。发布后记录CI清单、build/readiness和线上资源核验，不能用本地PCK哈希替代CI清单。
+
+
 ## 2026-11-10 命中白闪 / 受伤淡红与短顿帧（最新）
 
 - 当前开发基线 `feature/vfx-motion-20261110` / `3f6375b08d378d7dafd8cbcc2d2a35ed97b7da5b`。按“玩家打中敌人白闪，玩家实际受伤淡红闪”实现用户要求；原句第二处对象重复，未收到相反澄清。沿用Cursor配色、卡牌/移动/冲刺/投弹修复。本轮版本 **20261110-194311**（北京时间），已同步并推送当前分支；已验证游戏源码 `2bc121dd64e5c84c92a8cd0ff563fff080e1a9a9`，后续仅文档。已更新 [PR #10](https://github.com/wyb969/Rogge/pull/10)，仍以PR #9分支为base，不合并master/不上传itch。

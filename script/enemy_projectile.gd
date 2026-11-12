@@ -27,7 +27,7 @@ func launch(origin: Vector2, dir: Vector2, speed: float, dmg: float, tint: Color
 
 func _draw() -> void :
 
-	draw_line(Vector2(-17, 0), Vector2(-8, 0), Color(1.0, 0.28, 0.5, 0.7), 3.0, true)
+	draw_line(Vector2(-17, 0), Vector2(-8, 0), Color(GamePalette.ENEMY_ORANGE, 0.75), 3.0, true)
 	draw_colored_polygon(PackedVector2Array([
 		Vector2(-10, -7), Vector2(4, -7), Vector2(12, 0), 
 		Vector2(4, 7), Vector2(-10, 7), Vector2(-6, 0), 
@@ -35,8 +35,8 @@ func _draw() -> void :
 	draw_colored_polygon(PackedVector2Array([
 		Vector2(-6, -4), Vector2(3, -4), Vector2(8, 0), 
 		Vector2(3, 4), Vector2(-6, 4), Vector2(-3, 0), 
-	]), color)
-	draw_line(Vector2(-3, 0), Vector2(4, 0), Color(1.0, 0.94, 0.98), 2.0, true)
+	]), GamePalette.ENEMY_RED)
+	draw_line(Vector2(-3, 0), Vector2(4, 0), Color(GamePalette.TELEGRAPH_EDGE, 0.95), 2.0, true)
 
 func _physics_process(delta: float) -> void :
 	if not live:

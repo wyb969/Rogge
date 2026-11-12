@@ -1,0 +1,5238 @@
+{
+  "version": "20261110-132712",
+  "base": "cca3e4551270bcb805fbb14e8977f58418b0d209",
+  "branch": "feature/vfx-motion-20261110",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "native_checks": [
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.12,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_bomb_card",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.31,
+      "errors": [],
+      "markers": [
+        "BOMB CARD OK: 57 checks; real draft/upgrade/caps, area/fuse/unique hit, blast hop/force, rewards/crit, trial/Boss rules, fixed pools, pause/cleanup and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_tactical_enemies",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.21,
+      "errors": [],
+      "markers": [
+        "TACTICAL ENEMIES OK: 72 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dash_grace",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.2,
+      "errors": [],
+      "markers": [
+        "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dash_direction",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 0.35,
+      "errors": [],
+      "markers": [
+        "DASH DIRECTION OK: 8 directions, light input, stopped/released stick, request snapshot, multi-touch and reset"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_player_motion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 7.7,
+      "errors": [],
+      "markers": [
+        "PLAYER MOTION OK: 32 checks; real30/60Hz input, travel/acceleration, actual-distance gait, speed card, stop/wall/vertical/mouse, last-direction dash, lock/reset, no walking particles, clipped frames and stable collider"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_camera_motion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.19,
+      "errors": [],
+      "markers": [
+        "CAMERA MOTION OK: actual-position lag/stop/reversal, wall/teleport, pause, single-layer bounded dash catch-up, zero setting, unchanged collider/FOV and teardown"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_combat_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.87,
+      "errors": [],
+      "markers": [
+        "COMBAT FEEDBACK OK: real actions/settings/persistence, exact damage, independent RNG, stable colliders, bounded camera/batches/ghosts, rising pickups, floating text and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.59,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 4654 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.05,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_motion_vfx",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.26,
+      "errors": [],
+      "markers": [
+        "MOTION VFX OK: 170 checks; player-bound HUD, distance ghosts, 30/60/120Hz arcs, render-only clocks, fixed pools and actual Debug/retry/Home isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_motion_vfx",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.99,
+      "errors": [],
+      "markers": [
+        "MOTION VFX OK: 170 checks; player-bound HUD, distance ghosts, 30/60/120Hz arcs, render-only clocks, fixed pools and actual Debug/retry/Home isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_bomb_card",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.87,
+      "errors": [],
+      "markers": [
+        "BOMB CARD OK: 57 checks; real draft/upgrade/caps, area/fuse/unique hit, blast hop/force, rewards/crit, trial/Boss rules, fixed pools, pause/cleanup and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_tactical_enemies",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.71,
+      "errors": [],
+      "markers": [
+        "TACTICAL ENEMIES OK: 72 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.41,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "import": "headless gl_compatibility editor import; no script/shader/build errors",
+  "web_export": "normal main scene and isolated QA entry both export without script/shader/build errors",
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "506da9110cf46b5830ff3742e34d2b187d31d4a5d5d3bb78f08ca608fadd2eaf"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23533976,
+      "sha256": "4dbe4bd19f751aa64df913b2c827212e0351645379c032a1bec035d410747932"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "pck_sha256": "4dbe4bd19f751aa64df913b2c827212e0351645379c032a1bec035d410747932",
+  "qa_equivalence": {
+    "identical_source_asset_files": 763,
+    "different_files": [],
+    "main_scene_only_override": "tools/preview_motion_vfx.tscn; telemetry/physics-rate/pause commands load only from QA entry"
+  },
+  "browser": [
+    {
+      "viewport": [
+        900,
+        600
+      ],
+      "dpr": 1,
+      "touch": false,
+      "errors": [],
+      "webgl_lost": false,
+      "samples": [
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 21,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 165,
+          "physics_hz": 60,
+          "position": [
+            0,
+            0
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.18333333333333,
+              "kind": "enemy",
+              "visual_age": 1.17466666666667,
+              "x": 0,
+              "y": 90
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 31,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 244,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -8.58333396911621
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            299.999969482422
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 32,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 252,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -21.9166660308838
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            292.611145019531
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 33,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 259,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -33.5833282470703
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            284.444854736328
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 34,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 267,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -46.9166717529297
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            281.623260498047
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 35,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 275,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -60.2500152587891
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            281.280029296875
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 36,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 282,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -71.9166717529297
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            281.279998779297
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 37,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 289,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -83.5833206176758
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            281.280029296875
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 38,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 297,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -96.916633605957
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            281.280029296875
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.516666666666667,
+              "kind": "player",
+              "visual_age": 0.5014,
+              "x": 145,
+              "y": -86.916633605957
+            },
+            {
+              "age": 0.516666666666667,
+              "kind": "enemy",
+              "visual_age": 0.5014,
+              "x": -137.325881958008,
+              "y": -128.916687011719
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 42,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 328,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -107.499954223633
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            291.995819091797
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.633333333333334,
+              "kind": "player",
+              "visual_age": 0.624800000000001,
+              "x": 145,
+              "y": -86.916633605957
+            },
+            {
+              "age": 0.633333333333334,
+              "kind": "enemy",
+              "visual_age": 0.624800000000001,
+              "x": -109.016471862793,
+              "y": -118.375862121582
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 43,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 335,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -95.8333053588867
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            303.651580810547
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.750000000000001,
+              "kind": "enemy",
+              "visual_age": 0.737766666666668,
+              "x": -83.1005935668945,
+              "y": -102.073951721191
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 44,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 342,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -84.1666564941406
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            312.453918457031
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.883333333333334,
+              "kind": "enemy",
+              "visual_age": 0.882400000000001,
+              "x": -49.9199981689453,
+              "y": -71.9201507568359
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 45,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 350,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -70.8333435058594
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.774139404297,
+            316.831298828125
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.01666666666667,
+              "kind": "enemy",
+              "visual_age": 1.01666666666667,
+              "x": -19.1176452636719,
+              "y": -34.5982894897461
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 46,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 358,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -57.5000152587891
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            318.719970703125
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.15,
+              "kind": "enemy",
+              "visual_age": 1.1458,
+              "x": 0,
+              "y": -6.91663360595703
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 47,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 366,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -44.1666717529297
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            318.720001220703
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 48,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 374,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -30.8333301544189
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            318.719970703125
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 49,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 382,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -17.5000019073486
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            318.720001220703
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.233333333333333,
+              "kind": "player",
+              "visual_age": 0.224,
+              "x": 77.3333358764648,
+              "y": -134.721099853516
+            },
+            {
+              "age": 0.233333333333333,
+              "kind": "enemy",
+              "visual_age": 0.224,
+              "x": -195,
+              "y": -126.25
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 57,
+          "ghosts": 8,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 434,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -210.666687011719
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            281.533325195312
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        }
+      ],
+      "interpolation_30hz_physics": {
+        "player": {
+          "sub_tick_moving_pairs": 0,
+          "examples": []
+        },
+        "enemy": {
+          "sub_tick_moving_pairs": 0,
+          "examples": []
+        },
+        "cadence_inconclusive": true
+      },
+      "arc_samples": [
+        {
+          "arcs": [
+            {
+              "age": 1.21666666666667,
+              "kind": "enemy",
+              "visual_age": 1.2001,
+              "x": 0,
+              "y": -241.499755859375
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 87,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 603,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.1,
+              "kind": "player",
+              "visual_age": 0.0833333333333333,
+              "x": 28.7698421478271,
+              "y": -357.507568359375
+            },
+            {
+              "age": 0.1,
+              "kind": "enemy",
+              "visual_age": 0.0833333333333333,
+              "x": -195,
+              "y": -361.499755859375
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 89,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 608,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.166666666666667,
+              "kind": "player",
+              "visual_age": 0.154533333333334,
+              "x": 53.3507957458496,
+              "y": -368.750823974609
+            },
+            {
+              "age": 0.166666666666667,
+              "kind": "enemy",
+              "visual_age": 0.154533333333334,
+              "x": -195,
+              "y": -361.499755859375
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 90,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 610,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.266666666666667,
+              "kind": "player",
+              "visual_age": 0.233333333333333,
+              "x": 80.5555572509766,
+              "y": -369.401000976562
+            },
+            {
+              "age": 0.266666666666667,
+              "kind": "enemy",
+              "visual_age": 0.233333333333333,
+              "x": -195,
+              "y": -361.499755859375
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 91,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 613,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.333333333333333,
+              "kind": "player",
+              "visual_age": 0.311111111111111,
+              "x": 107.407402038574,
+              "y": -357.892059326172
+            },
+            {
+              "age": 0.333333333333333,
+              "kind": "enemy",
+              "visual_age": 0.311111111111111,
+              "x": -180.980392456055,
+              "y": -364.883087158203
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 92,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 615,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.433333333333333,
+              "kind": "player",
+              "visual_age": 0.4,
+              "x": 138.095245361328,
+              "y": -329.957824707031
+            },
+            {
+              "age": 0.433333333333333,
+              "kind": "enemy",
+              "visual_age": 0.4,
+              "x": -160.588226318359,
+              "y": -366.482452392578
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 93,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 618,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.466666666666667,
+              "kind": "player",
+              "visual_age": 0.456333333333334,
+              "x": 145,
+              "y": -321.499755859375
+            },
+            {
+              "age": 0.466666666666667,
+              "kind": "enemy",
+              "visual_age": 0.456333333333334,
+              "x": -147.664703369141,
+              "y": -365.457916259766
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 94,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 619,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.533333333333333,
+              "kind": "player",
+              "visual_age": 0.523,
+              "x": 145,
+              "y": -321.499755859375
+            },
+            {
+              "age": 0.533333333333333,
+              "kind": "enemy",
+              "visual_age": 0.523,
+              "x": -132.370590209961,
+              "y": -362.202575683594
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 95,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 621,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.6,
+              "kind": "player",
+              "visual_age": 0.589666666666667,
+              "x": 145,
+              "y": -321.499755859375
+            },
+            {
+              "age": 0.6,
+              "kind": "enemy",
+              "visual_age": 0.589666666666667,
+              "x": -117.076469421387,
+              "y": -356.732666015625
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 96,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 623,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.7,
+              "kind": "enemy",
+              "visual_age": 0.6695,
+              "x": -98.7617645263672,
+              "y": -347.268676757812
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 97,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 626,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.766666666666667,
+              "kind": "enemy",
+              "visual_age": 0.740333333333334,
+              "x": -82.5117645263672,
+              "y": -336.212799072266
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 98,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 628,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.429595947266,
+            299.822204589844
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.833333333333333,
+              "kind": "enemy",
+              "visual_age": 0.811761904761905,
+              "x": -66.1252136230469,
+              "y": -322.532409667969
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 99,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 630,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.9,
+              "kind": "enemy",
+              "visual_age": 0.8908,
+              "x": -47.9929351806641,
+              "y": -304.431762695312
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 100,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 632,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 1,
+              "kind": "enemy",
+              "visual_age": 0.9792,
+              "x": -27.7129364013672,
+              "y": -280.49951171875
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 101,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 635,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.06666666666667,
+              "kind": "enemy",
+              "visual_age": 1.05253333333333,
+              "x": -10.889404296875,
+              "y": -257.691375732422
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 102,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 637,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.13333333333333,
+              "kind": "enemy",
+              "visual_age": 1.12586666666667,
+              "x": 0,
+              "y": -241.499755859375
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 103,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 639,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.2,
+              "kind": "enemy",
+              "visual_age": 1.1992,
+              "x": 0,
+              "y": -241.499755859375
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            900,
+            600
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            826,
+            526,
+            92,
+            92
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 104,
+          "ghosts": 0,
+          "home": [
+            645,
+            28,
+            138,
+            40
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            450,
+            347,
+            440,
+            52
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 641,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -331.499755859375
+          ],
+          "preset": [
+            300,
+            222,
+            292,
+            48
+          ],
+          "replay": [
+            366.5,
+            147,
+            163,
+            40
+          ],
+          "reset_dash": [
+            533.5,
+            147,
+            163,
+            40
+          ],
+          "screen_player": [
+            450.000030517578,
+            300.000061035156
+          ],
+          "stick": [
+            84,
+            520,
+            112,
+            112
+          ],
+          "stick_radius": 56
+        }
+      ],
+      "checks": [
+        "actual first-page Debug button/touch size",
+        "underfoot offset locked during vertical movement/dash",
+        "visible bounded dash trail",
+        "actual player bomb/enemy mortar render trajectories (cadence observation reported separately)",
+        "actual pause freezes projectile clocks",
+        "Home clears practice equipment/UI"
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "dpr": 2,
+      "touch": true,
+      "errors": [],
+      "webgl_lost": false,
+      "samples": [
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 22,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 170,
+          "physics_hz": 60,
+          "position": [
+            0,
+            0
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500061035156
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.533333333333333,
+              "kind": "player",
+              "visual_age": 0.5267,
+              "x": 145,
+              "y": 10
+            },
+            {
+              "age": 0.533333333333333,
+              "kind": "enemy",
+              "visual_age": 0.5267,
+              "x": -131.521759033203,
+              "y": -30.4572715759277
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 42,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 330,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -8.58333396911621
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.5
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.666666666666667,
+              "kind": "player",
+              "visual_age": 0.660033333333334,
+              "x": 145,
+              "y": 10
+            },
+            {
+              "age": 0.666666666666667,
+              "kind": "enemy",
+              "visual_age": 0.660033333333334,
+              "x": -100.933525085449,
+              "y": -17.0571365356445
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 43,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 338,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -21.9166660308838
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            966.111206054688
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.800000000000001,
+              "kind": "enemy",
+              "visual_age": 0.795866666666668,
+              "x": -69.7717666625977,
+              "y": 5.70307922363281
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 44,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 346,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -35.2499961853027
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            957.944946289062
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.933333333333335,
+              "kind": "enemy",
+              "visual_age": 0.933333333333335,
+              "x": -38.2352905273438,
+              "y": 38.0968856811523
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 45,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 354,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -48.5833396911621
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            449.467102050781,
+            955.117858886719
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.06666666666667,
+              "kind": "enemy",
+              "visual_age": 1.05606666666667,
+              "x": -10.0788269042969,
+              "y": 74.974983215332
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 46,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 362,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -61.9166831970215
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            954.779968261719
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.2,
+              "kind": "enemy",
+              "visual_age": 1.18384444444445,
+              "x": 0,
+              "y": 90
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 47,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 370,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -75.25
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            954.779968261719
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 48,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 377,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -86.9166488647461
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            954.780029296875
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            1,
+            0
+          ],
+          "frame": 49,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 385,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -100.249961853027
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            954.780029296875
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.233333333333333,
+              "kind": "player",
+              "visual_age": 0.216666666666667,
+              "x": 74.8015899658203,
+              "y": -296.380249023438
+            },
+            {
+              "age": 0.233333333333333,
+              "kind": "enemy",
+              "visual_age": 0.216666666666667,
+              "x": -195,
+              "y": -287.583343505859
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 56,
+          "ghosts": 8,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 439,
+          "physics_hz": 60,
+          "position": [
+            0,
+            -371.999969482422
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            955.033386230469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        }
+      ],
+      "interpolation_30hz_physics": {
+        "player": {
+          "sub_tick_moving_pairs": 0,
+          "examples": []
+        },
+        "enemy": {
+          "sub_tick_moving_pairs": 0,
+          "examples": []
+        },
+        "cadence_inconclusive": true
+      },
+      "arc_samples": [
+        {
+          "arcs": [
+            {
+              "age": 0.133333333333333,
+              "kind": "player",
+              "visual_age": 0.1044,
+              "x": 36.0428581237793,
+              "y": -583.221008300781
+            },
+            {
+              "age": 0.133333333333333,
+              "kind": "enemy",
+              "visual_age": 0.1044,
+              "x": -195,
+              "y": -582.832824707031
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 94,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 725,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.266666666666667,
+              "kind": "player",
+              "visual_age": 0.237466666666667,
+              "x": 81.9825439453125,
+              "y": -590.426147460938
+            },
+            {
+              "age": 0.266666666666667,
+              "kind": "enemy",
+              "visual_age": 0.237466666666667,
+              "x": -195,
+              "y": -582.832824707031
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 95,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 729,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.133333333333333,
+              "kind": "player",
+              "visual_age": 0.1108,
+              "x": 38.2523803710938,
+              "y": -584.376403808594
+            },
+            {
+              "age": 0.133333333333333,
+              "kind": "enemy",
+              "visual_age": 0.1108,
+              "x": -195,
+              "y": -582.832824707031
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 96,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 733,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.266666666666667,
+              "kind": "player",
+              "visual_age": 0.244133333333333,
+              "x": 84.2841262817383,
+              "y": -589.857727050781
+            },
+            {
+              "age": 0.266666666666667,
+              "kind": "enemy",
+              "visual_age": 0.244133333333333,
+              "x": -195,
+              "y": -582.832824707031
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 97,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 737,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.4,
+              "kind": "player",
+              "visual_age": 0.3694,
+              "x": 127.530952453613,
+              "y": -562.686828613281
+            },
+            {
+              "age": 0.4,
+              "kind": "enemy",
+              "visual_age": 0.3694,
+              "x": -167.60823059082,
+              "y": -587.709350585938
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 98,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 741,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.5,
+              "kind": "player",
+              "visual_age": 0.4853,
+              "x": 145,
+              "y": -542.832824707031
+            },
+            {
+              "age": 0.5,
+              "kind": "enemy",
+              "visual_age": 0.4853,
+              "x": -141.019409179688,
+              "y": -585.648620605469
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 99,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 744,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.633333333333333,
+              "kind": "player",
+              "visual_age": 0.618233333333334,
+              "x": 145,
+              "y": -542.832824707031
+            },
+            {
+              "age": 0.633333333333333,
+              "kind": "enemy",
+              "visual_age": 0.618233333333334,
+              "x": -110.522941589355,
+              "y": -575.044067382812
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 100,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 748,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.766666666666667,
+              "kind": "enemy",
+              "visual_age": 0.748233333333333,
+              "x": -80.6994171142578,
+              "y": -556.157897949219
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨冷却",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 101,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 752,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 0.9,
+              "kind": "enemy",
+              "visual_age": 0.8691,
+              "x": -52.9711761474609,
+              "y": -531.044372558594
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 0/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 102,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": false,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 756,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            449.402191162109,
+            974.151428222656
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.13333333333333,
+              "kind": "enemy",
+              "visual_age": 1.13233333333333,
+              "x": 0,
+              "y": -462.832824707031
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 103,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 763,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        },
+        {
+          "arcs": [
+            {
+              "age": 1.2,
+              "kind": "enemy",
+              "visual_age": 1.16666666666667,
+              "x": 0,
+              "y": -462.832824707031
+            }
+          ],
+          "bomb_rank": 1,
+          "canvas": [
+            780,
+            1688
+          ],
+          "caption": "彩墨 1/3",
+          "dash": [
+            715.86669921875,
+            1623.84387207031,
+            79.7333374023438,
+            79.7616882324219
+          ],
+          "dashing": false,
+          "debug_page": true,
+          "direction": [
+            0,
+            -1
+          ],
+          "frame": 104,
+          "ghosts": 0,
+          "home": [
+            559,
+            29.477144241333,
+            119.599998474121,
+            45.082691192627
+          ],
+          "hud_offset": [
+            -50,
+            32
+          ],
+          "hud_visible": true,
+          "menu": false,
+          "menu_debug": [
+            390,
+            953.672302246094,
+            381.333343505859,
+            76.2937850952148
+          ],
+          "mode": "motion_vfx",
+          "paused": false,
+          "physics_frame": 765,
+          "physics_hz": 30,
+          "position": [
+            0,
+            -552.832824707031
+          ],
+          "preset": [
+            390,
+            631.924621582031,
+            676,
+            96.0341339111328
+          ],
+          "replay": [
+            223.800003051758,
+            285.401458740234,
+            327.600006103516,
+            80.628662109375
+          ],
+          "reset_dash": [
+            555.299987792969,
+            285.401458740234,
+            328.466674804688,
+            80.628662109375
+          ],
+          "screen_player": [
+            450.000030517578,
+            973.500183105469
+          ],
+          "stick": [
+            72.8000030517578,
+            1618.64196777344,
+            97.0666656494141,
+            97.1011810302734
+          ],
+          "stick_radius": 48.5333337783813
+        }
+      ],
+      "checks": [
+        "actual first-page Debug button/touch size",
+        "underfoot offset locked during vertical movement/dash",
+        "visible bounded dash trail",
+        "actual player bomb/enemy mortar render trajectories (cadence observation reported separately)",
+        "actual pause freezes projectile clocks",
+        "Home clears practice equipment/UI"
+      ]
+    }
+  ],
+  "limits": [
+    "Browser recordings use software WebGL2 at low rendering FPS; 30Hz sub-tick pairs were not captured in final browser runs. Native actual120Hz frames against30Hz physics verify both arcs (>10 intermediate-frame pairs each).",
+    "No Safari device, hardware high-refresh display, horde load or complete game regression.",
+    "Known CLI ObjectDB/resource-in-use shutdown warnings are preserved separately from runtime errors.",
+    "Earlier browser test attempts missed short test-key presses and cadence samples under software recording; final QA commands avoid key-sampling races, no gameplay failure was inferred.",
+    "Dash screenshots can occur after the short dash/ghost lifetime; telemetry and videos capture active ghosts."
+  ],
+  "normal_browser": [
+    {
+      "viewport": [
+        900,
+        600
+      ],
+      "dpr": 1,
+      "errors": [],
+      "normal_main_entry": true,
+      "no_qa_telemetry": true,
+      "actual_debug_buttons_clicked": true
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "dpr": 2,
+      "errors": [],
+      "normal_main_entry": true,
+      "no_qa_telemetry": true,
+      "actual_debug_buttons_clicked": true
+    }
+  ],
+  "source_commit": "53b9906f6c2b33af9fd053d3b1e54f6fca6278af",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/10",
+  "playtest": {
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "audience": "existing owner-private; unchanged",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "source_commit": "81392fe86eead527db39049ef999ffdfef60545a",
+    "game_source_commit": "53b9906f6c2b33af9fd053d3b1e54f6fca6278af",
+    "deployment_id": "appgdep_6af2ae797ea48191881a2d0420e9544f",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_5781671132748191936bf6e3b95e4e13",
+    "status": "succeeded",
+    "published_beijing": "2026-11-10T13:41:33+08:00",
+    "pck_sha256": "4dbe4bd19f751aa64df913b2c827212e0351645379c032a1bec035d410747932",
+    "archive_sha256": "89a153f3ab7257a4b47ee4528dd4fe7b0441333957078c0bc8de267224006e4a",
+    "original_export_and_hosted_gzip_equivalence": true,
+    "hosting_all_11_assets_under_25MiB": true,
+    "hosting_js_syntax": true,
+    "hosting_helper": "Official helper unavailable; ordinary Git with hidden-stdin short-lived credential, tracked source push + exact dist tar; accepted by native publishing tool",
+    "browser_scope": "Normal original export and isolated QA entry tested in Chromium; hosted gzip adapter/live private Site not browser-retested; managed Sites browser/open_in_codex tool unavailable"
+  }
+}

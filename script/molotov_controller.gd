@@ -51,8 +51,9 @@ func _throw_bottle() -> void :
 func _pick_target() -> Node2D:
 	return CombatTargets.nearest(player.global_position)
 
-func get_throw_interval() -> float:
-	return interval_for(level)
+func get_throw_interval(rank: int = -1) -> float:
+	if rank < 0: rank = level
+	return interval_for(rank)
 
 static func interval_for(rank: int) -> float:
 	return maxf(1.6, 4.2 - float(rank) * 0.35) * COOLDOWN_SCALE
@@ -60,18 +61,22 @@ static func interval_for(rank: int) -> float:
 func get_throw_speed() -> float:
 	return 220.0 + float(level) * 18.0
 
-func get_burn_stacks() -> int:
-	return 2 + int((level - 1) / 2)
+func get_burn_stacks(rank: int = -1) -> int:
+	if rank < 0: rank = level
+	return 2 + int((rank - 1) / 2)
 
-func get_burn_dps() -> float:
-	return 2.5 + float(level) * 1.8
+func get_burn_dps(rank: int = -1) -> float:
+	if rank < 0: rank = level
+	return 2.5 + float(rank) * 1.8
 
-func get_explode_radius() -> float:
-	return 62.0 + float(level) * 8.0
+func get_explode_radius(rank: int = -1) -> float:
+	if rank < 0: rank = level
+	return 62.0 + float(rank) * 8.0
 
 
-func get_on_hit_chance() -> float:
-	return minf(0.18 + float(level) * 0.07, 0.65)
+func get_on_hit_chance(rank: int = -1) -> float:
+	if rank < 0: rank = level
+	return minf(0.18 + float(rank) * 0.07, 0.65)
 
 func get_on_hit_stacks() -> int:
 	return 1 + int((level - 1) / 3)

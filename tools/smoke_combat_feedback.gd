@@ -11,6 +11,7 @@ func _run() -> void :
 	await main._launch_run(&"")
 	var game: Node = main.game
 	var fx: Node = game.combat_feedback
+	var fixed_fx_children: int = fx.get_child_count()
 	game.spawner.timer.stop()
 	game.spawner.get_node("Elite").stop()
 	for name in ["HandWeapon", "CircleWeapon", "Weapon", "DroneController", "MolotovController", "FreezeController"]:
@@ -68,7 +69,7 @@ func _run() -> void :
 			fx.pickup(Vector2.ZERO)
 		_expect(fx.shards.size() <= 128 and fx.rings.size() <= 16 and fx.ghosts.size() <= 8, "hit/kill/pickup storms remain within fixed drawing budgets")
 		await process_frame
-	_expect(fx.suppressed > 0 and fx.get_child_count() == 0, "over-budget cosmetics allocate no particle nodes")
+	_expect(fx.suppressed > 0 and fx.get_child_count() == fixed_fx_children, "over-budget cosmetics allocate no particle nodes")
 	var popup: Node = load("res://scenes/damage_text.tscn").instantiate()
 	game.effect_container.add_child(popup)
 	popup.show_damage("100", Vector2.ZERO, 0, 0)

@@ -1,5 +1,6 @@
 extends Node2D
 
+const ARC := preload("res://script/arc_motion.gd")
 const MAX_ATTACKS := 12
 const CAPS := {&"cleave":3,&"boomerang":4,&"mortar":3}
 const SLASH_RADIUS := 84.0
@@ -7,8 +8,9 @@ const SLASH_HALF_ANGLE := 0.72
 const MORTAR_RADIUS := 44.0
 const BLADE_SPEED := 145.0
 const BLADE_RADIUS := 12.0
-const DANGER := Color("ff554d")
-const INK := Color("201e31")
+const DANGER := GamePalette.ENEMY_RED
+const EDGE := GamePalette.TELEGRAPH_EDGE
+const INK := GamePalette.INK
 class Slot:
 	extends RefCounted
 	var active := false
@@ -19,6 +21,7 @@ class Slot:
 	var target := Vector2.ZERO
 	var heading := Vector2.RIGHT
 	var age := 0.0
+	var previous_age := 0.0
 	var windup := 0.75
 	var duration := 1.0
 	var leg := 1.2
@@ -31,7 +34,6 @@ var cancelled := 0
 var attempted_hits := 0
 var _running := false
 var _generation := 0
-var _redraw_left := 0.0
 var _sector := PackedVector2Array()
 var _border := PackedVector2Array()
 var _blade := PackedVector2Array([Vector2(-9,-7),Vector2(1,-4),Vector2(10,-8),Vector2(6,2),Vector2(-1,7),Vector2(-4,0)])
@@ -78,6 +80,7 @@ func clear_combat_effects() -> void:
 	if _warn_audio!=null: _warn_audio.stop()
 	if _impact_audio!=null: _impact_audio.stop()
 	set_physics_process(false)
+	set_process(false)
 	queue_redraw()
 
 func cast(actor: Node2D, kind: StringName) -> Slot:
@@ -103,6 +106,7 @@ func cast(actor: Node2D, kind: StringName) -> Slot:
 	free.windup = 1.1 if kind==&"mortar" else 0.75
 	free.duration = free.windup+(free.leg*2 if kind==&"boomerang" else 0.18)
 	free.age = 0
+	free.previous_age = 0
 	free.damage = actor.projectile_damage
 	free.hit = false
 	free.released = false
@@ -112,6 +116,7 @@ func cast(actor: Node2D, kind: StringName) -> Slot:
 		_last_warning = now
 		_warn_audio.play()
 	set_physics_process(true)
+	set_process(true)
 	queue_redraw()
 	return free
 
@@ -158,6 +163,7 @@ func _physics_process(delta: float) -> void:
 			cancelled += 1
 			continue
 		var before := slot.age
+		slot.previous_age = before
 		slot.age = minf(slot.duration,slot.age+maxf(delta,0))
 		if slot.age>=slot.windup and not slot.released:
 			slot.released = true
@@ -172,54 +178,59 @@ func _physics_process(delta: float) -> void:
 			slot.active = false
 			slot.source = null
 		else: active = true
-	_redraw_left -= delta
-	if _redraw_left<=0 or not active:
-		_redraw_left = 1.0/30.0
-		queue_redraw()
-	if not active: set_physics_process(false)
+	queue_redraw()
+	if not active:
+		set_physics_process(false)
+		set_process(false)
+
+func _process(_delta: float) -> void:
+	if not get_tree().paused: queue_redraw()
 
 func _draw() -> void:
 	for slot in slots:
 		if not slot.active: continue
+		var age := ARC.render_age(slot.previous_age,slot.age)
 		var warning := slot.age<slot.windup
-		var progress := clampf(slot.age/slot.windup,0,1)
+		var progress := clampf(age/slot.windup,0,1)
 		if slot.kind==&"cleave":
 			draw_set_transform(to_local(slot.origin),slot.heading.angle())
-			draw_colored_polygon(_sector,Color(1,0.12,0.12,0.17+0.15*progress if warning else 0.48))
-			draw_polyline(_border,INK,3,false)
-			draw_polyline(_border,DANGER,1.25,false)
-			if warning: draw_arc(Vector2.ZERO,SLASH_RADIUS*progress,-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,18,Color(1,0.62,0.57,0.7),1.5,false)
+			var fill_alpha := 0.36+0.14*progress if warning else 0.52
+			draw_colored_polygon(_sector,Color(GamePalette.TELEGRAPH_FILL,fill_alpha))
+			draw_polyline(_border,INK,4.0,false)
+			draw_arc(Vector2.ZERO,SLASH_RADIUS,-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,18,Color(EDGE,0.35),7.0,false)
+			draw_polyline(_border,EDGE,2.4,false)
+			if warning: draw_arc(Vector2.ZERO,SLASH_RADIUS*progress,-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,18,Color(EDGE,0.9),2.2,false)
 			else:
-				var swing := (slot.age-slot.windup)/0.18
-				draw_arc(Vector2.ZERO,SLASH_RADIUS*0.85,-SLASH_HALF_ANGLE+1.15*swing-0.35,-SLASH_HALF_ANGLE+1.15*swing+0.4,12,Color("ffe8d3"),5,false)
+				var swing := (maxf(age,slot.windup)-slot.windup)/0.18
+				draw_arc(Vector2.ZERO,SLASH_RADIUS*0.85,-SLASH_HALF_ANGLE+1.15*swing-0.35,-SLASH_HALF_ANGLE+1.15*swing+0.4,12,Color(EDGE,0.95),5,false)
 			draw_set_transform(Vector2.ZERO)
 		elif slot.kind==&"boomerang":
 			if warning:
 				draw_line(to_local(slot.origin),to_local(slot.target),INK,5,false)
-				draw_line(to_local(slot.origin),to_local(slot.target),Color(1,0.22,0.28,0.5+0.4*progress),2,false)
+				draw_line(to_local(slot.origin),to_local(slot.target),Color(EDGE,0.55+0.4*progress),2.4,false)
 				draw_circle(to_local(slot.target),5,DANGER,false,1.5,false)
 			else:
-				var at := to_local(blade_position(slot,slot.age))
-				draw_set_transform(at,(slot.age-slot.windup)*14)
+				var at := to_local(blade_position(slot,maxf(age,slot.windup)))
+				draw_set_transform(at,(maxf(age,slot.windup)-slot.windup)*14)
 				draw_colored_polygon(_blade,INK)
-				draw_set_transform(at,(slot.age-slot.windup)*14,Vector2.ONE*0.72)
+				draw_set_transform(at,(maxf(age,slot.windup)-slot.windup)*14,Vector2.ONE*0.72)
 				draw_colored_polygon(_blade,DANGER)
-				draw_line(Vector2(-3,-2),Vector2(4,1),Color("fff0db"),2,false)
+				draw_line(Vector2(-3,-2),Vector2(4,1),Color(EDGE,0.95),2,false)
 				draw_set_transform(Vector2.ZERO)
 		else:
 			var at := to_local(slot.target)
-			draw_circle(at,MORTAR_RADIUS,Color(1,0.12,0.16,0.14+0.14*progress if warning else 0.4))
+			draw_circle(at,MORTAR_RADIUS,Color(GamePalette.TELEGRAPH_FILL,0.28+0.16*progress if warning else 0.46))
+			draw_arc(at,MORTAR_RADIUS,0,TAU,32,Color(EDGE,0.28),6,false)
 			draw_arc(at,MORTAR_RADIUS,0,TAU,32,INK,3,false)
-			draw_arc(at,MORTAR_RADIUS,0,TAU,32,DANGER,1.4,false)
+			draw_arc(at,MORTAR_RADIUS,0,TAU,32,EDGE,1.8,false)
 			if warning:
-				draw_arc(at,MORTAR_RADIUS*progress,0,TAU,24,Color(1,0.55,0.56,0.65),1.1,false)
-				var t := clampf((slot.age-0.25)/0.85,0,1)
-				var seed_at := to_local(slot.origin.lerp(slot.target,t)+Vector2.UP*sin(t*PI)*45)
+				draw_arc(at,MORTAR_RADIUS*progress,0,TAU,24,Color(EDGE,0.85),1.6,false)
+				var seed_at := to_local(ARC.position_at(slot.origin,slot.target,age-0.25,0.85,45.0))
 				draw_circle(seed_at,6,INK)
-				draw_circle(seed_at,4,Color("ff789f"))
+				draw_circle(seed_at,4,EDGE)
 			else:
-				var burst := (slot.age-slot.windup)/0.18
-				draw_arc(at,MORTAR_RADIUS*(0.3+0.7*burst),0,TAU,24,Color(1,0.76,0.6,1-burst),4,false)
+				var burst := (maxf(age,slot.windup)-slot.windup)/0.18
+				draw_arc(at,MORTAR_RADIUS*(0.3+0.7*burst),0,TAU,24,Color(EDGE,1-burst),4,false)
 				for i in 6:
 					var dir := Vector2.from_angle(i*TAU/6)
-					draw_line(at+dir*10,at+dir*(15+20*burst),Color(1,0.37,0.41,1-burst),2,false)
+					draw_line(at+dir*10,at+dir*(15+20*burst),Color(DANGER,1-burst),2,false)

@@ -10,6 +10,7 @@ func admit() -> void :
 	BUDGET._frame = -1
 	BUDGET._stamp = Time.get_ticks_msec()
 func _run() -> void :
+	Engine.max_fps = 120 # Real-time popup/hitstop assertions need real display cadence.
 	var main: Node = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	current_scene = main
@@ -36,7 +37,7 @@ func _run() -> void :
 		actor.apply_hit({"damage": 10, "effect": effect, "from_status": effect == "poison_trail"})
 		var popup: Node = game.effect_container.get_children().back()
 		expect(actor.health == hp - 10 and popup._status == (effect != ""), "real burn/frost/poison and plain hits route to their intended text without damage changes")
-		if effect != "": expect(popup.label.get_theme_color("font_color") == TEXT.STATUS_YELLOW, "all three abnormal hits start yellow")
+		if effect != "": expect(popup.label.get_theme_color("font_color") == (GamePalette.POISON_TINT if effect == "poison_trail" else TEXT.STATUS_YELLOW), "poison remains purple; burn and frost follow Cursor yellow-to-red colors")
 		else: expect(popup.label.get_theme_color("font_color") == Color(1, 0.96, 0.83), "plain damage stays cream")
 	admit()
 	actor._take_status_damage(5)

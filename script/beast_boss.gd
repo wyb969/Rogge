@@ -3,7 +3,7 @@ extends "res://script/boss.gd"
 const NAMES: = ["潮汐巨象 / TIDE", "雷鬃狮王 / THUNDER", "苍穹灵隼 / GALE", "熔岩玄龟 / AEGIS"]
 const IDS: = ["tide", "thunder", "gale", "aegis"]
 const HP: = [3600.0, 4200.0, 4800.0, 5600.0]
-const COLORS: = [Color(0.28, 0.85, 0.95), Color(1.0, 0.83, 0.3), Color(0.6, 1.0, 0.78), Color(1.0, 0.56, 0.26)]
+const COLORS: = [GamePalette.SKILL_TIDE, GamePalette.SKILL_THUNDER, GamePalette.SKILL_GALE, GamePalette.SKILL_AEGIS]
 const ROAM_SPEEDS: = [65.0, 96.0, 80.0, 43.0]
 const STANDOFFS: = [170.0, 145.0, 180.0, 110.0]
 const DIVE_SPEEDS: = [330.0, 470.0, 450.0, 260.0]
@@ -49,6 +49,7 @@ func _ready() -> void :
 	sprite_2d.vframes = 1
 	sprite_2d.texture = load("res://assest/sprites/beasts/%s.svg" % IDS[element])
 	sprite_2d.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	GamePalette.paint_actor(sprite_2d, &"enemy")
 	sprite_2d.scale = Vector2.ONE * 0.9
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = Color.WHITE

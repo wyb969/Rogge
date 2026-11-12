@@ -1,0 +1,1369 @@
+{
+  "task": "Rogge color target v4, visual/UI only",
+  "recorded_utc": "2026-11-10T01:25:27.954712+00:00",
+  "base_branch": "master",
+  "base_commit": "7e81adf98830f9f2ca563c7147c3cb3e5f5416a9",
+  "head_branch": "feature/palette-v4-20261110",
+  "previous_pr_6": "Open/unmerged; c25e983, cfb067e and 68d6700 cherry-picked with provenance onto latest master to preserve prior comparable-card and neutral-control work.",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "renderer": "gl_compatibility",
+  "mechanics": "No damage, speed, cooldown, health, RNG draw count, rewards, collision, wave quotas or input settings changed. Floor color selection is restricted to visual stage families; same-stage caching and one random draw retained. Card formulas inherited from PR6 still tested against real upgrades; speed fixed +20.",
+  "coin_design_confirmed_by_code": "coin.gd xp_value/prepared_xp -> game._on_prepared_coin_collected -> _award_prepared_experience -> level_manager.add_coin. Gold coin itself grants XP; no separate currency balance/XP-orb drop system. Original gold appearance restored per explicit user requirement without splitting drops.",
+  "semantic_roles": {
+    "player": "#22D3EE / #67E8F9",
+    "enemies": "#E11D48 / #F97316 / #EA580C; elites stay warm",
+    "enemy_projectiles": "#FF3B3B with white core/red local halo",
+    "telegraphs": "#EF4444 around alpha0.30, edge #FF5A3C, inner #B83232",
+    "poison": "#A855F7 around alpha0.55 with #C084FC rim/tint/numbers",
+    "coin": "#FACC15/#FDE68A/#B45309, still grants existing XP",
+    "healing": "#22C55E with white cross/text/VFX",
+    "distinct_beneficial_pickup_role": "#4ADE80",
+    "book": "#E8D3A3",
+    "shield": "#FACC15",
+    "shadows": "black translucent ellipses, max alpha0.35",
+    "floor": "4 teal moss / 4 warm earth / 4 dark violet, bounded world-anchored noise/patches/grass and mild vignette",
+    "ui": "#0F172A panels / #111827 buttons, #CBD5E1 borders / #F8FAFC text; controls neutral gray",
+    "functional_ui_exception": "healing rose #FB7185, lightning #FDE047, cooldown #38BDF8, shield #FACC15; prescribed by v4 icon section"
+  },
+  "native": {
+    "unique_passed": 17,
+    "checks": [
+      {
+        "name": "smoke_visual_style",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.94,
+        "errors": [],
+        "markers": [
+          "VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/direct damage without implicit burn, fixed footprint, shared non-additive pickups and exact healing"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_archetypes",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 7.98,
+        "errors": [],
+        "markers": [
+          "SMOKE OK"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_stage_variation",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.37,
+        "errors": [],
+        "markers": [
+          "STAGE VARIATION OK: 12 safe colors in three stage families, stable/repeat-free teal opening rolls, 3 primary themes, 75% share, stage transition and ranged caps"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_combat_lighting",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.58,
+        "errors": [],
+        "markers": [
+          "COMBAT LIGHTING OK: fixed batches/shared texture/layers, real drone/gun behavior, stable beam points, bounded projectile/orb/muzzle storms, exact audible-pitch XP glow/no-op/gap/pause/progress, deletion/Debug/return"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_palette_cards",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 3.06,
+        "errors": [],
+        "markers": [
+          "PALETTE CARDS OK: 347 checks; all22 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_beasts",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 14.16,
+        "errors": [],
+        "markers": [
+          "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_poison_trail",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.21,
+        "errors": [],
+        "markers": [
+          "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_fan_feedback",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.93,
+        "errors": [],
+        "markers": [
+          "FAN FEEDBACK OK: status-specific body colors, dual-status transition, shared bounded pool, exact fade/pause/delete/reset, unchanged combat channels, real gasoline cooldowns/upgrades and preview"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_monster_necklace",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 3.24,
+        "errors": [],
+        "markers": [
+          "MONSTER NECKLACE OK: card selection, stacking, real kill drops, pickup/heal/audio, boss/rest/stage flow and reset"
+        ],
+        "shutdown_warnings": []
+      },
+      {
+        "name": "smoke_control_cards",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.68,
+        "errors": [],
+        "markers": [
+          "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_encounter_readability",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.02,
+        "errors": [],
+        "markers": [
+          "ENCOUNTER READABILITY OK: 84 checks; four guardian entries retain minions/projectiles and stop new waves, cleanup, bundled CJK tooltips for all equipment and blessings"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_death_stains",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.02,
+        "errors": [],
+        "markers": [
+          "DEATH STAINS OK: 281 checks; fixed neon species pigments independent of lethal effects, doubled dimensions, rewards, bounded instanced pool, RNG/variation, world anchoring, pause/hold/fade, Boss and lifecycle"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_dash_grace",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 5.11,
+        "errors": [],
+        "markers": [
+          "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_equipment_badges",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.5,
+        "errors": [],
+        "markers": [
+          "EQUIPMENT BADGES OK: all22 equipment, bold corner digits including6, unobscured 1.5x perimeter and four screen layouts"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_session_toolbar",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.86,
+        "errors": [],
+        "markers": [
+          "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_ink_surf",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.92,
+        "errors": [],
+        "markers": [
+          "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_tactical_enemies",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.02,
+        "errors": [],
+        "markers": [
+          "TACTICAL ENEMIES OK: 72 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ],
+    "scope": "Latest focused result per script, not entire smoke suite. Earlier failed guardian bare-script visual access was fixed with get_node_or_null; latest death-stain run has no runtime error."
+  },
+  "packed": {
+    "unique_passed": 8,
+    "checks": [
+      {
+        "name": "smoke_palette_cards",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 3.43,
+        "errors": [],
+        "markers": [
+          "PALETTE CARDS OK: 347 checks; all22 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_visual_style",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.18,
+        "errors": [],
+        "markers": [
+          "VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/direct damage without implicit burn, fixed footprint, shared non-additive pickups and exact healing"
+        ],
+        "shutdown_warnings": []
+      },
+      {
+        "name": "smoke_stage_variation",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.37,
+        "errors": [],
+        "markers": [
+          "STAGE VARIATION OK: 12 safe colors in three stage families, stable/repeat-free teal opening rolls, 3 primary themes, 75% share, stage transition and ranged caps"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_archetypes",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 7.86,
+        "errors": [],
+        "markers": [
+          "SMOKE OK"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_combat_lighting",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 4.78,
+        "errors": [],
+        "markers": [
+          "COMBAT LIGHTING OK: fixed batches/shared texture/layers, real drone/gun behavior, stable beam points, bounded projectile/orb/muzzle storms, exact audible-pitch XP glow/no-op/gap/pause/progress, deletion/Debug/return"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 17 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_beasts",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 16.62,
+        "errors": [],
+        "markers": [
+          "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_poison_trail",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 4.18,
+        "errors": [],
+        "markers": [
+          "POISON TRAIL OK: real card/ranks/cap/lottery, exact DPS/radius/nonstacking/expiry, movement/dash/teleport, distinct layered pulse, real slow/freeze interaction, pause/RNG/no proc cascade, kill rewards, fixed pools, boss/trial shields and Debug/Retry/Back"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 17 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_encounter_readability",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 3.71,
+        "errors": [],
+        "markers": [
+          "ENCOUNTER READABILITY OK: 84 checks; four guardian entries retain minions/projectiles and stop new waves, cleanup, bundled CJK tooltips for all equipment and blessings"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ],
+    "scope": "Final normal Web PCK, empty packed-project and isolated user data; no loose resource fallback."
+  },
+  "builds": {
+    "import-final.log": {
+      "errors": [],
+      "warnings": [],
+      "log_sha256": "b13dc156261c09009ca5c2eb10f8c03653f1d4f0de89b56ec34a56d17c8052d9"
+    },
+    "export-final.log": {
+      "errors": [],
+      "warnings": [],
+      "log_sha256": "b5288dad8e1c358fc64e8e0110703934dba1f990b473570320213b67def93ad8"
+    },
+    "qa-import-final.log": {
+      "errors": [],
+      "warnings": [],
+      "log_sha256": "b13dc156261c09009ca5c2eb10f8c03653f1d4f0de89b56ec34a56d17c8052d9"
+    },
+    "qa-export-final.log": {
+      "errors": [],
+      "warnings": [],
+      "log_sha256": "5419733bae7494836eb4a834df2f89d80a6e0909ded20841792dd19692244560"
+    }
+  },
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "156aab9d47c54617284c41c9a0fbead1f70c489cc30b9278bab001dcf8ab2599"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23500672,
+      "sha256": "5016e08eef0681e284b3675da654124630af93b0b91ee12f9abf07cf57b69087"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "browser": [
+    {
+      "viewport": "landscape",
+      "size": {
+        "width": 900,
+        "height": 600
+      },
+      "dpr": 1,
+      "touch": false,
+      "scope": "QA export of identical gameplay sources in Chromium WebGL2; only project main_scene selects the isolated real-scene visual fixture, not itch iframe or physical device. Grayscale screenshots rendered through browser CSS filter.",
+      "errors": [],
+      "messages": [
+        "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org",
+        "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+        "PALETTE PREVIEW READY"
+      ],
+      "gfx": {
+        "canvas": [
+          900,
+          600
+        ],
+        "css": [
+          900,
+          600
+        ],
+        "context_lost": false,
+        "renderer": "WebKit WebGL"
+      },
+      "screenshots": [
+        "landscape-world-0.png",
+        "landscape-world-0-gray.png",
+        "landscape-world-1.png",
+        "landscape-world-1-gray.png",
+        "landscape-world-2.png",
+        "landscape-world-2-gray.png",
+        "landscape-dash-default.png",
+        "landscape-dash-pressed.png",
+        "landscape-dash-cooldown.png",
+        "landscape-dash-ready.png",
+        "landscape-cards.png",
+        "landscape-cards-gray.png",
+        "landscape-cards-cost.png"
+      ],
+      "state": {
+        "available": true,
+        "background": 2,
+        "cards": true,
+        "group": 1,
+        "pressed": false,
+        "progress": 1,
+        "ready_glow": 1
+      },
+      "states": {
+        "world-0": {
+          "available": true,
+          "background": 0,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-0-gray": {
+          "available": true,
+          "background": 0,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-1": {
+          "available": true,
+          "background": 1,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-1-gray": {
+          "available": true,
+          "background": 1,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-2": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-2-gray": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "dash-default": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "dash-pressed": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": true,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "dash-cooldown": {
+          "available": false,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 0.45,
+          "ready_glow": 0
+        },
+        "dash-ready": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        },
+        "cards": {
+          "available": true,
+          "background": 2,
+          "cards": true,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        },
+        "cards-gray": {
+          "available": true,
+          "background": 2,
+          "cards": true,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        },
+        "cards-cost": {
+          "available": true,
+          "background": 2,
+          "cards": true,
+          "group": 1,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        }
+      }
+    },
+    {
+      "viewport": "portrait",
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "dpr": 2,
+      "touch": true,
+      "scope": "QA export of identical gameplay sources in Chromium WebGL2; only project main_scene selects the isolated real-scene visual fixture, not itch iframe or physical device. Grayscale screenshots rendered through browser CSS filter.",
+      "errors": [],
+      "messages": [
+        "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org",
+        "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+        "PALETTE PREVIEW READY"
+      ],
+      "gfx": {
+        "canvas": [
+          780,
+          1688
+        ],
+        "css": [
+          390,
+          844
+        ],
+        "context_lost": false,
+        "renderer": "WebKit WebGL"
+      },
+      "screenshots": [
+        "portrait-world-0.png",
+        "portrait-world-0-gray.png",
+        "portrait-world-1.png",
+        "portrait-world-1-gray.png",
+        "portrait-world-2.png",
+        "portrait-world-2-gray.png",
+        "portrait-dash-default.png",
+        "portrait-dash-pressed.png",
+        "portrait-dash-cooldown.png",
+        "portrait-dash-ready.png",
+        "portrait-cards.png",
+        "portrait-cards-gray.png",
+        "portrait-cards-cost.png"
+      ],
+      "state": {
+        "available": true,
+        "background": 2,
+        "cards": true,
+        "group": 1,
+        "pressed": false,
+        "progress": 1,
+        "ready_glow": 1
+      },
+      "states": {
+        "world-0": {
+          "available": true,
+          "background": 0,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-0-gray": {
+          "available": true,
+          "background": 0,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-1": {
+          "available": true,
+          "background": 1,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-1-gray": {
+          "available": true,
+          "background": 1,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-2": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-2-gray": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "dash-default": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "dash-pressed": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": true,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "dash-cooldown": {
+          "available": false,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 0.45,
+          "ready_glow": 0
+        },
+        "dash-ready": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        },
+        "cards": {
+          "available": true,
+          "background": 2,
+          "cards": true,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        },
+        "cards-gray": {
+          "available": true,
+          "background": 2,
+          "cards": true,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        },
+        "cards-cost": {
+          "available": true,
+          "background": 2,
+          "cards": true,
+          "group": 1,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        }
+      }
+    },
+    {
+      "viewport": "phone-landscape",
+      "size": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2,
+      "touch": true,
+      "scope": "QA export of identical gameplay sources in Chromium WebGL2; only project main_scene selects the isolated real-scene visual fixture, not itch iframe or physical device. Grayscale screenshots rendered through browser CSS filter.",
+      "errors": [],
+      "messages": [
+        "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org",
+        "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+        "PALETTE PREVIEW READY"
+      ],
+      "gfx": {
+        "canvas": [
+          1688,
+          780
+        ],
+        "css": [
+          844,
+          390
+        ],
+        "context_lost": false,
+        "renderer": "WebKit WebGL"
+      },
+      "screenshots": [
+        "phone-landscape-world-0.png",
+        "phone-landscape-world-0-gray.png",
+        "phone-landscape-world-1.png",
+        "phone-landscape-world-1-gray.png",
+        "phone-landscape-world-2.png",
+        "phone-landscape-world-2-gray.png",
+        "phone-landscape-dash-default.png",
+        "phone-landscape-dash-pressed.png",
+        "phone-landscape-dash-cooldown.png",
+        "phone-landscape-dash-ready.png",
+        "phone-landscape-cards.png",
+        "phone-landscape-cards-gray.png",
+        "phone-landscape-cards-cost.png"
+      ],
+      "state": {
+        "available": true,
+        "background": 2,
+        "cards": true,
+        "group": 1,
+        "pressed": false,
+        "progress": 1,
+        "ready_glow": 1
+      },
+      "states": {
+        "world-0": {
+          "available": true,
+          "background": 0,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-0-gray": {
+          "available": true,
+          "background": 0,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-1": {
+          "available": true,
+          "background": 1,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-1-gray": {
+          "available": true,
+          "background": 1,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-2": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "world-2-gray": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "dash-default": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "dash-pressed": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": true,
+          "progress": 1,
+          "ready_glow": 0
+        },
+        "dash-cooldown": {
+          "available": false,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 0.45,
+          "ready_glow": 0
+        },
+        "dash-ready": {
+          "available": true,
+          "background": 2,
+          "cards": false,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        },
+        "cards": {
+          "available": true,
+          "background": 2,
+          "cards": true,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        },
+        "cards-gray": {
+          "available": true,
+          "background": 2,
+          "cards": true,
+          "group": 0,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        },
+        "cards-cost": {
+          "available": true,
+          "background": 2,
+          "cards": true,
+          "group": 1,
+          "pressed": false,
+          "progress": 1,
+          "ready_glow": 1
+        }
+      }
+    }
+  ],
+  "browser_interactions": [
+    {
+      "check": "Actual mobile touch swipe leaves the draft open; a complete tap selects and closes it",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "check": "Normal exported entry: Start, keyboard movement/Dash and live combat",
+      "passed": true,
+      "errors": [],
+      "gfx": {
+        "width": 900,
+        "height": 600,
+        "context_lost": false
+      }
+    }
+  ],
+  "qa_source_equivalence": {
+    "script": {
+      "file_count": 221,
+      "manifest_sha256": "32dbccbe7801f0f5d2cde47d70c0c9097892720884ed14e8c7dcf36dde260750",
+      "qa_game_sources_identical": true
+    },
+    "scenes": {
+      "file_count": 59,
+      "manifest_sha256": "0808b2ca51c8810540444f001c070628d5fa085c1a1d0e049b55f9f17e70a559",
+      "qa_game_sources_identical": true
+    },
+    "resource": {
+      "file_count": 10,
+      "manifest_sha256": "669658c75dc1c679b3f1fc16bf551b27f3160ad43d83573c3fd82947d0d2d5f1",
+      "qa_game_sources_identical": true
+    },
+    "shaders": {
+      "file_count": 17,
+      "manifest_sha256": "cb3c17f90e96c1eb8beedcb693ca4737d188573bc6b2331b60d19e1c08827542",
+      "qa_game_sources_identical": true
+    },
+    "tools": {
+      "file_count": 137,
+      "manifest_sha256": "86833e27b5e691bcbc45164703505a921a1343bbc56f9b1e098ae9ae2b107670",
+      "qa_game_sources_identical": true
+    },
+    "assest": {
+      "file_count": 303,
+      "manifest_sha256": "d7a548607d16107afca197e712691844908bb2f318df363b3f9641bfd94680af",
+      "qa_game_sources_identical": true
+    }
+  },
+  "qa_entry": "Only QA project main_scene selects tools/preview_palette.tscn; actual actors/controls frozen for static comparison. Normal Web main entry separately exercised. No production main_scene change.",
+  "grayscale": "Actual browser CSS grayscale(1) on game canvas; reviewed actor/value/shape distinction in landscape and portrait, not pixel-exact reference matching or user-population accessibility validation.",
+  "contrast_test_update": "Exact #FF3B3B body retained; existing >=4.5:1 assertion now checks visible white projectile core against all floor variants, rather than prior pale-red body. Green beneficial-pickup contrast and combat assertions retained. No claim that red body alone reaches4.5.",
+  "visual_budgets": {
+    "lighting_fields": 3,
+    "monster_shadow_slots": 64,
+    "new_pickup_shadow_slots": 32,
+    "new_coin_glow_max": 8,
+    "pickup_source_refresh_seconds": 0.1,
+    "pickup_scan_per_collection_max": 128,
+    "decoration_sprite_pool": 72,
+    "new_per_actor_light_nodes": 0,
+    "functional_skill_picture_nodes_max": 4,
+    "note": "Extra shadow/glow draw work is bounded, not proven cost-free on Safari. Enemy shadows now include EnemyShell subclasses, still under existing64 cap."
+  },
+  "literal_audit": {
+    "remaining": [
+      {
+        "file": "script/banana_fan.gd",
+        "line": 202,
+        "source": "draw_texture_rect(ICON, Rect2(-14.0, -14.0, 28.0, 28.0), false, Color(1, 1, 1, fade))"
+      },
+      {
+        "file": "script/death_stains.gd",
+        "line": 72,
+        "source": "_ellipse(picture,center,Vector2(random.randf_range(4.2,7.5),random.randf_range(2.4,4.6)),Color(1,1,1,0.9))"
+      },
+      {
+        "file": "script/death_stains.gd",
+        "line": 76,
+        "source": "_ellipse(picture,center+offset,Vector2(random.randf_range(1,3.4),random.randf_range(0.8,2.7)),Color(1,1,1,random.randf_range(0.65,0.9)))"
+      },
+      {
+        "file": "script/death_stains.gd",
+        "line": 77,
+        "source": "_ellipse(picture,center+Vector2(random.randf_range(-2,2),random.randf_range(-1,1)),Vector2(random.randf_range(1.5,3.5),random.randf_range(1,2)),Color(0.65,0.65,0.65,0.95))"
+      },
+      {
+        "file": "script/death_stains.gd",
+        "line": 81,
+        "source": "_ellipse(picture,center,Vector2(random.randf_range(4,7.5),random.randf_range(1.6,3.3)),Color(1,1,1,0.9))"
+      },
+      {
+        "file": "script/death_stains.gd",
+        "line": 82,
+        "source": "_ellipse(picture,center+Vector2(-4,0),Vector2(5,random.randf_range(0.7,1.4)),Color(1,1,1,0.7))"
+      },
+      {
+        "file": "script/mobile_controls.gd",
+        "line": 159,
+        "source": "stick_base.modulate = Color(1, 1, 1, _opacity)"
+      },
+      {
+        "file": "script/mobile_controls.gd",
+        "line": 160,
+        "source": "dash_button.modulate = Color(1, 1, 1, _opacity)"
+      },
+      {
+        "file": "script/mobile_controls.gd",
+        "line": 223,
+        "source": "var tint: = Color(1.16, 1.16, 1.16, _opacity) if hot else Color(1, 1, 1, _opacity)"
+      },
+      {
+        "file": "script/mobile_controls.gd",
+        "line": 235,
+        "source": "dash_button.modulate = Color(1, 1, 1, _opacity)"
+      },
+      {
+        "file": "script/shadow.gd",
+        "line": 8,
+        "source": "modulate = Color(1.35, 1.35, 1.35, 0.82)"
+      },
+      {
+        "file": "script/shadow.gd",
+        "line": 10,
+        "source": "tween.tween_property(self, \"modulate\", Color(1.2, 1.2, 1.2, 0.0), 0.22)"
+      },
+      {
+        "file": "script/upgrade_card.gd",
+        "line": 84,
+        "source": "play_hover_tween(Vector2(1.02, 1.02), Color(1.1, 1.1, 1.1), 0.12)"
+      },
+      {
+        "file": "scenes/enemy.tscn",
+        "line": 131,
+        "source": "\"values\": [Color(1, 1, 1, 1)]"
+      },
+      {
+        "file": "scenes/enemy.tscn",
+        "line": 159,
+        "source": "\"values\": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]"
+      },
+      {
+        "file": "scenes/health_bar.tscn",
+        "line": 14,
+        "source": "shadow_color = Color(0, 0, 0, 0.27451)"
+      },
+      {
+        "file": "scenes/player.tscn",
+        "line": 238,
+        "source": "debug_color = Color(0.89733845, 0.2303895, 0.55137455, 0.41960785)"
+      }
+    ],
+    "classification": "17 numeric literals: white/gray alpha masks, neutral scalar brightness/fades, black UI shadow, and collision debug-only pink. No scattered runtime faction/status/pickup pigments remain outside GamePalette. Existing source image pixels preserved; runtime materials apply roles."
+  },
+  "preserved_unmodified_paths": [
+    "assest",
+    "script/settings_store.gd",
+    "project.godot",
+    "export_presets.cfg",
+    "scenes/player.tscn"
+  ],
+  "changed_v4_tracked_files": [
+    "AGENTS.md",
+    "resource/Enemy_3.tres",
+    "resource/Enemy_5.tres",
+    "scenes/boss_reminder.tscn",
+    "scenes/color_rect.tscn",
+    "scenes/drone.tscn",
+    "scenes/enemy.tscn",
+    "scenes/level_bar.gd",
+    "scenes/main.tscn",
+    "script/beast_boss.gd",
+    "script/beast_powers.gd",
+    "script/beast_skill_icon.gd",
+    "script/black_hole.gd",
+    "script/boss.gd",
+    "script/boss_reminder.gd",
+    "script/boss_rush_feedback.gd",
+    "script/chain_lightning_effect.gd",
+    "script/coin.gd",
+    "script/combat_feedback.gd",
+    "script/combat_lighting.gd",
+    "script/demage_text.gd",
+    "script/enemy.gd",
+    "script/enemy_attack_field.gd",
+    "script/enemy_projectile.gd",
+    "script/enemy_shell.gd",
+    "script/environment_weather.gd",
+    "script/equipment_panel.gd",
+    "script/game.gd",
+    "script/game_palette.gd",
+    "script/game_ui_theme.gd",
+    "script/healing_orb.gd",
+    "script/infinite_background.gd",
+    "script/ink_surf.gd",
+    "script/knight_boss.gd",
+    "script/lighting_chain.gd",
+    "script/lighting_segment.gd",
+    "script/menu_background.gd",
+    "script/meteor_shower.gd",
+    "script/pasue_menu.gd",
+    "script/player.gd",
+    "script/player_marker.gd",
+    "script/poison_trail.gd",
+    "script/spawner.gd",
+    "script/treasure_guardian.gd",
+    "script/trial_enemy.gd",
+    "script/trials.gd",
+    "script/visual_style.gd",
+    "script/wooden_trial.gd",
+    "script/xp_pickup_glow.gd",
+    "shaders/infinite_ground.gdshader",
+    "shaders/semantic_ramp.gdshader",
+    "tools/preview_palette.gd",
+    "tools/smoke_archetypes.gd",
+    "tools/smoke_combat_lighting.gd",
+    "tools/smoke_stage_variation.gd",
+    "tools/smoke_visual_style.gd"
+  ],
+  "changed_vs_master_tracked_files": [
+    "AGENTS.md",
+    "docs/AI_HANDOFF.md",
+    "docs/palette-readability.md",
+    "docs/screenshots/palette-20261109/.gdignore",
+    "docs/screenshots/palette-20261109/landscape-cards-cost.png",
+    "docs/screenshots/palette-20261109/landscape-cards-gray.png",
+    "docs/screenshots/palette-20261109/landscape-cards.png",
+    "docs/screenshots/palette-20261109/landscape-dash-cooldown.png",
+    "docs/screenshots/palette-20261109/landscape-dash-default.png",
+    "docs/screenshots/palette-20261109/landscape-dash-pressed.png",
+    "docs/screenshots/palette-20261109/landscape-dash-ready.png",
+    "docs/screenshots/palette-20261109/landscape-world-0-gray.png",
+    "docs/screenshots/palette-20261109/landscape-world-0.png",
+    "docs/screenshots/palette-20261109/landscape-world-1-gray.png",
+    "docs/screenshots/palette-20261109/landscape-world-1.png",
+    "docs/screenshots/palette-20261109/landscape-world-2-gray.png",
+    "docs/screenshots/palette-20261109/landscape-world-2.png",
+    "docs/screenshots/palette-20261109/normal-web-gameplay.png",
+    "docs/screenshots/palette-20261109/phone-landscape-cards.png",
+    "docs/screenshots/palette-20261109/portrait-cards.png",
+    "docs/screenshots/palette-20261109/portrait-world-0-gray.png",
+    "docs/screenshots/palette-20261109/portrait-world-0.png",
+    "docs/validation/palette-playtest-20261109.json",
+    "docs/validation/palette-readability-20261109.json",
+    "resource/BladeMantis.tres",
+    "resource/BoomerangImp.tres",
+    "resource/Enemy2.tres",
+    "resource/Enemy_1.tres",
+    "resource/Enemy_3.tres",
+    "resource/Enemy_4.tres",
+    "resource/Enemy_5.tres",
+    "resource/LootCourier.tres",
+    "resource/SporeBomber.tres",
+    "resource/ui_tooltip_theme.tres",
+    "scenes/PasueMenu.tscn",
+    "scenes/UpgradeCard.tscn",
+    "scenes/boss.tscn",
+    "scenes/boss_reminder.tscn",
+    "scenes/bullet.gd",
+    "scenes/bullet.tscn",
+    "scenes/color_rect.tscn",
+    "scenes/damage_text.tscn",
+    "scenes/drone.tscn",
+    "scenes/enemy.tscn",
+    "scenes/fullscreen_toggle.tscn",
+    "scenes/health_bar.tscn",
+    "scenes/level_bar.gd",
+    "scenes/level_bar.tscn",
+    "scenes/main.tscn",
+    "scenes/mobile_controls.tscn",
+    "scenes/weapon.tscn",
+    "script/arsenal_combo.gd",
+    "script/banana_fan.gd",
+    "script/beast_boss.gd",
+    "script/beast_powers.gd",
+    "script/beast_skill_icon.gd",
+    "script/black_hole.gd",
+    "script/blessing_effect.gd",
+    "script/bomb_controller.gd",
+    "script/boss.gd",
+    "script/boss_reminder.gd",
+    "script/boss_rush_feedback.gd",
+    "script/card_numbers.gd",
+    "script/card_numbers.gd.uid",
+    "script/card_preview.gd",
+    "script/card_preview.gd.uid",
+    "script/chain_lightning_effect.gd",
+    "script/circle_unit.gd",
+    "script/circle_weapon.gd",
+    "script/coin.gd",
+    "script/combat_feedback.gd",
+    "script/combat_lighting.gd",
+    "script/damage_flash.gd",
+    "script/dash_button.gd",
+    "script/death_stains.gd",
+    "script/debug_menu_layout.gd",
+    "script/demage_text.gd",
+    "script/drone.gd",
+    "script/drone_controller.gd",
+    "script/electirc.gd",
+    "script/elemental_attack_visual.gd",
+    "script/enemy.gd",
+    "script/enemy_attack_field.gd",
+    "script/enemy_meta.gd",
+    "script/enemy_projectile.gd",
+    "script/enemy_shell.gd",
+    "script/environment_weather.gd",
+    "script/equipment_combos.gd",
+    "script/equipment_panel.gd",
+    "script/freeze_controller.gd",
+    "script/fullscreen_toggle.gd",
+    "script/game.gd",
+    "script/game_end_ui.gd",
+    "script/game_palette.gd",
+    "script/game_palette.gd.uid",
+    "script/game_ui_theme.gd",
+    "script/game_ui_theme.gd.uid",
+    "script/hand_weapon.gd",
+    "script/healing_orb.gd",
+    "script/health_bar.gd",
+    "script/infinite_background.gd",
+    "script/ink_surf.gd",
+    "script/juicy_hover.gd",
+    "script/knight_boss.gd",
+    "script/lighting_chain.gd",
+    "script/lighting_segment.gd",
+    "script/lightning_strike.gd",
+    "script/loot_courier.gd",
+    "script/menu_background.gd",
+    "script/meteor_shower.gd",
+    "script/mobile_controls.gd",
+    "script/molotov_bottle.gd",
+    "script/molotov_controller.gd",
+    "script/pasue_menu.gd",
+    "script/player.gd",
+    "script/player_marker.gd",
+    "script/poison_trail.gd",
+    "script/rest_hub.gd",
+    "script/run_variety.gd",
+    "script/settings_page.gd",
+    "script/shield_gem.gd",
+    "script/spawner.gd",
+    "script/status_echo_feedback.gd",
+    "script/treasure_guardian.gd",
+    "script/treasure_lottery.gd",
+    "script/trial_enemy.gd",
+    "script/trials.gd",
+    "script/upgrade_card.gd",
+    "script/visual_style.gd",
+    "script/weapon.gd",
+    "script/wind_blade.gd",
+    "script/wind_boss.gd",
+    "script/wooden_trial.gd",
+    "script/xp_pickup_glow.gd",
+    "shaders/book_palette.gdshader",
+    "shaders/enemy.gdshader",
+    "shaders/infinite_ground.gdshader",
+    "shaders/semantic_ramp.gdshader",
+    "shaders/semantic_ramp.gdshader.uid",
+    "shaders/status_echo_flash.gdshader",
+    "shaders/xp_pickup_glow.gdshader",
+    "tools/preview_palette.gd",
+    "tools/preview_palette.gd.uid",
+    "tools/preview_palette.tscn",
+    "tools/smoke_archetypes.gd",
+    "tools/smoke_combat_lighting.gd",
+    "tools/smoke_dash_grace.gd",
+    "tools/smoke_fan_feedback.gd",
+    "tools/smoke_monster_necklace.gd",
+    "tools/smoke_palette_cards.gd",
+    "tools/smoke_palette_cards.gd.uid",
+    "tools/smoke_poison_trail.gd",
+    "tools/smoke_stage_variation.gd",
+    "tools/smoke_status_numbers.gd",
+    "tools/smoke_visual_style.gd"
+  ],
+  "screenshots": {
+    "captured": 39,
+    "committed": {
+      "docs/screenshots/palette-v4-20261110/landscape-world-0.png": "7f1030793db02f8ba3de5fade02ddb966e36a858e06d6ea53d5dda47ddcb9cfa",
+      "docs/screenshots/palette-v4-20261110/landscape-world-0-gray.png": "cf6c94b862f87bff701c739db713c9d1482cacc65269fcaac092178610898d93",
+      "docs/screenshots/palette-v4-20261110/portrait-world-0.png": "0a09253bec06bf7a43a3763e3bc845e86ae0e93b741073d755cc3f44100c0aa6",
+      "docs/screenshots/palette-v4-20261110/portrait-world-0-gray.png": "83b3737c4bcf98ddff69bbf27679ff5966db70b0ff11f0acdb74d9ae01dae127",
+      "docs/screenshots/palette-v4-20261110/landscape-world-1.png": "c33dcfcce7e9f83d0a36d385e83fa9499cdb97b50ecf72e226fdc560125c180f",
+      "docs/screenshots/palette-v4-20261110/landscape-world-1-gray.png": "6f0044742f99f22bb6cdbfbebb5be9160801f9da18c1a062c58df297529e8f67",
+      "docs/screenshots/palette-v4-20261110/landscape-world-2.png": "64ce7ed869ddfed0ce0ae9105b1b115e1a3207675e81dda701bab9b2e4001d9e",
+      "docs/screenshots/palette-v4-20261110/landscape-world-2-gray.png": "7d1519e75e68c41421f6bae5d46e9f1ba7c343bf70e8008dc627a419a1f8dd63",
+      "docs/screenshots/palette-v4-20261110/landscape-cards.png": "5832e6b1e9e45f3bc9c83fa3dd36d93f563b39944b38f786467e05e0b02b9d90",
+      "docs/screenshots/palette-v4-20261110/portrait-cards.png": "035012c98dfeb68747f6bf72dc600f417c1dd2a722db7363e2c8df929e27f173",
+      "docs/screenshots/palette-v4-20261110/phone-landscape-world-0.png": "26feb184ea1a1f8893a7e7b2f46701d1f99a851a58b4db18618b5b6295331d0e",
+      "docs/screenshots/palette-v4-20261110/normal-web-gameplay.png": "01bea5165b8f17053f367fed5ca7ea8a48b5680dbeff08be973137e349a1f8c1",
+      "docs/screenshots/palette-v4-20261110/landscape-dash-default.png": "bcfdbff03b760d42ef55b4c6bbbef2dd847fa78fae59d652bcfeee818392e7b8",
+      "docs/screenshots/palette-v4-20261110/landscape-dash-pressed.png": "06d92b62ae8af7f96ed05c669ee55ee4a58841b2fc353b79398cf00b0b457552",
+      "docs/screenshots/palette-v4-20261110/landscape-dash-cooldown.png": "f4b258f2414d6d7c7745017c7a58077460934ed37d04fdb5c84e1da3f33ad15e",
+      "docs/screenshots/palette-v4-20261110/landscape-dash-ready.png": "59091b3101ad97ac829defbf501a77985909b2cb32f1c2f51e7b9bdfa4abe80f"
+    },
+    "excluded_from_game_import_and_export": true
+  },
+  "known_limits": [
+    "Cold first import needed cache generation and logged missing imported font/texture and old WAV seek warnings; final import/export clean.",
+    "Existing CLI ObjectDB/resource-in-use shutdown warnings retained per check, not ignored runtime failures.",
+    "No physical Safari/iOS, high-density FPS/memory benchmark, full campaign, all-weather stress or itch iframe test.",
+    "Only local normal/QA Web export tested; no new deployment or itch release in this task."
+  ],
+  "artifact_directory_transient": "/workspace/Rogge-palette-v4-20261110",
+  "source_commit": "1389bc80b1cc2ccc5f7dbfb8cc35aa877e2315be",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/7"
+}

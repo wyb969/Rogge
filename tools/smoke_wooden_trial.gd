@@ -27,7 +27,8 @@ func _run() -> void:
 	await process_frame
 	main._on_debug_button_pressed()
 	var button: Button = main.debug_page.box.get_node("DebugWoodenTrialButton")
-	_expect(button.visible, "new challenge is on the first Debug page")
+	main.debug_page.ensure_control_visible(button)
+	_expect(button.visible and not button.disabled, "wooden challenge is reachable on its current Debug page")
 	button.pressed.emit()
 	button.pressed.emit()
 	await process_frame

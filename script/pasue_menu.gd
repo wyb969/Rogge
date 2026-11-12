@@ -1,11 +1,12 @@
 extends CanvasLayer
 
 @export var card_scene: PackedScene
-@onready var h_box_container: HBoxContainer = $Panel / HBoxContainer
+@onready var h_box_container: GridContainer = $Panel / HBoxContainer
 
 signal upgrade_selected(upgrade_id: String)
 
 const DRAW_COUNT: = 3
+const PREVIEW := preload("res://script/card_preview.gd")
 const LIGHTNING_RING: = preload("res://script/lightning_ring.gd")
 var growth_hint: Label
 const VARIETY: = preload("res://script/run_variety.gd")
@@ -24,137 +25,145 @@ var reroll_hint: Label
 var _offered: Array = []
 var _draft_rng: = RandomNumberGenerator.new()
 var _fit_pending: = false
+var _card_scroll: ScrollContainer
 
 var upgrade_pool: = [
-	{"id": "bomb", "title": "炸弹 +1 级", "desc": "", "icon": "res://assest/sprites/bomb.svg", "max_level": 5},
-	{"id": "critical_glasses", "title": "暴击眼镜 +1 级", "desc": "", "icon": "res://assest/sprites/critical_glasses.svg", "max_level": 5},
-	{"id": "banana_fan", "title": "芭蕉扇 +1 级", "desc": "", "icon": "res://assest/sprites/banana_fan.svg", "max_level": 5},
-	{"id": "black_hole", "title": "黑洞 +1 级", "desc": "", "icon": "res://assest/sprites/black_hole.svg", "max_level": 5},
-	{"id": "poison_trail", "title": "剧毒踪迹 +1 级", "desc": "", "icon": "res://assest/sprites/poison_trail.svg", "max_level": 5}, 
-	{"id": "wind_emblem", "title": "踏风徽记 +1 级", "desc": "", "icon": "res://assest/sprites/wind_emblem.svg"}, 
-	{"id": "echo_ember", "title": "回响火种 +1 级", "desc": "", "icon": "res://assest/sprites/echo_ember.svg"}, 
+	{"id": "bomb", "title": "炸弹", "desc": "", "icon": "res://assest/sprites/bomb.svg", "max_level": 5},
+	{"id": "critical_glasses", "title": "暴击眼镜", "desc": "", "icon": "res://assest/sprites/critical_glasses.svg", "max_level": 5},
+	{"id": "banana_fan", "title": "芭蕉扇", "desc": "", "icon": "res://assest/sprites/banana_fan.svg", "max_level": 5},
+	{"id": "black_hole", "title": "黑洞", "desc": "", "icon": "res://assest/sprites/black_hole.svg", "max_level": 5},
+	{"id": "poison_trail", "title": "剧毒踪迹", "desc": "", "icon": "res://assest/sprites/poison_trail.svg", "max_level": 5},
+	{"id": "wind_emblem", "title": "踏风徽记", "desc": "", "icon": "res://assest/sprites/wind_emblem.svg"},
+	{"id": "echo_ember", "title": "回响火种", "desc": "", "icon": "res://assest/sprites/echo_ember.svg"},
 	{
 		"id": "lightning_ring", 
-		"title": "闪电戒指 +1 级", 
+		"title": "闪电戒指",
 		"desc": "", 
 		"icon": "res://assest/sprites/lightning_ring.svg"
 	}, 
 	{
 		"id": "axe_up", 
-		"title": "斧头 +1 级", 
+		"title": "斧头",
 		"desc": "提高斧头攻击力", 
 		"icon": "res://assest/sprites/axe.png"
 	}, 
 	{
 		"id": "circle_up", 
-		"title": "书本 +1 级", 
+		"title": "书本",
 		"desc": "增加书本并提高伤害\n最多12本，之后继续强化伤害", 
 		"icon": "res://assest/sprites/book.png"
 	}, 
 	{
 		"id": "gun_up", 
-		"title": "枪支 +1 级", 
+		"title": "枪支",
 		"desc": "提高枪支属性", 
 		"icon": "res://assest/weaponR1.png"
 	}, 
 	{
 		"id": "pickup_up", 
-		"title": "拾取 +1 级", 
+		"title": "拾取",
 		"desc": "提高拾取范围", 
 		"icon": "res://assest/bullet.png"
 	}, 
 	{
 		"id": "speed_up", 
-		"title": "移速 +1 级", 
+		"title": "移速",
 		"desc": "提高移动速度", 
 		"icon": "res://assest/sprites/Speedup.png"
 	}, 
 	{
 		"id": "left_fist", 
-		"title": "左拳 +1 级", 
+		"title": "左拳",
 		"desc": "", 
 		"icon": "res://assest/sprites/fist_left.svg"
 	}, 
 	{
 		"id": "right_fist", 
-		"title": "右拳 +1 级", 
+		"title": "右拳",
 		"desc": "", 
 		"icon": "res://assest/sprites/fist_right.svg"
 	}, 
 	{
 		"id": "drone_up", 
-		"title": "无人机 +1 级", 
+		"title": "无人机",
 		"desc": "", 
 		"icon": "res://assest/sprites/drone.svg"
 	}, 
 	{
 		"id": "molotov_up", 
-		"title": "汽油瓶 +1 级", 
+		"title": "汽油瓶",
 		"desc": "", 
 		"icon": "res://assest/sprites/molotov.svg"
 	}, 
 	{
 		"id": "freeze_up", 
-		"title": "寒冰 +1 级", 
+		"title": "寒冰",
 		"desc": "", 
 		"icon": "res://assest/sprites/freeze.svg"
 	}, 
 	{
 		"id": "regen_up", 
-		"title": "回复 +1 级", 
+		"title": "回复",
 		"desc": "", 
 		"icon": "res://assest/sprites/regen_sprout.svg"
 	}, 
 	{
 		"id": "lifesteal_up", 
-		"title": "吸血 +1 级", 
+		"title": "吸血",
 		"desc": "", 
 		"icon": "res://assest/sprites/crimson_fang.svg"
 	}, 
 	{
 		"id": "monster_necklace", 
-		"title": "怪物项链 +1 级", 
+		"title": "怪物项链",
 		"desc": "", 
 		"icon": "res://assest/sprites/monster_necklace.png"
 	}, 
 	{
 		"id": "shield_up", 
-		"title": "玉佩 +1 级", 
+		"title": "玉佩",
 		"desc": "", 
 		"icon": "res://assest/sprites/jade_guard.svg"
 	}
 ]
 
 func _ready():
+	layer = 140
 	visible = false
+	_card_scroll = ScrollContainer.new()
+	_card_scroll.name = "CardScroll"
+	_card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_card_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	$Panel.add_child(_card_scroll)
+	h_box_container.reparent(_card_scroll)
 	_draft_rng.randomize()
 	growth_hint = Label.new()
 	growth_hint.name = "GrowthHint"
 	growth_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	growth_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	growth_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	growth_hint.add_theme_color_override("font_color", Color(0.65, 1.0, 0.75))
+	growth_hint.add_theme_color_override("font_color", GamePalette.PLAYER_DAMAGE_WHITE)
 	$Panel.add_child(growth_hint)
 	reroll_button = Button.new()
 	reroll_button.name = "RerollButton"
 	reroll_button.pressed.connect(_on_reroll)
 	$Panel.add_child(reroll_button)
 	var style: = StyleBoxFlat.new()
-	style.bg_color = Color(0.055, 0.19, 0.19)
-	style.border_color = Color(0.42, 0.83, 0.75)
+	style.bg_color = GamePalette.UI_GREY_BASE
+	style.border_color = GamePalette.UI_GREY_BORDER
 	style.set_border_width_all(2)
 	style.set_corner_radius_all(7)
 	reroll_button.add_theme_stylebox_override("normal", style)
 	var disabled_style: = style.duplicate() as StyleBoxFlat
-	disabled_style.bg_color = Color(0.08, 0.09, 0.1)
-	disabled_style.border_color = Color(0.25, 0.3, 0.32)
+	disabled_style.bg_color = GamePalette.UI_GREY_COOLDOWN
+	disabled_style.border_color = GamePalette.UI_GREY_BASE
 	reroll_button.add_theme_stylebox_override("disabled", disabled_style)
 	JuicyHover.bind(reroll_button)
 	reroll_hint = Label.new()
 	reroll_hint.text = "每局 2 次 · 击败宝囊精可补充"
 	reroll_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	reroll_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	reroll_hint.modulate = Color(0.65, 0.8, 0.77)
+	reroll_hint.modulate = GamePalette.UI_GREY_BORDER
 	$Panel.add_child(reroll_hint)
 	_refresh_reroll()
 	get_viewport().size_changed.connect(_fit_cards)
@@ -216,37 +225,42 @@ func _on_reroll() -> void :
 	AudioManager.play_pickup()
 	RunDiagnostics.mark("card_reroll", {"remaining": rerolls})
 
-func _fit_cards() -> void :
+func _fit_cards() -> void:
 	_fit_pending = false
-	if h_box_container == null:
-		return
-	var vp: = get_viewport().get_visible_rect().size
-	var count: = h_box_container.get_child_count()
-	if count == 0 or vp.x <= 0:
-		return
-	var ui_scale: = 2.0 if vp.y > vp.x else 1.0
-	var gap: = 20.0 * ui_scale
-	var width: = minf(180.0 * ui_scale, (vp.x - 32.0 - gap * (count - 1)) / count)
-	for card in h_box_container.get_children():
-		card.set_display_width(width, ui_scale)
-
-
-	var row_height: = maxf(250 * ui_scale, h_box_container.get_combined_minimum_size().y)
-	var content: = Vector2(width * count + gap * (count - 1), row_height)
+	if h_box_container == null or h_box_container.get_child_count() == 0: return
+	var vp := get_viewport().get_visible_rect().size
+	var transform := get_viewport().get_final_transform()
+	var ratio := 1.0
+	if OS.has_feature("web"):
+		var css: Variant = JavaScriptBridge.eval("(function(){var c=document.getElementById('canvas');return c?c.getBoundingClientRect().width:window.innerWidth;})()",true)
+		if (css is float or css is int) and float(css) > 0: ratio = float(get_tree().root.size.x) / float(css)
+	var ui := ratio / maxf((transform * Vector2.RIGHT - transform * Vector2.ZERO).length(),0.1)
+	var portrait := vp.y > vp.x
+	var compact := portrait or vp.y / ui < 460
+	var count := h_box_container.get_child_count()
+	h_box_container.columns = 1 if portrait else count
+	var gap := 10.0 * ui
+	var width := minf((vp.x-48*ui-gap*(h_box_container.columns-1))/h_box_container.columns, (420.0 if portrait else 280.0)*ui)
+	for card in h_box_container.get_children(): card.set_display_width(width,ui,compact)
+	h_box_container.add_theme_constant_override("h_separation",int(gap))
+	h_box_container.add_theme_constant_override("v_separation",int(gap))
+	var content := h_box_container.get_combined_minimum_size()
 	h_box_container.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	h_box_container.scale = Vector2.ONE
-	h_box_container.add_theme_constant_override("separation", int(gap))
 	h_box_container.size = content
-	h_box_container.position = Vector2((vp.x - content.x) * 0.5, maxf(64 * ui_scale, (vp.y - content.y - 108 * ui_scale) * 0.5))
-	UiFonts.apply_to_label(growth_hint, int(16 * ui_scale), true)
-	growth_hint.position = Vector2(16, maxf(12.0, h_box_container.position.y - 50.0 * ui_scale))
-	growth_hint.size = Vector2(vp.x - 32, 40 * ui_scale)
-	UiFonts.apply_to_button(reroll_button, int(17 * ui_scale))
-	reroll_button.position = Vector2((vp.x - 260 * ui_scale) * 0.5, h_box_container.position.y + content.y + 20 * ui_scale)
-	reroll_button.size = Vector2(260, 48) * ui_scale
-	UiFonts.apply_to_label(reroll_hint, int(12 * ui_scale))
-	reroll_hint.position = reroll_button.position + Vector2(-40, 58) * ui_scale
-	reroll_hint.size = Vector2(340, 24) * ui_scale
+	var body_height := maxf(90*ui,vp.y-192*ui)
+	_card_scroll.position = Vector2((vp.x-content.x-16*ui)*0.5,96*ui+maxf(0,(body_height-content.y)*0.5))
+	_card_scroll.size = Vector2(content.x+16*ui,minf(content.y,body_height))
+	h_box_container.position = Vector2.ZERO
+	UiFonts.apply_to_label(growth_hint,int(13*ui))
+	growth_hint.position = Vector2(16*ui,56*ui)
+	growth_hint.size = Vector2(vp.x-32*ui,40*ui)
+	UiFonts.apply_to_button(reroll_button,int(16*ui))
+	reroll_button.position = Vector2((vp.x-260*ui)*0.5,vp.y-84*ui)
+	reroll_button.size = Vector2(260,44)*ui
+	UiFonts.apply_to_label(reroll_hint,int(11*ui))
+	reroll_hint.position = reroll_button.position + Vector2(-40,48)*ui
+	reroll_hint.size = Vector2(340,24)*ui
 	$Panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 
@@ -291,64 +305,14 @@ func available_upgrades() -> Array:
 
 
 func _build_card_data(data: Dictionary) -> Dictionary:
-	var card_data: = data.duplicate(true)
-	match str(card_data.get("id", "")):
-		"bomb":
-			var game := _get_game()
-			var rank: int = mini(BOMB.MAX_LEVEL, 1 + (game.bomb_controller.level if game != null else 0))
-			var stats := BOMB.stats_for(rank)
-			card_data["desc"] = "自动投弹 · 爆炸击飞\n伤害 %.0f · 半径 %.0f\n间隔 %.2fs · 最高5级\n%s" % [stats.damage, stats.radius, stats.interval, ARSENAL_HINT]
-		"gun_up":
-			card_data["desc"] = "强化枪支伤害与射速\n" + ARSENAL_HINT
-		"pickup_up":
-			card_data["desc"] = "拾取范围提高20%\n" + GROWTH_HINT
-		"speed_up":
-			card_data["desc"] = "基础移动速度 +20\n" + GROWTH_HINT
-		"critical_glasses":
-			var game := _get_game()
-			var rank: int = mini(CRITICAL.MAX_LEVEL, 1 + (game.player.critical_glasses_level if game != null else 0))
-			card_data["desc"] = "直接攻击暴击率 %d%%\n暴击造成 %d%% 伤害\n每级 +20%% · 最高5级\n满级：暴击伤害200%%\n持续伤害不触发暴击" % [roundi(CRITICAL.chance_for(rank) * 100.0), roundi(CRITICAL.damage_multiplier_for(rank) * 100.0)]
-		"banana_fan":
-			var game := _get_game()
-			var rank: int = mini(5, 1 + (game.banana_fan.level if game != null else 0))
-			var stats := FAN.stats_for(rank)
-			card_data["desc"] = "沿移动方向吹出气流\n伤害 %.0f · 距离 %.0f\n间隔 %.2f 秒 · 击退敌人\n已有灼烧/中毒额外一跳\n最高5级 · 追加不传播" % [stats.damage, stats.range, stats.interval]
-		"black_hole":
-			var game := _get_game()
-			var rank: int = mini(5, 1 + (game.black_hole.level if game != null else 0))
-			var stats := VORTEX.stats_for(rank)
-			card_data["desc"] = "自动召唤黑洞聚怪\n每秒伤害 %.0f · 半径 %.0f\n间隔 %.1f 秒 · 持续3秒\n升级增伤、扩围、减冷却\n最高 5 级" % [stats.dps, stats.radius, stats.interval]
-		"poison_trail":
-			var game: = _get_game()
-			var rank: int = mini(5, 1 + (game.poison_trail.level if game != null else 0))
-			var stats: = POISON.stats_for(rank)
-			card_data["desc"] = "移动留下 4 秒毒雾\n每秒伤害 %.0f · 范围 %.0f\n%s\n最高 5 级，重叠不叠伤" % [stats.dps, stats.radius, "5 级：移速降低 25%" if rank == 5 else "5 级解锁移速减速 25%"]
-		"left_fist":
-			card_data["desc"] = _fist_desc(true)
-		"right_fist":
-			card_data["desc"] = _fist_desc(false)
-		"drone_up":
-			card_data["desc"] = _drone_desc() + "\n" + ARSENAL_HINT
-		"molotov_up":
-			card_data["desc"] = _molotov_desc()
-		"freeze_up":
-			card_data["desc"] = _freeze_desc()
-		"regen_up":
-			card_data["desc"] = _regen_desc() + "\n" + GROWTH_HINT
-		"lifesteal_up":
-			card_data["desc"] = _lifesteal_desc()
-		"shield_up":
-			card_data["desc"] = _shield_desc()
-		"monster_necklace":
-			card_data["desc"] = _monster_necklace_desc()
-		"lightning_ring":
-			card_data["desc"] = _lightning_ring_desc()
-		"wind_emblem", "echo_ember":
-			var game: = _get_game()
-			var rank: int = 1 + (game.equipment_panel.get_level(str(card_data.id)) if game != null else 0)
-			var stats: = VARIETY.wind_stats(rank) if card_data.id == "wind_emblem" else VARIETY.echo_stats(rank)
-			card_data["desc"] = ("冲刺结束释放风压\n伤害 %.0f · 范围 %.0f\n利用无敌窗口切入" % [stats.damage, stats.radius]) if card_data.id == "wind_emblem" else ("每击杀 %d 个敌人\n在最后击杀处引爆回响\n伤害 %.0f · 范围 %.0f" % [stats.kills, stats.damage, stats.radius])
-	return card_data
+	var result := data.duplicate(true)
+	var game := _get_game()
+	var id: String = result.get("id", "")
+	result.merge(PREVIEW.build(game, id), true)
+	if game != null:
+		var rank: int = PREVIEW.rank_for(game,id)
+		result.title = str(game.equipment_panel.EQUIP_DEFS[id].title) + " · %d → %d级" % [rank, rank + 1]
+	return result
 
 
 func _get_game() -> Node:
@@ -356,94 +320,14 @@ func _get_game() -> Node:
 
 
 func _fist_desc(is_left: bool) -> String:
-	var player: = get_tree().get_first_node_in_group("player")
-	var current_level: = 0
-	if player != null:
-		current_level = player.left_fist_level if is_left else player.right_fist_level
+	return PREVIEW.build(_get_game(), "left_fist" if is_left else "right_fist").desc
 
-	var next_level: = current_level + 1
-	var bonus_pct: = 20
-	var penalty_pct: = 12
-	if player != null and player.has_method("get_fist_bonus"):
-		bonus_pct = int(round(player.get_fist_bonus(next_level) * 100.0))
-		penalty_pct = int(round(player.get_fist_penalty(next_level) * 100.0))
-
-	if is_left:
-		return "左侧伤害 +%d%%\n右侧伤害 -%d%%\n双持取消减伤" % [bonus_pct, penalty_pct]
-	return "右侧伤害 +%d%%\n左侧伤害 -%d%%\n双持取消减伤" % [bonus_pct, penalty_pct]
-
-
-func _drone_desc() -> String:
-	var game: = _get_game()
-	var lv: = 0
-	if game and game.get("drone_controller"):
-		lv = int(game.drone_controller.level)
-	var next: = lv + 1
-	var life: = 6.0 + float(next) * 1.6
-	var cd: = maxf(0.22, 0.9 - float(next) * 0.09)
-	var dmg: = 6.0 + float(next) * 4.5
-	var count: = 1 + int((next - 1) / 3)
-	return "召唤 %d 架伴飞无人机\n激光照射 间隔 %.2fs\n存活 %.1fs 伤害 %.0f" % [count, cd, life, dmg]
-
-
-func _molotov_desc() -> String:
-	var game: = _get_game()
-	var lv: = 0
-	if game and game.get("molotov_controller"):
-		lv = int(game.molotov_controller.level)
-	var next: = lv + 1
-	var interval: float = MOLOTOV.interval_for(next)
-	var stacks: = 2 + int((next - 1) / 2)
-	var dps: = 2.5 + float(next) * 1.8
-	var chance: = mini(0.18 + float(next) * 0.07, 0.65) * 100.0
-	return "投掷汽油瓶\n间隔 %.2fs 燃烧%d层\n击中附燃 %.0f%% DPS%.0f" % [interval, stacks, chance, dps]
-
-
-func _regen_desc() -> String:
-	var player: = get_tree().get_first_node_in_group("player")
-	var next_level: = 1
-	if player != null:
-		next_level = int(player.regen_level) + 1
-	if player != null and player.has_method("regen_amount_for"):
-		var amount: float = player.effective_heal_amount(player.regen_amount_for(next_level))
-		var interval: float = player.regen_interval_for(next_level)
-		return "每 %.1f 秒 +%s" % [interval, _heal_number(amount)]
-	return "每 3.0 秒 +1"
-
-func _lifesteal_desc() -> String:
-	var player: = get_tree().get_first_node_in_group("player")
-	var next_level: = 1
-	if player != null:
-		next_level = int(player.lifesteal_level) + 1
-	if player != null and player.has_method("lifesteal_cap_for"):
-		var multiplier: float = player.total_healing_multiplier()
-		var percent: float = player.lifesteal_percent_for(next_level) * 100.0 * multiplier
-		var cap: float = player.effective_heal_amount(player.lifesteal_cap_for(next_level))
-		return "命中回复少量\n约 %s%% +%s  上限 %s" % [_heal_number(percent), _heal_number(multiplier), _heal_number(cap)]
-	return "命中回复少量\n约 3% +1  上限 2"
-
-func _shield_desc() -> String:
-	var player: = get_tree().get_first_node_in_group("player")
-	var next_level: = 1
-	if player != null:
-		next_level = int(player.shield_level) + 1
-	if player != null and player.has_method("shield_gain_for"):
-		var gain: = int(player.shield_gain_for(next_level))
-		var decay: float = player.shield_decay_for(next_level)
-		return "击杀护盾 +%d\n停手后每秒 -%.1f" % [gain, decay]
-	return "击杀护盾 +2\n停手后每秒 -4.0"
-
-func _freeze_desc() -> String:
-	var game: = _get_game()
-	var lv: = 0
-	if game and game.get("freeze_controller"):
-		lv = int(game.freeze_controller.level)
-	var next: = lv + 1
-	var chance: = mini(0.16 + float(next) * 0.07, 0.6) * 100.0
-	var dur: = 1.0 + float(next) * 0.25
-	var slow: = maxf(0.28, 0.6 - float(next) * 0.05) * 100.0
-	var bonus: = mini(0.2 + float(next) * 0.1, 0.9) * 100.0
-	return "击中冰冻 %.0f%%\n持续 %.1fs 移速%.0f%%\n冻伤额外 +%.0f%%" % [chance, dur, slow, bonus]
+func _drone_desc() -> String: return PREVIEW.build(_get_game(), "drone_up").desc
+func _molotov_desc() -> String: return PREVIEW.build(_get_game(), "molotov_up").desc
+func _regen_desc() -> String: return PREVIEW.build(_get_game(), "regen_up").desc
+func _lifesteal_desc() -> String: return PREVIEW.build(_get_game(), "lifesteal_up").desc
+func _shield_desc() -> String: return PREVIEW.build(_get_game(), "shield_up").desc
+func _freeze_desc() -> String: return PREVIEW.build(_get_game(), "freeze_up").desc
 
 
 func on_card_selected(upgrade_id: String):
@@ -457,21 +341,6 @@ func _on_button_pressed():
 	get_tree().paused = false
 	visible = false
 
-func _monster_necklace_desc() -> String:
-	var player: = get_tree().get_first_node_in_group("player")
-	var next_level: = 1
-	if player != null:
-		next_level = int(player.monster_necklace_level) + 1
-	var multiplier: float = player.total_healing_multiplier() if player != null else 1.0
-	return "击杀掉落回血球\n拾取回复 +%s 生命\n每级增加 %s 点" % [_heal_number(next_level * 5 * multiplier), _heal_number(5 * multiplier)]
-
-func _heal_number(amount: float) -> String:
-	return ("%.1f" % amount).trim_suffix(".0")
-
-func _lightning_ring_desc() -> String:
-	var game: = _get_game()
-	var next_level: = 1
-	if game and game.get("lightning_ring"):
-		next_level = game.lightning_ring.level + 1
-	var stats: = LIGHTNING_RING.stats_for(next_level)
-	return "每 %.0f 秒自动落雷\n最多 %d 个不同目标\n单道伤害 %.0f · 范围 %.0f" % [stats.interval, stats.bolts, stats.damage, stats.range]
+func _monster_necklace_desc() -> String: return PREVIEW.build(_get_game(), "monster_necklace").desc
+func _heal_number(amount: float) -> String: return CardNumbers.number(amount)
+func _lightning_ring_desc() -> String: return PREVIEW.build(_get_game(), "lightning_ring").desc

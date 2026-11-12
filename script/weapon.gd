@@ -167,7 +167,7 @@ func play_recoil(dir: Vector2) -> void :
 
 func upgrade() -> void :
 	level += 1
-	damage = damage + 10 * level
+	damage = damage_for_upgrade(level)
 	if level == 1:
 		visible = true
 		set_process(true)
@@ -186,9 +186,14 @@ func apply_cooldown_scale(scale: float) -> void :
 	_sync_cooldown_timers()
 
 func _sync_cooldown_timers() -> void :
-	var scaled_level: = float(maxi(level - 1, 0))
-	fire_interval = maxf(0.05, (base_fire_interval - 0.08 * scaled_level) * cooldown_scale)
+	fire_interval = interval_for(level)
 	if auto_attack_timer != null:
 		auto_attack_timer.wait_time = fire_interval
 	if cool_down_timer != null:
 		cool_down_timer.wait_time = maxf(0.02, _base_shot_lock * cooldown_scale)
+
+func damage_for_upgrade(rank: int) -> int:
+	return damage + 10 * rank
+
+func interval_for(rank: int) -> float:
+	return maxf(0.05, (base_fire_interval - 0.08 * float(maxi(rank - 1, 0))) * cooldown_scale)

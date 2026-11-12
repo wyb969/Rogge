@@ -2,10 +2,19 @@ extends Node2D
 
 const DEATH_STAINS := preload("res://script/death_stains.gd")
 var death_stains: MultiMeshInstance2D
+var impact_feedback: Node2D
 
 const MAX_SHARDS: = 128
 const MAX_RINGS: = 16
 const MAX_GHOSTS: = 8
+const GHOST_LIFETIME := 0.22
+const GHOST_OPACITY := 0.48
+class GhostLayer:
+	extends Node2D
+	var feedback: Node2D
+	func _draw() -> void:
+		feedback._draw_ghosts(self)
+var _ghost_layer: Node2D
 const MAX_BURSTS_PER_FRAME: = 8
 const BURSTS_PER_SECOND: = 42.0
 var shards: Array[Dictionary] = []
@@ -46,6 +55,17 @@ func _ready() -> void :
 	death_stains = DEATH_STAINS.new()
 	death_stains.name = "DeathStains"
 	add_child(death_stains)
+	impact_feedback = preload("res://script/hit_feedback.gd").new()
+	impact_feedback.name = "HitFeedback"
+	add_child(impact_feedback)
+	_ghost_layer = GhostLayer.new()
+	_ghost_layer.name = "DashGhosts"
+	_ghost_layer.feedback = self
+	_ghost_layer.z_index = -7 # Below the hero, above ground ink.
+	var silhouette := ShaderMaterial.new()
+	silhouette.shader = preload("res://shaders/dash_ghost.gdshader")
+	_ghost_layer.material = silhouette
+	add_child(_ghost_layer)
 	for _i in MAX_SHARDS:
 		_free_shards.append({"p": Vector2.ZERO, "v": Vector2.ZERO, "left": 0.0, "life": 0.0, "color": Color.WHITE, "size": 0.0})
 	for _i in MAX_RINGS:
@@ -61,10 +81,12 @@ func _ready() -> void :
 
 func start() -> void :
 	reset()
+	impact_feedback.begin_run()
 	_stamp = Time.get_ticks_msec()
 	set_process(true)
 
 func reset() -> void :
+	if impact_feedback != null: impact_feedback.reset()
 	if death_stains != null: death_stains.reset()
 	while not shards.is_empty(): _free_shards.append(shards.pop_back())
 	while not rings.is_empty(): _free_rings.append(rings.pop_back())
@@ -82,6 +104,7 @@ func reset() -> void :
 		_camera.offset = _origin
 		_camera_motion.reset()
 	queue_redraw()
+	_ghost_layer.queue_redraw()
 	set_process(false)
 
 func _admit() -> bool:
@@ -142,16 +165,17 @@ func dash(at: Vector2, direction: Vector2) -> void :
 	camera_impulse(0.7, direction)
 	AudioManager.play_juice("dash")
 
-func ghost(sprite: AnimatedSprite2D) -> void :
+func ghost(sprite: AnimatedSprite2D, world_at: Vector2 = Vector2.INF) -> void :
 	if not is_processing() or ghosts.size() >= MAX_GHOSTS: return
 	var texture: = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
 	var ghost_image: Dictionary = _free_ghosts.pop_back()
-	ghost_image.p = to_local(sprite.global_position)
+	ghost_image.p = to_local(sprite.global_position if world_at == Vector2.INF else world_at)
 	ghost_image.scale = sprite.global_scale * Vector2(-1 if sprite.flip_h else 1, 1)
 	ghost_image.rotation = sprite.global_rotation - global_rotation
 	ghost_image.texture = texture
-	ghost_image.left = 0.18
+	ghost_image.left = GHOST_LIFETIME
 	ghosts.append(ghost_image)
+	_ghost_layer.queue_redraw()
 
 func pickup(at: Vector2, healing: bool = false) -> void :
 	if not _admit(): return
@@ -206,6 +230,7 @@ func _process(_delta: float) -> void :
 	_tick_small_pool(ghosts, _free_ghosts, dt, true)
 	if not shards.is_empty() or not rings.is_empty() or not ghosts.is_empty() or _had_draw:
 		queue_redraw()
+		_ghost_layer.queue_redraw()
 	_had_draw = not shards.is_empty() or not rings.is_empty() or not ghosts.is_empty()
 
 func _tick_small_pool(active: Array[Dictionary], idle: Array[Dictionary], dt: float, clear_texture: bool = false) -> void :
@@ -221,12 +246,13 @@ func _tick_small_pool(active: Array[Dictionary], idle: Array[Dictionary], dt: fl
 		i -= 1
 
 var _had_draw: = false
-func _draw() -> void :
+func _draw_ghosts(canvas: Node2D) -> void:
 	for ghost_image in ghosts:
 		var texture: Texture2D = ghost_image.texture
-		draw_set_transform(ghost_image.p, ghost_image.rotation, ghost_image.scale)
-		draw_texture(texture, - texture.get_size() * 0.5, Color(0.48, 0.78, 0.84, ghost_image.left / 0.18 * 0.28))
-	draw_set_transform(Vector2.ZERO)
+		canvas.draw_set_transform(ghost_image.p, ghost_image.rotation, ghost_image.scale)
+		canvas.draw_texture(texture, - texture.get_size() * 0.5, GamePalette.alpha(GamePalette.PLAYER_ATTACK, ghost_image.left / GHOST_LIFETIME * GHOST_OPACITY))
+
+func _draw() -> void :
 	for ring in rings:
 		var progress: float = 1.0 - ring.left / ring.life
 		var color: Color = ring.color

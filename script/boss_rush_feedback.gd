@@ -119,7 +119,7 @@ func _process(delta: float) -> void :
 	if caption != _last_caption:
 		_last_caption = caption
 		_status.text = caption
-		_status.add_theme_color_override("font_color", Color(1, 0.44, 0.3) if locked and warn else (Color(0.64, 0.96, 0.8) if recover and boss._combo_left == 0 else Color(1, 0.85, 0.56)))
+		_status.add_theme_color_override("font_color", Color(1, 0.44, 0.3) if locked and warn else (GamePalette.PLAYER_CYAN if recover and boss._combo_left == 0 else Color(1, 0.85, 0.56)))
 	var chained: bool = boss._combo_left > 0 or (boss._chain_warning and (warn or boss.is_charging))
 	var title_stamp: int = int(boss.enraged()) * 2 + int(chained)
 	if _title_stamp != title_stamp:
@@ -151,5 +151,5 @@ func _draw() -> void :
 			draw_line(p - dir * 8 + side * 6, p, Color(color, 0.95), 2, false)
 		draw_calls_last = 9
 	elif boss.charge_state == boss.ChargeState.RECOVER and boss._combo_left == 0:
-		draw_arc(boss.global_position, 45, 0, TAU, 32, Color(0.47, 0.85, 0.66, 0.4), 2, false)
+		draw_arc(boss.global_position, 45, 0, TAU, 32, Color(GamePalette.PLAYER_CYAN, 0.4), 2, false)
 		draw_calls_last = 1

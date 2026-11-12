@@ -153,10 +153,12 @@ func _select_card(amount: int) -> void :
 	menu.show_upgrade_options()
 	var card: Node = menu.h_box_container.get_child(0)
 	_expect(card.icon.texture != null, "card icon loads")
-	_expect(card.desc_label.text.contains("+%d" % amount), "card description previews next healing value")
+	_expect(card.desc_label.text.contains(CardNumbers.number(amount)), "card description previews next healing value")
 	var event: = InputEventMouseButton.new()
 	event.button_index = MOUSE_BUTTON_LEFT
 	event.pressed = true
+	card._gui_input(event)
+	event.pressed = false
 	card._gui_input(event)
 	_expect( not paused and not menu.visible, "selecting card resumes gameplay")
 

@@ -19,8 +19,10 @@ func _ready() -> void :
 		button = get_node_or_null("Root/FullscreenButton")
 	if button:
 		UiFonts.apply_to_button(button, 15)
+		GamePalette.apply_neutral_button(button)
 		if not button.pressed.is_connected(_on_pressed):
 			button.pressed.connect(_on_pressed)
+	GamePalette.apply_neutral_button(home_button)
 	get_viewport().size_changed.connect(_refresh_label)
 	_refresh_label()
 

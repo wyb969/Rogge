@@ -1,0 +1,3358 @@
+{
+  "task": "Actual-displacement side gait and bounded single-layer camera follow",
+  "recorded_beijing": "2026-11-10T12:23:43.938895+08:00",
+  "base_commit": "a5e3b0ec6e47b24be414b18c6d2210b38f8d8658",
+  "base_branch": "feature/palette-v4-20261110",
+  "branch": "feature/player-motion-20261110",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "confirmed_old_causes": [
+    "Fixed5/6FPS eight-direction mouse-facing animations continued while idle.",
+    "One-shot untextured rotated large quad walking emitter repeatedly enabled; continuous sprite deformation could cause pixel edge crawl.",
+    "Built-in Camera2D smoothing stacked with intended-velocity drag."
+  ],
+  "not_proven": "No evidence of a broken move_and_slide integration or all-device raster/FPS diagnosis; no universal claim that every aliasing cause is eliminated.",
+  "preserved_physics": {
+    "base_speed": 100,
+    "speed_card_bonus": 20,
+    "acceleration": 900,
+    "friction": 600,
+    "dash_speed": 780,
+    "dash_duration": 0.14,
+    "post_dash_invulnerability": 0.5,
+    "dash_cooldown": 3,
+    "movement_directions": "360-degree unchanged; only sprite facing is left/right",
+    "idle_dash_change": "Uses last movement direction instead of mouse"
+  },
+  "presentation": {
+    "gait": "Actual post-move displacement;0,1,0,2 poses /50 world units; idle/wall/lock neutral; dash side launch",
+    "max_walk_pose_fps": 18,
+    "walking_particles": "Hidden and never emitted; legacy node retained",
+    "walking_transform": "No continuous rotation/stretch; Sprite5/3 scale, existing1.8 camera gives3x source pixels; collider unchanged",
+    "frame_clip": true,
+    "ghost_pool": 8,
+    "ghost_life": 0.1,
+    "ghost_opacity": 0.16,
+    "ghost_interval": 0.035,
+    "camera": "World-position critical spring response20 /dash30; maximum16-world-unit lag; no built-in second smoother; pause/teleport/zero setting/reset handled"
+  },
+  "native": {
+    "passed": 11,
+    "checks": [
+      {
+        "name": "smoke_player_motion",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 7.53,
+        "errors": [],
+        "markers": [
+          "PLAYER MOTION OK: 32 checks; real30/60Hz input, travel/acceleration, actual-distance gait, speed card, stop/wall/vertical/mouse, last-direction dash, lock/reset, no walking particles, clipped frames and stable collider"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_camera_motion",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.09,
+        "errors": [],
+        "markers": [
+          "CAMERA MOTION OK: actual-position lag/stop/reversal, wall/teleport, pause, single-layer bounded dash catch-up, zero setting, unchanged collider/FOV and teardown"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_dash_direction",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 0.34,
+        "errors": [],
+        "markers": [
+          "DASH DIRECTION OK: 8 directions, light input, stopped/released stick, request snapshot, multi-touch and reset"
+        ],
+        "shutdown_warnings": []
+      },
+      {
+        "name": "smoke_dash_grace",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 5.01,
+        "errors": [],
+        "markers": [
+          "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 35 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 16 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_visual_style",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.93,
+        "errors": [],
+        "markers": [
+          "VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/direct damage without implicit burn, fixed footprint, shared non-additive pickups and exact healing"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_control_cards",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.58,
+        "errors": [],
+        "markers": [
+          "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_wooden_trial",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.3,
+        "errors": [],
+        "markers": [
+          "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_world_snow",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.02,
+        "errors": [],
+        "markers": [
+          "WORLD SNOW OK: camera/subframe independence, exact wind/fall, only offscreen recycling, portrait/Retina reuse, pause and return"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_palette_cards",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 3.25,
+        "errors": [],
+        "markers": [
+          "PALETTE CARDS OK: 347 checks; all22 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_session_toolbar",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 3.06,
+        "errors": [],
+        "markers": [
+          "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_combat_feedback",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.77,
+        "errors": [],
+        "markers": [
+          "COMBAT FEEDBACK OK: real actions/settings/persistence, exact damage, independent RNG, stable colliders, bounded camera/batches/ghosts, rising pickups, floating text and teardown"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ]
+  },
+  "packed": {
+    "passed": 6,
+    "checks": [
+      {
+        "name": "smoke_player_motion",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 7.34,
+        "errors": [],
+        "markers": [
+          "PLAYER MOTION OK: 32 checks; real30/60Hz input, travel/acceleration, actual-distance gait, speed card, stop/wall/vertical/mouse, last-direction dash, lock/reset, no walking particles, clipped frames and stable collider"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_camera_motion",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 0.91,
+        "errors": [],
+        "markers": [
+          "CAMERA MOTION OK: actual-position lag/stop/reversal, wall/teleport, pause, single-layer bounded dash catch-up, zero setting, unchanged collider/FOV and teardown"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_dash_direction",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 0.35,
+        "errors": [],
+        "markers": [
+          "DASH DIRECTION OK: 8 directions, light input, stopped/released stick, request snapshot, multi-touch and reset"
+        ],
+        "shutdown_warnings": []
+      },
+      {
+        "name": "smoke_dash_grace",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 4.82,
+        "errors": [],
+        "markers": [
+          "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 27 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_world_snow",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 1.84,
+        "errors": [],
+        "markers": [
+          "WORLD SNOW OK: camera/subframe independence, exact wind/fall, only offscreen recycling, portrait/Retina reuse, pause and return"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "name": "smoke_control_cards",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 2.41,
+        "errors": [],
+        "markers": [
+          "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+        ],
+        "shutdown_warnings": [
+          "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+          "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ],
+    "scope": "Final normal Web PCK, empty packed-project and isolated user data; no loose source fallback"
+  },
+  "builds": {
+    "import-final.log": {
+      "sha256": "7724afcdce3ecd3887ed3635e1cd25fd14c383122aacb851d307b3ece7924d56",
+      "errors": []
+    },
+    "export-final.log": {
+      "sha256": "95eefb19d5ff27108398c92d2aad4ac202d73e669910184e4b6a30417f4d1c71",
+      "errors": []
+    },
+    "qa-import.log": {
+      "sha256": "ed3e879040e52454de6492b46d4037d1945d2addd03c0e2d93296eeb7428b125",
+      "errors": []
+    },
+    "qa-export.log": {
+      "sha256": "61ea3c63da776f3a0a9ddd36462d142d248127affe1368bcde87c4fbde1b5ae5",
+      "errors": []
+    }
+  },
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "c10898b91525541fde0ddb74bcb991482b88ddcb2859433296c3a08df69619a7"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23513036,
+      "sha256": "15a8dec5be3544b592eeb5e680ae99baa98a4b4970bee17ce10d88b8905247c3"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "browser": [
+    {
+      "scope": "Real-motion QA export, normal gameplay sources; only quiet harness entry differs",
+      "viewport": [
+        900,
+        600
+      ],
+      "dpr": 1,
+      "errors": [],
+      "context_lost": false,
+      "samples": [
+        {
+          "label": "idle",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0,
+          "position": [
+            0,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            300
+          ],
+          "speed": 0,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.3,
+          "position": [
+            2.5,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            300
+          ],
+          "speed": 59.9999961853027,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -1.83939719200134,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.455000019073486,
+          "position": [
+            10.2500009536743,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            452.152099609375,
+            300
+          ],
+          "speed": 100.000015258789,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -6.71714687347412,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.655,
+          "position": [
+            20.25,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            457.859100341797,
+            300
+          ],
+          "speed": 99.9999542236328,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -11.0020055770874,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.888333244323731,
+          "position": [
+            31.9166622161865,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            462.872344970703,
+            300
+          ],
+          "speed": 99.9999542236328,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -14.4162540435791,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.155000076293946,
+          "position": [
+            45.2500038146973,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            466.867034912109,
+            300
+          ],
+          "speed": 100.000068664551,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -16,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.455000305175782,
+          "position": [
+            60.2500152587891,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            468.720031738281,
+            300
+          ],
+          "speed": 100.000068664551,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -10.235710144043,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.755,
+          "position": [
+            75.25,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            461.975830078125,
+            300
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -11.9198837280273,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.0549995422363281,
+          "position": [
+            90.2499771118164,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            463.946258544922,
+            300
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -11.7242736816406,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.354999084472656,
+          "position": [
+            105.249954223633,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            463.717407226562,
+            300
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -11.671012878418,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.654998626708984,
+          "position": [
+            120.249931335449,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            463.655090332031,
+            300
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -11.9049987792969,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.954998779296875,
+          "position": [
+            135.249938964844,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            463.928894042969,
+            300
+          ],
+          "speed": 100.000297546387,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -11.7168884277344,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.221666259765625,
+          "position": [
+            148.583312988281,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            463.708770751953,
+            300
+          ],
+          "speed": 100.000297546387,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -10.2103576660156,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.521667175292969,
+          "position": [
+            163.583358764648,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            461.946136474609,
+            300
+          ],
+          "speed": 100.000297546387,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-right-end",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -11.3287506103516,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.655000915527344,
+          "position": [
+            170.250045776367,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            463.254669189453,
+            300
+          ],
+          "speed": 100.000297546387,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "stopped",
+          "animation": "right",
+          "base_speed": 100,
+          "camera_drag": [
+            -0.000946044921875,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0,
+          "position": [
+            184.416732788086,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.001098632812,
+            300
+          ],
+          "speed": 0,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            1.83940124511719,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.455000305175781,
+          "position": [
+            174.166717529297,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            447.847900390625,
+            300
+          ],
+          "speed": 100.000297546387,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            7.76046752929688,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.688334350585938,
+          "position": [
+            162.500015258789,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            440.920288085938,
+            300
+          ],
+          "speed": 100.000297546387,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            9.56327819824219,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.955001831054688,
+          "position": [
+            149.166641235352,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            438.810974121094,
+            300
+          ],
+          "speed": 100.000297546387,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            9.93605041503906,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.221669311523438,
+          "position": [
+            135.833267211914,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            438.374816894531,
+            300
+          ],
+          "speed": 100.000297546387,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            12.4564514160156,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.555002746582032,
+          "position": [
+            119.166595458984,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            435.425964355469,
+            300
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            11.9055252075195,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.855002288818359,
+          "position": [
+            104.166618347168,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            436.070556640625,
+            300
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            10.9987106323242,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.021668701171875,
+          "position": [
+            95.8332977294922,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            437.131530761719,
+            300
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            13.3571853637695,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.355001525878906,
+          "position": [
+            79.1666564941406,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            434.372131347656,
+            300
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            10.8730697631836,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.655001068115234,
+          "position": [
+            64.1666793823242,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            437.278533935547,
+            300
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "walk-left-end",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            11.6328201293945,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.75500114440918,
+          "position": [
+            59.166675567627,
+            0
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            436.389587402344,
+            300
+          ],
+          "speed": 100.000068664551,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            5.7220458984375e-05,
+            1.91289150714874
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.421666679382324,
+          "position": [
+            45.0000038146973,
+            -8.58333396911621
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            449.999938964844,
+            297.761901855469
+          ],
+          "speed": 100.000015258789,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            7.62939453125e-06,
+            9.12974452972412
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.688333320617676,
+          "position": [
+            45.0000038146973,
+            -21.9166660308838
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450,
+            289.318176269531
+          ],
+          "speed": 99.9999542236328,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            9.51663780212402
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.988333282470703,
+          "position": [
+            45.0000038146973,
+            -36.9166641235352
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            288.865539550781
+          ],
+          "speed": 100.000068664551,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            11.8245582580566
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.288333511352539,
+          "position": [
+            45.0000038146973,
+            -51.916675567627
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            286.165283203125
+          ],
+          "speed": 100.000068664551,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            11.7116622924805
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.588333587646485,
+          "position": [
+            45.0000038146973,
+            -66.9166793823242
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            286.29736328125
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            9.21681594848633
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.821666564941406,
+          "position": [
+            45.0000038146973,
+            -78.5833282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            289.21630859375
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            10.9961318969727
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.154999389648437,
+          "position": [
+            45.0000038146973,
+            -95.2499694824219
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            287.134521484375
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            10.9738388061523
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.421665649414062,
+          "position": [
+            45.0000038146973,
+            -108.583282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            287.160583496094
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            11.4542770385742
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.72166519165039,
+          "position": [
+            45.0000038146973,
+            -123.58325958252
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            286.598510742188
+          ],
+          "speed": 99.9998397827148,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "vertical-end",
+          "animation": "left",
+          "base_speed": 100,
+          "camera_drag": [
+            0,
+            11.1911087036133
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.888331909179687,
+          "position": [
+            45.0000038146973,
+            -131.916595458984
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000030517578,
+            286.906402587891
+          ],
+          "speed": 100.000297546387,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -2.75909423828125,
+            0.006744384765625
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.43,
+          "position": [
+            54.0000038146973,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            453.228179931641,
+            299.992126464844
+          ],
+          "speed": 119.999992370605,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -10.2972373962402,
+            0.001068115234375
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.898333053588867,
+          "position": [
+            77.4166564941406,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            462.047790527344,
+            299.998779296875
+          ],
+          "speed": 159.99983215332,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -16,
+            0.000150333042256534
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.378332595825195,
+          "position": [
+            101.416633605957,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            468.720031738281,
+            299.999877929688
+          ],
+          "speed": 159.99983215332,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -16,
+            1.37091119540855e-05
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.858332138061523,
+          "position": [
+            125.416610717773,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            468.720001220703,
+            300
+          ],
+          "speed": 159.99983215332,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -13.9667892456055,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.23166618347168,
+          "position": [
+            144.083312988281,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            466.341156005859,
+            300
+          ],
+          "speed": 160.000289916992,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -14.8971252441406,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.498333358764649,
+          "position": [
+            157.41667175293,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            467.429656982422,
+            300
+          ],
+          "speed": 160.000289916992,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -16,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.925000839233399,
+          "position": [
+            178.750045776367,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            468.719970703125,
+            300
+          ],
+          "speed": 160.000289916992,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -14.5677337646484,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.298334884643555,
+          "position": [
+            197.416748046875,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            467.044250488281,
+            300
+          ],
+          "speed": 160.000289916992,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -14.3554382324219,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.725002365112305,
+          "position": [
+            218.750122070312,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            466.7958984375,
+            300
+          ],
+          "speed": 160.000289916992,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -16,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 1,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.365003585815431,
+          "position": [
+            250.750183105469,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            468.720001220703,
+            300
+          ],
+          "speed": 160.000289916992,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -14.2252349853516,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.738336105346681,
+          "position": [
+            269.416809082031,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            466.6435546875,
+            300
+          ],
+          "speed": 159.999374389648,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -16,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.218334274291993,
+          "position": [
+            293.416717529297,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            468.720001220703,
+            300
+          ],
+          "speed": 159.999374389648,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -15.8556823730469,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.698332443237305,
+          "position": [
+            317.416625976562,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            468.551147460938,
+            300
+          ],
+          "speed": 159.999374389648,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "speed-card-end",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -16,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 2,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.858331832885743,
+          "position": [
+            325.416595458984,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            468.720031738281,
+            300
+          ],
+          "speed": 159.999374389648,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "dash-start",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -16,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 1,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0.559999389648438,
+          "position": [
+            514.583190917969,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.83170366287231,
+            1.53463733196259
+          ],
+          "screen_player": [
+            468.466644287109,
+            300
+          ],
+          "speed": 165.999740600586,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "dash-recovered",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -0.0003662109375,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0,
+          "position": [
+            536.18310546875,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000427246094,
+            300
+          ],
+          "speed": 0,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "paused",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -6.103515625e-05,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": true,
+          "phase": 0,
+          "position": [
+            536.18310546875,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000122070312,
+            300
+          ],
+          "speed": 0,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "pause-held",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            -6.103515625e-05,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": true,
+          "phase": 0,
+          "position": [
+            536.18310546875,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450.000122070312,
+            300
+          ],
+          "speed": 0,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        },
+        {
+          "label": "resumed",
+          "animation": "right",
+          "base_speed": 160,
+          "camera_drag": [
+            0,
+            0
+          ],
+          "camera_smoothing": false,
+          "canvas_size": [
+            900,
+            600
+          ],
+          "dash": [
+            826,
+            526
+          ],
+          "dash_direction": [
+            1,
+            0
+          ],
+          "dashing": false,
+          "frame": 0,
+          "ghosts": 0,
+          "particle_visible": false,
+          "particles": false,
+          "paused": false,
+          "phase": 0,
+          "position": [
+            536.18310546875,
+            -146.083282470703
+          ],
+          "rotation": 0,
+          "scale": [
+            1.66666674613953,
+            1.66666674613953
+          ],
+          "screen_player": [
+            450,
+            300
+          ],
+          "speed": 0,
+          "stick": [
+            84,
+            520
+          ],
+          "stick_radius": 56
+        }
+      ],
+      "checks": [
+        "right/left movement despite opposite cursor",
+        "vertical keeps side facing",
+        "base100 and three +20 speed cards160",
+        "idle pose/no walking particles or ghosts",
+        "last-direction idle dash",
+        "camera single-layer/capped16",
+        "pause freezes actual movement"
+      ]
+    },
+    {
+      "scope": "Real-motion QA export; actual CDP two-finger joystick+Dash",
+      "viewport": [
+        390,
+        844
+      ],
+      "dpr": 2,
+      "errors": [],
+      "moving": {
+        "animation": "left",
+        "base_speed": 100,
+        "camera_drag": [
+          16,
+          4.35965084761847e-05
+        ],
+        "camera_smoothing": false,
+        "canvas_size": [
+          780,
+          1688
+        ],
+        "dash": [
+          715.86669921875,
+          1623.84387207031
+        ],
+        "dash_direction": [
+          1,
+          0
+        ],
+        "dashing": false,
+        "frame": 1,
+        "ghosts": 0,
+        "particle_visible": false,
+        "particles": false,
+        "paused": false,
+        "phase": 0.288333511352539,
+        "position": [
+          -51.916675567627,
+          -0.000141461656312458
+        ],
+        "rotation": 0,
+        "scale": [
+          1.66666674613953,
+          1.66666674613953
+        ],
+        "screen_player": [
+          431.280029296875,
+          973.5
+        ],
+        "speed": 100.000068664551,
+        "stick": [
+          72.8000030517578,
+          1618.64196777344
+        ],
+        "stick_radius": 48.5333337783813
+      },
+      "dash": {
+        "animation": "left",
+        "base_speed": 100,
+        "camera_drag": [
+          16,
+          4.35965630458668e-05
+        ],
+        "camera_smoothing": false,
+        "canvas_size": [
+          780,
+          1688
+        ],
+        "dash": [
+          715.86669921875,
+          1623.84387207031
+        ],
+        "dash_direction": [
+          -1,
+          -2.72478382612462e-06
+        ],
+        "dashing": false,
+        "frame": 1,
+        "ghosts": 1,
+        "particle_visible": false,
+        "particles": false,
+        "paused": false,
+        "phase": 0.45833251953125,
+        "position": [
+          -361,
+          -0.000983647187240422
+        ],
+        "rotation": 0,
+        "scale": [
+          1.83301174640656,
+          1.53359079360962
+        ],
+        "screen_player": [
+          431.533386230469,
+          973.500061035156
+        ],
+        "speed": 99.999382019043,
+        "stick": [
+          72.8000030517578,
+          1618.64196777344
+        ],
+        "stick_radius": 48.5333337783813
+      },
+      "stopped": {
+        "animation": "left",
+        "base_speed": 100,
+        "camera_drag": [
+          0.11236572265625,
+          3.06172296404839e-07
+        ],
+        "camera_smoothing": false,
+        "canvas_size": [
+          780,
+          1688
+        ],
+        "dash": [
+          715.86669921875,
+          1623.84387207031
+        ],
+        "dash_direction": [
+          -1,
+          -2.72478382612462e-06
+        ],
+        "dashing": false,
+        "frame": 0,
+        "ghosts": 0,
+        "particle_visible": false,
+        "particles": false,
+        "paused": false,
+        "phase": 0,
+        "position": [
+          -403.499786376953,
+          -0.00109945191070437
+        ],
+        "rotation": 0,
+        "scale": [
+          1.66666674613953,
+          1.66666674613953
+        ],
+        "screen_player": [
+          449.868469238281,
+          973.500061035156
+        ],
+        "speed": 0,
+        "stick": [
+          72.8000030517578,
+          1618.64196777344
+        ],
+        "stick_radius": 48.5333337783813
+      }
+    },
+    {
+      "scope": "Actual normal export Start/move/stop/dash with cursor on opposite side",
+      "revision": "before-v4",
+      "viewport": [
+        900,
+        600
+      ],
+      "errors": [],
+      "context_lost": false
+    },
+    {
+      "scope": "Actual normal export Start/move/stop/dash with cursor on opposite side",
+      "revision": "after-motion",
+      "viewport": [
+        900,
+        600
+      ],
+      "errors": [],
+      "context_lost": false
+    }
+  ],
+  "qa_source_equivalence": {
+    "script": {
+      "files": 221,
+      "manifest_sha256": "5720a6334680c02da260abc3a2c8195158c1a8f91886ba2db56d58f94eb1bfdd"
+    },
+    "scenes": {
+      "files": 59,
+      "manifest_sha256": "6f93f9c8b750863b55bbf2f10f2f6bddce0de40352cf53ea6ae13acd349bd235"
+    },
+    "resource": {
+      "files": 10,
+      "manifest_sha256": "669658c75dc1c679b3f1fc16bf551b27f3160ad43d83573c3fd82947d0d2d5f1"
+    },
+    "shaders": {
+      "files": 17,
+      "manifest_sha256": "cb3c17f90e96c1eb8beedcb693ca4737d188573bc6b2331b60d19e1c08827542"
+    },
+    "tools": {
+      "files": 142,
+      "manifest_sha256": "3b7f795e6a5d4543244b68b8a605c6ab10fac43ca278cc9aaef1ff9aa88fb786"
+    },
+    "assest": {
+      "files": 303,
+      "manifest_sha256": "d7a548607d16107afca197e712691844908bb2f318df363b3f9641bfd94680af"
+    }
+  },
+  "qa_entry": "Only separate QA project main_scene points to tools/preview_player_motion.tscn. Real player/control/camera, quiet enemies/attacks. Actual before/after normal exports tested separately.",
+  "video_scope": "Real browser recordings, WebGL2 software renderer. Random weather differs between baseline/after runs. GIF is a15FPS crop/quantization of real video, not a game frame-rate benchmark. Dash wait observed true; subsequent sampled snapshots may already be recovery.",
+  "evidence": {
+    "docs/screenshots/player-motion-20261110/.gdignore": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "docs/screenshots/player-motion-20261110/after-motion-walk.png": {
+      "sha256": "336e768e7eed5ee6d9148a6f875fdc9046fbbca196f1d21b37f371dca423dab4",
+      "bytes": 162699
+    },
+    "docs/screenshots/player-motion-20261110/after-motion.webm": {
+      "sha256": "0f91c49b4b82f61754f94d244e1463f0743e4c8ed2c1c8e39ed21b528754e4c2",
+      "bytes": 706629
+    },
+    "docs/screenshots/player-motion-20261110/before-v4-walk.png": {
+      "sha256": "0dd1462b06ee6b57eb83700d1f6d54f584b7a9c0f0d5c079264d08027ef65c02",
+      "bytes": 154289
+    },
+    "docs/screenshots/player-motion-20261110/before-v4.webm": {
+      "sha256": "c7160322e4b75e771eb8a04bd6b41ff171cf38e130f5c321186fa745d3af6158",
+      "bytes": 929005
+    },
+    "docs/screenshots/player-motion-20261110/desktop-fast-walk.png": {
+      "sha256": "5b044f47dea9a3e27ec0de53467d4d749edc9b35059cea37024604b92adf87df",
+      "bytes": 150614
+    },
+    "docs/screenshots/player-motion-20261110/desktop-idle.png": {
+      "sha256": "d2ee3e69a1e19735be1316a20a4b2624fe51637562ffa24e92e6333a6c82f51d",
+      "bytes": 147444
+    },
+    "docs/screenshots/player-motion-20261110/desktop-motion.webm": {
+      "sha256": "116646cb03ef1a9d4c806af8a715421eb5850e72ef04340c0c4fe4d5f820c943",
+      "bytes": 1436802
+    },
+    "docs/screenshots/player-motion-20261110/desktop-walk-left.png": {
+      "sha256": "23828fc916c3037825bebce9b215941284f3055171d3791230494f805a7954ca",
+      "bytes": 145318
+    },
+    "docs/screenshots/player-motion-20261110/desktop-walk-right.png": {
+      "sha256": "ad2e199221dbd95c95cc00b01687b2f8ca886f8e35cd219f0c45f55ae92f543b",
+      "bytes": 147067
+    },
+    "docs/screenshots/player-motion-20261110/movement-closeup.gif": {
+      "sha256": "d31a25e94c2a0e6dedf9c9b19804387edc23229dd21b513cfdffefe0ba571d37",
+      "bytes": 734841
+    },
+    "docs/screenshots/player-motion-20261110/phone-idle.png": {
+      "sha256": "ce86c1e05613e783376105c684bc2236c5194b5040b780b49b63c07e4e3ebc50",
+      "bytes": 344510
+    },
+    "docs/screenshots/player-motion-20261110/phone-motion.webm": {
+      "sha256": "1357d624d17e88841ea5abfbc20e9a3f0ef999b7eab3544597890824d9722739",
+      "bytes": 299532
+    },
+    "docs/screenshots/player-motion-20261110/phone-walk-left.png": {
+      "sha256": "0a8ef7eeac07d512eb52e262f815d671dd9346df3c06133ff6dd9c32b9ef5306",
+      "bytes": 347792
+    }
+  },
+  "changed_tracked_files": [
+    "AGENTS.md",
+    "scenes/game.tscn",
+    "scenes/player.tscn",
+    "script/camera_motion.gd",
+    "script/combat_feedback.gd",
+    "script/player.gd",
+    "tools/smoke_camera_motion.gd",
+    "tools/smoke_combat_feedback.gd"
+  ],
+  "new_tools": [
+    "tools/smoke_player_motion.gd",
+    "tools/preview_player_motion.gd",
+    "tools/preview_player_motion.tscn"
+  ],
+  "limitations": [
+    "No physical Safari/iOS, high-refresh display, dense-crowd FPS/memory benchmark or full campaign test.",
+    "Known CLI ObjectDB/resource-in-use shutdown warnings retained per check; runtime/script errors are not ignored.",
+    "Hosted gzip adapter and live private Site browser QA remain separate from original-export testing.",
+    "No default-branch merge or itch upload in this task."
+  ],
+  "artifact_directory_transient": "/workspace/Rogge-player-motion-20261110",
+  "source_commit": "e24861d0f675c2a428fa817ae23d04794ea99217",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/9",
+  "playtest": {
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "audience": "owner-private; unchanged",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_f11e69b5f9ec8191a62238a3687a73d0",
+    "deployment_id": "appgdep_6af29d70514c8191ae932b511dd9e3f2",
+    "status": "succeeded",
+    "deployed_at_beijing": "2026-11-10T12:28:52.507375+08:00",
+    "site_source_commit": "b9ce5cad9ad8e607d8180ba16f82c5f893c8e157",
+    "archive_sha256": "f84a7ac6e768abe3f6b1bbfc532b3047f27aec6fec71b7b382a41ad20795eda1",
+    "hosting_checks": {
+      "game_pr": "https://github.com/wyb969/Rogge/pull/9",
+      "game_source_commit": "e24861d0f675c2a428fa817ae23d04794ea99217",
+      "exact_export_bytes": {
+        "index.apple-touch-icon.png": true,
+        "index.audio.position.worklet.js": true,
+        "index.audio.worklet.js": true,
+        "index.html": true,
+        "index.icon.png": true,
+        "index.js": true,
+        "index.pck": true,
+        "index.png": true,
+        "index.wasm": true
+      },
+      "all_assets_under_25MiB": true,
+      "normal_main_entry": true,
+      "qa_fixture_excluded": true,
+      "js_syntax": "Original engine and unchanged gzip loader passed node --check",
+      "browser_scope": "Original Web export checked separately; managed Sites adapter/live private URL not browser-retested",
+      "files": {
+        "build-info.json": {
+          "bytes": 2018,
+          "sha256": "3659ef70c3558cc9605c9f670ad5d5d2462530134c6540def0bd30fca13cfd3a"
+        },
+        "index.apple-touch-icon.png": {
+          "bytes": 11441,
+          "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+        },
+        "index.audio.position.worklet.js": {
+          "bytes": 2973,
+          "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+        },
+        "index.audio.worklet.js": {
+          "bytes": 7298,
+          "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+        },
+        "index.html": {
+          "bytes": 5479,
+          "sha256": "28616e2caca55e2af5a7266b9cc5df53742bbe287a0c17ef0496b815cab1a559"
+        },
+        "index.icon.png": {
+          "bytes": 3209,
+          "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+        },
+        "index.pck": {
+          "bytes": 23513036,
+          "sha256": "15a8dec5be3544b592eeb5e680ae99baa98a4b4970bee17ce10d88b8905247c3"
+        },
+        "index.png": {
+          "bytes": 21443,
+          "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+        },
+        "index.wasm.gz": {
+          "bytes": 10052173,
+          "sha256": "d49553dad4d96ed902f15aaf53277c1537bc158d2355d4f26bbe344b9e25c63f"
+        },
+        "preview-loader.js": {
+          "bytes": 2293,
+          "sha256": "86a692076dbb65be99554b79c5a8f1c1aab78b87af0128b2f21689a70f450eea"
+        }
+      }
+    },
+    "verification_limit": "Managed Sites helper/cua_repl.js absent; secure-stdin Git packaging fallback. Native succeeded confirms publication. Hosted gzip adapter/live private URL not browser-retested; actual normal/QA game exports were tested separately."
+  }
+}

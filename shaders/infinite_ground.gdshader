@@ -21,6 +21,8 @@ uniform vec2 sun_direction = vec2(0.9, 0.35);
 uniform float sun_strength = 0.0;
 uniform float cloud_strength = 0.0;
 uniform float environment_time = 0.0;
+// Stage 1 uses a stronger edge darkening. 0 leaves the menu/test look unchanged.
+uniform float vignette = 0.0;
 
 varying vec2 v_world;
 
@@ -65,6 +67,11 @@ void fragment() {
 	if (cloud_strength > 0.0) {
 		float cloud = 0.5 + 0.5 * sin(dot(v_world, vec2(0.004, 0.002)) + environment_time * 0.06);
 		light *= 1.0 - cloud_strength * cloud * 0.08;
+	}
+	if (vignette > 0.0) {
+		vec2 centered = (SCREEN_UV - vec2(0.5)) * vec2(1.15, 1.0);
+		float edge = smoothstep(0.22, 0.95, length(centered));
+		graded *= mix(1.0, 1.0 - vignette, edge);
 	}
 	COLOR = vec4(graded * light, tex.a * tint.a);
 }

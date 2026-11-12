@@ -254,6 +254,8 @@ func _reset_skill_controllers() -> void :
 			actor.suspend_feedback()
 	var playground: = get_node_or_null("FeedbackPlayground")
 	if playground != null: playground.stop()
+	var motion_debug := get_node_or_null("MotionVfxDebug")
+	if motion_debug != null: motion_debug.stop()
 	AudioManager.stop_gun_audio()
 	if burn_spread: burn_spread.reset()
 	if combat_lighting: combat_lighting.reset()
@@ -317,11 +319,11 @@ func _on_upgrade_selected(upgrade_id: String):
 		"circle_up":
 			circle_weapon.handle_level_up(current_level)
 		"speed_up":
-			player.speed_up(20)
+			player.speed_up(player.SPEED_CARD_BONUS)
 		"gun_up":
 			gun_weapon.upgrade()
 		"pickup_up":
-			player.pick_up_upgrade(1.2)
+			player.pick_up_upgrade(player.PICKUP_CARD_SCALE)
 		"left_fist":
 			player.upgrade_left_fist()
 		"right_fist":
@@ -470,7 +472,7 @@ func _show_death_veil() -> CanvasLayer:
 	add_child(layer)
 	var rect: = ColorRect.new()
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rect.color = Color(0.7, 0.05, 0.04, 0.34)
+	rect.color = GamePalette.alpha(GamePalette.ENEMY_CRIMSON,0.34)
 	layer.add_child(rect)
 	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	return layer
@@ -752,6 +754,16 @@ func prepare_variety_debug() -> void :
 	variety._courier_left = 999
 	variety.spawn_courier()
 	variety.notify("已装备踏风徽记 / 回响火种\n冲刺结束触发风压 · 击杀 8 个敌人触发回响")
+
+func prepare_motion_vfx_debug() -> void:
+	var sandbox := preload("res://script/motion_vfx_debug.gd").new()
+	sandbox.name = "MotionVfxDebug"
+	add_child(sandbox)
+
+func prepare_hitstop_debug() -> void:
+	var sandbox := preload("res://script/hitstop_debug.gd").new()
+	sandbox.name = "MotionVfxDebug"
+	add_child(sandbox)
 
 func prepare_ink_surf_debug() -> void:
 	variety.notify("彩墨冲浪：向右冲刺，掠过3处溅痕\n终点60伤害+击退 · 6秒冷却 · 无需选卡")

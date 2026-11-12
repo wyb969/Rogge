@@ -105,9 +105,12 @@ func start_attack() -> void :
 	returning = false
 
 func handle_level_up(character_level: int) -> void :
+	var next := upgrade_preview(character_level)
 	level += 1
+	weapon_demage = next.damage
+	max_speed = next.speed
 
-
-	weapon_demage *= 1.0 + 0.12 * character_level + 0.015 * character_level * character_level
-	var upgrades: = float(level - 1)
-	max_speed = mini(MAX_FLIGHT_SPEED, roundi(BASE_FLIGHT_SPEED * (1.0 + 0.12 * upgrades + 0.015 * upgrades * upgrades)))
+func upgrade_preview(character_level: int) -> Dictionary:
+	var upgrades := float(level)
+	return {"damage": weapon_demage * (1.0 + 0.12 * character_level + 0.015 * character_level * character_level),
+		"speed": mini(MAX_FLIGHT_SPEED, roundi(BASE_FLIGHT_SPEED * (1.0 + 0.12 * upgrades + 0.015 * upgrades * upgrades)))}

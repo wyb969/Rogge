@@ -1,5 +1,98 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-10 命中白闪 / 受伤淡红与短顿帧（最新）
+
+- 当前开发基线 `feature/vfx-motion-20261110` / `3f6375b08d378d7dafd8cbcc2d2a35ed97b7da5b`。按“玩家打中敌人白闪，玩家实际受伤淡红闪”实现用户要求；原句第二处对象重复，未收到相反澄清。沿用Cursor配色、卡牌/移动/冲刺/投弹修复。本轮版本 **20261110-194311**（北京时间），已同步并推送当前分支；已验证游戏源码 `2bc121dd64e5c84c92a8cd0ff563fff080e1a9a9`，后续仅文档。已更新 [PR #10](https://github.com/wyb969/Rogge/pull/10)，仍以PR #9分支为base，不合并master/不上传itch。
+- `hit_feedback.gd` 是唯一战斗顿帧控制器：普通命中目标28ms、实际HP受伤65ms，临时速度0.05；全局普通命中间隔200ms，不续长；玩家受伤可升级正在进行的普通命中停顿，但总长不超过起始65ms，受伤独立400ms门限。全部使用真实时间截止，不为每次命中创建Timer/Tween/Node。恢复只处理自身持有的0.05，死亡0.08、Boss死亡0.06/0.2等外部慢动作优先。
+- 同一个固定48槽轮廓池（玩家保留0号槽、敌方47槽），白色85ms、淡红115ms、同目标140ms间隔。复用现有unshaded轮廓shader，只读取源alpha；支持AnimatedSprite/普通帧表、UV、翻转、缩放和旋转。活着随sprite，致死后暂留捕获的真实帧，避免一击死亡看不到闪色。材质/中毒/冻结染色、碰撞与伤害数值不被覆盖。
+- EnemyShell只对实际正伤害、非from_status请求新反馈；Boss仍经真实伤害和原冷却门限，但旧独立time_scale/异步Timer已改为委托共享控制器。持续毒/火和二次伤害不触发。玩家仅HP损失触发淡红；护盾完全吸收、Dash/军械无敌、受伤保护与0伤害不误触发。限时试炼保留闪色，不施加全局慢动作，以保护原始倒计时/锁定/闪避窗口。
+- 移除玩家旧乘红闪烁循环和普通怪旧乘亮闪光，受击形变/击退保持；跳字放在轮廓上方并忽略时间缩放，血迹改用独立真实时钟，避免开始顿帧的同帧delta/新time_scale让新血迹突然前进。原2秒停留/2.5秒消失和Ink Surf判定不变。暂停、转场、休整、重试、结束、Home和释放节点都清理自身时间/快照。
+- Debug首页新增 **命中顿帧 · 白色 / 淡红**，18项继续分页。复用既有安静测试场，按钮交替打普通怪/精英和走真实玩家受击流程；无自动投弹，原动态表现入口仍保留。新局/Retry/Home不继承状态。
+- 证据与边界见 [hitstop.md](hitstop.md) 和 [validation/hitstop-20261110.json](validation/hitstop-20261110.json)。新增专项78断言已通过，另有反馈、状态字、无敌、Boss、试炼、血迹、彩墨和卡牌等回归；本轮14项不同原生、7项最终实际Web PCK专项通过。Chromium软件WebGL2桌面900×600、390×844/DPR2实际菜单/按钮已核验，白色与淡红真实渲染帧的像素明显高于基线，并观察到0.05短停顿和恢复1；Home清理通过。正常原始Web也测试进入新Debug、两种受击和返回主页，确认没有QA遥测。772个源/资源/素材与QA副本一致，只有QA main_scene不同；最新所有者私有试玩：<https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>，当前账号登录，主页→Debug第一项“命中顿帧 · 白色 / 淡红”。Site source `560c995d874016a0204292a44d3a3e08d184c6b9`，deployment `appgdep_6af30946706c81918127f0cbff7e8675`，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_a6d0af061d5881918249c5a0b21fc8a6`，北京时间2026-11-10 20:08:48发布succeeded。PCK `5e5461fca143823b3bb7deb49340a273bc131b1a3c93c508d52aa5d5232db837`；WASM解压/PCK原字节一致，11资产均低于25MiB；托管适配器/线上私有页未浏览器复测。软件浏览器的短闪色使用渲染完成帧读回，不延长/冻结游戏时钟；这只在QA入口启用，正常包入口没有采集开销。已有CLI退出资源警告独立保留，无Safari真机或密集怪性能结论。
+
+## 2026-11-10 用 Cursor 配色替换两轮旧颜色（上一轮）
+
+- 用户指定将 `cursor/color-palette-v4-4455` 的颜色用于当前开发分支，替代先前两轮配色。颜色来源已从远端核对为 `137fa6d7968617eefed4e19fad76cf0983e408d1`；当前开发起点 `feature/vfx-motion-20261110` / `d9dcb3da2447be5807f357204f06e0b2383c9cd9`。已在隔离integration工作树完成整理与验证，并快进同步/推送当前分支，已验证游戏提交 `ec012230bc0146e2b04653e25f9c36c48e198e9f`；后续仅发布记录文档。已更新 [PR #10](https://github.com/wyb969/Rogge/pull/10)，保持以PR #9分支为base。不改写历史、不合并master、不发布itch。
+- 新版本 **20261110-150638**（北京时间）。`GamePalette`原始Cursor定义/方法保持完整，尾部只保留现有卡牌UI、脚下提示与残影所需的角色别名/中性样式包装；所有别名解析到同一套Cursor颜色。移除`semantic_ramp.gdshader`及全局`game_ui_theme.gd`，原贴图不再被上两轮色阶映射盖住。
+- 同步Cursor共享body_tint、角色/怪物/Boss染色及状态恢复、原武器/无人机/金币/书卷/图标色彩、紫毒、红橙预警、原生命/经验条、技能/组合颜色、黑色椭圆影子与共享局部光、分关地面/装饰/暗角、灰色摇杆和Dash。第一关地面固定深青苔、后续按Cursor表轮换，替代旧三组随机色族。绿色生命条/蓝色经验条等以用户本次选定样式为准，不再套旧版“绿仅拾取”等条款。
+- 保留卡牌数值前后比较、固定移速卡+20、实际参数共用计算、手机卡牌滑动与点击选择、17项Debug分页/设置持久化。移除全局主题后，卡牌独立使用Cursor中性面板，防止文字直接压在战斗画面上。普通伤害暖白、暴击金色及加大/加粗、异常黄→红恢复Cursor风格，同时保留当前的紫色毒伤通道。
+- 移动/冲刺/投弹修复保留：左右步态、实际位移步频、无走路粒子、单层相机跟随、脚下HUD固定在Player、0.22秒/0.48透明度/8槽按距离残影、双投弹渲染插值；物理伤害时钟不改。静态审计确认14个核心文件与当前起点逐字一致、22个关键移动/卡牌/命中方法逐字一致；GamePalette原Cursor前缀逐字一致。
+- 本轮专项与截图、构件哈希收尾见 [validation/palette-sync-20261110.json](validation/palette-sync-20261110.json) 和 [palette-sync.md](palette-sync.md)。原生已通过17项不同专项（含22卡347断言、运动表现170断言、真实120Hz渲染采样30Hz物理、Debug4654断言）；6项最终实际Web PCK专项通过；Chromium原始正常入口、横屏/竖屏固定场景（三种Cursor地面）、彩色与灰度、Dash四状态、数值卡牌、真实手机滑动不误选/点击选择均通过，无脚本/Shader错误或WebGL丢失。正常Web入口也保留键鼠/双指移动和Dash检查。仅QA副本启用固定场景与遥测，763个源/资源/素材文件逐字一致。旧配色文档已标记历史，数值/功能条款仍有效。
+- 最新试玩：<https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>（现有所有者私有权限，登录当前账号），版本20261110-150638；普通Start或Debug第一项动态表现均可。Site source `3c2a320bbf5b3bccdc815e4953eca5fa1ad9d585`，deployment `appgdep_6af2c579ccc481918e7dcf7d7d7b3550`，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_40aa335d30148191b706ba6466e252b3`；北京时间2026-11-10 15:19:34发布succeeded。PCK `aaf96070a6579a70a6c095860ece1eefac0310e40eab2135f078b34a059188ab`；WASM解压/原PCK字节一致，11资产均低于25MiB。官方helper/浏览器工具缺失，沿用隐藏stdin普通Git与精确dist tar；托管适配器/线上私有页未浏览器复测。
+- 边界：仅颜色/材质/UI外观替换，不回退卡牌功能、不调整伤害/冷却/移速/血量，不清理或覆盖用户工作区。CLI既有ObjectDB/资源退出警告独立记录；无Safari真机、全流程或密集怪性能结论。临时路径 `/workspace/Rogge-palette-sync-20261110T065217Z/` 不是持久依赖。
+
+## 2026-11-10 彩墨提示 / 冲刺残影 / 投弹平滑（上一轮）
+
+- 分支 `feature/vfx-motion-20261110` 基于已核对的移动分支 `cca3e4551270bcb805fbb14e8977f58418b0d209`；PR #9仍未合并，默认分支为master `7e81adf`。已提交 [PR #10](https://github.com/wyb969/Rogge/pull/10)（以移动分支为base），已验证源码 `53b9906f6c2b33af9fd053d3b1e54f6fca6278af`，后续仅收尾文档。本轮不合并master、不更新itch。版本 **20261110-132712**（北京时间）。
+- 代码确认：彩墨提示与投弹均有30Hz重绘门限，提示另行采样玩家坐标；投弹年龄本来已经用physics delta推进，因此不称其为“没有使用delta”。旧残影仅0.10秒/0.16透明度，暗贴图乘色进一步削弱可见度。
+- `ink_surf.gd`的3格与Label移入Player下固定`InkFootHud`，不挂AnimatedSprite，不拷贝世界坐标、不受冲刺拉伸；只有数值/增益动画/冷却改变时重绘，冲浪震波仍留在世界坐标。3处彩墨/6秒/60伤害/90半径与实际dash信号判定未改。
+- `player.gd`沿move_and_slide后的真实路径每18世界单位留下残影，启动即有一帧，每物理步最多4次、总池8；0.22秒/0.48透明度。`combat_feedback.gd`新增一个共享绘制层和unshaded纯轮廓shader，青蓝色不再与暗贴图RGB相乘；保留旧ShadowTimer回调供兼容检查，正常冲刺不启动它。无走路残影/新粒子/逐残影节点。
+- `arc_motion.gd`统一抛物线视觉（相同端点/高度/时长）。炸弹与EnemyAttackField记录previous/current物理年龄，在渲染帧使用Engine插值分数采样，空池停止process。命中/引信/冷却/落点锁定/来源死亡及控制取消/一次命中/上限不变；敌方危险激活仍以物理时钟立即切换。此方案最多落后一物理tick，不预测未来伤害。
+- Debug首页第一项 **动态表现 · 彩墨 / 残影 / 投弹**：停普通波次、装备1级炸弹，固定两只耐久测试怪、自动每2秒重放双方实际投弹，敌方落点位于玩家下方90单位以避开脚下提示。该专属练习敌方伤害为0。按钮“重放投弹”“重置冲刺”；可上下走/任意方向冲刺，提供可再生彩墨。17个入口继续分页，CSS/DPR触控尺寸保留；Retry保留preset，Home/普通Start清除装备和练习UI。
+- 本轮**11项不同原生专项、4项最终Web PCK专项通过**。新增170断言：脚下坐标随真实玩家且不随sprite形变、30/60/120Hz等间隔残影/弧线、真实120Hz引擎帧对30Hz物理（双方各>10个物理tick内中间采样）、渲染不推进伤害时钟、池上限/清理/实际Debug按钮/Retry/Home。其余覆盖彩墨、炸弹、战术怪、dash无敌/方向、步态、相机、反馈、Debug 4654断言和工具栏。
+- 真实Chromium软件WebGL2：900×600及390×844/DPR2双指操作，实际Debug菜单/按钮、纵向HUD固定[-50,32]、冲刺残影、双方投弹、暂停/恢复、Home和普通原始Web入口通过；无脚本/Shader错误或WebGL丢失。正常入口不暴露QA遥测。763个脚本/场景/资源/素材文件与QA副本一致，仅QA main_scene加载专属观测入口。
+- 限制：软件录屏渲染较慢，最终浏览器未观察到30Hz物理tick内的连续渲染对，不能据此做60/120FPS或真机性能结论；插值引擎专项由上述原生实际帧确认。Dash截图可能晚于短暂拖尾，活跃残影由遥测和录屏确认。退出ObjectDB/资源仍被引用警告独立保留。未做Safari真机、密集怪负载或完整游戏回归。
+- 文档/命令：[motion-vfx.md](motion-vfx.md)；源/导出哈希、检查、浏览器数据：[validation/motion-vfx-20261110.json](validation/motion-vfx-20261110.json)。临时产物 `/workspace/Rogge-vfx-motion-20261110/`，不是持久依赖。已更新既有所有者私有试玩：<https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>，当前所有者账号登录；主页→Debug→动态表现。Site source `81392fe86eead527db39049ef999ffdfef60545a`，deployment `appgdep_6af2ae797ea48191881a2d0420e9544f`，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_5781671132748191936bf6e3b95e4e13`，2026-11-10 13:41:33北京时间发布succeeded，受众不变。PCK `4dbe4bd19f751aa64df913b2c827212e0351645379c032a1bec035d410747932`；WASM解压/PCK原字节和11资产25MiB限制均校验。官方Site helper/浏览器工具缺失，沿用隐藏stdin普通Git和精确dist tar；托管适配器/线上私有页未浏览器复测。
+
+## 2026-11-10 玩家移动与跟随（上一轮）
+
+- 新分支 `feature/player-motion-20261110` 基于v4 `a5e3b0e`，PR #7尚未合并，已提交 [PR #9](https://github.com/wyb969/Rogge/pull/9)，以v4分支为base保持增量清晰；不合并master/不更新itch。已验证游戏源码 `e24861d0f675c2a428fa817ae23d04794ea99217`，后续仅文档。
+- 代码确认旧问题：固定5/6FPS、鼠标8向动画且站立仍播；走路反复触发无贴图旋转大方块粒子；像素角色持续缩放/旋转；相机内置平滑叠加意图速度拖拽。未证明move_and_slide位置积分本身错误，也不声称所有设备锯齿原因已排除。
+- `player.gd`按move_and_slide之后实际位移驱动0/1/0/2侧向步态，50单位一周期，极快上限18姿态/秒。左右面向，不随鼠标转身；上下/停步保持上次侧向，停下/顶墙/锁定回中立帧，冲刺固定发力帧。360度移动/冲刺保留，闲置键盘冲刺改用最近移动方向。移速100、卡+20、加速900/摩擦600、dash780/0.14秒/结束0.5秒无敌/冷却均未改。
+- 走路旧粒子隐藏且不发射，常态不旋转/伸缩；仅受击/冲刺有短形变，Sprite5/3缩放配1.8相机约3倍源像素，AtlasTexture开启filter_clip，碰撞体不变。残影仍8槽，改0.10秒/0.16透明度/0.035秒采样，不新增脚步节点或噪音。
+- `camera_motion.gd`用实际世界位置单层临界阻尼跟随，响应20/冲刺30、最大16单位拖拽，禁用内置第二平滑；暂停冻结、240单位瞬移重置、舒适度0关闭、返回主页/新局清零，不改FOV/旋转。
+- 11项不同原生专项、6项最终实际PCK通过；新移动32断言涵盖真实30/60Hz输入位移、加速卡、鼠标/上下/停步/顶墙、冲刺/锁定/清理，旧dash方向/无敌、相机、雪、卡牌/返回等通过。原反馈测试改用固定初始子节点数兼容已有DeathStains，并保留池/无新节点断言。最终原工程/QA无头导入与导出无脚本/shader/构建错误；已知退出资源警告保留。
+- Chromium真实WebGL2桌面与390×844/DPR2触屏：55组运动数据、100→160步频/面向、无走路粒子/残影、相机≤16、双指摇杆/Dash、暂停恢复通过。旧v4与新正常入口相同键鼠序列也录屏，无脚本错误/WebGL丢失；天气随机不同，不是同场景性能对照。冲刺wait观察到true，随后截图可能已恢复，不误称都捕获活动帧。没有Safari真机/高刷新率/密集群怪性能结论。
+- 文件/设计/命令/演示见 [player-motion.md](player-motion.md)，全部检查/原包哈希/QA源等价/视频记录见 [validation/player-motion-20261110.json](validation/player-motion-20261110.json)。截图/视频目录有 `.gdignore`不进入游戏包；测试入口preview_player_motion只在QA副本启用，普通游戏无测试键/遥测。临时产物 `/workspace/Rogge-player-motion-20261110/`。
+- 下一步重点收集真机行走/反向/冲刺恢复观感与相机舒适度。保持表现位移和物理/数值分离，不能恢复鼠标转身、空转步态或叠加第二个跟随平滑。
+
+
+### 移动优化试玩（已更新）
+
+- <https://rogge-palette-playtest-20261109.whiteber.chatgpt.site> 已更新为本轮移动/相机版本，正常游戏入口，保持所有者私有。下文v4/PR #6的同URL发布信息是历史版本。
+- Site源 `b9ce5cad9ad8e607d8180ba16f82c5f893c8e157`；deployment `appgdep_6af29d70514c8191ae932b511dd9e3f2` 返回succeeded（北京时间2026-11-10 12:28:52），version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_f11e69b5f9ec8191a62238a3687a73d0`。PCK `15a8dec5be3544b592eeb5e680ae99baa98a4b4970bee17ce10d88b8905247c3` 与已验证正常Web导出完全相同。
+- 11文件字节/大小/JS语法检查通过，WASM gzip解压等价；没有改游戏或重复完整回归。Sites专用helper和managed浏览器仍不可用，使用隐藏stdin凭据/Git打包；线上私有页/托管压缩适配器没有浏览器复测。原始Web导出的桌面/触屏检查与平台发布成功分开记录，不作Safari真机承诺。
+- 完整发布状态写入 [validation/player-motion-20261110.json](validation/player-motion-20261110.json) 的playtest字段；未改变itch或主分支。
+
+## 2026-11-10 配色稿v4（本轮新PR）
+
+- 主分支实际为 `master`，从最新 `7e81adf` 新建 `feature/palette-v4-20261110`。PR #6仍未合并，因此带入其三次提交（保留cherry-pick来源）后实现v4；下文PR #6旧色板与旧试玩是历史结果。已提交 [PR #7](https://github.com/wyb969/Rogge/pull/7)，未合并/未部署新包，版本仍为 `20261109-192900`。已验证游戏源码提交 `1389bc80b1cc2ccc5f7dbfb8cc35aa877e2315be`，后续仅补交接/记录。
+- `GamePalette` v4：玩家/友攻青蓝，敌人按原型深红/橙/锈红，精英描边也属敌色；红色敌弹白芯红晕，预警红填充/亮红边/暗红内弧；毒紫、治疗绿、金币金、书本羊皮纸、护盾金，UI中性底色。功能技能边框按稿用玫红/浅黄/蓝/金；数量白粗黑描边。玩家原图片文件和角色碰撞均未改，仅加青蓝材质/局部轻光。
+- **金币原始设计已读代码确认：金币就是经验载体，没有独立货币或另一套经验球掉落。** 按用户本轮明确要求恢复金色，仍由原接口给经验；回血球用#22C55E+白加号，保留#4ADE80独立有益拾取语义。不拆掉落、不改数值。继承卡牌比较及移速固定+20。
+- 第一关四种暗青苔，第二关四种暖褐，第三关四种暗紫，后续色组轮换；同关缓存、不重复开局与单次随机抽取保留。现有地面shader增加世界噪点、平滑暗斑、轻暗角；72个草装饰池不扩容。未改敌人主题、刷怪比例、伤害/血量/时序。
+- 黑椭圆阴影替换旧彩色脚底点；保留64怪阴影槽并覆盖EnemyShell子类，新增32拾取阴影缓存、最多8金币暖光，每0.1秒刷新、每类最多看128拾取。复用3批次与共享纹理，无逐怪/逐弹Light2D；四技能各加一个固定图标TextureRect以保留功能边框。超预算只舍弃装饰效果。用户控件大小/透明度/拖动设置保持。
+- **17项原生专项、8项最终实际Web PCK专项通过**；卡牌347断言、伤害/奖励/碰撞/池上限均保留。最终原项目及QA无头导入/导出无脚本/shader/构建错误；冷缓存首轮与既有退出ObjectDB/资源警告如实记录。红弹按稿精确色，4.5:1检查改看实际白芯，不谎称红主体达到4.5。
+- Chromium/WebGL2三视口900×600、390×844/DPR2、844×390/DPR2，39张彩色/灰度/三地面/DASH/卡片截图；另测手机滑动不选卡、点击领取与正常Web开始/移动/冲刺/短战斗，均无脚本错误或WebGL丢失。截图使用真实场景冻结夹具，仅QA入口不同；正常入口另测。没有Safari真机、itch iframe、全流程/怪潮性能结论。
+- 规则/文件分组/图库/命令见 [palette-v4.md](palette-v4.md)，文件清单、源/包哈希、全部专项和浏览器结果见 [validation/palette-v4-20261110.json](validation/palette-v4-20261110.json)。16张精选图有 `.gdignore`，不进入游戏包。临时产物 `/workspace/Rogge-palette-v4-20261110/`。
+- 后续重点：用户按稿试玩确认色彩；真机检查不同天气下的低饱和地面、怪物群/毒圈辨识与局部阴影开销。本轮没有新增玩法或已知未修脚本错误。PR评审/发布按新指令执行，不把PR #6旧试玩当v4包。
+
+
+### v4试玩（用户追加要求，已更新同一站点）
+
+- <https://rogge-palette-playtest-20261109.whiteber.chatgpt.site> 已更新至 **v4 / PR #7**，正常游戏入口；原所有者私有权限保留。下文PR #6曾在此URL部署的版本是历史记录。
+- Site源 `3afc9220f0fe595f529bdecf355b30b423ddd97f`；deployment `appgdep_6af27b8ade18819193a1d4d2230df965` 返回succeeded，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_7d3a43ad5490819199360a70c2677017`。游戏源码 `1389bc80b1cc2ccc5f7dbfb8cc35aa877e2315be`，PCK `5016e08eef0681e284b3675da654124630af93b0b91ee12f9abf07cf57b69087` 与已测试导出一致。
+- 仅复用原包/处理托管gzip，未改游戏、合并master或发布itch。11文件校验、WASM解压等价、单文件25MiB限制、JS语法通过；没有重复全量回归。Sites专用helper/浏览器工具仍缺失，凭据仅隐藏stdin/子进程内存使用；托管gzip适配器和线上私有URL未做浏览器复测。平台succeeded只确认发布，原游戏17+8专项与Chromium结果单独保留。
+- 发布记录：[validation/palette-v4-playtest-20261110.json](validation/palette-v4-playtest-20261110.json)。Site本地源仍为 `/workspace/sites/rogge-palette-playtest-20261109/`，不要仅按旧目录日期误判版本。
+
+## 2026-11-09 统一颜色与卡牌比较（本轮PR）
+
+- 从最新主分支 `master` / `7e81adf` 新建 `feature/palette-card-readability-20261109`；仓库没有 `main`。本轮只做视觉/UI/文案，已提交 [PR #6](https://github.com/wyb969/Rogge/pull/6)，未合并、未更新itch，版本仍为 `20261109-192900`。已验证源码提交 `c25e98347633b0ca591419b4e6f6c4f82f7f8ec9`；后续仅补本交接和记录。
+- `GamePalette` 集中颜色与缓存材质：有益拾取/回血绿、毒紫、危险红橙、盾黄、控件灰白、友方攻击蓝白。毒染色/跳字与风追加毒伤一致；部分绿色敌人和武器原图通过共享ramp运行时重着色。玩家主体素材/场景与关卡地面、天气、音频、设置存储和战斗数值均未改。
+- 灰白摇杆/冲刺保留用户大小、透明度与位置；按下1.06视觉放大、冷却遮罩、就绪短亮，触摸边界固定。统一中性按钮/主题和CJK提示字体。红色小敌弹增加浅红亮部，保持12种地面原有4.5:1专项阈值。
+- `CardPreview`+`CardNumbers`覆盖22卡，读取真实控制器等级与共用数值helper，显示百分比/固定增幅及当前→下级；增益白、代价橙。用户明确确认**移速卡仍固定+20，只修文案**，首张100→120为+20%。纳入角色等级、双拳、生机组合、难度治疗倍率；不消耗战斗RNG。休息页同步。手机卡片可滚动，完整点击抬手才领取，固定换卡页脚。
+- 23项不同原生专项、10项实际Web PCK专项通过；新 `smoke_palette_cards` 347断言逐卡比对真实升级，其他专项覆盖伤害/异常/碰撞与既有生命周期。最终导入、导出无脚本/shader/构建错误；已有退出ObjectDB/资源警告仍保留。没有跑全部smoke。
+- Chromium/WebGL2的900×600、390×844/DPR2、844×390/DPR2，39张彩色/灰度/卡片/冲刺状态截图；实际触屏滑动不误选，点击选卡、正常Web入口短时战斗/移动/冲刺通过。截图使用隔离QA入口，游戏代码/资源与正常导出相同；不代表itch iframe、Safari真机、全流程或密集怪性能验证。18张精选截图有 `.gdignore`，只存Git不进入游戏包。
+- 设计、文件分组、测试命令与图库见 [palette-readability.md](palette-readability.md)，完整源码清单/23+10检查/浏览器结果/哈希/限制见 [validation/palette-readability-20261109.json](validation/palette-readability-20261109.json)。临时构件 `/workspace/Rogge-palette-20261109/` 不作为持久备份。
+- 后续：评审PR，重点真机检查手机竖屏滚动、不同天气下毒/经验/敌弹区分；本轮没有已确认的未修玩法bug。共享ramp不可逐怪修改，新增卡片应复用真实公式与统一formatter。发布itch需另按用户发布指令执行。
+
+
+### 颜色与卡牌试玩（用户追加要求，已部署）
+
+- <https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>，新建的所有者私有Sites试玩，内容为 [PR #6](https://github.com/wyb969/Rogge/pull/6) 已验证源码 `c25e98347633b0ca591419b4e6f6c4f82f7f8ec9`；正常游戏入口，不是冻结截图夹具。该用户追加要求仅发布试玩；未合并master或更新itch。
+- Site源 `9758813b365b394ae107910066197a84572d65e3`；deployment `appgdep_6af1e62ce8008191b4290a9d10773aea` 返回 **succeeded**，version `appgprj_6af1e5b586688191b2677024b2e27023~appgver_524d54826f648191a0d3fcd776bfaab2`。新Site默认私有，未更改受众或原有Sites。
+- PCK `e4a8febdb76acdbf3c2c89875dac6fb92ea1924090ee0247efb8e2dccb61c12f` 与原验证导出一致；WASM用gzip适配托管大小限制，解压字节完全一致。原始JS/资源也逐文件校验，所有单文件小于25MiB，loader/engine JS语法通过。只复用已验证导出，没有重跑完整回归。
+- 当前环境没有Sites提供的本地helper文件与managed `cua_repl.js`工具；用原生凭据经隐藏stdin完成Git/打包，未写入密钥；未另开浏览器路径。因此**托管gzip适配器和线上私有URL没有浏览器复测**；平台发布成功不等于Safari真机或线上完整游玩验证。记录见 [validation/palette-playtest-20261109.json](validation/palette-playtest-20261109.json)。临时Site源 `/workspace/sites/rogge-palette-playtest-20261109/`。
+
 ## 2026-11-09 主分支与itch最新版本（已完成）
 
 - 基于已合并的master `c34a957`（[PR #4](https://github.com/wyb969/Rogge/pull/4)），在 `fix/beast-hover-ink-20261109` 修复用户追加的三项反馈，版本 **`20261109-192900`**。原开发分支工作区保留，没有清理/重置。

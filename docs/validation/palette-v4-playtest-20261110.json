@@ -1,0 +1,16 @@
+{
+  "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+  "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+  "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_7d3a43ad5490819199360a70c2677017",
+  "deployment_id": "appgdep_6af27b8ade18819193a1d4d2230df965",
+  "status": "succeeded",
+  "deployed_at": "2026-11-10T02:04:10.089051+00:00",
+  "audience": "owner-private; access read before update and left unchanged",
+  "site_source_commit": "3afc9220f0fe595f529bdecf355b30b423ddd97f",
+  "game_source_commit": "1389bc80b1cc2ccc5f7dbfb8cc35aa877e2315be",
+  "game_pr": "https://github.com/wyb969/Rogge/pull/7",
+  "pck_sha256": "5016e08eef0681e284b3675da654124630af93b0b91ee12f9abf07cf57b69087",
+  "scope": "Exact previously tested normal v4 export reused; no game changes or repeated full regression. Existing Sites URL updated, no itch release/default-branch merge.",
+  "checks": "11 assets; PCK unchanged, WASM gzip restores exact bytes, all exports match recorded hashes after removing only HTML loader insertion; all files below25MiB; original engine/unchanged loader JS syntax passed.",
+  "verification_limit": "Native deployment succeeded. Managed Sites helper/browser tools unavailable; secure stdin credential/Git packaging fallback used. Hosted gzip adapter/private URL not browser-retested; original game has17 native/8 PCK/three Chromium viewport checks recorded separately."
+}

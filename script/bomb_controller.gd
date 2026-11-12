@@ -14,7 +14,7 @@ var casts := 0
 var detonations := 0
 var hits := 0
 var _cooldown := 0.0
-var _redraw_left := 0.0
+const ARC := preload("res://script/arc_motion.gd")
 var _generation := 0
 var _blast_slot := 0
 var _had_draw := false
@@ -35,10 +35,10 @@ func _ready() -> void:
 	z_index = 10
 	_icon = load(ICON_PATH)
 	for _i in MAX_BOMBS:
-		_bombs.append({"active": false, "age": 0.0, "from": Vector2.ZERO, "at": Vector2.ZERO,
+		_bombs.append({"active": false, "age": 0.0, "previous_age": 0.0, "from": Vector2.ZERO, "at": Vector2.ZERO,
 			"damage": 0.0, "radius": 0.0, "push_speed": 0.0})
 	for _i in MAX_BLASTS:
-		_blasts.append({"left": 0.0, "at": Vector2.ZERO, "radius": 0.0, "phase": 0.0})
+		_blasts.append({"left": 0.0, "previous_left": 0.0, "at": Vector2.ZERO, "radius": 0.0, "phase": 0.0})
 	_audio = AudioStreamPlayer.new()
 	AudioManager.configure_sfx(_audio)
 	_audio.stream = preload("res://assest/sounds/bomb_burst.wav")
@@ -73,6 +73,7 @@ func clear_combat_effects() -> void:
 			actor.clear_blast_impulse()
 	if _audio != null: _audio.stop()
 	_had_draw = false
+	set_process(false)
 	queue_redraw()
 
 func cast() -> bool:
@@ -98,6 +99,7 @@ func cast() -> bool:
 	var bomb: Dictionary = _bombs[slot]
 	bomb.active = true
 	bomb.age = 0.0
+	bomb.previous_age = 0.0
 	bomb.from = origin
 	# Land at a fixed ground point, so a dead target cannot retain a node or move the blast.
 	bomb.at = origin + (target.global_position - origin).limit_length(240.0)
@@ -107,6 +109,7 @@ func cast() -> bool:
 	_cooldown = float(_stats.interval)
 	casts += 1
 	_had_draw = true
+	set_process(true)
 	queue_redraw()
 	return true
 
@@ -118,10 +121,12 @@ func _physics_process(delta: float) -> void:
 	var generation := _generation
 	var active := false
 	for blast in _blasts:
+		blast.previous_left = blast.left
 		blast.left = maxf(0.0, float(blast.left) - delta)
 		active = active or blast.left > 0.0
 	for bomb in _bombs:
 		if not bomb.active: continue
+		bomb.previous_age = bomb.age
 		bomb.age += delta
 		if bomb.age >= FUSE_SECONDS:
 			_detonate(bomb)
@@ -130,12 +135,13 @@ func _physics_process(delta: float) -> void:
 	_cooldown -= delta
 	if _cooldown <= 0.0 and not cast(): _cooldown = 0.25
 	for bomb in _bombs: active = active or bool(bomb.active)
-	if active or _had_draw:
-		_redraw_left -= delta
-		if _redraw_left <= 0.0:
-			_redraw_left = 1.0 / 30.0
-			queue_redraw()
+	if active or _had_draw: queue_redraw()
 	_had_draw = active
+	set_process(active)
+
+func _process(_delta: float) -> void:
+	# Rendering can run at 30/60/120Hz; hit/fuse/cooldown clocks stay in physics.
+	if not get_tree().paused: queue_redraw()
 
 func _detonate(bomb: Dictionary) -> void:
 	if not bomb.active or not game.variety._battle_active(): return
@@ -149,10 +155,11 @@ func _detonate(bomb: Dictionary) -> void:
 	blast.at = at
 	blast.radius = radius
 	blast.left = BLAST_SECONDS
+	blast.previous_left = BLAST_SECONDS
 	blast.phase = float(detonations) * 2.399963
 	_blast_slot = (_blast_slot + 1) % MAX_BLASTS
 	_audio.play()
-	game.combat_feedback.spray(at, Vector2.ZERO, Color(0.96, 0.84, 0.53), 12, 155)
+	game.combat_feedback.spray(at, Vector2.ZERO, GamePalette.FRIENDLY_CYAN, 12, 155)
 	game.combat_feedback.camera_impulse(1.7)
 	queue_redraw()
 	_targets.clear()
@@ -174,29 +181,30 @@ func _detonate(bomb: Dictionary) -> void:
 func _draw() -> void:
 	for bomb in _bombs:
 		if not bomb.active: continue
-		var progress: float = clampf(float(bomb.age) / THROW_SECONDS, 0.0, 1.0)
+		var age := ARC.render_age(bomb.previous_age, bomb.age)
+		var progress: float = clampf(age / THROW_SECONDS, 0.0, 1.0)
 		var ground: Vector2 = to_local(bomb.from).lerp(to_local(bomb.at), progress)
-		var lift := sin(progress * PI) * 44.0
+		var airborne := to_local(ARC.position_at(bomb.from, bomb.at, age, THROW_SECONDS, 44.0))
 		draw_set_transform(ground, 0.0, Vector2(1.0, 0.35))
-		draw_circle(Vector2.ZERO, 6.0, Color(0.04, 0.07, 0.08, 0.28))
+		draw_circle(Vector2.ZERO, 6.0, GamePalette.alpha(GamePalette.INK, 0.28))
 		draw_set_transform(to_local(bomb.at))
 		draw_arc(Vector2.ZERO, 9.0, 0, TAU, 16, Color(STYLE.FRIENDLY, 0.45), 1.0, false)
-		draw_set_transform(ground - Vector2(0, lift), progress * TAU)
+		draw_set_transform(airborne, progress * TAU)
 		draw_texture_rect(_icon, Rect2(-11, -11, 22, 22), false)
-		if bomb.age > THROW_SECONDS:
-			var pulse: float = 0.4 + 0.4 * sin(float(bomb.age) * 40.0)
-			draw_circle(Vector2(-2, -9), 2.0, Color(1, 0.9, 0.58, pulse))
+		if age > THROW_SECONDS:
+			var pulse: float = 0.4 + 0.4 * sin(age * 40.0)
+			draw_circle(Vector2(-2, -9), 2.0, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, pulse))
 		draw_set_transform(Vector2.ZERO)
 	for blast in _blasts:
 		if blast.left <= 0.0: continue
-		var progress: float = 1.0 - float(blast.left) / BLAST_SECONDS
+		var progress: float = 1.0 - ARC.render_age(blast.previous_left, blast.left) / BLAST_SECONDS
 		var radius: float = lerpf(10, float(blast.radius), 1.0 - pow(1.0 - progress, 3.0))
 		var at: Vector2 = to_local(blast.at)
 		var alpha := pow(1.0 - progress, 1.5)
 		# A brief local core and thin friendly ring preserve hostile red telegraphs.
-		if progress < 0.32: draw_circle(at, radius * 0.52, Color(1.0, 0.91, 0.65, alpha * 0.35))
+		if progress < 0.32: draw_circle(at, radius * 0.52, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, alpha * 0.35))
 		draw_arc(at, radius, 0, TAU, 32, Color(STYLE.FRIENDLY, alpha * 0.9), lerpf(3.0, 0.8, progress), false)
-		draw_arc(at, radius * 0.72, 0, TAU, 24, Color(0.98, 0.86, 0.58, alpha * 0.6), 1.4, false)
+		draw_arc(at, radius * 0.72, 0, TAU, 24, GamePalette.alpha(GamePalette.FRIENDLY_CYAN, alpha * 0.6), 1.4, false)
 		for i in 8:
 			var direction := Vector2.from_angle(float(blast.phase) + i * TAU / 8.0)
-			draw_line(at + direction * radius * 0.58, at + direction * radius * 0.9, Color(1, 0.9, 0.64, alpha), 2.0, false)
+			draw_line(at + direction * radius * 0.58, at + direction * radius * 0.9, GamePalette.alpha(GamePalette.FRIENDLY_LIGHT, alpha), 2.0, false)

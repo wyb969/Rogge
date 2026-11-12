@@ -1,0 +1,85 @@
+{
+  "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+  "audience": "owner-private; created private and not changed",
+  "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+  "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_524d54826f648191a0d3fcd776bfaab2",
+  "deployment_id": "appgdep_6af1e62ce8008191b4290a9d10773aea",
+  "deployment_status": "succeeded",
+  "deployed_at": "2026-11-09T15:26:54.401760+00:00",
+  "site_source_commit": "9758813b365b394ae107910066197a84572d65e3",
+  "game_source_commit": "c25e98347633b0ca591419b4e6f6c4f82f7f8ec9",
+  "game_pr": "https://github.com/wyb969/Rogge/pull/6",
+  "archive_sha256": "6af3d6abf7b13561e82d4c039d799b7495b701b07b44242c411cec939d499a3a",
+  "export_pck_sha256": "e4a8febdb76acdbf3c2c89875dac6fb92ea1924090ee0247efb8e2dccb61c12f",
+  "hosting_checks": {
+    "exact_original_export_bytes": {
+      "index.apple-touch-icon.png": true,
+      "index.audio.position.worklet.js": true,
+      "index.audio.worklet.js": true,
+      "index.html": true,
+      "index.icon.png": true,
+      "index.js": true,
+      "index.pck": true,
+      "index.png": true,
+      "index.wasm": true
+    },
+    "html_change": "Only adds preview-loader.js before original engine script",
+    "all_assets_under_25MiB": true,
+    "normal_main_entry": true,
+    "qa_html_excluded": true,
+    "js_syntax_checks": "node --check preview-loader.js and dist/index.js passed",
+    "browser_qa": "Unavailable for Sites adapter: managed cua_repl.js tool absent; no alternate preview server started",
+    "files": {
+      "build-info.json": {
+        "bytes": 1968,
+        "sha256": "cfb323875bc1fcf2db748c332db63fff418726ee2d7e0edbd30dd057465ef3cc"
+      },
+      "index.apple-touch-icon.png": {
+        "bytes": 11441,
+        "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+      },
+      "index.audio.position.worklet.js": {
+        "bytes": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "index.audio.worklet.js": {
+        "bytes": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.html": {
+        "bytes": 5479,
+        "sha256": "03aaf5fe14289812b1063810971083bfb03e6f28950b6b582c513a38580afcec"
+      },
+      "index.icon.png": {
+        "bytes": 3209,
+        "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+      },
+      "index.pck": {
+        "bytes": 23493600,
+        "sha256": "e4a8febdb76acdbf3c2c89875dac6fb92ea1924090ee0247efb8e2dccb61c12f"
+      },
+      "index.png": {
+        "bytes": 21443,
+        "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+      },
+      "index.wasm.gz": {
+        "bytes": 10052173,
+        "sha256": "d49553dad4d96ed902f15aaf53277c1537bc158d2355d4f26bbe344b9e25c63f"
+      },
+      "preview-loader.js": {
+        "bytes": 2293,
+        "sha256": "86a692076dbb65be99554b79c5a8f1c1aab78b87af0128b2f21689a70f450eea"
+      }
+    }
+  },
+  "scope": "Reused exact previously tested normal game export; not the frozen screenshot fixture. No new gameplay changes or repeated full tests. New owner-private Site; original itch channel and existing Sites unaffected.",
+  "limits": [
+    "Sites packaged helper scripts and managed cua_repl.js browser tool absent in this environment; source Git/packaging used the native credential over hidden stdin, never stored.",
+    "No browser test of the hosting gzip wrapper or live owner-private URL. Native succeeded result verifies publication only.",
+    "Original game task Chromium checks remain recorded separately; no physical Safari claim."
+  ]
+}

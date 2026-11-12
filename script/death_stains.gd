@@ -127,6 +127,7 @@ func _ready() -> void:
 	reset()
 
 func reset() -> void:
+	_wall_stamp = Time.get_ticks_usec()
 	for i in MAX_STAINS:
 		stamps[i].age = LIFETIME
 		_hide_stamp(i)
@@ -179,6 +180,7 @@ func splat(at: Vector2, tint: Color, direction: Vector2 = Vector2.ZERO, body_siz
 	_next = (_next+1)%MAX_STAINS
 	emitted += 1
 	multimesh.visible_instance_count = MAX_STAINS*PARTS_PER_STAIN
+	if not is_processing(): _wall_stamp = Time.get_ticks_usec()
 	set_process(true)
 	return true
 
@@ -232,9 +234,16 @@ func consume_along_segment(from: Vector2, to: Vector2, limit: int) -> int:
 		set_process(false)
 	return collected
 
-func _process(delta: float) -> void:
+var _wall_stamp := 0
+
+func _process(_delta: float) -> void:
+	var now := Time.get_ticks_usec()
+	var seconds := maxf(0,float(now-_wall_stamp)/1000000.0)
+	_wall_stamp = now
+	advance_real(seconds)
+
+func advance_real(seconds: float) -> void:
 	if get_tree().paused: return
-	var seconds := delta/maxf(Engine.time_scale,0.001)
 	_redraw_left -= seconds
 	var update := _redraw_left <= 0
 	if update: _redraw_left = 1.0/30.0

@@ -214,7 +214,7 @@ func _juice_layout_widget(ctrl: Control, mouse: Vector2, dragging: bool, blend: 
 	var target_scale: = Vector2(1.08, 1.08) if dragging else (Vector2(1.05, 1.05) if hot else Vector2.ONE)
 	ctrl.pivot_offset = ctrl.size * 0.5
 	ctrl.scale = ctrl.scale.lerp(target_scale, blend)
-	var tint: = Color(1.18, 1.32, 1.12, _opacity) if hot else Color(1, 1, 1, _opacity)
+	var tint: = Color(1.12, 1.12, 1.14, _opacity) if hot else Color(1, 1, 1, _opacity)
 	ctrl.modulate = ctrl.modulate.lerp(tint, blend)
 
 func _reset_stick_visual() -> void :

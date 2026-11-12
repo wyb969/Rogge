@@ -95,13 +95,13 @@ func _ready() -> void :
 	_apply_body_scale()
 	if sprite_2d:
 		_sprite_base_scale = sprite_2d.scale
-		sprite_2d.modulate = base_modulate
+		sprite_2d.modulate = Color.WHITE
 
 func _draw() -> void :
 	if _blast_left > 0.0:
 		var unit := 1.0 / maxf(body_scale, 0.4)
 		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
-		draw_circle(Vector2.ZERO, 7.5, Color(0.015, 0.025, 0.03, 0.3))
+		draw_circle(Vector2.ZERO, 7.5, GamePalette.shadow(0.78))
 		draw_set_transform(Vector2.ZERO)
 	if archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0:
 		var unit: = 1.0 / maxf(body_scale, 0.4)
@@ -110,9 +110,9 @@ func _draw() -> void :
 		var unit: = 1.0 / maxf(body_scale, 0.4)
 		var lift: = dash_jump_height() / DASH_JUMP_HEIGHT
 		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
-		draw_circle(Vector2.ZERO, lerpf(9.0, 6.0, lift), Color(0.015, 0.01, 0.025, 0.4))
+		draw_circle(Vector2.ZERO, lerpf(9.0, 6.0, lift), GamePalette.shadow(0.82))
 		draw_set_transform(Vector2.ZERO)
-	draw_circle(Vector2(0, 14), 3.4, marker_color)
+	draw_circle(Vector2(0, 14), 3.4, GamePalette.ENEMY_RED)
 	if archetype == EnemyData.Archetype.DASHER and dash_windup > 0.0:
 
 
@@ -168,6 +168,9 @@ func set_enemy_data(data: EnemyData) -> void :
 	death_stain_color = DEATH_STAINS.color_for(StringName(data.title))
 	base_modulate = data.tint
 	marker_color = data.marker_color
+	GamePalette.paint_actor(sprite_2d, &"enemy")
+	if sprite_2d:
+		sprite_2d.modulate = Color.WHITE
 	contact_damage = data.contact_damage
 	contact_cooldown = data.contact_cooldown
 	contact_radius = data.contact_radius
@@ -447,7 +450,7 @@ func _finish_dash() -> void :
 	dash_time_left = 0.0
 	dash_timer = dash_cooldown + randf_range(0.0, 0.4)
 	if sprite_2d and freeze_time <= 0.0 and burn_stacks <= 0:
-		sprite_2d.modulate = base_modulate
+		sprite_2d.modulate = Color.WHITE
 
 func _begin_contact_recovery() -> void :
 	if is_dashing:
@@ -470,7 +473,7 @@ func _steer_tank(delta: float, dir: Vector2, dist: float, move_speed: float) -> 
 		if sprite_2d:
 			sprite_2d.modulate = Color(0.75, 0.85, 1.5, 1)
 		if slam_time_left <= 0.0 and sprite_2d and freeze_time <= 0.0 and burn_stacks <= 0:
-			sprite_2d.modulate = base_modulate
+			sprite_2d.modulate = Color.WHITE
 		return
 
 	if slam_windup > 0.0:
@@ -482,7 +485,7 @@ func _steer_tank(delta: float, dir: Vector2, dist: float, move_speed: float) -> 
 			slam_time_left = 0.22
 			slam_dir = dir if dir.length_squared() > 0.001 else Vector2.RIGHT
 		elif slam_windup <= 0.0 and sprite_2d:
-			sprite_2d.modulate = base_modulate
+			sprite_2d.modulate = Color.WHITE
 		return
 
 	attack_timer -= delta
@@ -501,7 +504,7 @@ func _steer_ranged(delta: float, dir: Vector2, dist: float, move_speed: float) -
 			if not is_frozen():
 				_fire_projectile(dir)
 			if sprite_2d and freeze_time <= 0.0 and burn_stacks <= 0:
-				sprite_2d.modulate = base_modulate
+				sprite_2d.modulate = Color.WHITE
 		return
 
 	attack_timer -= delta
@@ -639,7 +642,7 @@ func _update_statuses(delta: float) -> void :
 		if sprite_2d and not is_dashing and slam_windup <= 0.0 and shot_windup <= 0.0:
 			sprite_2d.modulate = Color(0.55, 0.85, 1.2, 1.0)
 		if freeze_time <= 0.0 and burn_stacks <= 0 and sprite_2d:
-			sprite_2d.modulate = base_modulate
+			sprite_2d.modulate = Color.WHITE
 
 	if burn_stacks > 0:
 		if sprite_2d and freeze_time <= 0.0 and not is_dashing and shot_windup <= 0.0 and slam_windup <= 0.0:
@@ -652,7 +655,7 @@ func _update_statuses(delta: float) -> void :
 			_try_spread_burn()
 			burn_stacks = max(burn_stacks - 1, 0)
 			if burn_stacks <= 0 and freeze_time <= 0.0 and sprite_2d and not is_dashing:
-				sprite_2d.modulate = base_modulate
+				sprite_2d.modulate = Color.WHITE
 
 func _mitigate(raw: float) -> float:
 	var dealt: = raw * (1.0 - clampf(defense, 0.0, 0.75))
@@ -675,13 +678,14 @@ func get_status_echo_damage(poison_tick: float) -> float:
 		total += _mitigate(poison_tick)
 	return total
 
-func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false) -> float:
+func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false, visual_effect: StringName = &"", impact: bool = true) -> float:
 	if _death_started or damage_value <= 0: return 0.0
 	var dealt: float = damage_value if damage_is_final else _mitigate(damage_value)
 	var feedback: = JUICE.find(self)
 	if feedback != null: feedback.hit(global_position, direction, is_elite)
+	if feedback != null and dealt > 0 and impact: feedback.impact_feedback.pulse(self,sprite_2d)
 	play_hit_tween(direction)
-	show_damage_text(dealt, status_damage, critical)
+	show_damage_text(dealt, status_damage, critical, visual_effect)
 	AudioManager.play_enemy_hurt()
 	_apply_health_loss(dealt,direction)
 	return dealt
@@ -707,7 +711,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 	var crit_multiplier := 1.0
 	if not damage_is_final and player_node != null and player_node.has_method("roll_critical_multiplier"):
 		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
-	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final)
+	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))), not hit_data.get("from_status",false))
 	if not hit_data.get("from_status", false) and not damage_is_final:
 		_report_lifesteal(dealt)
 
@@ -815,9 +819,10 @@ func play_hit_tween(direction: Vector2):
 	_hit_squash = 1.0
 
 	_hit_recoil = direction.normalized() * 3.0 / maxf(body_scale, 0.4)
-	sprite_2d.self_modulate = preload("res://script/visual_style.gd").HIT_FLASH
-	_hit_flash_left = 0.1
-	set_process(true)
+	# The pooled silhouette now supplies white; keep status tint underneath intact.
+	sprite_2d.self_modulate = _poison_tint
+	_hit_flash_left = 0.0
+	set_process(false)
 
 func take_damage(damage_value: float) -> void :
 	AudioManager.play_enemy_hurt()
@@ -841,7 +846,7 @@ func _apply_health_loss(dealt: float, death_direction: Vector2 = Vector2.ZERO) -
 		death_signal.emit()
 		queue_free()
 
-func show_damage_text(damage_value: float, status_damage: bool = false, critical: bool = false) -> void :
+func show_damage_text(damage_value: float, status_damage: bool = false, critical: bool = false, visual_effect: StringName = &"") -> void :
 	var owner: = _game_owner()
 	var container: Node = owner.effect_container if owner != null else get_tree().get_first_node_in_group("effect_container")
 	if container == null or not FEEDBACK_BUDGET.allow_popup(get_tree()):
@@ -849,7 +854,7 @@ func show_damage_text(damage_value: float, status_damage: bool = false, critical
 	var d = damage_text.instantiate()
 	container.add_child(d)
 	d.position = self.position
-	d.show_damage(str(int(floor(damage_value))), self.global_position, 0, 0, status_damage, critical)
+	d.show_damage(str(int(floor(damage_value))), self.global_position, 0, 0, status_damage, critical, visual_effect)
 
 func spaw_icon() -> void :
 	var game: = _game_owner()

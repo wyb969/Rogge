@@ -31,17 +31,29 @@ var growth_move_multiplier := 1.0
 var growth_heal_multiplier := 1.0
 
 var SPEED = 100.0
+const SPEED_CARD_BONUS := 20.0
+const PICKUP_CARD_SCALE := 1.2
 const DASH_SPEED = 780.0
 const DASH_DURATION: = 0.14
 const DASH_GRACE_SECONDS: = 0.5
 const DASH_COOLDOWN: = 3.0
-const DASH_SHADOW_INTERVAL: = 0.028
+const DASH_SHADOW_INTERVAL: = 0.035
 var dashing: bool = false
 var can_dash: bool = true
 var dash_grace_left: = 0.0
 var dash_direction: Vector2 = Vector2.RIGHT
 var last_move_direction: Vector2 = Vector2.RIGHT
-var animation_directions = ["right", "right_down", "down", "left_down", "left", "left_up", "up", "right_up"]
+# One neutral pose between the two foot contacts. Distance, not a fixed FPS,
+# advances this cycle; high-speed builds cap the cadence rather than flickering.
+const WALK_POSES := [0, 1, 0, 2]
+const WALK_CYCLE_DISTANCE := 50.0
+const MAX_WALK_FPS := 18.0
+const WALK_STOP_SPEED := 2.0
+var locomotion_velocity := Vector2.ZERO
+var locomotion_speed := 0.0
+var _walk_phase := 0.0
+var _walking := false
+var _facing_left := false
 
 var pickup_range: float
 
@@ -98,6 +110,11 @@ var _hurt_tween: Tween
 var _hurt_punch: = 0.0
 
 func _ready() -> void :
+	GamePalette.paint_actor(animated_sprite_2d, &"player")
+	# Retain the old emitter node/API for saved scenes, but never emit walking quads.
+	cpu_particles_2d.emitting = false
+	cpu_particles_2d.hide()
+	_stop_locomotion()
 	_critical_rng.randomize()
 	_visual_base_scale = animated_sprite_2d.scale
 	health_bar.init_health(player_health)
@@ -164,7 +181,10 @@ func total_healing_multiplier() -> float:
 	return healing_multiplier * growth_heal_multiplier
 
 func effective_move_speed() -> float:
-	return float(SPEED) * growth_move_multiplier
+	return move_speed_for(float(SPEED),growth_move_multiplier)
+
+static func move_speed_for(base: float, multiplier: float) -> float:
+	return base * multiplier
 
 func add_regen_level() -> void :
 	regen_level += 1
@@ -312,7 +332,7 @@ func _spawn_heal_spark() -> void :
 	_last_heal_spark_msec = now
 	var feedback: = JUICE.find(self)
 	if feedback != null:
-		feedback.spray(global_position + Vector2(0, -8), Vector2.UP, Color(0.45, 1, 0.55), 6, 46)
+		feedback.spray(global_position + Vector2(0, -8), Vector2.UP, GamePalette.HEAL_GREEN, 6, 46)
 		return
 	var particles: = CPUParticles2D.new()
 	particles.one_shot = true
@@ -327,7 +347,7 @@ func _spawn_heal_spark() -> void :
 	particles.initial_velocity_max = 46.0
 	particles.scale_amount_min = 1.4
 	particles.scale_amount_max = 2.8
-	particles.color = Color(0.45, 1.0, 0.55, 1)
+	particles.color = GamePalette.HEAL_GREEN
 	particles.z_index = 12
 	particles.global_position = global_position + Vector2(0, -8)
 	var container: = get_tree().get_first_node_in_group("effect_container")
@@ -346,14 +366,14 @@ func apply_rest_max_hp(bonus: float) -> void :
 		health_bar.init_health(max_player_health)
 
 func apply_rest_defense(amount: float) -> void :
-	damage_reduction = clampf(damage_reduction + amount, 0.0, 0.6)
+	damage_reduction = rest_defense_for(amount)
 
 func apply_rest_move_speed(bonus: float) -> void :
 	SPEED += bonus
 
 
 func apply_rest_cooldown(scale: float) -> float:
-	cooldown_scale = clampf(cooldown_scale * scale, 0.45, 1.0)
+	cooldown_scale = rest_cooldown_for(scale)
 	if can_dasing_timer:
 		can_dasing_timer.wait_time = DASH_COOLDOWN * cooldown_scale
 	return cooldown_scale
@@ -377,21 +397,23 @@ func get_side_damage_multiplier(target_global_pos: Vector2) -> float:
 	if left_fist_level <= 0 and right_fist_level <= 0:
 		return 1.0
 
-	var target_on_left: = target_global_pos.x < global_position.x
-	var both: = left_fist_level > 0 and right_fist_level > 0
+	return side_multiplier_for(target_global_pos.x < global_position.x, left_fist_level, right_fist_level)
+
+func side_multiplier_for(target_on_left: bool, left_level: int, right_level: int) -> float:
+	var both: = left_level > 0 and right_level > 0
 	var mult: = 1.0
 
-	if left_fist_level > 0:
+	if left_level > 0:
 		if target_on_left:
-			mult *= 1.0 + get_fist_bonus(left_fist_level)
+			mult *= 1.0 + get_fist_bonus(left_level)
 		elif not both:
-			mult *= 1.0 - get_fist_penalty(left_fist_level)
+			mult *= 1.0 - get_fist_penalty(left_level)
 
-	if right_fist_level > 0:
+	if right_level > 0:
 		if not target_on_left:
-			mult *= 1.0 + get_fist_bonus(right_fist_level)
+			mult *= 1.0 + get_fist_bonus(right_level)
 		elif not both:
-			mult *= 1.0 - get_fist_penalty(right_fist_level)
+			mult *= 1.0 - get_fist_penalty(right_level)
 
 	return mult
 
@@ -405,6 +427,7 @@ func is_dash_invulnerable() -> bool:
 
 func _cancel_dash() -> void :
 	dashing = false
+	_dash_ghost_distance = 0.0
 	dash_grace_left = 0
 	dashing_timer.stop()
 	shadow_timer.stop()
@@ -415,6 +438,7 @@ func reset_dash() -> void :
 	can_dasing_timer.stop()
 	can_dash = true
 	velocity = Vector2.ZERO
+	_stop_locomotion()
 
 func set_movement_locked(locked: bool) -> void:
 	movement_locked = locked
@@ -434,11 +458,12 @@ func _process(delta: float) -> void :
 
 func _tick_visuals(delta: float) -> void :
 	_hurt_punch = move_toward(_hurt_punch, 0, delta * 8)
-	var effort: = clampf(velocity.length() / maxf(effective_move_speed(), 1), 0, 1)
-	var stretch: = Vector2(1.13, 0.88) if dashing else Vector2(1.0 + effort * 0.025, 1.0 - effort * 0.015)
+	# Constant scale and axis alignment while walking avoid crawling pixel edges.
+	# Deformation is reserved for brief dash/hit feedback, never the collider.
+	var stretch: = Vector2(1.10, 0.92) if dashing else Vector2.ONE
 	stretch += Vector2(0.1, -0.08) * _hurt_punch
 	animated_sprite_2d.scale = animated_sprite_2d.scale.lerp(_visual_base_scale * stretch, 1.0 - exp( - delta * 25))
-	animated_sprite_2d.rotation = lerpf(animated_sprite_2d.rotation, - velocity.x / maxf(DASH_SPEED, 1) * 0.09, 1.0 - exp( - delta * 20))
+	animated_sprite_2d.rotation = 0.0
 
 func speed_up(val: float):
 	SPEED += val
@@ -462,6 +487,7 @@ func _physics_process(delta: float) -> void :
 	if movement_locked:
 		global_position = _movement_lock_position
 		velocity = Vector2.ZERO
+		_stop_locomotion()
 		MobileInput.clear_move()
 		MobileInput.clear_dash()
 		return
@@ -476,16 +502,6 @@ func _physics_process(delta: float) -> void :
 
 	if not input_direction.is_zero_approx():
 		last_move_direction = input_direction.normalized()
-
-	var look_target: = get_global_mouse_position()
-
-	if MobileInput.controls_enabled:
-		if not input_direction.is_zero_approx():
-			look_target = global_position + input_direction
-		elif velocity.length_squared() > 1.0:
-			look_target = global_position + velocity
-	var look_direction: = look_target - global_position
-	playAnimation(look_direction)
 
 	var dash_input_direction: = input_direction
 	var want_dash: = Input.is_action_just_pressed("roll")
@@ -508,10 +524,27 @@ func _physics_process(delta: float) -> void :
 		else:
 			velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 
-	if velocity.length_squared() > 1.0:
-		cpu_particles_2d.emitting = true
-
+	var before_move := global_position
 	move_and_slide()
+	_update_locomotion(global_position - before_move, delta)
+	if dashing: _emit_dash_ghosts(before_move, global_position)
+
+const DASH_GHOST_SPACING := 18.0
+var _dash_ghost_distance := 0.0
+
+func _emit_dash_ghosts(before: Vector2, after: Vector2) -> void:
+	var distance := before.distance_to(after)
+	if distance <= 0.001: return
+	var feedback := JUICE.find(self)
+	var sprite_offset := animated_sprite_2d.global_position - global_position
+	var along := DASH_GHOST_SPACING - _dash_ghost_distance
+	# Bounded even after a teleport/long physics step. Walking never enters here.
+	var emitted := 0
+	while along <= distance and emitted < 4:
+		if feedback != null: feedback.ghost(animated_sprite_2d, before.lerp(after, along / distance) + sprite_offset)
+		along += DASH_GHOST_SPACING
+		emitted += 1
+	_dash_ghost_distance = fposmod(_dash_ghost_distance + distance, DASH_GHOST_SPACING)
 
 func _start_dash(input_direction: Vector2) -> void :
 	if movement_locked or not can_dash or player_health <= 0: return
@@ -529,26 +562,62 @@ func _start_dash(input_direction: Vector2) -> void :
 	elif velocity.length_squared() > 100.0:
 		dash_direction = velocity.normalized()
 	else:
-		var mouse_dir: = get_global_mouse_position() - global_position
-		dash_direction = mouse_dir.normalized() if mouse_dir.length_squared() > 0.01 else last_move_direction
+		dash_direction = last_move_direction
 
 	velocity = dash_direction * DASH_SPEED
 	dashing_timer.start()
 	can_dasing_timer.start()
-	shadow_timer.start()
+	shadow_timer.stop() # Compatibility timer remains callable; the trail uses actual distance.
+	_dash_ghost_distance = 0.0
+	playAnimation(dash_direction)
+	animated_sprite_2d.set_frame_and_progress(1, 0)
 	var feedback: = JUICE.find(self)
-	if feedback != null: feedback.dash(global_position, dash_direction)
+	if feedback != null:
+		feedback.dash(global_position, dash_direction)
+		feedback.ghost(animated_sprite_2d)
 	dash_started.emit(global_position)
 
 func _sync_dash_hurt_area() -> void :
 	if hurt_area:
 		hurt_area.set_deferred("monitoring", not is_dash_invulnerable())
 
-func playAnimation(direction: Vector2):
-	direction = direction.normalized()
-	var snap = snappedf(direction.angle(), PI / 4) / (PI / 4)
-	var index = wrapi(int(snap), 0, 8)
-	animated_sprite_2d.play(animation_directions[index])
+func playAnimation(direction: Vector2) -> void:
+	# Compatibility entry point: only the horizontal component changes the pose.
+	# Vertical travel and idle keep the last horizontal facing; mouse is irrelevant.
+	if absf(direction.x) > 0.02: _facing_left = direction.x < 0
+	var wanted: StringName = &"left" if _facing_left else &"right"
+	if animated_sprite_2d.animation != wanted: animated_sprite_2d.animation = wanted
+	animated_sprite_2d.pause()
+
+func _stop_locomotion() -> void:
+	locomotion_velocity = Vector2.ZERO
+	locomotion_speed = 0.0
+	_walk_phase = 0.0
+	_walking = false
+	playAnimation(Vector2.ZERO)
+	animated_sprite_2d.set_frame_and_progress(0, 0)
+
+func _update_locomotion(displacement: Vector2, delta: float) -> void:
+	if delta <= 0 or movement_locked:
+		_stop_locomotion()
+		return
+	locomotion_velocity = displacement / delta
+	locomotion_speed = locomotion_velocity.length()
+	if dashing:
+		playAnimation(dash_direction)
+		animated_sprite_2d.set_frame_and_progress(1, 0)
+		_walking = false
+		return
+	if locomotion_speed <= WALK_STOP_SPEED:
+		_stop_locomotion()
+		return
+	playAnimation(locomotion_velocity.normalized())
+	if not _walking: _walk_phase = 0.25 # first foot contact on departure
+	_walking = true
+	var cycles := minf(displacement.length() / WALK_CYCLE_DISTANCE, MAX_WALK_FPS * delta / WALK_POSES.size())
+	_walk_phase = fposmod(_walk_phase + cycles, 1.0)
+	var pose := _walk_phase * WALK_POSES.size()
+	animated_sprite_2d.set_frame_and_progress(WALK_POSES[int(pose)], fposmod(pose, 1))
 
 func _on_shadow_timer_timeout() -> void :
 	if not dashing or velocity.length_squared() <= 1e-05:
@@ -595,6 +664,7 @@ func receive_attack(amount: float, _source: Node = null) -> void :
 		if is_instance_valid(_source) and _source is Node2D:
 			direction = (_source.global_position - global_position).normalized()
 		feedback.hurt(global_position, direction, hp_loss <= 0)
+		if hp_loss > 0: feedback.impact_feedback.pulse(self,animated_sprite_2d,true)
 	player_health = max(0.0, player_health - hp_loss)
 	health_bar.set_health(player_health)
 	_sync_shield_visuals()
@@ -609,11 +679,8 @@ func get_hit() -> void :
 func play_hit_tween() -> void :
 	_hurt_punch = 1.0
 	if _hurt_tween != null and _hurt_tween.is_valid(): _hurt_tween.kill()
-	animated_sprite_2d.modulate = Color(1, 0.3, 0.35)
-	_hurt_tween = create_tween().set_loops(2)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.06)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color(1, 0.5, 0.5), 0.04)
-	_hurt_tween.tween_property(animated_sprite_2d, "modulate", Color.WHITE, 0.04)
+	# The shared silhouette overlay supplies pale red without multiplying dark art.
+	animated_sprite_2d.modulate = Color.WHITE
 
 func die() -> void :
 	player_died.emit()
@@ -627,3 +694,9 @@ func play_ring_tween() -> void :
 	player_ring.scale = Vector2.ONE
 	player_ring.modulate = Color.WHITE
 	player_ring.queue_redraw()
+
+func rest_defense_for(amount: float) -> float:
+	return clampf(damage_reduction+amount,0.0,0.6)
+
+func rest_cooldown_for(scale: float) -> float:
+	return clampf(cooldown_scale*scale,0.45,1.0)

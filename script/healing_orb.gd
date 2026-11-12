@@ -24,7 +24,7 @@ func _ready() -> void :
 	if _shared_halo == null:
 		var gradient: = Gradient.new()
 		gradient.offsets = PackedFloat32Array([0.0, 0.35, 1.0])
-		gradient.colors = PackedColorArray([Color(0.3, 0.8, 0.48, 0.12), Color(0.18, 0.6, 0.34, 0.06), Color(0.1, 0.4, 0.2, 0)])
+		gradient.colors = PackedColorArray([Color(GamePalette.HEAL, 0.12), Color(GamePalette.XP_GREEN, 0.06), Color(GamePalette.HEAL.darkened(0.45), 0)])
 		_shared_halo = GradientTexture2D.new()
 		_shared_halo.width = 64
 		_shared_halo.height = 64
@@ -42,9 +42,9 @@ func _ready() -> void :
 	add_child(_halo)
 
 func _draw() -> void :
-	draw_circle(Vector2.ZERO, 8.0, Color(0.025, 0.12, 0.08))
+	draw_circle(Vector2.ZERO, 8.0, Color(GamePalette.HEAL.darkened(0.72), 1.0))
 	draw_circle(Vector2.ZERO, 6.0, preload("res://script/visual_style.gd").HEAL)
-	draw_circle(Vector2(-1, -2), 3.5, Color(0.5, 1.0, 0.68))
+	draw_circle(Vector2(-1, -2), 3.5, GamePalette.HEAL)
 	draw_rect(Rect2(-1, -4, 2, 8), Color(0.94, 1.0, 0.94))
 	draw_rect(Rect2(-4, -1, 8, 2), Color(0.94, 1.0, 0.94))
 

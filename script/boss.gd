@@ -78,6 +78,8 @@ func _ready() -> void :
 		sprite_2d.scale *= 1.06
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = sprite_2d.modulate
+	if fight_stage < 2:
+		GamePalette.paint_actor(sprite_2d, &"enemy")
 	_setup_health_bar()
 	health_bar.init_health(health_max_value)
 	boss_current_health = health_max_value
@@ -302,7 +304,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 	var status_damage := preload("res://script/demage_text.gd").is_status_hit(hit_data)
 	boss_current_health = max(0.0, boss_current_health - damage_value)
 	if damage_value > 0 and (status_damage or critical):
-		_show_damage_number(damage_value, status_damage, critical)
+		_show_damage_number(damage_value, status_damage, critical, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))))
 	if health_bar:
 		health_bar.visible = true
 		health_bar.set_health(boss_current_health)
@@ -311,7 +313,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 		if steal_target != null and steal_target.has_method("notify_damage_dealt"):
 			steal_target.notify_damage_dealt(damage_value)
 
-	play_hit_feedback(damage_dir.normalized())
+	play_hit_feedback(damage_dir.normalized(),damage_value > 0 and not hit_data.get("from_status",false))
 
 	if boss_current_health <= health_max_value * 0.72:
 		rush_ready_time = 0.25
@@ -324,14 +326,14 @@ func apply_hit(hit_data: Dictionary) -> void :
 			feedback.death_stains.splat(global_position,pigment,hit_data.get("direction",Vector2.ZERO),1.8)
 		await start_defeat_sequence()
 
-func _show_damage_number(amount: float, status_damage: bool, critical: bool) -> void :
+func _show_damage_number(amount: float, status_damage: bool, critical: bool, visual_effect: StringName = &"") -> void :
 	if not preload("res://script/feedback_budget.gd").allow_popup(get_tree()): return
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	var container: Node = feedback.get_parent().effect_container if feedback != null else get_parent()
 	var popup: Node = preload("res://scenes/damage_text.tscn").instantiate()
 	container.add_child(popup)
 	popup.global_position = global_position
-	popup.show_damage(str(int(floor(amount))), global_position, 0, 0, status_damage, critical)
+	popup.show_damage(str(int(floor(amount))), global_position, 0, 0, status_damage, critical, visual_effect)
 
 func _apply_phase2_outline() -> void :
 
@@ -354,7 +356,7 @@ func _sync_outline_frame_uv() -> void :
 	var fh: = 1.0 / float(vf)
 	mat.set_shader_parameter("frame_uv_rect", Vector4(float(col) * fw, float(row) * fh, fw, fh))
 
-func play_hit_feedback(hit_dir: Vector2) -> void :
+func play_hit_feedback(hit_dir: Vector2, impact: bool = true) -> void :
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null: feedback.hit(global_position, hit_dir, true)
 	var now: = Time.get_ticks_msec()
@@ -362,7 +364,9 @@ func play_hit_feedback(hit_dir: Vector2) -> void :
 		_last_particle_msec = now
 		_spawn_hit_particles(hit_dir)
 	_play_hit_deform(hit_dir)
-	_request_hitstop(0.42, 0.022)
+	if impact and feedback != null:
+		feedback.impact_feedback.pulse(self,sprite_2d,false,false)
+		_request_hitstop(0.42,0.022)
 
 func _play_hit_deform(hit_dir: Vector2) -> void :
 	if hurt_tween != null and hurt_tween.is_valid():
@@ -394,18 +398,14 @@ func _play_hit_deform(hit_dir: Vector2) -> void :
 	hurt_tween.tween_property(sprite_2d, "scale", base_sprite_scale, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	hurt_tween.tween_property(sprite_2d, "position", origin, 0.06)
 
-func _request_hitstop(scale: float, duration_real: float) -> void :
+func _request_hitstop(_scale: float, _duration_real: float) -> void :
 	var now: = Time.get_ticks_msec()
 	if now - last_hitstop_msec < HITSTOP_COOLDOWN_MSEC:
 		return
 	last_hitstop_msec = now
 
-	hitstop_token += 1
-	var token: = hitstop_token
-	Engine.time_scale = scale
-	await get_tree().create_timer(duration_real, true, false, true).timeout
-	if token == hitstop_token and not is_dying and not get_tree().has_meta("player_death_slowmo"):
-		Engine.time_scale = 1.0
+	var feedback := preload("res://script/combat_feedback.gd").find(self)
+	if feedback != null: feedback.impact_feedback.request_stop()
 
 func _spawn_hit_particles(hit_dir: Vector2) -> void :
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)

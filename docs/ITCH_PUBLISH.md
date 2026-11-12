@@ -27,7 +27,7 @@ GitHub artifact 默认保留 30 天。长期需要的源码、验证概要和发
 
 ## 验证边界
 
-当前发布流程选取17项实际PCK检查：`smoke_menu_layout`、`smoke_fan_feedback`、`smoke_control_cards`、`smoke_session_toolbar`、`smoke_equipment_badges`、`smoke_wooden_trial`、`smoke_trials`、`smoke_growth_combo`、`smoke_bomb_card`、`smoke_arsenal_combo`、`smoke_death_stains`、`smoke_ink_surf`、`smoke_tactical_enemies`、`smoke_debug_menu`、`smoke_stage_variation`、`smoke_encounter_readability`、`smoke_beasts`。它们覆盖布局、返回主页、装备组合、炸弹、三项试炼、定向泼溅/彩墨、新怪物与共享远程上限；由原生Godot加载实际Web PCK，不等于真实Web/Safari试玩，也不表示全量61个smoke脚本通过。
+当前发布流程选取24项实际PCK检查：`smoke_menu_layout`、`smoke_fan_feedback`、`smoke_control_cards`、`smoke_session_toolbar`、`smoke_equipment_badges`、`smoke_wooden_trial`、`smoke_trials`、`smoke_growth_combo`、`smoke_bomb_card`、`smoke_arsenal_combo`、`smoke_death_stains`、`smoke_ink_surf`、`smoke_tactical_enemies`、`smoke_debug_menu`、`smoke_stage_variation`、`smoke_encounter_readability`、`smoke_beasts`、`smoke_game_palette`、`smoke_palette_cards`、`smoke_player_motion`、`smoke_motion_vfx`、`smoke_hitstop`、`smoke_status_numbers`、`smoke_dash_grace`。它们覆盖布局、返回主页、装备组合、炸弹、三项试炼、定向泼溅/彩墨、新怪物与共享远程上限，以及配色/卡牌数值、移动/投弹、顿帧和无敌保护。由原生Godot加载实际Web PCK，不等于真实Web/Safari试玩，也不表示全部smoke脚本通过。
 
 现存脚本退出时的 ObjectDB / resources-in-use 警告保留在报告中，与运行中脚本/解析错误分开。若出现新运行时错误或检查断言失败，发布任务必须停止；不得将其混同于已知退出警告忽略。
 
@@ -35,10 +35,14 @@ GitHub artifact 默认保留 30 天。长期需要的源码、验证概要和发
 
 ## 最新发布记录
 
-2026-11-09已发布 **`20261109-192900`**，源码master `d9855b1`，build **2339462**。17项PCK检查通过，[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/42609961711)成功；[只读通道核验](https://github.com/wyb969/PixelFishing/actions/runs/42610504578)确认该版本已是completed的head。主页HTTP429，**线上iframe及资源哈希尚未核验**；详见 `validation/itch-release-20261109-192900.json`、`validation/itch-readiness-20261109-192900.json` 与 `validation/itch-live-20261109-192900.json`。
+2026-11-12已发布 **`20261112-230737`**，源码master `c51afeccba095ea1abcdbfcc51c0f71edbd93862`，build **2366099**。24项实际PCK检查通过，[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/43245465358)成功；[只读核验](https://github.com/wyb969/PixelFishing/actions/runs/43245971065)确认completed/current、无pending。主页HTTP200，实际iframe的PCK/WASM/JS哈希与Actions清单一致；Chromium实际托管入口的Debug/受击/移动/Dash/Home检查通过。没有Safari真机或全流程结论。报告：`validation/itch-release-20261112-230737.json`、`validation/itch-readiness-20261112-230737.json`、`validation/itch-live-20261112-230737.json`。
+
+第一次发布尝试被木头人检查过时的“必须在Debug首页”断言阻止，未上传；PR #12让检查定位按钮实际页，最终24项全过。不要跳过失败检查或为了测试改变按钮排序。HTML提取可能在Butler completed之后仍返回extracting；等待主页实际`load_url`响应，再核验其中的iframe，不猜CDN路径。itch会在HTML尾部加入自己的`htmlgame.js`，因此HTML整体哈希可能不同；仍需核对原始内容/资源配置，PCK/WASM/JS则必须逐字匹配CI。
 
 主页限流时，可使用同一独立分支的 `.github/workflows/verify-rogge-itch.yml`：更新EXPECTED_BUILD/EXPECTED_VERSION并提交该文件，只运行Butler status等待当前head，不重新打包、测试或上传。它同样仅使用Actions Secret。此通道检查不能替代真实iframe/资源核验。
 
 ### 历史发布
+
+2026-11-09已发布 **`20261109-192900`**，源码master `d9855b1`，build **2339462**。17项PCK检查通过，[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/42609961711)成功；[只读通道核验](https://github.com/wyb969/PixelFishing/actions/runs/42610504578)确认该版本已是completed的head。主页HTTP429，**线上iframe及资源哈希尚未核验**；详见 `validation/itch-release-20261109-192900.json`、`validation/itch-readiness-20261109-192900.json` 与 `validation/itch-live-20261109-192900.json`。
 
 2026-11-06已发布 `20261106-182118`，build `2312775`。Actions run `42213352444` 的10项PCK检查通过，线上三项资源哈希与CI清单一致。报告见 `validation/itch-release-20261106-182118.json` 和 `validation/itch-live-20261106-182118.json`。

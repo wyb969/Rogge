@@ -1,14 +1,15 @@
 # ROGGE · AI 开发交接
 
-## 2026-11-12 主分支发布整合（进行中）
+## 2026-11-12 主分支整合与 itch 发布（已完成，当前正式版）
 
-- 用户授权将最新版合入主分支并更新itch。仓库实际默认分支为`master`，不存在`main`；不另建竞争主分支。已核对远端最新开发提交为`c6171513c438842ed4eade5a7bd5595aa51b6c79`，与11月10日一致。
-- 隔离发布分支`release/master-itch-20261112`从master `7e81adf`合并完整开发历史，保留Cursor配色、22卡数值比较、移动/相机、脚下HUD、残影/投弹与命中反馈。仅更新版本与README发布说明，不修改游戏逻辑。新版本 **20261112-230737**（北京时间）。原工作树与未跟踪文件保留。
-- 本轮Godot4.7两次导入、正常入口Web导出通过；7项实际导出PCK专项全过：palette、347项卡牌、32项移动、170项运动VFX、78项顿帧、异常跳字、dash无敌。正常Web Chromium900×600进入Debug第一项、两种真实受击按钮、Home通过，无脚本错误/WebGL丢失、无QA遥测。截图与本地构件哈希见`validation/master-itch-20261112-230737.json`。既有CLI退出ObjectDB/资源引用警告单独记录；没有Safari真机/完整流程结论。
-- 下一步：PR合入master后，将最终master SHA与版本钉在PixelFishing `automation/rogge-itch-release`工作流；从17项扩至24项实际PCK检查，上传原`ybwangrogger/rogue-white:html`（upload20115514），使用Actions已有Secret。发布后记录CI清单、build/readiness和线上资源核验，不能用本地PCK哈希替代CI清单。
+- 用户授权将最新版合入主分支并更新itch。仓库默认分支实际为`master`，没有`main`；不创建第二个主分支。远端最新开发源码为`c6171513c438842ed4eade5a7bd5595aa51b6c79`，11月10日后没有新的开发提交。通过[PR #11](https://github.com/wyb969/Rogge/pull/11)保留两边历史合入master `1367c24`，包括Cursor配色、22卡数值对比、移动/相机、脚下HUD、残影/投弹和命中反馈。原工作树与未跟踪文件保留。
+- 本轮仅改版本、README发布说明和一条过时测试，不改游戏业务逻辑。版本 **20261112-230737**（北京时间）。首次Actions 24项中23项通过，`smoke_wooden_trial`仍要求入口位于Debug首页；新入口使其落到后续页。通过[PR #12](https://github.com/wyb969/Rogge/pull/12)使用现有`ensure_control_visible`定位按钮，再检查可见且启用，保留原49项断言。原生检查通过；首次任务在检查阶段停止，未上传。
+- 最终发布源码master **`c51afeccba095ea1abcdbfcc51c0f71edbd93862`**。PixelFishing独立发布分支工作流提交`2c76eae8c119072b0dbf8f05679d2b9171c4f8c3`固定该SHA与版本，[Actions run43245465358](https://github.com/wyb969/PixelFishing/actions/runs/43245465358)成功。Godot4.7重新导入/导出，**24项实际Web PCK检查全过**；最终ZIP逐项匹配CI清单。本地另有7项新功能PCK检查和正常Web Chromium900×600 Debug/两种受击/Home检查。既有退出ObjectDB/资源引用警告独立保留，未当成运行时错误忽略。
+- 正式试玩：<https://ybwangrogger.itch.io/rogue-white>。继续原`html`通道/upload **20115514**，新build **2366099**，版本 **20261112-230737**；[只读核验run43245971065](https://github.com/wyb969/PixelFishing/actions/runs/43245971065)确认已是completed的head、无pending。不创建额外上传项、不删除Butler回退历史；密钥仅由Actions使用。
+- 本次主页HTTP200。HTML初次返回extracting，随后从主页实际`load_url`响应提取到`https://html.itch.zone/html/20115514-2366099/index.html?v=1794496652`。线上PCK/WASM/JS全为HTTP200且哈希与**CI**清单一致；HTML只多出itch自带`htmlgame.js`，Godot资源大小配置一致。实际itch CDN正常入口Chromium900×600加载、Debug首页/命中场、两种受击按钮、键盘移动/Dash/Home通过，无脚本错误、WebGL丢失或QA遥测；左下角版本截图确认。此处测试的是主页给出的真实iframe URL直接打开，未测试父页面Run game按钮；没有Safari真机、手机性能或全流程结论。
+- 持久记录：[发布清单](validation/itch-release-20261112-230737.json)、[通道就绪](validation/itch-readiness-20261112-230737.json)、[线上资源/浏览器](validation/itch-live-20261112-230737.json)、[本地检查](validation/master-itch-20261112-230737.json)。截图在`docs/screenshots/release-20261112-230737/`。后续文档提交不改变已发布游戏源码；下次从最新master切分支，旧功能PR若仍开放先比较master，勿重复套用旧配色。旧私有Sites试玩未在此轮更新，当前正式版本以itch为准。
 
-
-## 2026-11-10 命中白闪 / 受伤淡红与短顿帧（最新）
+## 2026-11-10 命中白闪 / 受伤淡红与短顿帧（上一轮，已合入主分支）
 
 - 当前开发基线 `feature/vfx-motion-20261110` / `3f6375b08d378d7dafd8cbcc2d2a35ed97b7da5b`。按“玩家打中敌人白闪，玩家实际受伤淡红闪”实现用户要求；原句第二处对象重复，未收到相反澄清。沿用Cursor配色、卡牌/移动/冲刺/投弹修复。本轮版本 **20261110-194311**（北京时间），已同步并推送当前分支；已验证游戏源码 `2bc121dd64e5c84c92a8cd0ff563fff080e1a9a9`，后续仅文档。已更新 [PR #10](https://github.com/wyb969/Rogge/pull/10)，仍以PR #9分支为base，不合并master/不上传itch。
 - `hit_feedback.gd` 是唯一战斗顿帧控制器：普通命中目标28ms、实际HP受伤65ms，临时速度0.05；全局普通命中间隔200ms，不续长；玩家受伤可升级正在进行的普通命中停顿，但总长不超过起始65ms，受伤独立400ms门限。全部使用真实时间截止，不为每次命中创建Timer/Tween/Node。恢复只处理自身持有的0.05，死亡0.08、Boss死亡0.06/0.2等外部慢动作优先。

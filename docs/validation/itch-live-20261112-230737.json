@@ -1,0 +1,77 @@
+{
+  "checked_utc": "2026-11-12T15:17:51.091899+00:00",
+  "storefront": "https://ybwangrogger.itch.io/rogue-white",
+  "storefront_http": 200,
+  "actual_iframe": "https://html.itch.zone/html/20115514-2366099/index.html?v=1794496652",
+  "build": 2366099,
+  "version": "20261112-230737",
+  "source_of_expected_hashes": "Actions run43245465358 web-manifest.json",
+  "resources": [
+    {
+      "file": "index.html",
+      "url": "https://html.itch.zone/html/20115514-2366099/index.html",
+      "http": 200,
+      "bytes": 5524,
+      "sha256": "27250022ba256f3a56dc8550803301fbba5a953ab0d0699e7bd5c63ff0e731e4",
+      "matches_ci": false
+    },
+    {
+      "file": "index.pck",
+      "url": "https://html.itch.zone/html/20115514-2366099/index.pck",
+      "http": 200,
+      "bytes": 23550688,
+      "sha256": "d674216bf2a102d2bb91a51893bb504aa0303fde18b0df50967d128b4ca56e79",
+      "matches_ci": true
+    },
+    {
+      "file": "index.wasm",
+      "url": "https://html.itch.zone/html/20115514-2366099/index.wasm",
+      "http": 200,
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656",
+      "matches_ci": true
+    },
+    {
+      "file": "index.js",
+      "url": "https://html.itch.zone/html/20115514-2366099/index.js",
+      "http": 200,
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c",
+      "matches_ci": true
+    }
+  ],
+  "html_config_sizes_match_ci": true,
+  "browser": {
+    "checked_utc": "2026-11-12T15:18:30.910197+00:00",
+    "actual_live_iframe_url": "https://html.itch.zone/html/20115514-2366099/index.html?v=1794496652",
+    "entry": "actual itch CDN URL extracted from current storefront; normal game export",
+    "viewport": [
+      900,
+      600
+    ],
+    "browser": "Chromium software WebGL2",
+    "no_qa_telemetry": true,
+    "errors": [],
+    "context_lost": false,
+    "actions": [
+      "load actual itch-hosted menu",
+      "real Debug button",
+      "first hitstop preset",
+      "both real damage buttons",
+      "keyboard movement",
+      "dash",
+      "return Home"
+    ],
+    "limits": [
+      "not a physical mobile/Safari test",
+      "short interactive smoke; not a full run",
+      "iframe URL opened directly; storefront embed interaction not tested"
+    ]
+  },
+  "html_difference": "itch appends only its static.itch.io/htmlgame.js loader; all original CI HTML bytes remain otherwise unchanged.",
+  "status": "pass",
+  "limits": [
+    "Short Chromium software WebGL2 interaction; not a full game run or physical Safari/device QA.",
+    "Actual iframe URL was tested directly; storefront embed button interaction was not tested."
+  ]
+}

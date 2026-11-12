@@ -152,7 +152,8 @@
   },
   "limits": [
     "software Chromium; no physical Safari device QA",
-    "known CLI shutdown resource warnings recorded separately",
-    "CI export/upload and live itch verification pending"
-  ]
+    "known CLI shutdown resource warnings recorded separately"
+  ],
+  "local_test_source": "6c4f092d612ccd630ff89df381db8ef633dd5268 (before PR12 test-only pagination correction)",
+  "final_published_release_report": "itch-release-20261112-230737.json"
 }

@@ -1,0 +1,20 @@
+{
+  "checked_utc": "2026-11-12T15:16:22.714300+00:00",
+  "attempt": 1,
+  "channel": {
+    "head": {
+      "createdAt": "2026-11-12T15:15:10Z",
+      "id": 2366099,
+      "parentBuildId": 2339462,
+      "state": "completed",
+      "updatedAt": "2026-11-12T15:15:21Z",
+      "userVersion": "20261112-230737",
+      "version": 34
+    },
+    "name": "html",
+    "tags": "",
+    "uploadId": 20115514
+  },
+  "expected_build": 2366099,
+  "expected_version": "20261112-230737"
+}

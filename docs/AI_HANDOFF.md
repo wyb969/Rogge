@@ -3,7 +3,8 @@
 ## 2026-11-15 三种新武器（最新开发）
 
 - 分支`feature/three-weapons-20261115`基于平衡分支`11f2351`，保留上一轮平衡；版本**20261115-132754**。新增银翼飞刀、回旋十字刃、净化圣水（各5级），25卡完整派发/图标/数值预览/满级过滤和通用宝藏奖励。Debug首页新增三武器1级练习，19入口分页。
-- 共享控制器固定32弹体/8区域，扫掠命中、折返分段、圣水重叠不叠伤/from_status，转场清暂态新局清装备。设计/数值/命令见[relic-weapons.md](relic-weapons.md)，验证见`validation/relic-weapons-20261115.json`。6项原生专项、3项最终实际Web PCK专项通过；待补试玩部署记录。未合并master或更新itch，用户本次要求的是试玩链接。
+- 共享控制器固定32弹体/8区域，扫掠命中、折返分段、圣水重叠不叠伤/from_status，转场清暂态新局清装备。设计/数值/命令见[relic-weapons.md](relic-weapons.md)，验证见`validation/relic-weapons-20261115.json`。6项原生专项、3项最终实际Web PCK专项通过；已通过[PR #14](https://github.com/wyb969/Rogge/pull/14)保存源码`81fac8f`，后续仅文档。未合并master或更新itch，用户本次要求的是试玩链接。
+- 试玩已更新：<https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>，沿用所有者私有权限，登录当前账号。版本20261115-132754，主页→Debug第一项“三武器”。Site source`5b246033130c16c62fb48c017fe0e8b6f51a7178`、deployment`appgdep_6af943835e6481919f84dbeb5d5946a5`发布succeeded；详细版本/部署和验证边界见`validation/relic-playtest-20261115.json`。托管资源压缩解压后字节一致；线上浏览器未复测。
 - 当前没有可用显示服务/托管浏览器工具，未完成渲染截图或Safari真机试玩。不要把布局断言写成视觉检查。
 
 ## 2026-11-15 战斗数值第一版（开发分支）

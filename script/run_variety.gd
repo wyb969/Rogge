@@ -120,6 +120,7 @@ func _refresh_charge() -> void :
 	_charge_label.visible = echo_level > 0 and _notice_left <= 0
 
 func clear_combat_effects() -> void :
+	if game.get("arcane_weapons") != null: game.arcane_weapons.clear_combat_effects()
 	if game.get("relic_weapons") != null: game.relic_weapons.clear_combat_effects()
 	if game.get("combat_feedback") != null and game.combat_feedback.impact_feedback != null:
 		game.combat_feedback.impact_feedback.clear_combat_effects()

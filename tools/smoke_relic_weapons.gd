@@ -52,11 +52,11 @@ func _run() -> void:
 	var front := enemy(game,Vector2(100,0))
 	var far := enemy(game,Vector2(230,0))
 	var side := enemy(game,Vector2(100,80))
-	game.player.last_move_direction = Vector2.RIGHT
+	game.player.last_move_direction = Vector2.LEFT
 	check(w.cast("silver_knife"),"owned knife casts with nearby target")
 	hold(w)
 	w._physics_process(1.0)
-	check(is_equal_approx(front.health,9984) and is_equal_approx(far.health,9984),"long frame swept knife hits every crossed target once")
+	check(is_equal_approx(front.health,9984) and is_equal_approx(far.health,9984),"moving away still auto-aims and swept knife hits every crossed target once")
 	check(is_equal_approx(side.health,10000),"knife does not hit off-path targets")
 	w._physics_process(0.1)
 	check(is_equal_approx(front.health,9984),"expired knife cannot hit again")
@@ -71,6 +71,9 @@ func _run() -> void:
 	hold(w)
 	w._physics_process(0.5)
 	check(is_equal_approx(front.health,9931),"overlap applies only one5 damage tick")
+	check(w.water_hits.any(func(hit): return hit.left>0) and w.pools[0].flash>0,"actual water damage produces burst and bright pulse")
+	w._process(0.3)
+	check(w.water_hits.all(func(hit): return hit.left==0),"water bursts fade in a fixed pool")
 	paused = true
 	var before: float = front.health
 	check(not w.cast("holy_water"),"paused game cannot cast")

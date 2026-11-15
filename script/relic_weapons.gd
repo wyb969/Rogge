@@ -12,6 +12,9 @@ var pools: Array[Dictionary] = []
 var candidates: Array[Node2D] = []
 var casts := 0
 var hits := 0
+const MAX_WATER_HITS := 24
+var water_hits: Array[Dictionary] = []
+var _water_hit_slot := 0
 var _water_tick := 0.0
 var _generation := 0
 var _audio: AudioStreamPlayer
@@ -29,7 +32,8 @@ func _ready() -> void:
 	for i in MAX_SHOTS:
 		shots.append({"active":false,"kind":"","at":Vector2.ZERO,"previous":Vector2.ZERO,"origin":Vector2.ZERO,"direction":Vector2.RIGHT,"age":0.0,"life":1.0,"range":0.0,"damage":0.0,"returning":false,"hit_ids":{},"angle":0.0})
 	for i in MAX_POOLS:
-		pools.append({"active":false,"at":Vector2.ZERO,"age":0.0,"radius":0.0,"dps":0.0,"duration":3.0})
+		pools.append({"active":false,"at":Vector2.ZERO,"age":0.0,"radius":0.0,"dps":0.0,"duration":3.0,"flash":0.0})
+	for i in MAX_WATER_HITS: water_hits.append({"at":Vector2.ZERO,"left":0.0})
 	_audio = AudioStreamPlayer.new()
 	AudioManager.configure_sfx(_audio)
 	_audio.stream = preload("res://assest/sounds/banana_fan.wav")
@@ -50,6 +54,7 @@ func clear_combat_effects() -> void:
 		shot.active = false
 		shot.hit_ids.clear()
 	for pool in pools: pool.active = false
+	for hit in water_hits: hit.left = 0.0
 	candidates.clear()
 	_water_tick = 0.0
 	for id in IDS: cooldowns[id] = 0.3
@@ -79,13 +84,14 @@ func cast(id: String) -> bool:
 			pool.active = true
 			pool.at = origin + (target.global_position-origin).limit_length(260.0)
 			pool.age = 0.0
+			pool.flash = 0.0
 			pool.radius = stats.radius
 			pool.dps = stats.dps
 			pool.duration = stats.duration
 			_finish_cast(id,stats.interval)
 			return true
 		return false
-	var direction: Vector2 = game.player.last_move_direction.normalized() if id == "silver_knife" else origin.direction_to(target.global_position)
+	var direction: Vector2 = origin.direction_to(target.global_position)
 	if direction.is_zero_approx(): direction = Vector2.RIGHT
 	var count: int = int(stats.count)
 	var spawned := 0
@@ -140,7 +146,7 @@ func _physics_process(delta: float) -> void:
 			bounds = bounds.expand(pool.at)
 			active = true
 	if not active:
-		set_process(false)
+		set_process(water_hits.any(func(hit): return hit.left > 0.0))
 		queue_redraw()
 		return
 	candidates.clear()
@@ -173,7 +179,11 @@ func _physics_process(delta: float) -> void:
 			for pool in pools:
 				if pool.active and pool.age < pool.duration and actor.global_position.distance_squared_to(pool.at) <= pool.radius*pool.radius:
 					dps = maxf(dps,pool.dps)
+					pool.flash = 0.22
 			if dps > 0:
+				water_hits[_water_hit_slot].at = actor.global_position
+				water_hits[_water_hit_slot].left = 0.28
+				_water_hit_slot = (_water_hit_slot+1)%MAX_WATER_HITS
 				actor.apply_hit({"damage":dps*TICK,"direction":Vector2.ZERO,"source":self,"from_status":true,"visual_effect":&"holy_water"})
 				hits += 1
 				if generation != _generation: return
@@ -200,7 +210,9 @@ func _sweep(shot: Dictionary, from: Vector2, to: Vector2) -> void:
 		hits += 1
 		if generation != _generation: return
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	for pool in pools: pool.flash = maxf(0.0,float(pool.flash)-delta)
+	for hit in water_hits: hit.left = maxf(0.0,float(hit.left)-delta)
 	queue_redraw()
 
 func _draw() -> void:
@@ -214,8 +226,24 @@ func _draw() -> void:
 		for i in 3:
 			var wave: float = fmod(pool.age*0.65+float(i)/3.0,1.0)
 			draw_arc(at,pool.radius*wave,0,TAU,24,Color(cyan,(1.0-wave)*0.3*fade),1.5)
-		draw_line(at+Vector2(-5,0),at+Vector2(5,0),Color.WHITE,2)
-		draw_line(at+Vector2(0,-5),at+Vector2(0,5),Color.WHITE,2)
+		var pulse: float = float(pool.flash)/0.22
+		draw_arc(at,pool.radius*(1.0-0.14*pulse),0,TAU,32,Color.WHITE*Color(1,1,1,pulse*0.8),2.5)
+		# Flickering inward flame tongues distinguish the damage field from a healing ring.
+		for i in 8:
+			var radial := Vector2.RIGHT.rotated(TAU*float(i)/8.0)
+			var base: Vector2 = at+radial*pool.radius*0.72
+			var height: float = 9.0+7.0*sin(pool.age*9.0+i*1.7)+12.0*pulse
+			draw_colored_polygon(PackedVector2Array([base+Vector2(-3,0),base+Vector2(0,-height),base+Vector2(4,0)]),Color(cyan,fade*0.65))
+	for hit in water_hits:
+		if hit.left <= 0: continue
+		var progress: float = 1.0-float(hit.left)/0.28
+		var base: Vector2 = to_local(hit.at)
+		for i in 5:
+			var direction := Vector2.UP.rotated((i-2)*0.3)
+			var tip: Vector2 = base+direction*(12.0+progress*26.0)
+			draw_line(tip-direction*9.0,tip,Color(cyan,1.0-progress),3.0)
+			draw_circle(tip,2.0,Color(1,1,1,1.0-progress))
+
 	for shot in shots:
 		if not shot.active: continue
 		var pos: Vector2 = shot.previous.lerp(shot.at,Engine.get_physics_interpolation_fraction())

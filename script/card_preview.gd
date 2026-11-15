@@ -3,6 +3,7 @@ extends RefCounted
 const FAN := preload("res://script/banana_fan.gd")
 const HOLE := preload("res://script/black_hole.gd")
 const POISON := preload("res://script/poison_trail.gd")
+const ARCANE := preload("res://script/arcane_weapons.gd")
 const RELICS := preload("res://script/relic_weapons.gd")
 const BOMB := preload("res://script/bomb_controller.gd")
 const RING := preload("res://script/lightning_ring.gd")
@@ -31,6 +32,7 @@ static func rank_for(game: Node, id: String) -> int:
 		"right_fist": return game.player.right_fist_level
 		"wind_emblem": return game.variety.wind_level
 		"echo_ember": return game.variety.echo_level
+		"thorn_whip", "rune_bolt", "pulse_aura": return game.arcane_weapons.levels[id]
 		"silver_knife", "cross_blade", "holy_water": return game.relic_weapons.levels[id]
 		"bomb": return game.bomb_controller.level
 		"banana_fan": return game.banana_fan.level
@@ -124,6 +126,14 @@ static func build(game: Node, id: String) -> Dictionary:
 				var after: float = player.side_multiplier_for(side,new_left,new_right)*100
 				_row(rows,"左侧伤害" if side else "右侧伤害",before,after,"%",false,after < before)
 			hint = "双持取消另一侧伤害惩罚"
+		"thorn_whip", "rune_bolt", "pulse_aura":
+			var before := ARCANE.stats_for(id,rank)
+			var after := ARCANE.stats_for(id,next)
+			for key in ["damage","count","range","radius","duration","interval"]:
+				if not after.has(key): continue
+				var label: String = {"damage":"单次伤害","count":"飞弹数量","range":"攻击距离","radius":"脉冲半径","duration":"持续时间","interval":"触发间隔"}[key]
+				_row(rows,label,float(before[key]) if rank>0 else 0,float(after[key]),"s" if key in ["duration","interval"] else "",key!="count")
+			hint = {"thorn_whip":"自动瞄准 · 120度近身横扫","rune_bolt":"固定符文区域边界反弹 · 穿透敌人\n同一飞弹对同一敌人命中间隔0.35秒","pulse_aura":"围绕玩家周期攻击 · 不暴击或传播异常"}[id]+"\n最高5级"
 		"silver_knife", "cross_blade", "holy_water":
 			var before := RELICS.stats_for(id,rank)
 			var after := RELICS.stats_for(id,next)
@@ -131,7 +141,7 @@ static func build(game: Node, id: String) -> Dictionary:
 				if not after.has(key): continue
 				var label: String = {"damage":"单次伤害","dps":"每秒伤害","count":"飞刀数量","range":"飞行距离","radius":"净化半径","duration":"持续时间","interval":"触发间隔"}[key]
 				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key in ["duration","interval"] else "",key != "count")
-			hint = {"silver_knife":"沿最后移动方向穿透 · 每把对同一目标命中一次","cross_blade":"自动瞄准 · 固定路径往返各命中一次","holy_water":"敌人脚下净化区域 · 每0.5秒结算\n重叠区域不叠伤，不触发暴击和异常传播"}[id]+"\n最高5级"
+			hint = {"silver_knife":"自动瞄准附近敌人穿透 · 每把对同一目标命中一次","cross_blade":"自动瞄准 · 固定路径往返各命中一次","holy_water":"敌人脚下净化区域 · 每0.5秒结算\n重叠区域不叠伤，不触发暴击和异常传播"}[id]+"\n最高5级"
 		"bomb", "banana_fan", "black_hole", "poison_trail", "lightning_ring", "wind_emblem", "echo_ember":
 			var source: Script = {"bomb":BOMB,"banana_fan":FAN,"black_hole":HOLE,"poison_trail":POISON,"lightning_ring":RING}.get(id,VARIETY)
 			var before: Dictionary = source.wind_stats(maxi(rank,1)) if id == "wind_emblem" else (source.echo_stats(maxi(rank,1)) if id == "echo_ember" else source.stats_for(maxi(rank,1)))

@@ -283,6 +283,8 @@ func _launch_run(mode: StringName) -> void :
 	game.diagnostic_mode = str(mode) if mode != &"" else "normal"
 	start_game()
 	match mode:
+		&"arcane_weapons":
+			game.prepare_arcane_debug()
 		&"relic_weapons":
 			game.prepare_relic_debug()
 		&"hitstop":

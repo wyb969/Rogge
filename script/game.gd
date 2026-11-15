@@ -49,6 +49,8 @@ var banana_fan: Node2D
 var black_hole: Node2D
 const RELIC_WEAPONS := preload("res://script/relic_weapons.gd")
 var relic_weapons: Node2D
+const ARCANE_WEAPONS := preload("res://script/arcane_weapons.gd")
+var arcane_weapons: Node2D
 var bomb_controller: Node2D
 var arsenal_combo: Node2D
 const EQUIPMENT_COMBOS := preload("res://script/equipment_combos.gd")
@@ -144,6 +146,9 @@ func _ready() -> void :
 	black_hole = BLACK_HOLE.new()
 	black_hole.name = "BlackHole"
 	add_child(black_hole)
+	arcane_weapons = ARCANE_WEAPONS.new()
+	arcane_weapons.name = "ArcaneWeapons"
+	add_child(arcane_weapons)
 	relic_weapons = RELIC_WEAPONS.new()
 	relic_weapons.name = "RelicWeapons"
 	add_child(relic_weapons)
@@ -269,6 +274,7 @@ func _reset_skill_controllers() -> void :
 	if poison_trail: poison_trail.reset()
 	if banana_fan: banana_fan.reset()
 	if black_hole: black_hole.reset()
+	if arcane_weapons: arcane_weapons.reset()
 	if relic_weapons: relic_weapons.reset()
 	if bomb_controller: bomb_controller.reset()
 	if arsenal_combo: arsenal_combo.reset()
@@ -360,6 +366,8 @@ func _on_upgrade_selected(upgrade_id: String):
 			banana_fan.upgrade()
 		"black_hole":
 			black_hole.upgrade()
+		"thorn_whip", "rune_bolt", "pulse_aura":
+			arcane_weapons.upgrade(upgrade_id)
 		"silver_knife", "cross_blade", "holy_water":
 			relic_weapons.upgrade(upgrade_id)
 		"bomb":
@@ -370,7 +378,7 @@ func _on_upgrade_selected(upgrade_id: String):
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
-		"banana_fan", "black_hole", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water",
+		"banana_fan", "black_hole", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
 	]:
 		spawner.note_offense_card()
 
@@ -1029,5 +1037,13 @@ func prepare_relic_debug() -> void:
 	for id in RELIC_WEAPONS.IDS: _on_upgrade_selected(id)
 	player.apply_rest_max_hp(500)
 	player.full_heal()
-	variety.notify("三武器1级 · 飞刀随移动方向 / 十字往返 / 圣水净化
+	variety.notify("三武器1级 · 飞刀自动瞄准 / 十字往返 / 圣水净化
 正常刷怪练习 · 升级卡可继续强化到5级")
+
+func prepare_arcane_debug() -> void:
+	for id in ARCANE_WEAPONS.IDS: _on_upgrade_selected(id)
+	for id in ["silver_knife","holy_water"]: _on_upgrade_selected(id)
+	player.apply_rest_max_hp(500)
+	player.full_heal()
+	variety.notify("新增三武器 + 自动飞刀 / 圣水伤害表现
+鞭子近身横扫 · 符文反弹 · 法阵脉冲")

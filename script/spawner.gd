@@ -314,6 +314,7 @@ func on_enemy_killed(dead_enemy: Node2D = null) -> void :
 	_grant_kill_shield()
 	_drop_necklace_orb(dead_enemy)
 	get_parent().variety.note_kill(dead_enemy)
+	if get_parent().star_chain != null: get_parent().star_chain.note_kill(dead_enemy)
 
 func _on_timer_timeout() -> void :
 	if _run_closed:

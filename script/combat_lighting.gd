@@ -19,6 +19,7 @@ var _drones: Array[Node2D] = []
 var _orbs: Array[Node2D] = []
 var _cells: Array[Vector2i] = []
 var _shadows: Array[Node2D] = []
+var _shadow_sprites: Array[Node2D] = []
 var _shadow_sizes: = PackedVector2Array()
 var _shadow_feet: = PackedFloat32Array()
 var _flashes: Array[Dictionary] = []
@@ -71,6 +72,7 @@ func _ready() -> void :
 	_orbs.resize(ORB_LIGHTS)
 	_cells.resize(ORB_LIGHTS)
 	_shadows.resize(MAX_SHADOWS)
+	_shadow_sprites.resize(MAX_SHADOWS)
 	_shadow_sizes.resize(MAX_SHADOWS)
 	_shadow_feet.resize(MAX_SHADOWS)
 	for _i in MAX_FLASHES: _flashes.append({"at": Vector2.ZERO, "direction": Vector2.RIGHT, "anchor": null, "left": 0.0})
@@ -104,7 +106,9 @@ func reset() -> void :
 	shadows_last = 0
 	_shadow_count = 0
 	_orb_count = 0
-	for i in MAX_SHADOWS: _shadows[i] = null
+	for i in MAX_SHADOWS:
+		_shadows[i] = null
+		_shadow_sprites[i] = null
 	for i in ORB_LIGHTS: _orbs[i] = null
 	for field in _fields:
 		field.hide()
@@ -164,7 +168,11 @@ func _refresh_sources() -> void :
 		elif actor.has_signal("boss_defeated") and actor.fight_stage <= 2:
 			size = Vector2(33, 9) if actor.fight_stage == 1 else Vector2(25, 7)
 			foot = 54 if actor.fight_stage == 1 else 35
+		elif actor.has_signal("boss_defeated"):
+			size = Vector2(24, 7)
+			foot = 22
 		else: continue
+		_shadow_sprites[_shadow_count] = actor.get_node_or_null("Sprite2D")
 		_shadows[_shadow_count] = actor
 		_shadow_sizes[_shadow_count] = size
 		_shadow_feet[_shadow_count] = foot
@@ -176,7 +184,7 @@ func _process(delta: float) -> void :
 	_bounds = get_viewport().get_visible_rect().grow(90)
 	_canvas = get_viewport().get_canvas_transform()
 	var daylight: float = game.weather.daylight
-	_sun = Vector2(0.9, 0.35).rotated(sin(game.weather.solar_phase * TAU) * 0.35).normalized()
+	_sun = game.weather.sun_direction
 	_shadow_alpha = lerpf(0.72, 0.88, daylight) * (0.82 if game.weather.current_weather == 1 else 1.0)
 	_emission = lerpf(1.2, 0.85, daylight)
 	_refresh_left -= delta
@@ -196,13 +204,16 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 	if not _running: return
 	if kind == 0:
 		shadows_last = 0
-		var offset: = _sun * lerpf(1, 6, game.weather.daylight)
+		var offset := Vector2.ZERO
+		var weather_light: Node = game.weather.lighting
+		weather_light.project_sprite(canvas, game.player.animated_sprite_2d, game.player.global_position + Vector2(0, 17), false)
 		_halo(canvas, game.player.global_position + Vector2(0, 17) + offset, Vector2(14, 5), GamePalette.shadow(_shadow_alpha))
 		shadows_last += 1
 		for i in _shadow_count:
 			var actor: = _shadows[i]
 			if not _visible(actor): continue
 			if actor.get_script() == ENEMY and actor.archetype == EnemyData.Archetype.DASHER and (actor.is_dashing or actor.dash_windup > 0): continue
+			weather_light.project_sprite(canvas, _shadow_sprites[i], actor.global_position + Vector2(0, _shadow_feet[i]))
 			_halo(canvas, actor.global_position + Vector2(0, _shadow_feet[i]) + offset, _shadow_sizes[i], GamePalette.shadow(_shadow_alpha))
 			shadows_last += 1
 		var flying: = 0

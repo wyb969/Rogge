@@ -108,6 +108,10 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugWeatherLightButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "天气光影 · 阳光 / 雨灯"
+
 [node name="DebugArcaneWeaponsButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "新武器二期 · 鞭 / 符文 / 法阵"
@@ -233,3 +237,5 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugRelicWeaponsButton" to="." method="_launch_run" binds= [&"relic_weapons"]]
 
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugArcaneWeaponsButton" to="." method="_launch_run" binds= [&"arcane_weapons"]]
+
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugWeatherLightButton" to="." method="_launch_run" binds= [&"weather"]]

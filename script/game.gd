@@ -720,6 +720,7 @@ func prepare_weather_debug() -> void :
 	player.max_player_health = 50000
 	player.player_health = 50000
 	player.health_bar.set_max_health(50000, 50000)
+	weather.set_preview(0, 0.0)
 	weather.enable_preview()
 
 func spawn_necklace_orb(world_position: Vector2) -> Node2D:

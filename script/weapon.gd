@@ -193,7 +193,7 @@ func _sync_cooldown_timers() -> void :
 		cool_down_timer.wait_time = maxf(0.02, _base_shot_lock * cooldown_scale)
 
 func damage_for_upgrade(rank: int) -> int:
-	return damage + 10 * rank
+	return 15 + 10 * maxi(rank, 0)
 
 func interval_for(rank: int) -> float:
-	return maxf(0.05, (base_fire_interval - 0.08 * float(maxi(rank - 1, 0))) * cooldown_scale)
+	return maxf(0.12, maxf(0.22, base_fire_interval - 0.06 * float(maxi(rank - 1, 0))) * cooldown_scale)

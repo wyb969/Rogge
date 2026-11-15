@@ -46,15 +46,15 @@ const STAGE2_BOSS_DELAY: float = 42.0
 
 
 
-const LEVEL_LINEAR: = 0.08
-const LEVEL_QUAD: = 0.008
+const LEVEL_LINEAR: = 0.10
+const LEVEL_QUAD: = 0.002
 const TIME_PER_MIN: = 0.06
-const CARD_STEP: = 0.07
+const CARD_STEP: = 0.02
 const DAMAGE_PER_LEVEL: = 0.04
 const DAMAGE_PER_MINUTE: = 0.035
 const DAMAGE_PER_CARD: = 0.015
 const DAMAGE_MULTIPLIER_CAP: = 2.4
-const STAGE_HP: Array[float] = [1.0, 1.38]
+const STAGE_HP: Array[float] = [1.0, 1.22, 1.32, 1.42, 1.52, 1.62]
 const STAGE_DMG: Array[float] = [1.0, 1.18]
 const SPAWN_INTERVAL: Array[float] = [1.05, 0.82]
 const SPAWN_INTERVAL_MIN: Array[float] = [0.7, 0.55]
@@ -186,11 +186,11 @@ func threat_damage_multiplier_for(level: int, stage_seconds: float, cards: int, 
 	return minf(growth * _stage_row(STAGE_DMG, stage_num), DAMAGE_MULTIPLIER_CAP)
 
 func _pressure(level: int, stage_seconds: float, cards: int) -> float:
-	var lv: = float(maxi(level, 0))
-	var mins: = maxf(stage_seconds, 0.0) / 60.0
+	var lv: = float(clampi(level, 0, 40))
+	var mins: = clampf(stage_seconds / 60.0, 0.0, 5.0)
 	var from_level: = 1.0 + LEVEL_LINEAR * lv + LEVEL_QUAD * lv * lv
 	var from_time: = 1.0 + TIME_PER_MIN * mins
-	var from_cards: = 1.0 + CARD_STEP * float(maxi(cards, 0))
+	var from_cards: = 1.0 + CARD_STEP * float(clampi(cards, 0, 20))
 	return from_level * from_time * from_cards
 
 func _stage_row(row: Array[float], stage_num: int) -> float:

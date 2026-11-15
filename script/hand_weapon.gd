@@ -8,7 +8,7 @@ const BASE_FLIGHT_SPEED: = 200.0
 const MAX_FLIGHT_SPEED: = 600
 const HIT_RADIUS: = 14.0
 var level: = 1
-var weapon_demage: float = 10.0
+var weapon_demage: float = 14.0
 var max_speed: int = 200
 var max_distance: int = 200
 var rotate_speed: float = 4.0
@@ -112,5 +112,5 @@ func handle_level_up(character_level: int) -> void :
 
 func upgrade_preview(character_level: int) -> Dictionary:
 	var upgrades := float(level)
-	return {"damage": weapon_demage * (1.0 + 0.12 * character_level + 0.015 * character_level * character_level),
+	return {"damage": weapon_demage + 8.0 + 0.6 * clampi(character_level, 0, 30),
 		"speed": mini(MAX_FLIGHT_SPEED, roundi(BASE_FLIGHT_SPEED * (1.0 + 0.12 * upgrades + 0.015 * upgrades * upgrades)))}

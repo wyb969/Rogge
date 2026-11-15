@@ -7,7 +7,7 @@
 script = ExtResource("1")
 title = "chaser_brute"
 sprite = ExtResource("2")
-health = 42.0
+health = 52.0
 damage = 2.2
 move_speed = 48.0
 defense = 0.08

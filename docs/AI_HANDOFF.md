@@ -5,6 +5,7 @@
 - 分支`feature/weapon-expansion-20261115`基于上一轮`a84adca`，保留数值平衡和三武器功能；版本**20261115-161616**。飞刀改独立自动瞄准；圣水伤害节拍加入青白亮环、喷涌和青色数字，原伤害/重叠机制不变。
 - 新增荆棘鞭、符文飞弹、脉冲法阵，各5级；28卡派发/预览/HUD/满级过滤/实际宝藏奖励接通。Debug首页首项新武器二期，20入口继续分页。固定8符文/12闪光/24圣水命中槽；暂停/试炼/清理沿现有API。设计/数值/命令/横竖截图见[weapon-expansion.md](weapon-expansion.md)。
 - 七项原生专项通过；实际Web PCK专项及发布记录在`validation/weapon-expansion-20261115.json`。当前可用自建Xorg dummy显示，原生横屏/竖屏截图已检查；上一节“无显示服务”只描述上一轮。托管浏览器工具仍不可用，未做本轮浏览器/Safari真机测试。CLI退出资源警告和渲染器关闭的Texture/RID警告未解决，不要误报无内存问题。
+- 源码`bb5378c`已保存到[PR #15](https://github.com/wyb969/Rogge/pull/15)，以PR #14分支为base；后续仅文档。既有[试玩地址](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新为20261115-161616，保持所有者私有权限。Site source`2589678a337ae94c53b4cfe1a9e551b91f3172a8`，deployment`appgdep_6af96b32c0e08191a5132ed367f50c7b`于2026-11-15 16:20北京时间succeeded；托管PCK/解压WASM与原导出字节一致，正常main入口未启用截图夹具。主页→Debug第一项可练习。
 - 不自动合入master、不上传itch。后续优先试玩三新卡强度、圣水攻击可读性和真机密集怪负载；勿将公式/专项断言视为通关平衡结论。
 
 ## 2026-11-15 三种新武器（最新开发）

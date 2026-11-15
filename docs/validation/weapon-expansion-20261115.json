@@ -215,5 +215,25 @@
     "No hosted browser check: managed Sites browser helper unavailable",
     "No Safari/device FPS, crowd memory benchmark or full campaign balance playtest",
     "CLI and renderer teardown resource warnings remain unresolved"
-  ]
+  ],
+  "verified_game_commit": "bb5378c098701d5be840af383cc47baaa8aeb551",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/15",
+  "playtest": {
+    "id": "appgdep_6af96b32c0e08191a5132ed367f50c7b",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "title": "ROGGE · Color & Card Readability Playtest",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_6a644e3509e881918be1417ff3327049",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6af1e5b586688191b2677024b2e27023",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-11-15T08:20:20.833646+00:00",
+    "site_source_commit": "2589678a337ae94c53b4cfe1a9e551b91f3172a8",
+    "audience": "unchanged owner-private",
+    "exact_pck_and_decoded_wasm_bytes": true
+  }
 }

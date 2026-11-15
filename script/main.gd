@@ -283,6 +283,8 @@ func _launch_run(mode: StringName) -> void :
 	game.diagnostic_mode = str(mode) if mode != &"" else "normal"
 	start_game()
 	match mode:
+		&"relic_weapons":
+			game.prepare_relic_debug()
 		&"hitstop":
 			game.prepare_hitstop_debug()
 		&"motion_vfx":

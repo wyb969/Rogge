@@ -19,6 +19,9 @@ var _combo_clock := 0.0
 var _border_tick_left := 0.0
 
 const EQUIP_DEFS: = {
+	"silver_knife": {"title": "银翼飞刀", "icon": "res://assest/sprites/silver_knife.svg", "start_level": 0, "max_level": 5},
+	"cross_blade": {"title": "回旋十字刃", "icon": "res://assest/sprites/cross_blade.svg", "start_level": 0, "max_level": 5},
+	"holy_water": {"title": "净化圣水", "icon": "res://assest/sprites/holy_water.svg", "start_level": 0, "max_level": 5},
 	"bomb": {"title": "炸弹", "icon": "res://assest/sprites/bomb.svg", "start_level": 0, "max_level": 5},
 	"critical_glasses": {"title": "暴击眼镜", "icon": "res://assest/sprites/critical_glasses.svg", "start_level": 0, "max_level": 5},
 	"banana_fan": {"title": "芭蕉扇", "icon": "res://assest/sprites/banana_fan.svg", "start_level": 0, "max_level": 5},

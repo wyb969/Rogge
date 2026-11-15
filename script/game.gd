@@ -47,6 +47,8 @@ const BOMB := preload("res://script/bomb_controller.gd")
 const ARSENAL_COMBO := preload("res://script/arsenal_combo.gd")
 var banana_fan: Node2D
 var black_hole: Node2D
+const RELIC_WEAPONS := preload("res://script/relic_weapons.gd")
+var relic_weapons: Node2D
 var bomb_controller: Node2D
 var arsenal_combo: Node2D
 const EQUIPMENT_COMBOS := preload("res://script/equipment_combos.gd")
@@ -142,6 +144,9 @@ func _ready() -> void :
 	black_hole = BLACK_HOLE.new()
 	black_hole.name = "BlackHole"
 	add_child(black_hole)
+	relic_weapons = RELIC_WEAPONS.new()
+	relic_weapons.name = "RelicWeapons"
+	add_child(relic_weapons)
 	bomb_controller = BOMB.new()
 	bomb_controller.name = "BombController"
 	add_child(bomb_controller)
@@ -264,6 +269,7 @@ func _reset_skill_controllers() -> void :
 	if poison_trail: poison_trail.reset()
 	if banana_fan: banana_fan.reset()
 	if black_hole: black_hole.reset()
+	if relic_weapons: relic_weapons.reset()
 	if bomb_controller: bomb_controller.reset()
 	if arsenal_combo: arsenal_combo.reset()
 	if variety: variety.reset()
@@ -354,6 +360,8 @@ func _on_upgrade_selected(upgrade_id: String):
 			banana_fan.upgrade()
 		"black_hole":
 			black_hole.upgrade()
+		"silver_knife", "cross_blade", "holy_water":
+			relic_weapons.upgrade(upgrade_id)
 		"bomb":
 			bomb_controller.upgrade()
 
@@ -362,7 +370,7 @@ func _on_upgrade_selected(upgrade_id: String):
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
-		"banana_fan", "black_hole", "critical_glasses", "bomb",
+		"banana_fan", "black_hole", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water",
 	]:
 		spawner.note_offense_card()
 
@@ -1016,3 +1024,10 @@ func prepare_trial_debug(kind: String) -> void :
 	spawner.stage_advanced.emit(stage_num)
 	_trial_pending = kind
 	_show_next_reward()
+
+func prepare_relic_debug() -> void:
+	for id in RELIC_WEAPONS.IDS: _on_upgrade_selected(id)
+	player.apply_rest_max_hp(500)
+	player.full_heal()
+	variety.notify("三武器1级 · 飞刀随移动方向 / 十字往返 / 圣水净化
+正常刷怪练习 · 升级卡可继续强化到5级")

@@ -28,6 +28,9 @@ var _fit_pending: = false
 var _card_scroll: ScrollContainer
 
 var upgrade_pool: = [
+	{"id": "silver_knife", "title": "银翼飞刀", "desc": "", "icon": "res://assest/sprites/silver_knife.svg", "max_level": 5},
+	{"id": "cross_blade", "title": "回旋十字刃", "desc": "", "icon": "res://assest/sprites/cross_blade.svg", "max_level": 5},
+	{"id": "holy_water", "title": "净化圣水", "desc": "", "icon": "res://assest/sprites/holy_water.svg", "max_level": 5},
 	{"id": "bomb", "title": "炸弹", "desc": "", "icon": "res://assest/sprites/bomb.svg", "max_level": 5},
 	{"id": "critical_glasses", "title": "暴击眼镜", "desc": "", "icon": "res://assest/sprites/critical_glasses.svg", "max_level": 5},
 	{"id": "banana_fan", "title": "芭蕉扇", "desc": "", "icon": "res://assest/sprites/banana_fan.svg", "max_level": 5},

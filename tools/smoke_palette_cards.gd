@@ -33,6 +33,13 @@ func observed(id: String) -> Dictionary:
 	var p: Node = game.player
 	var level: int = game.equipment_panel.get_level(id)
 	match id:
+		"silver_knife", "cross_blade", "holy_water":
+			var stats: Dictionary = game.relic_weapons.stats_for(id,level)
+			var values := {}
+			for key in stats:
+				var label: String = {"damage":"单次伤害","dps":"每秒伤害","count":"飞刀数量","range":"飞行距离","radius":"净化半径","duration":"持续时间","interval":"触发间隔"}.get(key,"")
+				if not label.is_empty(): values[label] = stats[key]
+			return values
 		"speed_up": return {"移速":p.effective_move_speed()}
 		"pickup_up": return {"拾取半径":p.pickup_range}
 		"axe_up": return {"基础伤害":game.hand_weapon.weapon_demage,"飞行速度":game.hand_weapon.max_speed}
@@ -133,7 +140,7 @@ func _run() -> void:
 	expect(not controls.dash_button.available and controls.dash_button.progress == 0.5,"cooldown presentation does not change gameplay state")
 	controls.end_layout_edit()
 	main.show_main_menu()
-	if failures.is_empty(): print("PALETTE CARDS OK: %d checks; all22 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls" % checks)
+	if failures.is_empty(): print("PALETTE CARDS OK: %d checks; all25 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls" % checks)
 	else:
 		for failure in failures: push_error(failure)
 	quit(0 if failures.is_empty() else 1)

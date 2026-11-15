@@ -51,6 +51,7 @@ const RELIC_WEAPONS := preload("res://script/relic_weapons.gd")
 var relic_weapons: Node2D
 const ARCANE_WEAPONS := preload("res://script/arcane_weapons.gd")
 var arcane_weapons: Node2D
+var star_chain: Node2D
 var bomb_controller: Node2D
 var arsenal_combo: Node2D
 const EQUIPMENT_COMBOS := preload("res://script/equipment_combos.gd")
@@ -158,6 +159,9 @@ func _ready() -> void :
 	arsenal_combo = ARSENAL_COMBO.new()
 	arsenal_combo.name = "ArsenalCombo"
 	add_child(arsenal_combo)
+	star_chain = preload("res://script/star_chain.gd").new()
+	star_chain.name = "StarChain"
+	add_child(star_chain)
 	spawner.beast_defeated.connect(_on_beast_defeated)
 	level_manager.signal_level_up.connect(on_level_up)
 	pause_menu.upgrade_selected.connect(_on_upgrade_selected)
@@ -215,6 +219,7 @@ func start_game() -> void :
 	RunDiagnostics.begin(self, diagnostic_mode)
 	variety.begin_run()
 	ink_surf.begin_run()
+	star_chain.begin_run()
 	enemy_attacks.begin_run()
 	combat_lighting.begin_run()
 	meteors.begin_run()
@@ -275,6 +280,7 @@ func _reset_skill_controllers() -> void :
 	if banana_fan: banana_fan.reset()
 	if black_hole: black_hole.reset()
 	if arcane_weapons: arcane_weapons.reset()
+	if star_chain: star_chain.reset()
 	if relic_weapons: relic_weapons.reset()
 	if bomb_controller: bomb_controller.reset()
 	if arsenal_combo: arsenal_combo.reset()
@@ -1048,3 +1054,12 @@ func prepare_arcane_debug() -> void:
 	player.full_heal()
 	variety.notify("新增三武器 + 自动飞刀 / 圣水伤害表现
 鞭子近身横扫 · 符文反弹 · 法阵脉冲")
+
+func prepare_star_chain_debug() -> void:
+	player.max_player_health += 500
+	player.player_health = player.max_player_health
+	player.health_bar.set_max_health(player.max_player_health, player.player_health)
+	for i in 18:
+		spawn_xp_coin(player.global_position + Vector2.from_angle(TAU*i/18)*110, 2)
+	star_chain.enable_debug()
+	star_chain.start_route()

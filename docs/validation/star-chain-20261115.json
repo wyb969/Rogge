@@ -1,0 +1,196 @@
+{
+  "version": "20261116-003018",
+  "branch": "feature/star-chain-20261115",
+  "base": "aac803f",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "native_checks": [
+    {
+      "name": "smoke_star_chain",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.89,
+      "errors": [],
+      "markers": [
+        "STAR CHAIN OK: 63 checks; real kills/duplicate gate, route order/sweeps, reward once, magnet bounds, expiry/pause/boss/trial/reset and fixed nodes"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 15 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.05,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 6153 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_run_variety",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.42,
+      "errors": [],
+      "markers": [
+        "RUN VARIETY OK: real wind/echo cards, landing damage/grace/cancel, exact queued pause-safe nonrecursive echo, lottery stacks, diverse independent draws, reroll UI/tokens, harmless bounded courier/rewards/escape, full HUD layout and Retry"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_ink_surf",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.3,
+      "errors": [],
+      "markers": [
+        "INK SURF OK: 23 checks; actual dash signals/sweeps, charge/cooldown, once-only reward/proc bounds, radius/shields/knockback, pause/transitions/Home and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_growth_combo",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.05,
+      "errors": [],
+      "markers": [
+        "GROWTH COMBO OK: 61 checks; actual movement/healing/XP pickups/merge/difficulty, no stacking, shared green/gold phase, bounded border work, layout and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 25 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 6.03,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 29 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 14 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "actual_web_pck_checks": [
+    {
+      "name": "smoke_star_chain",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.02,
+      "errors": [],
+      "markers": [
+        "STAR CHAIN OK: 63 checks; real kills/duplicate gate, route order/sweeps, reward once, magnet bounds, expiry/pause/boss/trial/reset and fixed nodes"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_run_variety",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.59,
+      "errors": [],
+      "markers": [
+        "RUN VARIETY OK: real wind/echo cards, landing damage/grace/cancel, exact queued pause-safe nonrecursive echo, lottery stacks, diverse independent draws, reroll UI/tokens, harmless bounded courier/rewards/escape, full HUD layout and Retry"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.59,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 6153 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "import_export": "final import and Web export passed with no error/warning lines",
+  "native_render": {
+    "renderer": "Godot Compatibility / Mesa llvmpipe / Xorg dummy",
+    "screenshots": [
+      "docs/screenshots/star-chain-20261115/fever-390x844.png",
+      "docs/screenshots/star-chain-20261115/fever-900x600.png",
+      "docs/screenshots/star-chain-20261115/route-390x844.png",
+      "docs/screenshots/star-chain-20261115/route-900x600-gray.png",
+      "docs/screenshots/star-chain-20261115/route-900x600.png"
+    ],
+    "checked": "landscape route/fever, portrait route and grayscale route",
+    "fixture": "normal startup unchanged; capture disables level-up modal only for screenshot composition",
+    "runtime_script_shader_errors": false,
+    "shutdown_warnings": [
+      "Texture GL ID19 leaked1364 bytes",
+      "RenderingServer singleton null at CompressedTexture2D destructor",
+      "1 GLES3 Texture RID leaked",
+      "ObjectDB and resources referenced at exit"
+    ]
+  },
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "c5fe228bb0aeac063fdda64e217327124790054cc75afbffaa1a487e55f5e6c7"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23637232,
+      "sha256": "ca79b3038d20839f48c09ef16139c52bededec4b5420fb78cd146b64d98439bd"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "limits": [
+    "No hosted browser/Safari or crowd FPS test this turn",
+    "Fun and reward pacing still require real playtesting",
+    "Existing exit resource warnings not resolved"
+  ]
+}

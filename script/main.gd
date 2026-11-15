@@ -311,6 +311,8 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_treasure_debug_run()
 		&"lightning":
 			game.prepare_lightning_debug_run()
+		&"star_chain":
+			game.prepare_star_chain_debug()
 		&"weather":
 			game.prepare_weather_debug()
 		&"variety":

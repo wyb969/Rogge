@@ -108,6 +108,10 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugRelicWeaponsButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "新武器 · 飞刀 / 十字 / 圣水"
+
 [node name="DebugHitstopButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "命中顿帧 · 白色 / 淡红"
@@ -221,3 +225,5 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/BackButton" to="." method="_on_debug_back_pressed"]
 [connection signal="main_menu_pressed" from="GameEndUI" to="." method="_on_game_end_ui_main_menu_pressed"]
 [connection signal="retry_pressed" from="GameEndUI" to="." method="_on_game_end_ui_retry_pressed"]
+
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugRelicWeaponsButton" to="." method="_launch_run" binds= [&"relic_weapons"]]

@@ -1,0 +1,24 @@
+{
+  "deployment": {
+    "id": "appgdep_6af943835e6481919f84dbeb5d5946a5",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "title": "ROGGE · Color & Card Readability Playtest",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_0af7ac30525481919545cd1501605ea1",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6af1e5b586688191b2677024b2e27023",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-11-15T05:31:02.158586+00:00"
+  },
+  "site_source_commit": "5b246033130c16c62fb48c017fe0e8b6f51a7178",
+  "game_source_commit": "81fac8f",
+  "game_pr": "https://github.com/wyb969/Rogge/pull/14",
+  "audience": "existing owner-private; unchanged",
+  "version": "20261115-132754",
+  "verification": "Native6/PCK3 passed; exact export PCK and decoded WASM verified; loader/engine JS syntax passed. No hosted browser or physical-device QA.",
+  "hosting_workflow": "Local helper unavailable; source opened/pushed with hidden-stdin ephemeral Git credential, exact dist archive supplied to native Sites deploy."
+}

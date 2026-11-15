@@ -1,0 +1,239 @@
+{
+  "version": "20261115-161616",
+  "branch": "feature/weapon-expansion-20261115",
+  "base_commit": "a84adca",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "native_checks": [
+    {
+      "name": "smoke_arcane_weapons",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.3,
+      "errors": [],
+      "markers": [
+        "ARCANE WEAPONS OK: 39 checks; cone/radius/ricochet, per-target cooldown, actual lottery caps, bounded effects, pause/end/new-run"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_relic_weapons",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.21,
+      "errors": [],
+      "markers": [
+        "RELIC WEAPONS OK: 65 checks; draft/HUD/caps, swept long frames, return hits, overlap, pause/cleanup, bounded pools and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.53,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 452 checks; all28 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.43,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 5460 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_status_numbers",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.58,
+      "errors": [],
+      "markers": [
+        "STATUS NUMBERS OK: real burn ticks/frost/poison and frozen bonus, plain/heal colors, yellow-orange-red tween/lifetime, bounded boss status routing and return"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.97,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_hitstop",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.97,
+      "errors": [],
+      "markers": [
+        "HITSTOP OK: 78 checks; real damage/white-red frames, anti-chain bounds, status/immunity/shields, death clock ownership, pause/trials, crowd pool and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 30 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 15 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "actual_web_pck_checks": [
+    {
+      "name": "smoke_arcane_weapons",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.7,
+      "errors": [],
+      "markers": [
+        "ARCANE WEAPONS OK: 39 checks; cone/radius/ricochet, per-target cooldown, actual lottery caps, bounded effects, pause/end/new-run"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_relic_weapons",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.3,
+      "errors": [],
+      "markers": [
+        "RELIC WEAPONS OK: 65 checks; draft/HUD/caps, swept long frames, return hits, overlap, pause/cleanup, bounded pools and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.62,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 452 checks; all28 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.49,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 5460 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "import_export": "passed with no error/warning lines",
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "2568168b0aa3102b82bc725226117ec23ef4dd78478a6288ebf9b3e7e6393e07"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23600576,
+      "sha256": "73b73d8a43d697118ddcfb736db34d2d61135d4878fde56b03bef351caaf1ee1"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "native_render": {
+    "renderer": "Mesa llvmpipe OpenGL Compatibility, Xorg dummy",
+    "landscape": "docs/screenshots/weapon-expansion-20261115/expansion-900x600.png",
+    "portrait": "docs/screenshots/weapon-expansion-20261115/expansion-390x844.png",
+    "visually_inspected": true,
+    "runtime_script_errors": false,
+    "shutdown_warnings": [
+      "Texture GL ID19 leaked1364 bytes",
+      "RenderingServer singleton null at CompressedTexture2D destructor",
+      "1 GLES3 Texture RID leaked",
+      "6 ObjectDB instances / 3 resources at exit"
+    ],
+    "qa_fixture_only": true
+  },
+  "limitations": [
+    "No hosted browser check: managed Sites browser helper unavailable",
+    "No Safari/device FPS, crowd memory benchmark or full campaign balance playtest",
+    "CLI and renderer teardown resource warnings remain unresolved"
+  ],
+  "verified_game_commit": "bb5378c098701d5be840af383cc47baaa8aeb551",
+  "pull_request": "https://github.com/wyb969/Rogge/pull/15",
+  "playtest": {
+    "id": "appgdep_6af96b32c0e08191a5132ed367f50c7b",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "title": "ROGGE · Color & Card Readability Playtest",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_6a644e3509e881918be1417ff3327049",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6af1e5b586688191b2677024b2e27023",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-11-15T08:20:20.833646+00:00",
+    "site_source_commit": "2589678a337ae94c53b4cfe1a9e551b91f3172a8",
+    "audience": "unchanged owner-private",
+    "exact_pck_and_decoded_wasm_bytes": true
+  }
+}

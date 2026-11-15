@@ -108,6 +108,10 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugArcaneWeaponsButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "新武器二期 · 鞭 / 符文 / 法阵"
+
 [node name="DebugRelicWeaponsButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "新武器 · 飞刀 / 十字 / 圣水"
@@ -227,3 +231,5 @@ autowrap_mode = 3
 [connection signal="retry_pressed" from="GameEndUI" to="." method="_on_game_end_ui_retry_pressed"]
 
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugRelicWeaponsButton" to="." method="_launch_run" binds= [&"relic_weapons"]]
+
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugArcaneWeaponsButton" to="." method="_launch_run" binds= [&"arcane_weapons"]]

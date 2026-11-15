@@ -19,6 +19,9 @@ var _combo_clock := 0.0
 var _border_tick_left := 0.0
 
 const EQUIP_DEFS: = {
+	"thorn_whip": {"title": "荆棘鞭", "icon": "res://assest/sprites/thorn_whip.svg", "start_level": 0, "max_level": 5},
+	"rune_bolt": {"title": "符文飞弹", "icon": "res://assest/sprites/rune_bolt.svg", "start_level": 0, "max_level": 5},
+	"pulse_aura": {"title": "脉冲法阵", "icon": "res://assest/sprites/pulse_aura.svg", "start_level": 0, "max_level": 5},
 	"silver_knife": {"title": "银翼飞刀", "icon": "res://assest/sprites/silver_knife.svg", "start_level": 0, "max_level": 5},
 	"cross_blade": {"title": "回旋十字刃", "icon": "res://assest/sprites/cross_blade.svg", "start_level": 0, "max_level": 5},
 	"holy_water": {"title": "净化圣水", "icon": "res://assest/sprites/holy_water.svg", "start_level": 0, "max_level": 5},

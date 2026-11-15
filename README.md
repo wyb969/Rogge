@@ -4,11 +4,11 @@
 
 ### 冲进怪潮，把每次升级变成新的连锁反应。
 
-**像素生存 · 25 张装备卡 · 双装备组合 · 彩墨冲浪 · 八种小怪**
+**像素生存 · 28 张装备卡 · 双装备组合 · 彩墨冲浪 · 八种小怪**
 
 [![浏览器试玩](https://img.shields.io/badge/立即试玩-itch.io-FA5C5C?style=for-the-badge&logo=itchdotio&logoColor=white)](https://ybwangrogger.itch.io/rogue-white)
 [![Godot](https://img.shields.io/badge/Godot-4.7-478CBF?style=for-the-badge&logo=godotengine&logoColor=white)](https://godotengine.org/)
-[![装备卡片](https://img.shields.io/badge/装备卡片-25_种-59C9A5?style=for-the-badge)](#装备图鉴)
+[![装备卡片](https://img.shields.io/badge/装备卡片-28_种-59C9A5?style=for-the-badge)](#装备图鉴)
 
 [开始一局](https://ybwangrogger.itch.io/rogue-white) · [装备图鉴](#装备图鉴) · [彩墨冲浪](#彩墨冲浪) · [新怪物与攻击方式](#新怪物与攻击方式) · [四神兽与祝福](#四神兽与祝福) · [运行项目](#运行项目)
 
@@ -82,11 +82,14 @@
 
 ## 装备图鉴
 
-25 种装备与成长卡可以交叉搭配。斧头、书本提供开局火力，其余能力在升级过程中逐步加入。
+28 种装备与成长卡可以交叉搭配。斧头、书本提供开局火力，其余能力在升级过程中逐步加入。
 
 | 类型 | 装备 | 打法与作用 |
 | --- | --- | --- |
-| <img src="assest/sprites/silver_knife.svg" width="28" alt="银翼飞刀"> 定向穿透 | **银翼飞刀** | 沿最后移动方向发射穿透飞刀；升级提高伤害、数量、距离和频率，最高5级。 |
+| <img src="assest/sprites/thorn_whip.svg" width="28" alt="荆棘鞭"> 近身横扫 | **荆棘鞭** | 自动朝附近敌人挥出120°扇形攻击；升级增加伤害、范围与频率，最高5级。 |
+| <img src="assest/sprites/rune_bolt.svg" width="28" alt="符文飞弹"> 反弹穿透 | **符文飞弹** | 符文在施放位置周围反弹并穿透怪群；升级增加伤害、活动范围、数量和频率，最高5级。 |
+| <img src="assest/sprites/pulse_aura.svg" width="28" alt="脉冲法阵"> 贴身防护 | **脉冲法阵** | 周期攻击身边敌人；升级增加伤害、半径和频率，最高5级。 |
+| <img src="assest/sprites/silver_knife.svg" width="28" alt="银翼飞刀"> 定向穿透 | **银翼飞刀** | 自动瞄准附近敌人发射穿透飞刀；升级提高伤害、数量、距离和频率，最高5级。 |
 | <img src="assest/sprites/cross_blade.svg" width="28" alt="回旋十字刃"> 往返清怪 | **回旋十字刃** | 自动瞄准近敌，沿固定路径往返各命中一次；升级提高伤害、射程和频率，最高5级。 |
 | <img src="assest/sprites/holy_water.svg" width="28" alt="净化圣水"> 区域伤害 | **净化圣水** | 在敌人脚下留下3秒净化区域；每0.5秒伤害，重叠不叠加。升级提高秒伤、半径和频率，最高5级。 |
 | <img src="assest/sprites/axe.png" width="28" alt="斧头"> 飞行武器 | **斧头** | 飞出后回收，沿途打击敌人；升级强化伤害与攻击能力。 |

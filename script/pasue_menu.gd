@@ -28,6 +28,9 @@ var _fit_pending: = false
 var _card_scroll: ScrollContainer
 
 var upgrade_pool: = [
+	{"id": "thorn_whip", "title": "荆棘鞭", "desc": "", "icon": "res://assest/sprites/thorn_whip.svg", "max_level": 5},
+	{"id": "rune_bolt", "title": "符文飞弹", "desc": "", "icon": "res://assest/sprites/rune_bolt.svg", "max_level": 5},
+	{"id": "pulse_aura", "title": "脉冲法阵", "desc": "", "icon": "res://assest/sprites/pulse_aura.svg", "max_level": 5},
 	{"id": "silver_knife", "title": "银翼飞刀", "desc": "", "icon": "res://assest/sprites/silver_knife.svg", "max_level": 5},
 	{"id": "cross_blade", "title": "回旋十字刃", "desc": "", "icon": "res://assest/sprites/cross_blade.svg", "max_level": 5},
 	{"id": "holy_water", "title": "净化圣水", "desc": "", "icon": "res://assest/sprites/holy_water.svg", "max_level": 5},

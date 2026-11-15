@@ -16,6 +16,8 @@ var solar_phase: = 0.0
 var daylight: = 1.0
 var ambient: = Color.WHITE
 var sun_strength: = 0.0
+var sun_direction := Vector2(0.65, 0.76).normalized()
+var lighting: Node2D
 var cloud_strength: = 0.0
 var rain_count: = 0
 var snow_count: = 0
@@ -88,6 +90,9 @@ func _ready() -> void :
 	_ui.add_child(_caption)
 	get_viewport().size_changed.connect(_fit)
 	_fit()
+	lighting = preload("res://script/weather_lighting.gd").new()
+	lighting.name = "WeatherLighting"
+	add_child(lighting)
 	stop()
 
 func begin_run() -> void :
@@ -144,6 +149,7 @@ func _select(kind: int, immediate: bool) -> void :
 func stop() -> void :
 	AudioManager.weather_audio.detach(self)
 	running = false
+	if lighting != null: lighting.stop()
 	rain_count = 0
 	snow_count = 0
 	set_process(false)
@@ -223,8 +229,8 @@ func _update_environment() -> void :
 	var intensity: float = SettingsStore.weather_intensity
 	sun_strength = daylight * (_weights[0] * 0.14 + _weights[1] * 0.02 + _weights[3] * 0.03) * intensity
 	cloud_strength = (_weights[0] * 0.12 + _weights[1] * 0.45 + _weights[2] * 0.6 + _weights[3] * 0.35) * intensity
-	var direction: = Vector2(0.9, 0.35).rotated(sin(solar_phase * TAU) * 0.35)
-	_background.set_environment_light(ambient, sun_strength, direction, elapsed, cloud_strength)
+	sun_direction = Vector2(0.65, 0.76).rotated(sin(solar_phase * TAU) * 0.25).normalized()
+	_background.set_environment_light(ambient, sun_strength, sun_direction, elapsed, cloud_strength)
 	var boss_factor: = 0.72 if get_parent().spawner._boss_fight_active else 1.0
 	rain_count = int(MAX_RAIN * _weights[Weather.RAIN] * intensity * boss_factor)
 	snow_count = int(MAX_SNOW * _weights[Weather.SNOW] * intensity * boss_factor)
@@ -233,6 +239,7 @@ func _update_environment() -> void :
 	if stamp != _caption_stamp:
 		_caption_stamp = stamp
 		_caption.text = NAMES[current_weather] + " · " + time_name()
+	if lighting != null: lighting.sync()
 	AudioManager.weather_audio.sync(self, current_weather, daylight)
 
 func _exit_tree() -> void :

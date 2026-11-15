@@ -1,5 +1,13 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-15 天气光影（当前开发）
+
+- 分支`feature/weather-lighting-20261115`基于`7c4eb72`，版本**20261115-230137**，保留28卡和平衡。新增晴天世界坐标丁达尔光束/定向轮廓影；雨天单盏玩家灯及附近向外投影。游戏数值与天气选择/雪粒子坐标不改。
+- 新控制器`weather_lighting.gd`与shader共用太阳方向和天气权重；一个64×64纹理PointLight、32草丛影子预算，怪物投影复用64缓存槽/每0.1秒最多192检查；无实时阴影贴图。光影同天气设置渐变，0关闭，暂停/结束清理。
+- Debug首页第一项“天气光影 · 阳光 / 雨灯”，默认晴天日间，下个天气两次为雨天；21项继续分页。五项原生、三项最终实际Web PCK检查通过；原生横/竖/灰度图已检查。详见[weather-lighting.md](weather-lighting.md)和`validation/weather-lighting-20261115.json`。
+- 已验证源码`4b061d0`保存于[PR #16](https://github.com/wyb969/Rogge/pull/16)，后续仅文档。既有[试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新到20261115-230137，所有者私有权限不变。Site source`e739bcf23ffa58b62d02a7c86fafe853fa783177`，deployment`appgdep_6af9ca1ca47481919a2942cfa9236978`于2026-11-15 23:05北京时间succeeded。原PCK与解压WASM字节一致；发布记录见`validation/weather-lighting-playtest-20261115.json`。
+- 2D近似光束/轮廓影，不是真实遮挡；没有本轮托管浏览器/Safari/密集怪FPS结论，既有CLI与渲染器退出资源警告仍在。不自动合入master或发布正式itch。后续重点真机雨天负载和亮度舒适性。
+
 ## 2026-11-15 武器扩展二期（当前开发）
 
 - 分支`feature/weapon-expansion-20261115`基于上一轮`a84adca`，保留数值平衡和三武器功能；版本**20261115-161616**。飞刀改独立自动瞄准；圣水伤害节拍加入青白亮环、喷涌和青色数字，原伤害/重叠机制不变。

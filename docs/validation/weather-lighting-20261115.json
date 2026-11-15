@@ -1,0 +1,179 @@
+{
+  "version": "20261115-230137",
+  "branch": "feature/weather-lighting-20261115",
+  "base_commit": "7c4eb72",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "native_checks": [
+    {
+      "name": "smoke_weather",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.51,
+      "errors": [],
+      "markers": [
+        "WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_combat_lighting",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.23,
+      "errors": [],
+      "markers": [
+        "COMBAT LIGHTING OK: fixed batches/shared texture/layers, real drone/gun behavior, stable beam points, bounded projectile/orb/muzzle storms, exact audible-pitch XP glow/no-op/gap/pause/progress, deletion/Debug/return"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.15,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 5966 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_weather_lighting",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.21,
+      "errors": [],
+      "markers": [
+        "WEATHER LIGHTING OK: 21 checks; real Debug, shared lamp/bounds, solar/radial shadows, movement, pause, crossfade, zero intensity, stop and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_world_snow",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.3,
+      "errors": [],
+      "markers": [
+        "WORLD SNOW OK: camera/subframe independence, exact wind/fall, only offscreen recycling, portrait/Retina reuse, pause and return"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "actual_web_pck_checks": [
+    {
+      "name": "smoke_weather_lighting",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.61,
+      "errors": [],
+      "markers": [
+        "WEATHER LIGHTING OK: 21 checks; real Debug, shared lamp/bounds, solar/radial shadows, movement, pause, crossfade, zero intensity, stop and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.59,
+      "errors": [],
+      "markers": [
+        "WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_combat_lighting",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.68,
+      "errors": [],
+      "markers": [
+        "COMBAT LIGHTING OK: fixed batches/shared texture/layers, real drone/gun behavior, stable beam points, bounded projectile/orb/muzzle storms, exact audible-pitch XP glow/no-op/gap/pause/progress, deletion/Debug/return"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "final_import_export": "passed, no error/warning lines",
+  "native_render": {
+    "renderer": "OpenGL Compatibility / Mesa llvmpipe on Xorg dummy",
+    "screenshots": [
+      "docs/screenshots/weather-lighting-20261115/weather-0-390x844.png",
+      "docs/screenshots/weather-lighting-20261115/weather-0-900x600-gray.png",
+      "docs/screenshots/weather-lighting-20261115/weather-0-900x600.png",
+      "docs/screenshots/weather-lighting-20261115/weather-2-390x844.png",
+      "docs/screenshots/weather-lighting-20261115/weather-2-900x600-gray.png",
+      "docs/screenshots/weather-lighting-20261115/weather-2-900x600.png"
+    ],
+    "checked": "landscape/portrait and grayscale: shafts and silhouettes distinct from actor/UI; rain pool visible",
+    "runtime_script_or_shader_errors": false,
+    "shutdown_warnings": [
+      "Texture GL ID19 leaked1364 bytes",
+      "RenderingServer singleton null at CompressedTexture2D destructor",
+      "1 GLES3 Texture RID leaked",
+      "ObjectDB and resources still referenced at exit"
+    ]
+  },
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "1b9e595ee0856f96891d2fee1efb81b2de74b85129af109834fab79e2e5d6249"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23615492,
+      "sha256": "bf19c5e426c2f74932981901a40691a68f7ce86aa06ee233db15fed2d78a04cb"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "limitations": [
+    "2D shaft and sprite projection approximation, not volumetric scattering or occlusion shadows",
+    "No hosted browser/Safari test or crowd FPS benchmark this turn",
+    "Existing CLI/render shutdown warnings unresolved"
+  ]
+}

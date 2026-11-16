@@ -24,6 +24,7 @@ const XP_GREEN := Color("4ade80")
 const XP_BAR := Color("2f6fbf")
 const XP_TRACK := Color("16345c")
 const COIN_GOLD := Color("f5c542")
+const ICE_GROUND := Color("91bdcf")
 const SNOW_GROUND := Color("d9e3e8")
 const SNOW_FLAKE := Color("f5fbff")
 const SNOW_TRACK := Color("526977")
@@ -174,3 +175,5 @@ static func surface(fill: Color = UI_BUTTON, border: Color = UI_BORDER, opacity:
 	var style := neutral_surface(fill, border)
 	style.bg_color = alpha(fill, opacity)
 	return style
+
+const ICE_REFLECTION := Color("c7e6ff")

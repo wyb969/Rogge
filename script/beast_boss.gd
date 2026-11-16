@@ -89,6 +89,7 @@ func _reposition(_delta: float, weight: float = 1.0) -> void :
 	var heading: = dir * radial + dir.orthogonal() * side * (0.9 if absf(radial) < 0.65 else 0.3)
 	var speed: float = ROAM_SPEEDS[element] * (1.22 if phase == 2 else 1.0)
 	velocity = heading.normalized() * speed * poison_slow * weight
+	if is_instance_valid(player.environment): velocity += player.environment.surface.wind_velocity(0.3)
 	move_and_slide()
 	if absf(offset.x) > 2: sprite_2d.flip_h = offset.x < 0
 

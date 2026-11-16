@@ -24,6 +24,8 @@ uniform float environment_time = 0.0;
 // Stage 1 uses a stronger edge darkening. 0 leaves the menu/test look unchanged.
 uniform float vignette = 0.0;
 uniform float snow_cover = 0.0;
+uniform float ice_cover = 0.0;
+uniform vec4 ice_tint : source_color;
 uniform vec4 snow_tint : source_color;
 
 varying vec2 v_world;
@@ -65,6 +67,13 @@ void fragment() {
 		float drift = 0.5 + 0.5 * sin(v_world.x * 0.013 + sin(v_world.y * 0.017));
 		vec3 snow = snow_tint.rgb * (0.93 + grain * 0.04 + luma * 0.03);
 		graded = mix(graded, snow, snow_cover * (0.85 + drift * 0.12));
+	}
+	if (ice_cover > 0.0) {
+		float grain = hash21(floor(v_world / 4.0));
+		float seam = pow(abs(sin(v_world.x * 0.021 + sin(v_world.y*0.015)*1.2)), 48.0);
+		float shine = pow(max(0.0,sin(dot(v_world,vec2(0.014,0.009))+environment_time*0.09)),16.0);
+		vec3 ice = ice_tint.rgb * (0.8 + grain*0.035 + shine*0.12) + vec3(seam*0.08);
+		graded = mix(graded, ice, ice_cover*0.94);
 	}
 	vec3 light = clamp(ambient_light, vec3(0.0), vec3(1.0));
 	if (sun_strength > 0.0) {

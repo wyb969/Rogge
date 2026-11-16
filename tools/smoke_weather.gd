@@ -36,11 +36,11 @@ func _run() -> void :
 		weather.apply_stage(stage, true)
 		var chosen: int = weather.current_weather
 		_expect(chosen != last, "adjacent normal stages avoid repeating the same weather")
-		if stage <= 4: seen[chosen] = true
+		if stage <= 6: seen[chosen] = true
 		for _repeat in 3: weather.apply_stage(stage)
 		_expect(weather.current_weather == chosen, "same-stage notifications preserve their cached weather")
 		last = chosen
-	_expect(seen.size() == 4 and randi() == expected, "four-weather bag is fresh and isolated from gameplay RNG")
+	_expect(seen.size() == 6 and randi() == expected, "six-weather bag is fresh and isolated from gameplay RNG")
 	for stage in range(1, 13):
 		var saved: int = weather._stage_profiles[stage]
 		weather.apply_stage(stage, true)
@@ -78,7 +78,7 @@ func _run() -> void :
 	weather._update_environment()
 	_expect(weather.snow_count < 64, "busy boss encounters automatically reduce precipitation density")
 	game.spawner._boss_fight_active = false
-	for kind in range(4):
+	for kind in range(6):
 		for phase in [0.0, 0.125, 0.25, 0.5, 0.75]:
 			weather.set_preview(kind, phase)
 			_expect(weather.ambient.r <= 1 and weather.ambient.g <= 1 and weather.ambient.b <= 1, "scenery multiplier stays within the established floor-contrast bound")
@@ -88,7 +88,7 @@ func _run() -> void :
 	for _frame in 30: bg._update_coverage()
 	_expect(bg._decor_atlases.size() == 6 and atlas_ids == bg._decor_atlases.map( func(atlas): return atlas.get_instance_id()), "background decorations reuse six atlases instead of reallocating them each frame")
 	for _change in 100:
-		weather.set_preview(_change % 4, fmod(_change * 0.1, 1))
+		weather.set_preview(_change % 6, fmod(_change * 0.1, 1))
 	_expect(weather._rain.size() == 96 and weather._snow.size() == 64 and weather.get_child_count() == child_count and weather._field.get_instance_id() == field_id, "weather switches reuse fixed data and scene nodes")
 	main._on_setting_button_pressed()
 	main.settings_page.weather_slider.value = 0

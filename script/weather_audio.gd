@@ -1,12 +1,12 @@
 extends Node
 
 
-const BEDS: = [preload("res://assest/sounds/weather/clear_air.ogg"), preload("res://assest/sounds/weather/overcast_wind.ogg"), preload("res://assest/sounds/weather/rain.ogg"), preload("res://assest/sounds/weather/snow.ogg")]
+const BEDS: = [preload("res://assest/sounds/weather/clear_air.ogg"), preload("res://assest/sounds/weather/overcast_wind.ogg"), preload("res://assest/sounds/weather/rain.ogg"), preload("res://assest/sounds/weather/snow.ogg"), preload("res://assest/sounds/weather/overcast_wind.ogg"), preload("res://assest/sounds/weather/snow.ogg")]
 const BIRDS: = [preload("res://assest/sounds/weather/birds_1.ogg"), preload("res://assest/sounds/weather/birds_2.ogg")]
 const OWL: = preload("res://assest/sounds/weather/night_owl.ogg")
 const THUNDER: = [preload("res://assest/sounds/weather/thunder_1.ogg"), preload("res://assest/sounds/weather/thunder_2.ogg")]
 const FADE_SECONDS: = 2.5
-const BED_DB: = [-24.0, -23.0, -22.0, -24.0]
+const BED_DB: = [-24.0, -23.0, -22.0, -24.0, -23.0, -24.0]
 var active: = false
 var kind: = -1
 var daylight: = 1.0
@@ -74,7 +74,7 @@ func sync(owner: Node, weather: int, light: float) -> void :
 	var night: = daylight < 0.18
 	if kind == weather and _night == night: return
 	var changed: = kind != weather
-	kind = clampi(weather, 0, 3)
+	kind = clampi(weather, 0, 5)
 	_night = night
 
 	if _event.playing: _event_fade = 0.25

@@ -1,8 +1,8 @@
 extends Node
 
 
-enum Weather{CLEAR, OVERCAST, RAIN, SNOW}
-const NAMES: Array[String] = ["晴天", "阴天", "雨天", "雪天"]
+enum Weather{CLEAR, OVERCAST, RAIN, SNOW, WIND, ICE}
+const NAMES: Array[String] = ["晴天", "阴天", "雨天", "雪天", "刮风", "冰面"]
 const CYCLE_SECONDS: = 240.0
 const TRANSITION_SECONDS: = 2.5
 const MAX_RAIN: = 96
@@ -19,12 +19,13 @@ var sun_strength: = 0.0
 var sun_direction := Vector2(0.65, 0.76).normalized()
 var lighting: Node2D
 var winter: Node2D
+var surface: Node2D
 var cloud_strength: = 0.0
 var rain_count: = 0
 var snow_count: = 0
 var _start_phase: = 0.0
-var _weights: = PackedFloat32Array([1, 0, 0, 0])
-var _transition_start: = PackedFloat32Array([1, 0, 0, 0])
+var _weights: = PackedFloat32Array([1, 0, 0, 0, 0, 0])
+var _transition_start: = PackedFloat32Array([1, 0, 0, 0, 0, 0])
 var _transition_left: = 0.0
 var _stage_profiles: = {}
 var _bag: Array[int] = []
@@ -97,6 +98,9 @@ func _ready() -> void :
 	winter = preload("res://script/winter_tracks.gd").new()
 	winter.name = "WinterTracks"
 	add_child(winter)
+	surface = preload("res://script/environment_surface.gd").new()
+	surface.name = "EnvironmentSurface"
+	add_child(surface)
 	stop()
 
 func begin_run() -> void :
@@ -124,7 +128,7 @@ func apply_stage(value: int, immediate: bool = false) -> void :
 	if not _stage_profiles.has(stage):
 		var previous: int = _last_opening if stage == 1 else current_weather
 		if _bag.is_empty():
-			_bag.assign([0, 1, 2, 3])
+			_bag.assign([0, 1, 2, 3, 4, 5])
 			for i in range(_bag.size() - 1, 0, -1):
 				var other: = _rng.randi_range(0, i)
 				var temp: = _bag[i]
@@ -157,6 +161,8 @@ func stop() -> void :
 	running = false
 	if lighting != null: lighting.stop()
 	if winter != null: winter.sync(0)
+	if surface != null: surface.stop()
+	_background.set_ice_cover(0)
 	_background.set_snow_cover(0)
 	rain_count = 0
 	snow_count = 0
@@ -179,8 +185,9 @@ func _process(delta: float) -> void :
 	if _transition_left > 0:
 		_transition_left = maxf(0, _transition_left - delta)
 		var blend: = smoothstep(0, 1, 1.0 - _transition_left / TRANSITION_SECONDS)
-		for i in 4:
+		for i in NAMES.size():
 			_weights[i] = lerpf(_transition_start[i], 1.0 if i == current_weather else 0.0, blend)
+	if surface != null: surface.sync()
 	_field.global_transform = get_viewport().get_canvas_transform().affine_inverse()
 	_redraw_left -= delta
 	if _redraw_left > 0: return
@@ -249,6 +256,8 @@ func _update_environment() -> void :
 		_caption.text = NAMES[current_weather] + " · " + time_name()
 	_background.set_snow_cover(_weights[Weather.SNOW] * intensity)
 	if winter != null: winter.sync(_weights[Weather.SNOW] * intensity)
+	_background.set_ice_cover(_weights[Weather.ICE]) # Gameplay surface stays identifiable at zero cosmetic FX.
+	if surface != null: surface.sync()
 	if lighting != null: lighting.sync()
 	AudioManager.weather_audio.sync(self, current_weather, daylight)
 
@@ -299,7 +308,7 @@ func describe() -> Dictionary:
 
 func set_preview(kind: int, phase: float = -1) -> void :
 	if phase >= 0: _start_phase = fposmod(phase - elapsed / CYCLE_SECONDS, 1)
-	_select(clampi(kind, 0, 3), true)
+	_select(clampi(kind, 0, NAMES.size()-1), true)
 
 func enable_preview() -> void :
 	if _preview != null: return
@@ -315,7 +324,7 @@ func enable_preview() -> void :
 		var button: = Button.new()
 		button.text = title
 		_buttons.add_child(button)
-	_buttons.get_child(0).pressed.connect( func(): set_preview((current_weather + 1) % 4))
+	_buttons.get_child(0).pressed.connect( func(): set_preview((current_weather + 1) % NAMES.size()))
 	_buttons.get_child(1).pressed.connect( func(): set_preview(current_weather, 0.0 if daylight < 0.5 else 0.5))
 	_buttons.get_child(2).pressed.connect( func():
 		get_parent().end_game()

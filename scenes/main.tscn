@@ -108,6 +108,14 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugWindSceneButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "阵风场景 · 风向 / 偏移"
+
+[node name="DebugIceSceneButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "冰面场景 · 惯性 / 位移"
+
 [node name="DebugWinterButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "冬季雪景 · 脚印 / 冲刺雪痕"
@@ -251,3 +259,6 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugStarChainButton" to="." method="_launch_run" binds= [&"star_chain"]]
 
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugWinterButton" to="." method="_launch_run" binds= [&"winter"]]
+
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugWindSceneButton" to="." method="_launch_run" binds= [&"wind_scene"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugIceSceneButton" to="." method="_launch_run" binds= [&"ice_scene"]]

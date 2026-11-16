@@ -1,0 +1,345 @@
+{
+  "version": "20261116-101336",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "base": "42b75c3",
+  "branch": "feature/wind-ice-20261116",
+  "native_checks": [
+    {
+      "name": "smoke_environment_surface",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.33,
+      "errors": [],
+      "markers": [
+        "ENVIRONMENT SURFACE OK: 36 checks; wind/quality isolation, actual input/coast/brake/dash, resisted 30% crowd impulses, 30/60Hz locked ice leaps, lifecycle and real Debug"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.64,
+      "errors": [],
+      "markers": [
+        "WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather_audio",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.3,
+      "errors": [],
+      "markers": [
+        "WEATHER AUDIO OK: six weather kinds / four reused beds, day/night calls, thunder timing, real preview, bounded stream crossfades, pause/boss mix, RNG, volume, unlock, Back/result/Retry ownership"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 25 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.15,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 7386 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_player_motion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.06,
+      "errors": [],
+      "markers": [
+        "PLAYER MOTION OK: 32 checks; real30/60Hz input, travel/acceleration, actual-distance gait, speed card, stop/wall/vertical/mouse, last-direction dash, lock/reset, no walking particles, clipped frames and stable collider"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dash_direction",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 0.34,
+      "errors": [],
+      "markers": [
+        "DASH DIRECTION OK: 8 directions, light input, stopped/released stick, request snapshot, multi-touch and reset"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_dash_grace",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.75,
+      "errors": [],
+      "markers": [
+        "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 19 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dasher_balance",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.28,
+      "errors": [],
+      "markers": [
+        "DASHER BALANCE OK: smooth tracking/red-arrow lock, harmless warning, jump/landing, 30/60 FPS and slow-frame distance, stagger, damage, immunity, freeze and 24-enemy charge budget"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dasher_recovery",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.57,
+      "errors": [],
+      "markers": [
+        "DASHER RECOVERY OK: normal/charge contacts, 0.9-second stationary opening at 30/60 FPS and slow frames, no duplicate hits/knockback bypass, chase resumption, dash/shield, walking escape, status death and archetype isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_control_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.53,
+      "errors": [],
+      "markers": [
+        "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_bomb_card",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.98,
+      "errors": [],
+      "markers": [
+        "BOMB CARD OK: 63 checks; real draft/upgrade/caps, area/fuse/unique hit, blast hop/force, rewards/crit, trial/Boss rules, fixed pools, pause/cleanup and Debug lifecycle"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.28,
+      "errors": [],
+      "markers": [
+        "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_boss_rhythm",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.24,
+      "errors": [],
+      "markers": [
+        "BOSS RHYTHM OK: tracking/visible lock/swept real hurt geometry/safe anticipation and opening, bounded two-rush phase/HUD, all guardian close-range movement/slow, frozen warnings, finite elemental travel, wind roles and phase cancellation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_winter",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.26,
+      "errors": [],
+      "markers": [
+        "WINTER OK: 51 checks; snowy Debug/materials, world marks, spacing/alternation, dash signals, teleports, bounded reuse, fade/pause/weather/settings and new run"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_environment_surface",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.65,
+      "errors": [],
+      "markers": [
+        "ENVIRONMENT SURFACE OK: 36 checks; wind/quality isolation, actual input/coast/brake/dash, resisted 30% crowd impulses, 30/60Hz locked ice leaps, lifecycle and real Debug"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.59,
+      "errors": [],
+      "markers": [
+        "WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_control_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.34,
+      "errors": [],
+      "markers": [
+        "CONTROL CARDS OK: draft/art/HUD/layout, directional cone/body push/dash interrupt/mass, exact area DPS/pull/expiry/pause/no-proc/rewards, boss/trial rules, capped upgrades, bounded crowd work, actual Debug/Retry/Back"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.87,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 7386 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "resolved_initial_failures": [
+    {
+      "name": "smoke_environment_surface",
+      "passed": false,
+      "exit_code": -15,
+      "seconds": 34.52,
+      "errors": [
+        "SCRIPT ERROR: Trying to assign invalid previously freed instance.",
+        "SCRIPT ERROR: Invalid access to property or key 'current_weather' on a base object of type 'Nil'."
+      ],
+      "markers": [],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_boss_rhythm",
+      "passed": false,
+      "exit_code": 1,
+      "seconds": 3.34,
+      "errors": [
+        "ERROR: new roaming keeps the existing poison slow",
+        "ERROR: new roaming keeps the existing poison slow",
+        "ERROR: new roaming keeps the existing poison slow"
+      ],
+      "markers": [],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "import": "final warm import: no script/engine errors; first cold import had old asset seek warning and newly introduced type inference errors corrected",
+  "export": "release Web, normal main entry, no export errors",
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "a43e04c873765c83ab0c78dab6a1258b31ae30a4163c00454b82e60a1e5146c4"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23672500,
+      "sha256": "008d106607535537c17058176b98e9a8e746deca7b6e914ca75d0c02b789dd3e"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "screenshots": [
+    "docs/screenshots/wind-ice-20261116/surface-4-390x844-gray.png",
+    "docs/screenshots/wind-ice-20261116/surface-4-390x844.png",
+    "docs/screenshots/wind-ice-20261116/surface-4-900x600-gray.png",
+    "docs/screenshots/wind-ice-20261116/surface-4-900x600.png",
+    "docs/screenshots/wind-ice-20261116/surface-5-390x844-gray.png",
+    "docs/screenshots/wind-ice-20261116/surface-5-390x844.png",
+    "docs/screenshots/wind-ice-20261116/surface-5-900x600-gray.png",
+    "docs/screenshots/wind-ice-20261116/surface-5-900x600.png"
+  ],
+  "rendering": "native Compatibility/Mesa llvmpipe; visual and grayscale inspection completed",
+  "renderer_shutdown_warnings": [
+    "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+    "ERROR: Texture with GL ID of 19: leaked 1364 bytes.",
+    "ERROR: Parameter \"RenderingServer::get_singleton()\" is null.",
+    "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+    "ERROR: 6 resources still in use at exit (run with --verbose for details).",
+    "ERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit."
+  ],
+  "browser_tested": false,
+  "mobile_safari_tested": false,
+  "performance_claim": "bounded work by implementation; no device FPS claim"
+}

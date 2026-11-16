@@ -210,3 +210,7 @@ func set_snow_cover(amount: float) -> void:
 	snow_cover = clampf(amount, 0, 1)
 	_shader_mat.set_shader_parameter("snow_cover", snow_cover)
 	_snow_material.set_shader_parameter("snow_cover", snow_cover)
+
+func set_ice_cover(amount: float) -> void:
+	_shader_mat.set_shader_parameter("ice_cover", clampf(amount,0,1))
+	_shader_mat.set_shader_parameter("ice_tint", GamePalette.ICE_GROUND)

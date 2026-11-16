@@ -20,6 +20,7 @@ var ring_tween: Tween
 var max_speed: float = 100.0
 var acceleration: float = 1000.0
 var friction: float = 600.0
+var environment: Node
 var player_health = 500.0
 var max_player_health = 500.0
 const HEALTH_PER_LEVEL: = 25.0
@@ -518,11 +519,13 @@ func _physics_process(delta: float) -> void :
 		velocity = dash_direction * DASH_SPEED
 	else:
 		max_speed = effective_move_speed()
-		acceleration = 900.0
+		var ice: float = environment.surface.ice_amount() if is_instance_valid(environment) else 0.0
+		var drift: Vector2 = environment.surface.wind_velocity() if is_instance_valid(environment) else Vector2.ZERO
+		acceleration = lerpf(900.0,260.0,ice)
 		if input_direction != Vector2.ZERO:
-			velocity = velocity.move_toward(input_direction.normalized() * max_speed, acceleration * delta)
+			velocity = velocity.move_toward(input_direction.normalized() * max_speed + drift, acceleration * delta)
 		else:
-			velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+			velocity = velocity.move_toward(drift, lerpf(friction,100.0,ice) * delta)
 
 	var before_move := global_position
 	move_and_slide()

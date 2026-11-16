@@ -1,5 +1,11 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-16 主分支与正式itch发布（进行中）
+
+- 用户明确授权合入主分支、更新GitHub首页并发布ROGGE；下方各轮“不合并master/不上传itch”为历史边界。默认分支是master，远端204f7d8是当前611fa44的祖先（0分叉、44个开发提交）。发布分支 `release/master-itch-20261116`，版本 **20261116-202250**。
+- 本轮只更新版本号、README和发布记录，不新增游戏机制。README补全天气/冰面/随机危险、28卡、中英词典、暂停菜单和新版UI截图。
+- 复用PixelFishing独立Actions分支及 `ybwangrogger/rogue-white:html` / upload20115514；Secret仅在Actions中使用。发布检查覆盖自上次master后新增的模块及共享生命周期；成功后记录合并SHA、Actions构件、Butler build和线上资源核验。
+
 ## 2026-11-16 按标注图调整UI（当前开发）
 
 - 继续 `feature/compact-combat-hud-20261116` / PR #30，基于 `f6c89ae`，版本 **20261116-200630**。左侧关卡/等级/天气统一16显示像素、左对齐并按40像素行距布局；XP仍200×30，时间移到右侧等级行。窄屏将左侧块移到工具栏下面，时间与关卡同排，避免碰撞；长天气单行省略。

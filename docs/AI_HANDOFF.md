@@ -8,6 +8,8 @@
 - 换一组位于整排卡片下方20显示像素，不再贴底。28卡两语言五尺寸的数值和说明边界检查升级为3008项；最终PCK、截图与命令见 [reference-ui.md](reference-ui.md)、`validation/reference-ui-20261116.json`。未做真实浏览器/Safari测试，既有退出资源/GL警告保留。
 - 临时日志/导出 `../reference-ui` 在RAM，以GitHub为准；只更新原私有试玩，不合并master/发布正式itch。
 
+- 源码 `462b6e9` 已推送PR #30；[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 更新 **20261116-200630**，Site `b0930e37bab654b20366c8cbd776176bf9592be3` / deployment `appgdep_6afaf2e0598c819189e897ae55c8a158` 于北京时间20:11发布成功。9文件字节核对与26 loader检查通过，见 `validation/reference-ui-playtest-20261116.json`。
+
 ## 2026-11-16 HUD对齐跟进（当前开发）
 
 - 同一 `feature/compact-combat-hud-20261116` / PR #30，基于 `69d9994`，版本 **20261116-195315**。顶部菜单/主页/全屏三枚图标整体居中；主页只显示全屏时也按可见按钮居中。关卡与时间分列两侧。

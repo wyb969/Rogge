@@ -1,0 +1,45 @@
+{
+  "game_pr": "https://github.com/wyb969/Rogge/pull/30",
+  "game_source_commit": "462b6e9cf558af6149ecca8e19f702c66017876a",
+  "version": "20261116-200630",
+  "exact_export_bytes": {
+    "index.apple-touch-icon.png": true,
+    "index.audio.position.worklet.js": true,
+    "index.audio.worklet.js": true,
+    "index.html": true,
+    "index.icon.png": true,
+    "index.js": true,
+    "index.pck": true,
+    "index.png": true,
+    "index.wasm": true
+  },
+  "asset_bytes": {
+    "index.pck.gz": 23180027,
+    "build-info.json": 1862,
+    "preview-loader.js": 2553,
+    "index.wasm.gz": 10052173,
+    "index.png": 21443,
+    "index.js": 279815,
+    "index.icon.png": 3209,
+    "index.html": 5479,
+    "index.audio.worklet.js": 7298,
+    "index.audio.position.worklet.js": 2973,
+    "index.apple-touch-icon.png": 11441
+  },
+  "javascript_syntax": "preview-loader.js and dist/index.js checked with node --check",
+  "loader_checks": {
+    "passed": true,
+    "checks": 26,
+    "coverage": "WASM/PCK gzip and host-decoded responses; exact bytes, MIME, query strings, unrelated requests, truncated and invalid resources"
+  },
+  "packed_checks": 3,
+  "screenshots": "Native bilingual reference-based header and portrait cards;320/390portrait,900/844landscape",
+  "hosted_browser": "not tested",
+  "safari": "not tested",
+  "audience": "existing owner-private unchanged",
+  "site_source_commit": "b0930e37bab654b20366c8cbd776176bf9592be3",
+  "deployment_id": "appgdep_6afaf2e0598c819189e897ae55c8a158",
+  "status": "succeeded",
+  "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+  "published_at": "2026-11-16T12:11:34.060520+00:00"
+}

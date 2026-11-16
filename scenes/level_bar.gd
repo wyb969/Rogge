@@ -31,15 +31,15 @@ func _ready() -> void :
 func _fit_hud() -> void:
 	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
 	var row: HBoxContainer=$UI/HBoxContainer
-	row.position=Vector2(12*ui,54*ui)
-	row.size=Vector2(120*ui,16*ui)
-	row.add_theme_constant_override("separation",int(4*ui))
-	label.custom_minimum_size=Vector2(68*ui,16*ui)
+	row.position=Vector2(12*ui,58*ui)
+	row.size=Vector2(276*ui,30*ui)
+	row.add_theme_constant_override("separation",int(8*ui))
+	label.custom_minimum_size=Vector2(68*ui,30*ui)
 	label.clip_text=true
 	label.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
-	UiFonts.apply_to_label(label,int(10*ui))
-	progress_bar.custom_minimum_size=Vector2(48*ui,16*ui)
-	progress_bar.add_theme_font_size_override("font_size",int(10*ui))
+	UiFonts.apply_to_label(label,int(12*ui))
+	progress_bar.custom_minimum_size=Vector2(200*ui,30*ui)
+	progress_bar.add_theme_font_size_override("font_size",int(12*ui))
 
 func _on_pickup_tone(pitch: float) -> void :
 	var game: = get_parent()

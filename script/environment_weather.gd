@@ -371,8 +371,11 @@ func _fit() -> void :
 	var scale: = 2.0 if vp.y > vp.x else 1.0
 	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
 	UiFonts.apply_to_label(_caption, int(10*hud_ui))
-	_caption.position = Vector2(12*hud_ui,74*hud_ui)
-	_caption.size = Vector2(vp.x-24*hud_ui,16*hud_ui)
+	_caption.position = Vector2(12*hud_ui,94*hud_ui)
+	_caption.size = Vector2(vp.x-88*hud_ui,16*hud_ui)
+	_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
+	_caption.clip_text=true
+	_caption.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
 	if _buttons == null: return
 	var width: = minf(780, vp.x - 40)
 	_buttons.position = Vector2((vp.x - width) * 0.5, vp.y - 76 * scale)

@@ -1,5 +1,12 @@
 # Compact combat HUD
 
+Update **20261116-195315**: center the visible toolbar group; restore XP bar200×30 displayed pixels. Stage/time flank the toolbar; weather and numeric timers sit below XP, with Boss bars/equipment lower to avoid overlap. [Follow-up validation](validation/centered-hud-20261116.json).
+
+![Centered portrait](images/centered-hud/combat-en-320.png)
+![Centered landscape](images/centered-hud/combat-en-900.png)
+
+The following describes the earlier compact-HUD revision.
+
 Version 20261116-194322; based on b32e8d5.
 
 - Three SVG icon buttons replace Menu/Home/Fullscreen text. Original actions, pause ownership and bilingual tooltips remain;40px targets,20px art,4px gaps.

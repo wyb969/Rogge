@@ -46,6 +46,7 @@ func set_home_available(available: bool) -> void:
 	if menu_button:
 		menu_button.visible=available
 		menu_button.disabled=not available
+		_refresh_label()
 
 func _request_home() -> void:
 	if not _home_available: return
@@ -83,6 +84,7 @@ func _refresh_label() -> void :
 	menu_button.tooltip_text = L10n.text("菜单")
 	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
 	var controls: Array=[button,home_button,menu_button]
+	var group_width: float=(128 if _home_available else 40)*ui
 	for i in controls.size():
 		var control: Button=controls[i]
 		control.text=""
@@ -90,7 +92,8 @@ func _refresh_label() -> void :
 		control.add_theme_constant_override("icon_max_width",int(20*ui))
 		control.offset_top=8*ui
 		control.offset_bottom=48*ui
-		control.offset_right=-(8+44*i)*ui
+		control.set_anchors_preset(Control.PRESET_CENTER_TOP)
+		control.offset_right=group_width*0.5-44*i*ui
 		control.offset_left=control.offset_right-40*ui
 		for state in ["normal","hover","pressed","disabled","focus"]:
 			var style: StyleBox=control.get_theme_stylebox(state)

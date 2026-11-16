@@ -579,11 +579,12 @@ func _fit_stage_label() -> void:
 	var vp:=get_viewport().get_visible_rect().size
 	_stage_label.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_stage_label.position=Vector2(12*ui,8*ui)
-	_stage_label.size=Vector2(minf(180*ui,vp.x-156*ui),40*ui)
+	_stage_label.size=Vector2(minf(180*ui,vp.x*0.5-84*ui),40*ui)
 	_stage_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
-	UiFonts.apply_to_label(_stage_label,int(16*ui),true)
+	_stage_label.clip_text=true
+	UiFonts.apply_to_label(_stage_label,int((10 if vp.x/ui<400 else 14)*ui),true)
 	var clock: HBoxContainer=$UI/HBoxContainer
-	clock.position=Vector2(vp.x-80*ui,54*ui)
+	clock.position=Vector2(vp.x-80*ui,20*ui)
 	clock.size=Vector2(68*ui,16*ui)
 	clock.add_theme_constant_override("separation",0)
 	for child in clock.get_children():

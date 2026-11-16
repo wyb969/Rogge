@@ -321,7 +321,7 @@ func _fit() -> void :
 		button.custom_minimum_size.y = 48 * scale_ui
 		UiFonts.apply_to_button(button, int(17 * scale_ui))
 	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
-	_clock.position = Vector2(vp.x*0.5-24*hud_ui,51*hud_ui)
+	_clock.position = Vector2(vp.x-64*hud_ui,94*hud_ui)
 	_clock.size = Vector2(48*hud_ui,20*hud_ui)
 	UiFonts.apply_to_label(_clock,int(14*hud_ui),true)
 

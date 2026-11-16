@@ -137,7 +137,8 @@ func _fit_equipment() -> void :
 	var grid_width := SLOT_FOOTPRINT.x * slot_list.columns + 8.0 * (slot_list.columns - 1)
 	var width: = maxf(grid_width, 128.0 if status_rows > 0 else 0.0)
 	scale = Vector2.ONE * factor
-	global_position = Vector2(vp.x - width * factor - 18, 120)
+	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	global_position = Vector2(vp.x - width * factor - 18, 138*hud_ui)
 	slot_list.position.x = width - grid_width
 	slot_list.size = Vector2(grid_width, icon_height)
 	_arsenal_label.position = Vector2(0, icon_height + 4)

@@ -33,6 +33,9 @@ func _ready() -> void :
 		if not button.pressed.is_connected(_on_pressed):
 			button.pressed.connect(_on_pressed)
 	GamePalette.apply_neutral_button(home_button)
+	button.icon=preload("res://assest/ui/toolbar_fullscreen.svg")
+	home_button.icon=preload("res://assest/ui/toolbar_home.svg")
+	menu_button.icon=preload("res://assest/ui/toolbar_menu.svg")
 	get_viewport().size_changed.connect(_refresh_label)
 	_refresh_label()
 
@@ -75,25 +78,20 @@ func _is_fullscreen() -> bool:
 func _refresh_label() -> void :
 	if button == null:
 		return
-	button.text = L10n.text("退出全屏") if _is_fullscreen() else L10n.text("全屏")
-	var vp: = get_viewport().get_visible_rect().size
-	if vp.x < 8.0 or vp.y < 8.0:
-		return
-	var h: = clampf(vp.y * 0.055, 40.0, 52.0)
-	var w: = clampf(vp.x * 0.28, 96.0, 168.0)
-	button.offset_top = 8.0
-	button.offset_right = -10.0
-	button.offset_bottom = 8.0 + h
-	button.offset_left = -10.0 - w
-
-	# Same height, style and fixed gap: the two controls form one compact toolbar.
-	var home_width := clampf(vp.x * 0.22, 100.0, 138.0)
-	home_button.offset_top = button.offset_top
-	home_button.offset_bottom = button.offset_bottom
-	home_button.offset_right = button.offset_left - 8.0
-	home_button.offset_left = home_button.offset_right - home_width
-	if menu_button:
-		menu_button.offset_top=button.offset_top
-		menu_button.offset_bottom=button.offset_bottom
-		menu_button.offset_right=home_button.offset_left-8
-		menu_button.offset_left=menu_button.offset_right-clampf(vp.x*0.16,72,110)
+	button.tooltip_text = L10n.text("退出全屏") if _is_fullscreen() else L10n.text("全屏")
+	home_button.tooltip_text = L10n.text("结束当前局并返回主页")
+	menu_button.tooltip_text = L10n.text("菜单")
+	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var controls: Array=[button,home_button,menu_button]
+	for i in controls.size():
+		var control: Button=controls[i]
+		control.text=""
+		control.expand_icon=true
+		control.add_theme_constant_override("icon_max_width",int(20*ui))
+		control.offset_top=8*ui
+		control.offset_bottom=48*ui
+		control.offset_right=-(8+44*i)*ui
+		control.offset_left=control.offset_right-40*ui
+		for state in ["normal","hover","pressed","disabled","focus"]:
+			var style: StyleBox=control.get_theme_stylebox(state)
+			for side in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]: style.set_content_margin(side,4*ui)

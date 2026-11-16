@@ -8,6 +8,7 @@ signal signal_level_up(level)
 var pickup_glow: ColorRect
 
 func _ready() -> void :
+	label.text=L10n.text("等级 %d") % level
 	progress_bar.modulate = Color.WHITE
 	var back: = StyleBoxFlat.new()
 	back.bg_color = Color(GamePalette.XP_TRACK, 0.95)
@@ -24,6 +25,21 @@ func _ready() -> void :
 	progress_bar.add_child(pickup_glow)
 	pickup_glow.bind(progress_bar)
 	AudioManager.pickup_tone_played.connect(_on_pickup_tone)
+	get_viewport().size_changed.connect(_fit_hud)
+	_fit_hud()
+
+func _fit_hud() -> void:
+	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var row: HBoxContainer=$UI/HBoxContainer
+	row.position=Vector2(12*ui,54*ui)
+	row.size=Vector2(120*ui,16*ui)
+	row.add_theme_constant_override("separation",int(4*ui))
+	label.custom_minimum_size=Vector2(68*ui,16*ui)
+	label.clip_text=true
+	label.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
+	UiFonts.apply_to_label(label,int(10*ui))
+	progress_bar.custom_minimum_size=Vector2(48*ui,16*ui)
+	progress_bar.add_theme_font_size_override("font_size",int(10*ui))
 
 func _on_pickup_tone(pitch: float) -> void :
 	var game: = get_parent()
@@ -43,7 +59,7 @@ func add_coin(value: int) -> void :
 func level_up():
 	AudioManager.play_upgrade()
 	level += 1
-	label.text = L10n.text("Level: ") + str(level)
+	label.text = L10n.text("等级 %d") % level
 	coin_number = max(0, coin_number - level_need_coin_number)
 	level_need_coin_number = get_need_exp(level)
 	progress_bar.value = float(coin_number) / float(level_need_coin_number) * 100.0

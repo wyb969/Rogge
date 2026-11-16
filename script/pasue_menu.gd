@@ -149,6 +149,7 @@ func _ready():
 	growth_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	growth_hint.add_theme_color_override("font_color", GamePalette.PLAYER_DAMAGE_WHITE)
 	$Panel.add_child(growth_hint)
+	growth_hint.hide()
 	reroll_button = Button.new()
 	reroll_button.name = "RerollButton"
 	reroll_button.pressed.connect(_on_reroll)
@@ -170,6 +171,7 @@ func _ready():
 	reroll_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	reroll_hint.modulate = GamePalette.UI_GREY_BORDER
 	$Panel.add_child(reroll_hint)
+	reroll_hint.hide()
 	_refresh_reroll()
 	get_viewport().size_changed.connect(_fit_cards)
 	h_box_container.minimum_size_changed.connect(_queue_fit_cards)

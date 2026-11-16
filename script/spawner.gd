@@ -570,7 +570,24 @@ func _ensure_stage_label() -> void :
 	label.add_theme_color_override("font_outline_color", Color(0.04, 0.04, 0.06, 1))
 	label.add_theme_constant_override("outline_size", 6)
 	_stage_label = label
+	get_viewport().size_changed.connect(_fit_stage_label)
+	_fit_stage_label()
 	_refresh_stage_label()
+
+func _fit_stage_label() -> void:
+	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var vp:=get_viewport().get_visible_rect().size
+	_stage_label.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_stage_label.position=Vector2(12*ui,8*ui)
+	_stage_label.size=Vector2(minf(180*ui,vp.x-156*ui),40*ui)
+	_stage_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
+	UiFonts.apply_to_label(_stage_label,int(16*ui),true)
+	var clock: HBoxContainer=$UI/HBoxContainer
+	clock.position=Vector2(vp.x-80*ui,54*ui)
+	clock.size=Vector2(68*ui,16*ui)
+	clock.add_theme_constant_override("separation",0)
+	for child in clock.get_children():
+		if child is Label: UiFonts.apply_to_label(child,int(12*ui),true)
 
 func _refresh_stage_label() -> void :
 	if _stage_label == null or not is_instance_valid(_stage_label):

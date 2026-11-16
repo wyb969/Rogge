@@ -40,3 +40,5 @@
 - `SessionMenu` owns nested pause snapshots: returning from settings/Codex must restore the prior paused state, focus and touch-control visibility, including pending cards/rest/trials. Codex reads shared equipment metadata, trial rules and CardPreview only; never roll drafts, apply upgrades, reset trials or consume gameplay RNG while browsing or translating.
 
 - Stage bosses tick shared control once per physics frame: 3 continuous controlled seconds grant 3 seconds of control immunity, not damage immunity. Wind role paths must tick it and release cancelled attack ownership. Attack cancellation clears warnings only; hide/disable Boss HUDs only on defeat/suspend. Use shared boss_hud_layout for readable, separated bars.
+
+- Keep combat HUD sparse: three icon-only toolbar buttons with localized tooltips; health-only stage Boss bars; numeric-only temporary/trial clocks without progress bars. No central instructional/courier notices or draft growth/reroll helper paragraphs. Keep XP progress, world-space attack warnings and actual skill cooldown feedback. Share physical/CSS sizing and clamp tiny windows so controls stay reachable.

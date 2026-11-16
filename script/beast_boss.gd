@@ -114,7 +114,7 @@ func _process(delta: float) -> void :
 func _physics_process(delta: float) -> void :
 	if is_dying or not is_instance_valid(player) or player.player_health <= 0.0 or get_tree().paused:
 		return
-	if _tick_electric_stun(delta): return
+	if _tick_environment_control(delta): return
 	state_left -= delta
 	match state:
 		State.APPROACH:
@@ -333,8 +333,8 @@ func _layout_hud() -> void :
 	_action_label.position = Vector2(0, 63)
 	_action_label.size = Vector2(width, 20)
 
-func apply_electric_stun(seconds: float) -> void:
-	super.apply_electric_stun(seconds)
+func _cancel_controlled_attack() -> void:
+	super._cancel_controlled_attack()
 	state = State.RECOVER
 	state_left = 0.5
 	shapes.clear()

@@ -63,6 +63,7 @@ var left_fist_level: int = 0
 var right_fist_level: int = 0
 var hurt_lock: float = 0.0
 var arsenal_shield_active := false
+var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
 var electric_stun_left := 0.0
 var movement_locked := false
 var _movement_lock_position := Vector2.ZERO
@@ -436,6 +437,7 @@ func _cancel_dash() -> void :
 	_sync_dash_hurt_area()
 
 func reset_dash() -> void :
+	terrain_impulse.clear()
 	electric_stun_left = 0
 	_cancel_dash()
 	can_dasing_timer.stop()
@@ -494,6 +496,10 @@ func _physics_process(delta: float) -> void :
 		velocity = Vector2.ZERO
 		_stop_locomotion()
 		MobileInput.clear_move()
+		MobileInput.clear_dash()
+		return
+	if terrain_impulse.tick(self,delta):
+		_stop_locomotion()
 		MobileInput.clear_dash()
 		return
 	if electrically_stunned:
@@ -559,7 +565,7 @@ func _emit_dash_ghosts(before: Vector2, after: Vector2) -> void:
 	_dash_ghost_distance = fposmod(_dash_ghost_distance + distance, DASH_GHOST_SPACING)
 
 func _start_dash(input_direction: Vector2) -> void :
-	if movement_locked or electric_stun_left>0 or not can_dash or player_health <= 0: return
+	if movement_locked or electric_stun_left>0 or terrain_impulse.left>0 or not can_dash or player_health <= 0: return
 	can_dash = false
 	dashing = true
 	dash_grace_left = 0
@@ -714,8 +720,14 @@ func rest_cooldown_for(scale: float) -> float:
 	return clampf(cooldown_scale*scale,0.45,1.0)
 
 func apply_electric_stun(seconds: float) -> void:
+	terrain_impulse.clear()
 	if player_health<=0 or movement_locked: return
 	_cancel_dash()
 	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
 	hurt_lock = maxf(hurt_lock,electric_stun_left+0.25)
 	velocity = Vector2.ZERO
+
+func apply_terrain_impulse(push: Vector2) -> void:
+	if player_health<=0 or movement_locked or is_dash_invulnerable() or arsenal_shield_active: return
+	_cancel_dash()
+	terrain_impulse.start(push.limit_length(260))

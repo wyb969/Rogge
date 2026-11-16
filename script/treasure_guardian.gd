@@ -24,9 +24,9 @@ func configure_guardian(hp: float, attack_damage: float) -> void :
 func _physics_process(delta: float) -> void :
 	if _death_started:
 		return
-	if electric_stun_left>0:
+	if electric_stun_left>0 or terrain_impulse.left>0:
 		_update_statuses(delta)
-		_tick_electric_stun(delta)
+		if not _death_started: _tick_environment_control(delta)
 		return
 	if not is_frozen():
 		impact_left = maxf(0.0, impact_left - delta)
@@ -65,8 +65,8 @@ func _draw() -> void :
 	draw_rect(Rect2(-22, -34, 44, 5), Color(0.03, 0.025, 0.035))
 	draw_rect(Rect2(-21, -33, 42.0 * clampf(health / max_health, 0, 1), 3), Color(1.0, 0.76, 0.18))
 
-func apply_electric_stun(seconds: float) -> void:
-	super.apply_electric_stun(seconds)
+func _cancel_controlled_attack() -> void:
+	super._cancel_controlled_attack()
 	warning_left = 0
 	impact_left = 0
 	attack_left = maxf(attack_left,0.8)

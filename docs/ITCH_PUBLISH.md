@@ -27,13 +27,17 @@ GitHub artifact 默认保留 30 天。长期需要的源码、验证概要和发
 
 ## 验证边界
 
-当前发布流程选取24项实际PCK检查：`smoke_menu_layout`、`smoke_fan_feedback`、`smoke_control_cards`、`smoke_session_toolbar`、`smoke_equipment_badges`、`smoke_wooden_trial`、`smoke_trials`、`smoke_growth_combo`、`smoke_bomb_card`、`smoke_arsenal_combo`、`smoke_death_stains`、`smoke_ink_surf`、`smoke_tactical_enemies`、`smoke_debug_menu`、`smoke_stage_variation`、`smoke_encounter_readability`、`smoke_beasts`、`smoke_game_palette`、`smoke_palette_cards`、`smoke_player_motion`、`smoke_motion_vfx`、`smoke_hitstop`、`smoke_status_numbers`、`smoke_dash_grace`。它们覆盖布局、返回主页、装备组合、炸弹、三项试炼、定向泼溅/彩墨、新怪物与共享远程上限，以及配色/卡牌数值、移动/投弹、顿帧和无敌保护。由原生Godot加载实际Web PCK，不等于真实Web/Safari试玩，也不表示全部smoke脚本通过。
+当前发布流程选取29项实际PCK检查：`smoke_menu_layout`、`smoke_session_toolbar`、`smoke_equipment_badges`、`smoke_three_cards`、`smoke_codex_menu`、`smoke_localization`、`smoke_debug_menu`、`smoke_palette_cards`、`smoke_combat_balance`、`smoke_relic_weapons`、`smoke_arcane_weapons`、`smoke_star_chain`、`smoke_weather_lighting`、`smoke_winter`、`smoke_world_snow`、`smoke_environment_surface`、`smoke_surface_art`、`smoke_wind_trails`、`smoke_electric_grid`、`smoke_minefield`、`smoke_ice_spikes`、`smoke_airborne_feedback`、`smoke_stage_hazards`、`smoke_boss_control_guard`、`smoke_boss_rhythm`、`smoke_beasts`、`smoke_trials`、`smoke_wooden_trial`、`smoke_resource_bounds`。覆盖本次新增的武器、环境、危险地形、中英菜单/词典与卡片，以及Boss控制、试炼和资源上限。检查脚本以当前发布工作流为准；由原生Godot加载实际Web PCK，不等于浏览器/Safari实测，也不是全量回归。
 
 现存脚本退出时的 ObjectDB / resources-in-use 警告保留在报告中，与运行中脚本/解析错误分开。若出现新运行时错误或检查断言失败，发布任务必须停止；不得将其混同于已知退出警告忽略。
 
 发布只替换当前通道的最新版本。Butler 构建历史可供回退；“页面只有一个当前上传项”不要求删除这些历史记录。上传游戏也不会自动修改商店文案、封面或字体。
 
 ## 最新发布记录
+
+2026-11-16已发布 **`20261116-202250`**，master源码 `372b8f5be5ffee9f6d455c46ce62a98abf99fb27` / [PR #31](https://github.com/wyb969/Rogge/pull/31)，build **2404997**。29项实际PCK检查和1100键翻译审计通过；[发布](https://github.com/wyb969/PixelFishing/actions/runs/43866453557)与[只读通道核验](https://github.com/wyb969/PixelFishing/actions/runs/43866959069)成功。原html通道completed/current，无pending；主页实际新iframe的PCK/WASM/JS与CI清单哈希一致。没有本轮浏览器/Safari交互实测。证据：`validation/itch-release-20261116-202250.json`，构件14226091335保留到2026-12-16。
+
+### 2026-11-12 发布
 
 2026-11-12已发布 **`20261112-230737`**，源码master `c51afeccba095ea1abcdbfcc51c0f71edbd93862`，build **2366099**。24项实际PCK检查通过，[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/43245465358)成功；[只读核验](https://github.com/wyb969/PixelFishing/actions/runs/43245971065)确认completed/current、无pending。主页HTTP200，实际iframe的PCK/WASM/JS哈希与Actions清单一致；Chromium实际托管入口的Debug/受击/移动/Dash/Home检查通过。没有Safari真机或全流程结论。报告：`validation/itch-release-20261112-230737.json`、`validation/itch-readiness-20261112-230737.json`、`validation/itch-live-20261112-230737.json`。
 

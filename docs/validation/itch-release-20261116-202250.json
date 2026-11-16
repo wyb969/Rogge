@@ -1,0 +1,415 @@
+{
+  "version": "20261116-202250",
+  "source_sha": "372b8f5be5ffee9f6d455c46ce62a98abf99fb27",
+  "feature_sha": "611fa44",
+  "master_before": "204f7d80378b725f16b9a8b7834251273fd90c24",
+  "merge_pr": "https://github.com/wyb969/Rogge/pull/31",
+  "gameplay_unchanged": true,
+  "release_only_files": [
+    "README.md",
+    "docs/AI_HANDOFF.md",
+    "project.godot",
+    "tools/smoke_menu_layout.gd"
+  ],
+  "workflow": "https://github.com/wyb969/PixelFishing/actions/runs/43866453557",
+  "workflow_commit": "56975a39cabaf9fbe78b4f79d9438d661c8b0f1c",
+  "artifact_id": 14226091335,
+  "artifact_expires": "2026-12-16",
+  "target": "ybwangrogger/rogue-white:html",
+  "upload_id": 20115514,
+  "butler_build": 2404997,
+  "packed_checks": [
+    {
+      "name": "smoke_menu_layout",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_equipment_badges",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_three_cards",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_codex_menu",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_localization",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_combat_balance",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_relic_weapons",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 23 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_arcane_weapons",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 25 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_star_chain",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 15 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather_lighting",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_winter",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_world_snow",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_environment_surface",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 28 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_surface_art",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_wind_trails",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_electric_grid",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_minefield",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 16 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ice_spikes",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 27 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_airborne_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_stage_hazards",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_boss_control_guard",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 7 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_boss_rhythm",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_resource_bounds",
+      "passed": true,
+      "exit_code": 0,
+      "runtime_errors": [],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "web_manifest": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "4097ffbf71516b822e42cead91969103190d0df2b17c8161670a25e13d44e758"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 28831832,
+      "sha256": "8bb952e71ea987d4cf5ef1bd5c096971f50b68020531f60e07ecbd6393aaac45"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "localization_audit": {
+    "passed": true,
+    "catalog_rows": 1100,
+    "locales": [
+      "en",
+      "zh_CN"
+    ],
+    "checks": [
+      "unique keys",
+      "nonempty translations",
+      "printf placeholder parity",
+      "English has no Chinese",
+      "source Chinese display-string coverage"
+    ]
+  },
+  "readiness": {
+    "run": "https://github.com/wyb969/PixelFishing/actions/runs/43866959069",
+    "status": {
+      "attempt": 1,
+      "head": {
+        "createdAt": "2026-11-16T12:27:17Z",
+        "id": 2404997,
+        "parentBuildId": 2366099,
+        "state": "completed",
+        "updatedAt": "2026-11-16T12:27:23Z",
+        "userVersion": "20261116-202250",
+        "version": 35
+      },
+      "pending": {}
+    }
+  },
+  "live": {
+    "checked_utc": "2026-11-16T12:29:33.469738+00:00",
+    "storefront": "https://ybwangrogger.itch.io/rogue-white",
+    "storefront_http": 200,
+    "actual_iframe": "https://html.itch.zone/html/20115514-2404997/index.html?v=1794832154",
+    "build": 2404997,
+    "version": "20261116-202250",
+    "source_of_expected_hashes": "Actions run43866453557 web-manifest.json",
+    "resources": [
+      {
+        "file": "index.html",
+        "url": "https://html.itch.zone/html/20115514-2404997/index.html",
+        "http": 200,
+        "bytes": 5524,
+        "sha256": "1dcba63a4ff5da636dd151ac5d4c5c14458ff2cfd20739c62b8a95a6a653c714",
+        "matches_ci": false
+      },
+      {
+        "file": "index.pck",
+        "url": "https://html.itch.zone/html/20115514-2404997/index.pck",
+        "http": 200,
+        "bytes": 28831832,
+        "sha256": "8bb952e71ea987d4cf5ef1bd5c096971f50b68020531f60e07ecbd6393aaac45",
+        "matches_ci": true
+      },
+      {
+        "file": "index.wasm",
+        "url": "https://html.itch.zone/html/20115514-2404997/index.wasm",
+        "http": 200,
+        "bytes": 39509339,
+        "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656",
+        "matches_ci": true
+      },
+      {
+        "file": "index.js",
+        "url": "https://html.itch.zone/html/20115514-2404997/index.js",
+        "http": 200,
+        "bytes": 279815,
+        "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c",
+        "matches_ci": true
+      }
+    ],
+    "html_config_sizes_match_ci": true,
+    "browser": "not run in this release session"
+  },
+  "browser_qa": "not run this release",
+  "physical_device_qa": "not run",
+  "existing_shutdown_warnings": "Retained in packed checks; not treated as script/runtime success."
+}

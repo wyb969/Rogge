@@ -1,10 +1,15 @@
 # ROGGE · AI 开发交接
 
-## 2026-11-16 主分支与正式itch发布（进行中）
+## 2026-11-16 主分支与正式itch发布（已完成）
 
 - 用户明确授权合入主分支、更新GitHub首页并发布ROGGE；下方各轮“不合并master/不上传itch”为历史边界。默认分支是master，远端204f7d8是当前611fa44的祖先（0分叉、44个开发提交）。发布分支 `release/master-itch-20261116`，版本 **20261116-202250**。
 - 本轮只更新版本号、README和发布记录，不新增游戏机制。README补全天气/冰面/随机危险、28卡、中英词典、暂停菜单和新版UI截图。
-- 复用PixelFishing独立Actions分支及 `ybwangrogger/rogue-white:html` / upload20115514；Secret仅在Actions中使用。发布检查覆盖自上次master后新增的模块及共享生命周期；成功后记录合并SHA、Actions构件、Butler build和线上资源核验。
+- 复用PixelFishing独立Actions分支及 `ybwangrogger/rogue-white:html` / upload20115514；Secret仅在Actions中使用。发布检查覆盖自上次master后新增的模块及共享生命周期；合并SHA、Actions构件、Butler build和线上资源核验见下。
+
+- [PR #31](https://github.com/wyb969/Rogge/pull/31)已合入master，发布源码 `372b8f5be5ffee9f6d455c46ce62a98abf99fb27`；与611fa44只差版本/README/交接及旧菜单断言适配中英文（不改游戏逻辑）。真实菜单/返回主页/装备布局本地通过。
+- [发布Actions](https://github.com/wyb969/PixelFishing/actions/runs/43866453557)成功，29项实际Web PCK检查全过、1100翻译键审计通过。artifact14226091335含Web ZIP/清单/日志，保留到2026-12-16。运行时/解析错误均为0；已有退出ObjectDB/资源警告记录保留。
+- [正式itch](https://ybwangrogger.itch.io/rogue-white)原html通道/upload20115514更新build **2404997** / **20261116-202250**；[只读核验](https://github.com/wyb969/PixelFishing/actions/runs/43866959069)确认completed/current、无pending。主页HTML提取完成，实际iframe为 `https://html.itch.zone/html/20115514-2404997/index.html?v=1794832154`；PCK/WASM/JS全部HTTP200，字节数/SHA256与Actions清单一致。itch注入htmlgame.js导致HTML整体哈希不同，原配置尺寸一致。
+- 完整证据 `validation/itch-release-20261116-202250.json`。本轮没有浏览器交互/Safari真机验证；HTTP资源核对不等于实际游玩。私有Sites保持200630，正式itch为202250，不要混淆。临时日志/构件 `../release-itch` 在RAM，长期源码/证据以GitHub为准。
 
 ## 2026-11-16 按标注图调整UI（当前开发）
 

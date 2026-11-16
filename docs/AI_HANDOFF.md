@@ -5,7 +5,7 @@
 - 分支`feature/electric-grid-20261116`基于`c07a63b`（PR #21），版本**20261116-114909**。晴天每关两条世界固定随机长矩形，4.5秒周期（预警0.75/通电1.2/断电2.55）；玩家18、怪物54起，每关+3/+9。
 - 麻痹1秒、玩家恢复后2.5秒电网保护；原Dash/护盾规则保留。42距离怪物传导采用位置快照、格桶、非递归队列、统一结算和每周期ID去重。怪物不反传玩家；取消旧蓄力后重新预警。骨架64/连线128/单批512目标，两个绘制节点。
 - 新Debug首项晴天电网，26项分页；原正常天气与其他卡牌保留。仅晴天启用，FX=0仍显示，暂停/结束/天气退出清理。详见[electric-grid.md](electric-grid.md)与验证JSON。12源码专项、最终Web PCK四项，原生横/竖/灰度；新700断言通过。无本轮浏览器/Safari/FPS实测，保留既有退出警告。
-- 由于工作盘接近满，源工作树/导入/构建经`/workspace/Rogge-electric-grid-20261116`链接放在内存目录；须以GitHub提交为持久依据，不清理历史源码或备份。后续重点试玩电网布局/危险可读性、手机密集传导流畅度与玩家脱离余量。正式master/itch未更新。
+- 由于工作盘接近满，源工作树/导入/构建经`/workspace/Rogge-electric-grid-20261116`链接放在内存目录；须以GitHub提交为持久依据，不清理历史源码或备份。后续重点试玩电网布局/危险可读性、手机密集传导流畅度与玩家脱离余量。正式master/itch未更新。 已验证源码`10463eb`保存于[PR #22](https://github.com/wyb969/Rogge/pull/22)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-114909，权限不变；Site source`9cc3ae63f5badd421cae69eb7bd52bb4cf25218c`、deployment`appgdep_6afa7e1d52788191b2968a9536f6a05b`于北京时间2026-11-16 11:53发布succeeded。原PCK/解压WASM一致，记录见`validation/electric-grid-playtest-20261116.json`。
 
 ## 2026-11-16 草、卷风与冰面高光（当前开发）
 

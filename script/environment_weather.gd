@@ -18,6 +18,7 @@ var ambient: = Color.WHITE
 var sun_strength: = 0.0
 var sun_direction := Vector2(0.65, 0.76).normalized()
 var lighting: Node2D
+var winter: Node2D
 var cloud_strength: = 0.0
 var rain_count: = 0
 var snow_count: = 0
@@ -75,7 +76,7 @@ func _ready() -> void :
 	_snow_field.weather = self
 	_snow_field.world_snow = true
 	_snow_field.top_level = true
-	_snow_field.z_index = -5
+	_snow_field.z_index = 3
 	add_child(_snow_field)
 	_snow_field.global_transform = Transform2D.IDENTITY
 	_ui = CanvasLayer.new()
@@ -93,9 +94,14 @@ func _ready() -> void :
 	lighting = preload("res://script/weather_lighting.gd").new()
 	lighting.name = "WeatherLighting"
 	add_child(lighting)
+	winter = preload("res://script/winter_tracks.gd").new()
+	winter.name = "WinterTracks"
+	add_child(winter)
 	stop()
 
 func begin_run() -> void :
+	winter.clear()
+	winter.stamped = 0
 	_stage_profiles.clear()
 	_bag.clear()
 	elapsed = 0
@@ -150,6 +156,8 @@ func stop() -> void :
 	AudioManager.weather_audio.detach(self)
 	running = false
 	if lighting != null: lighting.stop()
+	if winter != null: winter.sync(0)
+	_background.set_snow_cover(0)
 	rain_count = 0
 	snow_count = 0
 	set_process(false)
@@ -239,6 +247,8 @@ func _update_environment() -> void :
 	if stamp != _caption_stamp:
 		_caption_stamp = stamp
 		_caption.text = NAMES[current_weather] + " · " + time_name()
+	_background.set_snow_cover(_weights[Weather.SNOW] * intensity)
+	if winter != null: winter.sync(_weights[Weather.SNOW] * intensity)
 	if lighting != null: lighting.sync()
 	AudioManager.weather_audio.sync(self, current_weather, daylight)
 
@@ -269,19 +279,20 @@ func draw_snow(canvas: Node2D) -> void :
 	for i in snow_count:
 		var seed: Vector4 = _snow[i]
 		var point: = _snow_positions[i]
-		var alpha: = (0.18 + seed.w * 0.16) * lerpf(0.25, 1, smoothstep(20, 85, ((point - hero) * zoom).length()))
+		var alpha: = (0.32 + seed.w * 0.2) * lerpf(0.25, 1, smoothstep(20, 85, ((point - hero) * zoom).length()))
 
 
-		var size: = Vector2.ONE * (1.4 + seed.z * 2.0) / zoom
-		canvas.draw_rect(Rect2(point - size * 0.5, size), Color(0.85, 0.94, 1, alpha))
+		var size: = Vector2.ONE * ((3.0 + seed.z * 2.5) if i % 4 == 0 else (1.8 + seed.z * 2.2)) / zoom
+		canvas.draw_rect(Rect2(point - size * 0.5 + Vector2(0.7, 1.0) / zoom, size), Color(GamePalette.SNOW_TRACK, alpha * 0.5))
+		canvas.draw_rect(Rect2(point - size * 0.5, size), Color(GamePalette.SNOW_FLAKE, alpha))
 		if i % 4 == 0:
 			_snow_stars[i / 4] = Vector3(point.x, point.y, alpha)
 
 	for i in (snow_count + 3) / 4:
 		var star: Vector3 = _snow_stars[i]
 		var point: = Vector2(star.x, star.y)
-		canvas.draw_line(point - Vector2(2.8, 0) / zoom, point + Vector2(2.8, 0) / zoom, Color(0.92, 0.98, 1, star.z * 0.8), 1.0 / zoom.x, false)
-		canvas.draw_line(point - Vector2(0, 2.8) / zoom, point + Vector2(0, 2.8) / zoom, Color(0.92, 0.98, 1, star.z * 0.8), 1.0 / zoom.y, false)
+		canvas.draw_line(point - Vector2(4.0, 0) / zoom, point + Vector2(4.0, 0) / zoom, Color(GamePalette.SNOW_FLAKE, star.z * 0.9), 1.0 / zoom.x, false)
+		canvas.draw_line(point - Vector2(0, 4.0) / zoom, point + Vector2(0, 4.0) / zoom, Color(GamePalette.SNOW_FLAKE, star.z * 0.9), 1.0 / zoom.y, false)
 
 func describe() -> Dictionary:
 	return {"running": running, "stage": stage, "weather": NAMES[current_weather], "solar_phase": snappedf(solar_phase, 0.001), "daylight": snappedf(daylight, 0.001), "rain": rain_count, "snow": snow_count, "intensity": SettingsStore.weather_intensity, "audio": AudioManager.weather_audio.describe()}

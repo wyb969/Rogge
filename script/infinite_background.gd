@@ -14,6 +14,8 @@ extends Node2D
 @onready var decor_root: Node2D = $DecorRoot
 
 var _shader_mat: ShaderMaterial
+var _snow_material: ShaderMaterial
+var snow_cover := 0.0
 var _decor_sprites: Array[Sprite2D] = []
 var _decor_regions: Array[Rect2] = []
 var _decor_atlases: Array[AtlasTexture] = []
@@ -56,11 +58,15 @@ func _setup_ground() -> void :
 	_shader_mat.set_shader_parameter("variant_b_offset", Vector2(80, 16))
 	_shader_mat.set_shader_parameter("world_tile_size", tile_size)
 	_shader_mat.set_shader_parameter("tint", Vector4(tint.r, tint.g, tint.b, tint.a))
+	_shader_mat.set_shader_parameter("snow_tint", GamePalette.SNOW_GROUND)
 	ground.material = _shader_mat
 	ground.z_index = -30
 	ground.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 func _setup_decor_pool() -> void :
+	_snow_material = ShaderMaterial.new()
+	_snow_material.shader = preload("res://shaders/snow_decor.gdshader")
+	_snow_material.set_shader_parameter("snow_tint", GamePalette.SNOW_GROUND)
 	_decor_regions = [
 		Rect2(160, 32, 32, 32), 
 		Rect2(128, 64, 32, 32), 
@@ -76,6 +82,7 @@ func _setup_decor_pool() -> void :
 		_decor_atlases.append(atlas)
 	for i in 72:
 		var spr: = Sprite2D.new()
+		spr.material = _snow_material
 		spr.centered = true
 		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		spr.visible = false
@@ -192,8 +199,14 @@ func set_environment_light(ambient: Color, sun: float, direction: Vector2, clock
 	_shader_mat.set_shader_parameter("environment_time", clock)
 	_shader_mat.set_shader_parameter("cloud_strength", cloud)
 	decor_root.modulate = ambient
+	_snow_material.set_shader_parameter("snow_tint", GamePalette.SNOW_GROUND * ambient)
 
 func _cell_hash(x: int, y: int) -> int:
 	var n: = x * 374761393 + y * 668265263
 	n = (n ^ (n >> 13)) * 1274126177
 	return abs(n)
+
+func set_snow_cover(amount: float) -> void:
+	snow_cover = clampf(amount, 0, 1)
+	_shader_mat.set_shader_parameter("snow_cover", snow_cover)
+	_snow_material.set_shader_parameter("snow_cover", snow_cover)

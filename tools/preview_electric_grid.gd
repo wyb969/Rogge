@@ -49,6 +49,7 @@ func _ready() -> void:
 		await capture("zones",size)
 	for actor in actors: actor.queue_free()
 	await get_tree().process_frame
+	for zap in grid._zaps: grid._restore_zap(zap)
 	grid._zaps.clear()
 	grid._links.clear()
 	grid.zones.clear()

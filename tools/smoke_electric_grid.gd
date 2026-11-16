@@ -101,11 +101,10 @@ func run() -> void:
 	expect(a.electric_stun_left==1 and b.electric_stun_left==1,"one-second stun includes conducted targets")
 	grid._scan_enemies()
 	expect(a.health==1946 and b.health==1946 and grid.last_batch==0,"overlapping strips and repeated scans never double-hit in cycle")
-	grid._clock = 4.49
-	grid._physics_process(0.32)
-	expect(grid._hit_ids.is_empty(),"new cycle clears dedup")
-	grid._clock = 5.3
-	grid._scan_enemies()
+	grid._clock = 1.29
+	grid._scan_left = 0
+	grid._physics_process(0.01)
+	expect(grid._cycle==1,"half-second pulse advances dedup cycle")
 	expect(a.health==1892 and c.health==1892,"next pulse can strike once again")
 	var p: Node = g.player
 	p.damage_reduction = 0
@@ -148,7 +147,7 @@ func run() -> void:
 	grid._touch_player()
 	expect(p.player_health==hp-18,"arsenal invulnerability respected")
 	p.arsenal_shield_active = false
-	grid._clock = 2.4
+	grid._clock = 2.1
 	grid._player_ready = 0
 	grid._touch_player()
 	expect(p.player_health==hp-18,"off phase harmless")
@@ -235,7 +234,7 @@ func run() -> void:
 	expect(grid.last_batch==180,"dense connected 180-actor crowd each selected once")
 	grid._scan_enemies()
 	for actor in crowd: expect(actor.health==1946,"dense cycle cannot recurse/double-damage")
-	expect(grid._zaps.size()<=64 and grid._links.size()<=128 and grid.get_child_count()==1,"VFX node/geometry caps")
+	expect(grid._zaps.size()<=64 and grid._links.size()<=128 and grid.get_child_count()==2,"VFX node/geometry caps")
 	print("electric grid 180 actors batch microseconds: ",micros)
 	var settings: Node = root.get_node("SettingsStore")
 	var fx: float = settings.weather_intensity
@@ -248,11 +247,11 @@ func run() -> void:
 	grid._physics_process(1)
 	expect(grid._clock==time,"pause freezes cycle")
 	paused = false
-	g.weather.set_preview(2,0)
+	g.weather.set_hazard(0)
 	grid._physics_process(0.016)
-	expect(not grid._running and grid._hit_ids.is_empty() and grid._zaps.is_empty(),"rain cancels grid and transient effects")
-	for actor in crowd: expect(actor.electric_stun_left==0,"weather switch releases owned paralysis")
-	g.weather.set_preview(0,0)
+	expect(not grid._running and grid._hit_ids.is_empty() and grid._zaps.is_empty(),"hazard switch cancels grid and transient effects")
+	for actor in crowd: expect(actor.electric_stun_left==0,"hazard switch releases owned paralysis")
+	g.weather.set_hazard(1)
 	grid._physics_process(0.016)
 	expect(grid._running and not grid.energized(),"return to sun starts safe warning")
 	g.end_game()

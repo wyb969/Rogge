@@ -316,14 +316,17 @@ func _launch_run(mode: StringName) -> void :
 		&"minefield":
 			game.prepare_weather_debug()
 			game.weather.set_preview(1,0)
+			game.weather.set_hazard(0)
 			game.variety.notify("九宫格地雷：红灯闪烁表示危险\n踩中后爆炸击退，触发3秒后恢复\n玩家24 / 怪物72起；冲刺可避伤害")
 		&"electric_grid":
 			game.prepare_weather_debug()
-			game.variety.notify("晴天电网：探索刷新4处圆形 / 方形区域\n麻痹1秒；恢复后0.5秒电网保护\n引怪入网，近距离传导每周期只命中一次")
+			game.weather.set_hazard(1)
+			game.variety.notify("电网：每0.5秒放电，探索刷新4处圆形 / 方形区域\n麻痹1秒；恢复后0.5秒电网保护\n引怪入网，近距离传导每次脉冲只命中一次")
 		&"wind_scene":
 			game.prepare_surface_debug(4)
 		&"ice_scene":
 			game.prepare_surface_debug(5)
+			game.weather.set_hazard(2)
 		&"winter":
 			game.prepare_weather_debug()
 			game.weather.set_preview(3, 0)

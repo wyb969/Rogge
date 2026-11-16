@@ -110,11 +110,11 @@ horizontal_alignment = 1
 
 [node name="DebugMinefieldButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
-text = "九宫格地雷 · 爆炸 / 击退"
+text = "九宫格地雷 · 爆炸 / 腾空"
 
 [node name="DebugElectricGridButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
-text = "晴天电网 · 麻痹 / 群怪传导"
+text = "电网 · 0.5秒 / 骨架传导"
 
 [node name="DebugWindSceneButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2

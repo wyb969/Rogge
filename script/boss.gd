@@ -546,7 +546,7 @@ func _tick_electric_stun(delta: float) -> bool:
 func apply_terrain_impulse(push: Vector2) -> void:
 	if is_dying: return
 	_cancel_controlled_attack()
-	terrain_impulse.start(push*0.28,0.28,22)
+	terrain_impulse.start(push*0.28,0.28,34)
 
 func _tick_environment_control(delta: float) -> bool:
 	var stunned := _tick_electric_stun(delta)

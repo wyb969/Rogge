@@ -30,8 +30,8 @@ func _ready() -> void:
 	z_index = -6
 	_audio = AudioStreamPlayer.new()
 	AudioManager.configure_sfx(_audio)
-	_audio.stream = preload("res://assest/sounds/bomb_burst.wav")
-	_audio.volume_db = -18
+	_audio.stream = preload("res://assest/sounds/terrain_mine.wav")
+	_audio.volume_db = -10
 	_audio.max_polyphony = 1
 	add_child(_audio)
 	stop()
@@ -146,7 +146,7 @@ func _blast_batch(indices: Array[int]) -> void:
 
 func _physics_process(delta: float) -> void:
 	if get_tree().paused: return
-	if not weather.surface.active():
+	if not weather.hazard_enabled(weather.Hazard.MINES):
 		if _running: stop()
 		return
 	if not _running or _stage!=weather.stage:

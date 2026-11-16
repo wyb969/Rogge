@@ -156,7 +156,7 @@ func _scan_enemies() -> void:
 		if not weather.surface.active(): return
 
 func _physics_process(delta: float) -> void:
-	var enabled: bool = weather.surface.active() and weather._weights[5]>=0.5
+	var enabled: bool = weather.hazard_enabled(weather.Hazard.SPIKES)
 	if not enabled:
 		if _running: stop()
 		return

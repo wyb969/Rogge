@@ -6,7 +6,7 @@ func _init() -> void: _ring.resize(25)
 func profile(actor: Node2D) -> Dictionary:
 	var kind: StringName = &"person"
 	var size := Vector2(20,28)
-	var sprite: Sprite2D = actor.get("sprite_2d") if "sprite_2d" in actor else null
+	var sprite: Node2D = actor.get("sprite_2d") if "sprite_2d" in actor else actor.get("animated_sprite_2d")
 	var boss := "boss_current_health" in actor
 	if boss:
 		if "element" in actor: kind = [&"elephant",&"lion",&"bird",&"turtle"][actor.element]

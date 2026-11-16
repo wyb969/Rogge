@@ -1,6 +1,13 @@
 extends Node
 
 
+enum Hazard {MINES, ELECTRIC, SPIKES}
+const HAZARD_NAMES := ["地雷", "电网", "尖刺"]
+var hazard_kind := 0
+var _hazard_profiles: Dictionary = {}
+var _hazard_bag: Array[int] = []
+var _hazard_rng := RandomNumberGenerator.new()
+
 enum Weather{CLEAR, OVERCAST, RAIN, SNOW, WIND, ICE}
 const NAMES: Array[String] = ["晴天", "阴天", "雨天", "雪天", "刮风", "冰面"]
 const CYCLE_SECONDS: = 240.0
@@ -62,6 +69,7 @@ class WeatherField:
 
 func _ready() -> void :
 	_rng.randomize()
+	_hazard_rng.randomize()
 	_background = get_parent().get_node("InfiniteBackground")
 	for i in MAX_RAIN:
 		_rain.append(Vector4(_rng.randf(), _rng.randf(), _rng.randf(), _rng.randf()))
@@ -121,6 +129,8 @@ func begin_run() -> void :
 	minefield.reset_run()
 	winter.clear()
 	winter.stamped = 0
+	_hazard_profiles.clear()
+	_hazard_bag.clear()
 	_stage_profiles.clear()
 	_bag.clear()
 	elapsed = 0
@@ -140,6 +150,7 @@ func begin_run() -> void :
 func apply_stage(value: int, immediate: bool = false) -> void :
 	if not running: return
 	stage = maxi(1, value)
+	_select_stage_hazard()
 	if not _stage_profiles.has(stage):
 		var previous: int = _last_opening if stage == 1 else current_weather
 		if _bag.is_empty():
@@ -268,10 +279,10 @@ func _update_environment() -> void :
 	rain_count = int(MAX_RAIN * _weights[Weather.RAIN] * intensity * boss_factor)
 	snow_count = int(MAX_SNOW * _weights[Weather.SNOW] * intensity * boss_factor)
 	var period: = 0 if daylight > 0.72 else (1 if daylight < 0.18 else (2 if solar_phase < 0.5 else 3))
-	var stamp: = int(current_weather) * 4 + period
+	var stamp: = (int(current_weather) * 4 + period)*3+hazard_kind
 	if stamp != _caption_stamp:
 		_caption_stamp = stamp
-		_caption.text = NAMES[current_weather] + " · " + time_name()
+		_caption.text = NAMES[current_weather] + " · " + time_name() + " · " + HAZARD_NAMES[hazard_kind]
 	_background.set_snow_cover(_weights[Weather.SNOW] * intensity)
 	if winter != null: winter.sync(_weights[Weather.SNOW] * intensity)
 	_background.set_ice_cover(_weights[Weather.ICE]) # Gameplay surface stays identifiable at zero cosmetic FX.
@@ -359,8 +370,8 @@ func _fit() -> void :
 	var vp: = get_viewport().get_visible_rect().size
 	var scale: = 2.0 if vp.y > vp.x else 1.0
 	UiFonts.apply_to_label(_caption, int(12 * scale))
-	_caption.position = Vector2(vp.x * 0.3, 56 * scale)
-	_caption.size = Vector2(vp.x * 0.4, 24 * scale)
+	_caption.position = Vector2(vp.x * 0.15, 56 * scale)
+	_caption.size = Vector2(vp.x * 0.7, 24 * scale)
 	if _buttons == null: return
 	var width: = minf(780, vp.x - 40)
 	_buttons.position = Vector2((vp.x - width) * 0.5, vp.y - 76 * scale)
@@ -368,3 +379,32 @@ func _fit() -> void :
 		button.custom_minimum_size = Vector2((width - 20) / 3, 56 * scale)
 		UiFonts.apply_to_button(button, int(16 * scale))
 	_buttons.set_deferred("size", Vector2(width, 56 * scale))
+
+# Independent shuffled bag: every stage has exactly one hazard, regardless of weather.
+func _select_stage_hazard() -> void:
+	if not _hazard_profiles.has(stage):
+		if _hazard_bag.is_empty():
+			_hazard_bag.assign([0,1,2])
+			for i in range(2,0,-1):
+				var j := _hazard_rng.randi_range(0,i)
+				var temp := _hazard_bag[i]
+				_hazard_bag[i] = _hazard_bag[j]
+				_hazard_bag[j] = temp
+			if _hazard_profiles.size()>0 and _hazard_bag.back()==hazard_kind:
+				var temp := _hazard_bag[0]
+				_hazard_bag[0] = _hazard_bag[2]
+				_hazard_bag[2] = temp
+		_hazard_profiles[stage] = _hazard_bag.pop_back()
+	set_hazard(_hazard_profiles[stage])
+
+func set_hazard(kind: int) -> void:
+	# Explicit override for Debug; weather preview never silently changes hazards.
+	if hazard_kind!=kind:
+		spikes.stop()
+		electric_grid.stop()
+		minefield.stop()
+	hazard_kind = clampi(kind,0,2)
+	_caption_stamp = -1
+
+func hazard_enabled(kind: int) -> bool:
+	return hazard_kind==kind and surface.active()

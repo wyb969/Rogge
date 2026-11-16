@@ -6,6 +6,8 @@
 - 经验条从48×16恢复200×30显示像素，字号12；等级旁8像素间隔，仍保留短中英等级。天气/临时倒计时放经验条下方，Boss血条与装备相应下移，横竖屏避免重叠。只改布局。
 - 原生中英四视口截图检查，菜单/暂停与Boss血条最终PCK专项见 `validation/centered-hud-20261116.json`。未做本轮浏览器/Safari验证，既有退出资源/GL警告保留。构建/日志 `../centered-hud` 在RAM，正式itch/master未更新。
 
+- 源码 `8bf0d29` 已推送PR #30；原私有试玩更新 **20261116-195315**，Site `b20e3d2399f28a2ff0d61b927072dd88eedc0fa7` / deployment `appgdep_6afaef4d88348191a205709e0f1cbe4e` 于北京时间19:56发布成功。9文件字节核对和26 loader检查通过，记录 `validation/centered-hud-playtest-20261116.json`。
+
 ## 2026-11-16 战斗HUD减负（当前开发）
 
 - `feature/compact-combat-hud-20261116` 基于 `b32e8d5` / PR #29，版本 **20261116-194322**。菜单/主页/全屏改为三枚SVG线条图标，40显示像素点击区、20图标，保留原事件和中英tooltip。不依赖Unicode字符绘制图标。

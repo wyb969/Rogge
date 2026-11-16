@@ -45,6 +45,10 @@ var rush_feedback: Node2D
 @onready var _terrain_base_position: Vector2 = $Sprite2D.position
 var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
 var electric_stun_left := 0.0
+const CONTROL_LIMIT := 3.0
+const CONTROL_IMMUNITY := 3.0
+var control_time := 0.0
+var control_immunity_left := 0.0
 var warning_locked: = false
 var _combo_left: = 0
 var _attack_round: = 0
@@ -52,7 +56,7 @@ var _chain_warning: = false
 const LOCK_SECONDS: = 0.34
 
 func set_poison_exposure(active: bool, slow: float, tint: Color) -> void :
-	poison_slow = slow if active else 1.0
+	poison_slow = slow if active and not is_control_immune() else 1.0
 	if sprite_2d: sprite_2d.self_modulate = tint if active else Color.WHITE
 
 func apply_difficulty_health(multiplier: float) -> void :
@@ -148,6 +152,7 @@ func deals_own_contact() -> bool:
 	return true
 
 func suspend_feedback() -> void :
+	_reset_control_guard()
 	if is_instance_valid(line): line.hide()
 	if is_instance_valid(rush_feedback): rush_feedback.reset()
 
@@ -443,6 +448,7 @@ func start_defeat_sequence() -> void :
 	if is_dying:
 		return
 	is_dying = true
+	_reset_control_guard()
 	if rush_feedback != null: rush_feedback.reset()
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null: feedback.reward(global_position, true)
@@ -521,7 +527,7 @@ func _add_to_effect_container(node: Node) -> void :
 		get_tree().current_scene.add_child(node)
 
 func apply_electric_stun(seconds: float) -> void:
-	if is_dying: return
+	if is_dying or is_control_immune() or seconds<=0: return
 	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
 	clear_terrain_impulse()
 	_cancel_controlled_attack()
@@ -534,7 +540,7 @@ func _cancel_controlled_attack() -> void:
 	_state_left = 0.35
 	rush_timer.stop()
 	if line != null: line.hide()
-	if rush_feedback != null: rush_feedback.reset()
+	if rush_feedback != null: rush_feedback.clear_warning()
 	if animation_player.active: animation_player.play("idle")
 
 func _tick_electric_stun(delta: float) -> bool:
@@ -544,11 +550,38 @@ func _tick_electric_stun(delta: float) -> bool:
 	return true
 
 func apply_terrain_impulse(push: Vector2) -> void:
-	if is_dying: return
+	if is_dying or is_control_immune(): return
 	_cancel_controlled_attack()
 	terrain_impulse.start(push*0.28,0.28,34)
 
+func is_control_immune() -> bool:
+	return control_immunity_left>0
+
+func _reset_control_guard() -> void:
+	control_time=0
+	control_immunity_left=0
+	electric_stun_left=0
+	poison_slow=1
+	clear_terrain_impulse()
+
 func _tick_environment_control(delta: float) -> bool:
+	if get_tree().paused: return true
+	var step := maxf(0,delta)
+	if is_control_immune():
+		control_immunity_left=maxf(0,control_immunity_left-step)
+		return false
+	var duration := maxf(electric_stun_left,terrain_impulse.left)
+	if duration>0 or poison_slow<1:
+		control_time+=step if poison_slow<1 else minf(step,duration)
+		if control_time>=CONTROL_LIMIT-0.000001:
+			control_time=0
+			control_immunity_left=CONTROL_IMMUNITY
+			electric_stun_left=0
+			poison_slow=1
+			clear_terrain_impulse()
+			return false
+	else:
+		control_time=0
 	var stunned := _tick_electric_stun(delta)
 	if terrain_impulse.tick(self,delta): return true
 	return stunned

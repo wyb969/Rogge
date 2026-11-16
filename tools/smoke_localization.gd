@@ -106,8 +106,8 @@ func run() -> void:
 			inside(menu.reroll_button,"reroll "+lang+str(dimensions))
 			inside(menu._card_area,"card viewport")
 			for card in menu.h_box_container.get_children():
-				expect(card.title_label.size.y >= 20 and not card.title_label.text.is_empty(),"card title remains visible when text is clipped")
-				expect(card.title_label.max_lines_visible==2 and card.title_label.tooltip_text==card.title_label.text.replace("\n"," · "),"title wraps / ellipsis preserves full tooltip")
+				expect(card.title_label.size.y >= 18 and not card.title_label.text.is_empty(),"card title remains visible when text is clipped")
+				expect(card.title_label.max_lines_visible==1 and card.title_label.tooltip_text.begins_with(card.title_label.text),"title wraps / ellipsis preserves full tooltip")
 				expect(card.get_global_rect().grow(1).encloses(card.desc_label.get_global_rect()),"description inside card")
 				expect(card.desc_label.get_content_height()<=card.desc_label.size.y+1,"full short description visible")
 			menu.upgrade_pool = original

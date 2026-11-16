@@ -246,7 +246,7 @@ func _build_sword() -> void :
 func _build_boss_hud() -> void :
 
 	var canvas: = CanvasLayer.new()
-	canvas.layer = 35
+	canvas.layer = 90
 	add_child(canvas)
 	_health_panel = Control.new()
 	_health_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -259,15 +259,7 @@ func _build_boss_hud() -> void :
 	_layout_boss_hud()
 
 func _layout_boss_hud() -> void :
-	var vp: = get_viewport().get_visible_rect().size
-	var width: = minf(460.0, vp.x - 48.0)
-	var bottom: = 170.0 if vp.y > vp.x else 20.0
-	_health_panel.position = Vector2((vp.x - width) * 0.5, vp.y - bottom - 64.0)
-	_health_panel.size = Vector2(width, 64)
-	_title.position = Vector2.ZERO
-	_title.size = Vector2(width, 28)
-	health_bar.position = Vector2(0, 32)
-	health_bar.size = Vector2(width, 26)
+	preload("res://script/boss_hud_layout.gd").fit(_health_panel,health_bar,_title)
 
 func _cancel_controlled_attack() -> void:
 	super._cancel_controlled_attack()

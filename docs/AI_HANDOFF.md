@@ -1,5 +1,14 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-16 Boss血条、横排三卡与免控（当前开发）
+
+- `feature/boss-control-hud-20261116` 基于 `0872a07` / PR #28，版本 **20261116-192020**。已复现第一关Boss触电后血条消失：取消攻击误调用完整反馈reset，隐藏包含血条的面板并停用处理。改为只清预警；其他Boss在基线原生测试中有血条，未证实“全被卡片挤掉”。统一屏幕顶部响应式血条，风双Boss分两行，HUD层级90。
+- 选卡横竖屏都三列，最大190×154显示像素，外边24、卡间12；图标下两行紧凑文字（名称、功能+真实升级后主数值）。长名称省略，完整等级/当前→升级数值在tooltip/词典；保留悬停1.02、离开1.0。中英28卡覆盖五种屏幕，卡牌伤害/升级公式不变。
+- 七个关卡Boss共用连续受控3秒→立即解除→免控3秒；免控阻挡电麻痹/地形击退/毒减速，伤害仍生效，暂停冻结计时，死亡/退场清理。风双Boss自定义路径原先跳过控制计时，已统一每帧只tick一次，并在打断时释放轮流攻击占用。不改变普通怪、宝藏守卫或试炼敌人规则。
+- 10源码专项、8最终Web PCK专项通过，新增476 Boss检查、三卡2108检查、翻译审计1098键。证据和原生截图见 [boss-control-hud.md](boss-control-hud.md)、`validation/boss-control-hud-20261116.json`。未做真实浏览器/Safari实测，既有退出资源/GL警告仍在。
+- 源码 `f9f417a` 与验证文档已推送 [PR #29](https://github.com/wyb969/Rogge/pull/29)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新192020，Site `9fc3c00f0df31449cfb304b4821bcc32aa8a0c25` / deployment `appgdep_6afae8983a948191954f9becb6a25e76` 于北京时间19:27发布成功。9导出文件字节核对、26 loader检查通过；证据 `validation/boss-control-hud-playtest-20261116.json`。
+- 本轮日志/导出在 `../boss-ui`，RAM临时路径；以GitHub提交为准。不合并master、不发布正式itch。Site更新原私有试玩，构建使用 `TMPDIR=/dev/shm`，不要清理旧文件。
+
 ## 2026-11-16 DASH 中文与一屏三卡修正（当前开发）
 
 - 继续 `feature/codex-pause-menu-20261116` / PR #28，基于 `356c5e0`，版本 **20261116-184844**。DASH 场景标签此前使用缺少中文的默认字体；现在由 `dash_button.gd` 使用 UiFonts 中英复合字体，保留“冲刺”翻译、冷却/灰白风格/保存的尺寸位置透明度。

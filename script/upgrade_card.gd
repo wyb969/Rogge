@@ -7,7 +7,7 @@ var _press_at := Vector2.ZERO
 var _tracking_press := false
 var _dragged := false
 
-const CARD_SIZE: = Vector2(280, 270)
+const CARD_SIZE: = Vector2(190, 154)
 var stats_label: RichTextLabel
 
 @onready var title_label: Label = $VBoxContainer / TitleLabel
@@ -65,9 +65,12 @@ func setup(data: Dictionary):
 
 	title_label.tooltip_text = L10n.text(str(data.get("title", "")))
 	# Keep the rank comparison visible instead of truncating it after a long name.
-	title_label.text = title_label.tooltip_text.replace(" · ", "\n")
-	desc_label.text = str(data.get("short_desc",CodexData.summary(upgrade_id)))
-	stats_label.text = str(data.get("compact_stats",CodexData.compact_stats(data.get("rows",[]))))
+	title_label.text = title_label.tooltip_text.split(" · ")[0]
+	title_label.max_lines_visible = 1
+	tooltip_text = title_label.tooltip_text+"\n"+str(data.get("short_desc",""))+"\n"+str(data.get("desc",""))
+	desc_label.text = str(data.get("draft_line",CodexData.draft_line(upgrade_id,data.get("rows",[]))))
+	stats_label.text = ""
+	stats_label.hide()
 	icon.texture = load(data["icon"])
 	preload("res://script/visual_style.gd").style_icon(icon, upgrade_id)
 	set_display_width(CARD_SIZE.x)
@@ -79,34 +82,31 @@ func set_display_size(dimensions: Vector2, ui: float, row_layout: bool) -> void:
 	custom_minimum_size = dimensions
 	size = dimensions
 	pivot_offset = size*0.5
-	var small := dimensions.y/ui < 160 if row_layout else dimensions.y/ui < 235
-	var font_size := 11 if small else 12
-	var icon_size := (60.0 if small else 72.0)*ui
-	var text_x := (82.0 if small else 94.0)*ui if row_layout else 12*ui
-	var text_width := dimensions.x-text_x-12*ui
-	var title_y := 10*ui if row_layout else icon_size+16*ui
-	var title_height := 32*ui if small else 40*ui
-	var stats_height := (32.0 if small else 40.0)*ui
-	var stats_y := dimensions.y-10*ui-stats_height
-	var desc_y := title_y+title_height+3*ui
-	UiFonts.apply_to_label(title_label,int((11 if small else 14)*ui))
-	_style_description(int(font_size*ui))
-	stats_label.add_theme_font_override("normal_font",UiFonts.ui())
-	stats_label.add_theme_font_override("bold_font",UiFonts.ui_bold())
-	stats_label.add_theme_font_size_override("normal_font_size",int(font_size*ui))
-	stats_label.add_theme_font_size_override("bold_font_size",int(font_size*ui))
-	for label in [title_label,desc_label,stats_label]:
-		label.custom_minimum_size=Vector2.ZERO
-		label.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT if row_layout else HORIZONTAL_ALIGNMENT_CENTER
-	title_label.position=Vector2(text_x,title_y)
+	var narrow := dimensions.x/ui < 135
+	var text_width := dimensions.x-12*ui
+	var icon_size := minf((48.0 if narrow else 64.0)*ui,text_width)
+	var title_height := 19*ui
+	var body_height := 18*ui
+	var block_height := icon_size+8*ui+title_height+body_height
+	var top := maxf(8*ui,(dimensions.y-block_height)*0.5)
+	UiFonts.apply_to_label(title_label,int((10 if narrow else 13)*ui))
+	var font_size := int((10 if narrow else 12)*ui)
+	# Fit one brief factual line without changing card geometry or overflowing neighbours.
+	while font_size>int(8*ui) and UiFonts.ui().get_string_size(desc_label.get_parsed_text(),HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>text_width:
+		font_size-=1
+	_style_description(font_size)
+	for label in [title_label,desc_label,stats_label]: label.custom_minimum_size=Vector2.ZERO
+	title_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	title_label.position=Vector2(6*ui,top+icon_size+8*ui)
 	title_label.size=Vector2(text_width,title_height)
-	desc_label.position=Vector2(text_x,desc_y)
-	desc_label.size=Vector2(text_width,maxf(1,stats_y-desc_y-4*ui))
-	stats_label.position=Vector2(text_x,stats_y)
-	stats_label.size=Vector2(text_width,stats_height)
+	desc_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	desc_label.autowrap_mode=TextServer.AUTOWRAP_OFF
+	desc_label.position=title_label.position+Vector2(0,title_height)
+	desc_label.size=Vector2(text_width,body_height)
+	stats_label.size=Vector2(text_width,body_height)
 	icon.custom_minimum_size=Vector2.ZERO
 	icon.size=Vector2.ONE*icon_size
-	icon.position=Vector2(10*ui,(dimensions.y-icon_size)*0.5) if row_layout else Vector2((dimensions.x-icon_size)*0.5,10*ui)
+	icon.position=Vector2((dimensions.x-icon_size)*0.5,top)
 
 func _on_selected_pressed():
 	selected.emit(upgrade_id)

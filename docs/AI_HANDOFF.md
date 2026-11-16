@@ -6,7 +6,7 @@
 - `environment_surface.gd`统一有界风速/冰面权重、最多48世界风线及玩家+16怪物倒影。玩家普通移动受最多16单位/秒风偏；冰面260加速/100减速，基础速松手约1秒停下。普通怪转向惯性，控制位移×1.3；敏捷怪起手快照×1.25（71.5距离），预警同步，不延长落地伤害。Boss只游走受轻风，锁定攻击保持。
 - Debug首屏两项刮风/冰面，自带3级扇/黑洞与练习生命；25项分页。天气FX不改变机制，冰面底色在FX=0时保留。暂停/试炼/休息/转场/结束与原玩家锁位优先。
 - 14项原生专项、4项最终实际Web PCK通过；36项环境断言与横/竖/灰度截图见[environment-surface.md](environment-surface.md)、`validation/wind-ice-20261116.json`。截图是原生Compatibility，未验证本轮浏览器/Safari群怪FPS；既有退出资源/渲染器警告未解决。
-- 待试玩调整风偏强度、升级后冰面停车距离与敏捷怪加速难度；不自动合入master或发布正式itch。源码PR/私有试玩发布记录待本轮最终步骤补全。
+- 待试玩调整风偏强度、升级后冰面停车距离与敏捷怪加速难度；不自动合入master或发布正式itch。已验证源码`d36a5be`保存于[PR #19](https://github.com/wyb969/Rogge/pull/19)；既有[私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-101336。Site source`edae8fc98901a34732381b3181ebfc162ca4dada`，deployment`appgdep_6afa67f443e88191bb075c35a5262c5f`于北京时间2026-11-16 10:18发布succeeded；原PCK/解压WASM字节校验一致，详见`validation/wind-ice-playtest-20261116.json`。
 
 ## 2026-11-16 冬季雪景（当前开发）
 

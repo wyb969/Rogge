@@ -2,30 +2,24 @@ extends Node2D
 # Shared weather forces: one lookup per actor, no target scans or physics bodies.
 const WIND_MAX := 16.0
 const REFLECTION_LIMIT := 16
-const WIND_STREAK_LIMIT := 18
-const GUST_POINTS := 25
 var wind := Vector2.ZERO
 var ice_visual := 0.0
 var _last_clock := 0.0
-var _gusts: Array[Dictionary] = []
-var _gust_rng := RandomNumberGenerator.new()
-var _gust_live := false
+var wind_trails: Node2D
 var _ice_tilt := Vector2.ZERO
 @onready var weather: Node = get_parent()
 @onready var game: Node = weather.get_parent()
 
 func _ready() -> void:
 	z_index = -35
-	_gust_rng.randomize()
-	for i in WIND_STREAK_LIMIT:
-		var points := PackedVector2Array()
-		points.resize(GUST_POINTS)
-		_gusts.append({"at":Vector2.ZERO,"angle":0.0,"phase":0.0,"age":0.0,"life":1.0,"opacity":0.0,"points":points})
+	wind_trails = preload("res://script/wind_trails.gd").new()
+	wind_trails.name = "WindTrails"
+	add_child(wind_trails)
 	stop()
 
 func stop() -> void:
 	wind = Vector2.ZERO
-	_gust_live = false
+	if wind_trails!=null: wind_trails.stop()
 	_ice_tilt = Vector2.ZERO
 	ice_visual = 0
 	_last_clock = weather.elapsed
@@ -51,9 +45,9 @@ func sync() -> void:
 	var gust := 0.45 + 0.55 * (0.5 + 0.5*sin(weather.elapsed*0.9))
 	wind = direction * WIND_MAX * gust * weather._weights[4]
 	if weather.elapsed < _last_clock:
-		_gust_live = false
+		wind_trails.stop()
 	var dt: float = maxf(0,weather.elapsed-_last_clock)
-	_advance_gusts(dt)
+	wind_trails.sync(weather._weights[4]*SettingsStore.weather_intensity,wind)
 	if weather._weights[5]>0.001: _update_ice_view(dt)
 	_last_clock = weather.elapsed
 	visible = weather._weights[4] > 0.001 or ice_visual > 0.001
@@ -69,43 +63,6 @@ func _update_ice_view(delta: float) -> void:
 	var movement: Vector2 = game.player.get_real_velocity()/maxf(100,game.player.effective_move_speed())
 	_ice_tilt = _ice_tilt.lerp(movement.limit_length(1),1.0-exp(-7.0*delta))
 	weather._background.set_ice_view(center,_ice_tilt,SettingsStore.weather_intensity)
-
-func _spawn_gust(gust: Dictionary, bounds: Rect2, initial: bool = false) -> void:
-	gust.at = bounds.position+Vector2(_gust_rng.randf(),_gust_rng.randf())*bounds.size
-	gust.angle = wind.angle()+_gust_rng.randf_range(-0.18,0.18)
-	gust.phase = _gust_rng.randf_range(0,TAU)
-	gust.life = _gust_rng.randf_range(2.4,4.2)
-	gust.age = _gust_rng.randf()*gust.life if initial else 0.0
-	gust.opacity = _gust_rng.randf_range(0.22,0.42)
-	var length := _gust_rng.randf_range(46,88)
-	var radius := _gust_rng.randf_range(8,18)
-	var hand := 1.0 if _gust_rng.randf()>0.5 else -1.0
-	var bend := hand*_gust_rng.randf_range(5,16)
-	var turns := _gust_rng.randf_range(0.72,1.10)
-	var points: PackedVector2Array = gust.points
-	for i in 10:
-		var t := float(i)/9.0
-		points[i] = Vector2(t*length,pow(sin(t*PI),2)*bend)
-	for i in 15:
-		var t := float(i+1)/15.0
-		var angle := -PI*0.5+t*TAU*turns
-		var r := radius*lerpf(1.0,0.36,t)
-		points[i+10] = Vector2(length+cos(angle)*r,hand*(radius+sin(angle)*r))
-	gust.points = points
-
-func _advance_gusts(delta: float) -> void:
-	if weather._weights[4]*SettingsStore.weather_intensity <= 0.001:
-		_gust_live = false
-		return
-	var bounds: Rect2 = get_viewport().get_canvas_transform().affine_inverse()*get_viewport().get_visible_rect()
-	bounds = bounds.grow(80)
-	for gust in _gusts:
-		if not _gust_live: _spawn_gust(gust,bounds,true)
-		else:
-			gust.age += delta
-			gust.at += wind*5.3*delta
-			if gust.age >= gust.life or not bounds.grow(160).has_point(gust.at): _spawn_gust(gust,bounds)
-	_gust_live = true
 
 func _reflection(canvas: Node2D, sprite: Node2D, feet: Vector2, alpha: float) -> void:
 	if not is_instance_valid(sprite) or not sprite.is_visible_in_tree(): return
@@ -138,12 +95,3 @@ func _draw() -> void:
 			var actor: Node2D = lights._shadows[i]
 			if not lights._visible(actor): continue
 			_reflection(self,lights._shadow_sprites[i],actor.global_position+Vector2(0,lights._shadow_feet[i]),0.2*ice_visual)
-	var strength: float = weather._weights[4] * SettingsStore.weather_intensity
-	if strength <= 0.001: return
-	for gust in _gusts:
-		var t: float = clampf(gust.age/gust.life,0,1)
-		var fade: float = smoothstep(0.0,0.18,t)*(1.0-smoothstep(0.68,1.0,t))
-		var angle: float = gust.angle+sin(gust.phase+gust.age*1.7)*0.12
-		draw_set_transform(gust.at,angle)
-		draw_polyline(gust.points,Color(GamePalette.UI_GREY_ACTIVE,gust.opacity*fade*strength),1.2,true)
-	draw_set_transform(Vector2.ZERO)

@@ -1,5 +1,13 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-16 风场拖尾重做（当前开发）
+
+- `feature/wind-trails-20261116`基于`f481f39`（PR #25），版本**20261116-170330**。用户提供Ryan GPUParticles2D风拖尾教程/截图；能读标题说明，无法读取完整视频参数，未声称逐参数复刻。4.7原生Compatibility探针明确不支持GPU粒子拖尾，因此实现Web兼容的粒子历史线带。
+- 新`wind_trails.gd`：14头粒子×64世界历史点，主风向/缓慢横波/3局部旋涡，固定60Hz中点积分+显示插值、渐细头尾/淡入淡出、共享柔边纹理。替换旧18条整形平移卷线；独立RNG/固定池/最多8步追赶，无群怪查询/新灯。
+- 风对玩家怪物的原力度与冰面、每关随机危险都不变。镜头不拖动既有历史，FX0只关视觉；暂停、休息、天气切换、退出清理。Debug仍用“阵风场景”。
+- 5源码专项、3最终Web PCK；新增113检查，含30/60/120Hz轨迹、120Hz插值、世界锚定、预算与生命周期。横/竖/灰度/原生48帧动图见[wind-trails.md](wind-trails.md)、`validation/wind-trails-20261116.json`。动图是确定步进渲染，不代表浏览器FPS；本轮未实测Safari，既有退出资源/GL警告保留。
+- 源路径仍`/workspace/Rogge-electric-grid-20261116/project`，构建/探针/原始帧在`../wind-trails`临时内存目录；持久依据为GitHub。后续重点试玩流速、密度与卷曲幅度。正式master/itch不在本轮发布范围。 源码`f7ea32e`保存于[PR #26](https://github.com/wyb969/Rogge/pull/26)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-170330，权限不变；Site source `8bd2733e6e0782169f7532e5a06089ac193b7e7f`，deployment `appgdep_6afac80eba048191b79e24361c6da139`于北京时间2026-11-16 17:08发布succeeded。证据见`validation/wind-trails-playtest-20261116.json`。
+
 ## 2026-11-16 每关随机危险与电击调整（当前开发）
 
 - `feature/stage-hazards-20261116`基于`3c0fe96`（PR #24），版本**20261116-164203**。每关独立选地雷/电网/尖刺之一，独立RNG洗牌袋、关卡缓存，三关包含三种且相邻不重复；与天气解耦，页顶显示种类。Debug固定选定类型，保留移动/电网/冰面旧入口。

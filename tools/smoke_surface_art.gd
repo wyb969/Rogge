@@ -45,45 +45,32 @@ func run() -> void:
 			reset += 1
 			expect(is_zero_approx(sprite.rotation),"recycled slots reset rotation for other art")
 	expect(upright>0 and reset>0,"fixture covers foliage and other decoration types")
-	s._gust_rng.seed = 241
-	s._gust_live = false
+	var trails: Node = s.wind_trails
+	trails.stop()
+	trails._rng.seed = 241
 	seed(969)
 	var expected := randi()
 	seed(969)
 	s.sync()
-	expect(randi()==expected,"visual gust RNG cannot alter combat rolls")
-	expect(s._gusts.size()==18 and s._gust_live,"wind uses eighteen reusable curves")
-	var signs: Dictionary = {}
-	var lengths: Dictionary = {}
-	for gust in s._gusts:
-		expect(gust.points.size()==25 and gust.points[24].distance_to(gust.points[9])>3,"every gust has a curved rolled tip")
-		signs[signf(gust.points[14].y)] = true
-		lengths[int(gust.points[9].x)] = true
-	expect(signs.size()==2 and lengths.size()>6,"curl handedness and lengths vary")
-	var gust: Dictionary = s._gusts[0]
-	var before: Vector2 = gust.at
+	trails.set_process(false)
+	expect(randi()==expected,"visual wind RNG cannot alter combat rolls")
+	expect(trails._trails.size()==14 and trails.live,"wind uses fourteen reusable particle histories")
+	var before: Vector2 = trails._trails[0].at
 	var camera: Camera2D = g.player.get_node("Camera2D")
 	camera.global_position += Vector2(8,0)
 	camera.force_update_scroll()
 	s.sync()
-	expect(gust.at == before,"camera motion cannot drag a live world gust")
-	gust.age = 0.1
-	gust.life = 4
-	var points: PackedVector2Array = gust.points
-	w.elapsed += 0.25
-	s.sync()
-	expect(gust.at.is_equal_approx(before+s.wind*5.3*0.25) and gust.points==points,"wind advects the cached curve without rebuilding it per frame")
-	var nodes: int = s.get_child_count()
+	trails.set_process(false)
+	expect(trails._trails[0].at==before,"camera cannot drag existing wind trails")
+	var nodes: int = trails.get_child_count()
 	var queries: int = root.get_node("CombatTargets").queries
-	for i in 200:
-		w.elapsed += 0.2
-		s.sync()
-	expect(s._gusts.size()==18 and s.get_child_count()==nodes and root.get_node("CombatTargets").queries==queries,"long wind animation adds neither nodes nor crowd queries")
+	for i in 200: trails.advance(1.0/60)
+	expect(trails.get_child_count()==nodes and root.get_node("CombatTargets").queries==queries,"flow adds neither nodes nor crowd queries")
 	var settings: Node = root.get_node("SettingsStore")
 	var old: float = settings.weather_intensity
 	settings.weather_intensity = 0
 	s.sync()
-	expect(not s._gust_live and s.wind_velocity().length()>0,"zero cosmetic quality clears curves but preserves wind forces")
+	expect(not trails.live and s.wind_velocity().length()>0,"zero FX clears histories but preserves wind forces")
 	settings.weather_intensity = old
 	w.set_preview(5,0)
 	root.get_node("MobileInput").controls_enabled = false
@@ -107,8 +94,8 @@ func run() -> void:
 	expect(bg._shader_mat.get_shader_parameter("ice_gloss_strength")==0 and bg._shader_mat.get_shader_parameter("ice_cover")==1,"low FX suppresses gloss while keeping icy ground identifiable")
 	settings.weather_intensity = old
 	w.stop()
-	expect(not s._gust_live and s._ice_tilt==Vector2.ZERO,"stop resets visual state")
-	if failures.is_empty(): print("SURFACE ART OK: %d assertions; upright/reused decor, varied pooled curls, world anchoring/RNG/budget, actual four-direction optical input, idle/pause/FX/reset" % checks)
+	expect(not trails.live and s._ice_tilt==Vector2.ZERO,"stop resets visual state")
+	if failures.is_empty(): print("SURFACE ART OK: %d assertions; upright/reused decor, pooled particle-history trails, world anchoring/RNG/budget, actual four-direction optical input, idle/pause/FX/reset" % checks)
 	else:
 		for failure in failures: push_error(failure)
 	quit(0 if failures.is_empty() else 1)

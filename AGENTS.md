@@ -32,3 +32,5 @@
 - Terrain airborne feedback is cosmetic Z, separate from ground collision/control duration. Keep foot locators and contact shadows on the ground, move attached weapon art with the body, and retain cleanup ownership until landing finishes. Route launch/landing shake through the existing camera mixer.
 
 - Each stage owns one cached hazard selected independently from weather (mines/electric/spikes). Debug overrides are explicit; changing weather must not reroll hazards. Electric skeleton replacement restores prior body/weapon visibility on expiration and lifecycle exits, without overwriting material/status tint.
+
+- Wind trails target Web/Compatibility: use the bounded world-space particle-history ribbon pool, not unsupported GPU trail rendering. Keep cosmetic flow independent of gameplay wind and combat RNG; advance at bounded fixed steps with render interpolation and clear histories on lifecycle exits.

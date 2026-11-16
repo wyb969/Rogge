@@ -1072,4 +1072,4 @@ func prepare_surface_debug(kind: int) -> void:
 		_on_upgrade_selected("banana_fan")
 		_on_upgrade_selected("black_hole")
 	variety.notify("阵风会推偏普通移动" if kind==4 else "冰面有惯性：松开后滑行，反向输入刹车
-扇风、黑洞和爆炸的怪物位移 +30%")
+位移 +30%；红尖刺伤玩家12 / 怪物36，每秒一次")

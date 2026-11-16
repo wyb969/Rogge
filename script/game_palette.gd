@@ -177,3 +177,6 @@ static func surface(fill: Color = UI_BUTTON, border: Color = UI_BORDER, opacity:
 	return style
 
 const ICE_REFLECTION := Color("c7e6ff")
+
+const SPIKE_BASE := Color("283744")
+const SPIKE_SHADE := Color("517b91")

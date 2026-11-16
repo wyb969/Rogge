@@ -20,6 +20,7 @@ var sun_direction := Vector2(0.65, 0.76).normalized()
 var lighting: Node2D
 var winter: Node2D
 var surface: Node2D
+var spikes: Node2D
 var cloud_strength: = 0.0
 var rain_count: = 0
 var snow_count: = 0
@@ -101,9 +102,13 @@ func _ready() -> void :
 	surface = preload("res://script/environment_surface.gd").new()
 	surface.name = "EnvironmentSurface"
 	add_child(surface)
+	spikes = preload("res://script/ice_spikes.gd").new()
+	spikes.name = "IceSpikes"
+	add_child(spikes)
 	stop()
 
 func begin_run() -> void :
+	spikes.reset_run()
 	winter.clear()
 	winter.stamped = 0
 	_stage_profiles.clear()
@@ -162,6 +167,7 @@ func stop() -> void :
 	if lighting != null: lighting.stop()
 	if winter != null: winter.sync(0)
 	if surface != null: surface.stop()
+	if spikes != null: spikes.stop()
 	_background.set_ice_cover(0)
 	_background.set_snow_cover(0)
 	rain_count = 0

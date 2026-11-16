@@ -5,6 +5,7 @@
 - 分支`feature/winter-snow-20261116`基于`3d4da7f`，版本**20261116-091750**（北京时间）。雪天天气增加冷白积雪地面/草丛覆雪、明显的世界雪花、行走左右脚印和冲刺双雪沟；保留28卡、星轨、光影与数值。
 - 地面和共享草丛材质按雪权重渐变，不改原stage tint；64雪花仍是世界坐标。新增`winter_tracks.gd`单绘制节点/128固定槽，按真实位移17/9单位采样，8秒寿命，瞬移不连线；静止/暂停/关闭天气/回主页/新局均处理。没有走路粒子或逐痕迹节点。
 - Debug首项“冬季雪景 · 脚印 / 冲刺雪痕”，23入口分页；普通游戏天气仍随机。六项原生、三项实际最终PCK通过；真实键盘/冲刺、横竖和灰度可读性已检查。见[winter-snow.md](winter-snow.md)和`validation/winter-snow-20261116.json`。
+- 已验证源码`3a5aacb`保存于[PR #18](https://github.com/wyb969/Rogge/pull/18)，后续仅文档。[既有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新到20261116-091750，所有者私有权限不变。Site source`95d1e2ccfb6be147c343cb9f52e00dd887538e02`，deployment`appgdep_6afa5ad31c508191b7df926b87952fb0`于北京时间2026-11-16 09:22发布succeeded；原PCK/解压WASM字节校验一致，发布记录见`validation/winter-playtest-20261116.json`。
 - 未做本轮托管浏览器/Safari真机或群怪帧率；退出资源警告仍记录。后续重点雪天真机流畅度和白地长期舒适性，不自动合入master或更新正式itch。
 
 ## 2026-11-15 星轨连锁（当前开发）

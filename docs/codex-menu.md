@@ -47,3 +47,9 @@ GODOT --headless --rendering-method gl_compatibility --audio-driver Dummy --path
 ![Chinese portrait cards](screenshots/codex-menu-20261116/cards-zh_CN-390.png)
 ![Portrait pause menu](screenshots/codex-menu-20261116/pause-en-390.png)
 ![Scrollable trial instructions](screenshots/codex-menu-20261116/trial-intro-en-390.png)
+
+## 试玩与保存
+
+[打开试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)，版本 **20261116-182759**。[PR #28](https://github.com/wyb969/Rogge/pull/28) 保存源码 `9ac0283`；北京时间 2026-11-16 18:35 发布成功，保持原 owner-private 权限。
+
+Site 源码 `65db5ef5944a407860722c47e3d12fdd41ac84dc`，部署 `appgdep_6afadc58e2c88191a36379885becaa61`。9 个原始导出文件逐字节核对（PCK/WASM 解压后，HTML 仅增加既有 loader）；26 项 loader 检查通过。见 [发布证据](validation/codex-menu-playtest-20261116.json)。正式 master/itch 未更新。

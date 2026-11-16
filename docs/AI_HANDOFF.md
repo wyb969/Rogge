@@ -7,7 +7,7 @@
 - 升级卡统一 280×330 逻辑显示像素、72×72 图标、一句简介、两项关键数值及详情按钮；完整数值在词典。CardNumbers.value_pair 共享显示格式，新装备冷却写“未装备 → …”，不误写 0 秒。战斗/升级数值不变。
 - 局内语言设置重绘现有卡牌、HUD、休整/试炼/抽奖/神兽说明，不重新抽卡/领取。控件尺寸透明度保留，位置拖动仍在主页设置；局内设置中触控战斗输入保持禁用。英文试炼长正文改滚动区，操作按钮常驻。
 - 源码7专项、最终 Web PCK 4专项通过；新增636检查、翻译审计1036键。验证、原生中英横竖屏截图和命令见 [codex-menu.md](codex-menu.md)、`validation/codex-menu-20261116.json`。未做本轮浏览器/Safari/手机实机测试，既有退出资源/GL 警告保留。
-- 工程路径 `/workspace/Rogge-electric-grid-20261116/project`，本轮构建/日志 `../codex`（临时内存目录）；源码以 GitHub 保存为准。后续优先收集词典文案、卡片可读性和手机滚动/返回反馈；不追加机制。本轮不合并正式 master、不发布正式 itch。
+- 工程路径 `/workspace/Rogge-electric-grid-20261116/project`，本轮构建/日志 `../codex`（临时内存目录）；源码以 GitHub 保存为准。后续优先收集词典文案、卡片可读性和手机滚动/返回反馈；不追加机制。本轮不合并正式 master、不发布正式 itch。 源码 `9ac0283` 已保存于 [PR #28](https://github.com/wyb969/Rogge/pull/28)。[私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新 20261116-182759；Site `65db5ef5944a407860722c47e3d12fdd41ac84dc`、deployment `appgdep_6afadc58e2c88191a36379885becaa61` 于北京时间 18:35 succeeded。磁盘空间不足，本轮 Site 工作副本在 `/dev/shm/Rogge-codex-site-20261116`，旧 checkout 保留未覆盖；后续先同步远端。发布证据 `validation/codex-menu-playtest-20261116.json`。
 
 ## 2026-11-16 中英文第一版（当前开发）
 

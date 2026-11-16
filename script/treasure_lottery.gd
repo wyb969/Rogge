@@ -102,9 +102,9 @@ func _build_ui() -> void :
 	_box = VBoxContainer.new()
 	_box.add_theme_constant_override("separation", 16)
 	_panel.add_child(_box)
-	var eyebrow: = _label("战利品  /  TREASURE", 14)
+	var eyebrow: = _label(L10n.text("战利品  /  TREASURE"), 14)
 	eyebrow.add_theme_color_override("font_color", Color(0.88, 0.69, 0.35))
-	_title = _label("宝藏老虎机", 30, true)
+	_title = _label(L10n.text("宝藏老虎机"), 30, true)
 	var row: = HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 10)
@@ -120,8 +120,8 @@ func _build_ui() -> void :
 		texture.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		panel.add_child(texture)
 		_reels.append(texture)
-	_result = _label("守卫已击败 · 你的奖励已就绪", 21, true)
-	_detail = _label("随机一张卡，直接提升等级\n+2 级 80%  ·  +3 级 15%  ·  +1 级 5%", 15)
+	_result = _label(L10n.text("守卫已击败 · 你的奖励已就绪"), 21, true)
+	_detail = _label(L10n.text("随机一张卡，直接提升等级\n+2 级 80%  ·  +3 级 15%  ·  +1 级 5%"), 15)
 	_button = Button.new()
 	_button.custom_minimum_size.y = 54
 	UiFonts.apply_to_button(_button, 20)
@@ -176,11 +176,11 @@ func open_lottery(pool: Array, equipment: Control) -> void :
 	spin_time = 0.0
 	_tick_left = 0.0
 	_burst.strength = 0
-	_title.text = "宝藏老虎机"
-	_result.text = "守卫已击败 · 你的奖励已就绪"
-	_detail.text = "随机一张卡，直接提升等级\n+2 级 80%  ·  +3 级 15%  ·  +1 级 5%"
+	_title.text = L10n.text("宝藏老虎机")
+	_result.text = L10n.text("守卫已击败 · 你的奖励已就绪")
+	_detail.text = L10n.text("随机一张卡，直接提升等级\n+2 级 80%  ·  +3 级 15%  ·  +1 级 5%")
 	_result.add_theme_color_override("font_color", Color.WHITE)
-	_button.text = "开启抽奖"
+	_button.text = L10n.text("开启抽奖")
 	_button.disabled = false
 	for i in _reels.size():
 		_set_reel(i, _pool[randi() % _pool.size()])
@@ -205,8 +205,8 @@ func _on_button() -> void :
 	if not revealed:
 		spinning = true
 		_button.disabled = true
-		_button.text = "抽奖中…"
-		_result.text = "好运正在转动…"
+		_button.text = L10n.text("抽奖中…")
+		_result.text = L10n.text("好运正在转动…")
 		return
 	claimed = true
 	visible = false
@@ -236,12 +236,12 @@ func _reveal() -> void :
 	for i in _reels.size():
 		_set_reel(i, reward)
 	_burst.strength = bonus_levels
-	_title.text = ["", "小小幸运", "幸运大奖", "超级大奖！"][bonus_levels]
-	var card_name: = str(reward.title).replace(" +1 级", "")
-	_result.text = "%s  +%d 级" % [card_name, bonus_levels]
+	_title.text = ["", L10n.text("小小幸运"), L10n.text("幸运大奖"), L10n.text("超级大奖！")][bonus_levels]
+	var card_name: = L10n.text(str(reward.title)).replace(L10n.text(" +1 级"), "")
+	_result.text = L10n.text("%s  +%d 级") % [card_name, bonus_levels]
 	_result.add_theme_color_override("font_color", Color(1.0, 0.78, 0.25))
-	_detail.text = "Lv.%d  →  Lv.%d\n同一张卡连续升级 %d 次，领取后生效" % [old_level, old_level + bonus_levels, bonus_levels]
-	_button.text = "领取奖励 · 继续战斗"
+	_detail.text = L10n.text("Lv.%d  →  Lv.%d\n同一张卡连续升级 %d 次，领取后生效") % [old_level, old_level + bonus_levels, bonus_levels]
+	_button.text = L10n.text("领取奖励 · 继续战斗")
 	_button.disabled = false
 	_fanfare.pitch_scale = 0.9 + 0.1 * bonus_levels
 	_fanfare.play()

@@ -99,7 +99,7 @@ func _process(delta: float) -> void :
 	if _action_label != null and (_caption_state != state or _caption_move != _move_name):
 		_caption_state = state
 		_caption_move = _move_name
-		var caption: String = ["走位", "预警 · " + _move_name, "释放 · " + _move_name, "硬直 · 反击", "二阶段"][state]
+		var caption: String = [L10n.text("走位"), L10n.text("预警 · ") + _move_name, L10n.text("释放 · ") + _move_name, L10n.text("硬直 · 反击"), L10n.text("二阶段")][state]
 		_action_label.text = caption
 	if not is_dying:
 		sprite_2d.position.y = sin(_elapsed * 2.5) * (5.0 if element == 2 else 2.0)
@@ -173,7 +173,7 @@ func begin_attack() -> void :
 	if element != 2 and pattern_index % 3 == 1:
 		_prepare_dive(target)
 		_extra_dives = 1 if element == 1 and phase == 2 else 0
-		_move_name = ["潮涌冲锋", "雷跃突袭", "俯冲", "熔壳滚动"][element]
+		_move_name = [L10n.text("潮涌冲锋"), L10n.text("雷跃突袭"), L10n.text("俯冲"), L10n.text("熔壳滚动")][element]
 		pattern_index += 1
 		state = State.WARN
 		state_left = warning_seconds()
@@ -181,7 +181,7 @@ func begin_attack() -> void :
 		_update_attack_visual(true)
 		queue_redraw()
 		return
-	_move_name = ["水泡落点" if not alternate else "潮汐水道", "交叉落雷" if not alternate else "雷印追击", "风刃", "熔岩环" if not alternate else "火种坠落"][element]
+	_move_name = [L10n.text("水泡落点") if not alternate else L10n.text("潮汐水道"), L10n.text("交叉落雷") if not alternate else L10n.text("雷印追击"), L10n.text("风刃"), L10n.text("熔岩环") if not alternate else L10n.text("火种坠落")][element]
 	match element:
 		0:
 			if alternate:
@@ -279,7 +279,7 @@ func apply_hit(data: Dictionary) -> void :
 		_extra_dives = 0
 		state = State.PHASE
 		state_left = 1.1
-		_title.text = NAMES[element] + " / II"
+		_title.text = L10n.text(NAMES[element]) + " / II"
 		_title.add_theme_color_override("font_color", COLORS[element])
 	_update_attack_visual()
 	queue_redraw()
@@ -308,7 +308,7 @@ func _build_hud() -> void :
 	health_bar.reparent(_hud, false)
 	health_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_title = Label.new()
-	_title.text = NAMES[element] + " / I"
+	_title.text = L10n.text(NAMES[element]) + " / I"
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	UiFonts.apply_to_label(_title, 18, true)
 	_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.03))

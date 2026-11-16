@@ -34,7 +34,7 @@ func _ready() -> void :
 	_layout_hud()
 
 func _update_title() -> void :
-	_title.text = ROLE_NAMES[role] + (" / II" if phase == 2 else " / I")
+	_title.text = L10n.text(ROLE_NAMES[role]) + (" / II" if phase == 2 else " / I")
 	_title.add_theme_color_override("font_color", ROLE_COLORS[role])
 
 func _physics_process(delta: float) -> void :
@@ -92,7 +92,7 @@ func begin_attack() -> void :
 	shapes.clear()
 	dive = false
 	_extra_dives = 0
-	_move_name = "风刃扇击" if role == Role.RANGED else "俯冲突袭"
+	_move_name = L10n.text("风刃扇击") if role == Role.RANGED else L10n.text("俯冲突袭")
 	_orbit_sign = (1.0 if role == Role.RANGED else -1.0) * (1.0 if pattern_index % 2 == 0 else -1.0)
 	if role == Role.RANGED:
 		var aim: = (player.global_position - global_position).normalized()

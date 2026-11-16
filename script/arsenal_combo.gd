@@ -45,7 +45,7 @@ func refresh_equipment() -> void:
 	if complete != unlocked:
 		clear_combat_effects()
 		unlocked = complete
-		if unlocked: game.variety.notify("军械护盾组合已激活\n每3秒获得1秒无敌 · 无人机 + 枪支 + 炸弹")
+		if unlocked: game.variety.notify(L10n.text("军械护盾组合已激活\n每3秒获得1秒无敌 · 无人机 + 枪支 + 炸弹"))
 	set_physics_process(unlocked)
 	_update_hud()
 

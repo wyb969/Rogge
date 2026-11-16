@@ -43,7 +43,7 @@ func add_coin(value: int) -> void :
 func level_up():
 	AudioManager.play_upgrade()
 	level += 1
-	label.text = "Level: " + str(level)
+	label.text = L10n.text("Level: ") + str(level)
 	coin_number = max(0, coin_number - level_need_coin_number)
 	level_need_coin_number = get_need_exp(level)
 	progress_bar.value = float(coin_number) / float(level_need_coin_number) * 100.0

@@ -139,6 +139,9 @@ func _check_settings(main: Node, failures: Array[String]) -> void :
 	var page: Variant = main.get_node("SettingsPage")
 	if not page.visible:
 		failures.append("settings page did not open")
+	page._scroll.ensure_control_visible(page.difficulty_button)
+	await process_frame
+	await process_frame
 	var picker: Variant = page.difficulty_button
 	var choices: Variant = page.difficulty_list
 	if choices.get_child_count() != 3:
@@ -147,7 +150,7 @@ func _check_settings(main: Node, failures: Array[String]) -> void :
 	var hard_label: Variant = choices.get_child(2).get_child(0)
 	if easy_label.text != "简单  Easy" or hard_label.text != "困难  Hard":
 		failures.append("difficulty labels mismatch")
-	if picker.text != "困难  Hard  v":
+	if picker.text != L10n.text("困难  Hard") + "  v":
 		failures.append("picker did not sync to hard (%s)" % picker.text)
 	var controls: Variant = host.mobile_controls
 	if not controls.visible or not controls.layout_edit:

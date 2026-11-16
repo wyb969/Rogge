@@ -43,7 +43,7 @@ static func rank_for(game: Node, id: String) -> int:
 
 static func build(game: Node, id: String) -> Dictionary:
 	var rows: Array[Dictionary] = []
-	if game == null: return {"rows":rows,"desc":"进入对局后显示当前数值","rich_desc":"进入对局后显示当前数值"}
+	if game == null: return {"rows":rows,"desc":L10n.text("进入对局后显示当前数值"),"rich_desc":L10n.text("进入对局后显示当前数值")}
 	var player: Node = game.player
 	var rank: int = rank_for(game,id)
 	var next: int = rank + 1
@@ -63,14 +63,14 @@ static func build(game: Node, id: String) -> Dictionary:
 			var stats: Dictionary = weapon.upgrade_preview(game.current_level)
 			_row(rows,"基础伤害",weapon.weapon_demage,stats.damage)
 			_row(rows,"飞行速度",weapon.max_speed,stats.speed)
-			hint = "往返各命中一次 · 不附带灼烧"
+			hint = L10n.text("往返各命中一次 · 不附带灼烧")
 		"circle_up":
 			var weapon: Node = game.circle_weapon
 			var old_damage: float = weapon.get_child(0).weapon_demage
 			_row(rows,"每本伤害",old_damage,BOOK.damage_for(maxi(weapon.current_level,game.current_level),next))
 			_row(rows,"书本数量",weapon.num_weapons,weapon.count_for(next),"",false)
 			_row(rows,"环绕速度",weapon.rotation_speed,weapon.rotation_for(next))
-			hint = "最多12本 · 达上限后继续增伤"
+			hint = L10n.text("最多12本 · 达上限后继续增伤")
 		"gun_up":
 			var gun: Node = game.gun_weapon
 			var damage: float = gun.damage_for_upgrade(next)
@@ -90,7 +90,7 @@ static func build(game: Node, id: String) -> Dictionary:
 			_row(rows,"燃烧层数",fire.get_burn_stacks(rank) if rank > 0 else 0,fire.get_burn_stacks(next),"",false)
 			_row(rows,"投掷间隔",fire.get_throw_interval(rank) if rank > 0 else 0,fire.get_throw_interval(next),"s")
 			_row(rows,"爆炸半径",fire.get_explode_radius(rank) if rank > 0 else 0,fire.get_explode_radius(next))
-			hint = "命中附燃几率 " + CardNumbers.number(fire.get_on_hit_chance(next)*100) + "%"
+			hint = L10n.text("命中附燃几率 ") + CardNumbers.number(fire.get_on_hit_chance(next)*100) + "%"
 		"freeze_up":
 			var ice: Node = game.freeze_controller
 			_row(rows,"冰冻几率",ice.get_on_hit_chance(rank)*100 if rank > 0 else 0,ice.get_on_hit_chance(next)*100,"%",false)
@@ -102,12 +102,12 @@ static func build(game: Node, id: String) -> Dictionary:
 			_row(rows,"回复间隔",player.regen_interval_for(rank) if rank > 0 else 0,player.regen_interval_for(next),"s")
 		"monster_necklace":
 			_row(rows,"每球回复",player.effective_heal_amount(player.monster_necklace_heal_for(rank)),player.monster_necklace_heal_for(next)*next_heal_scale,"",false)
-			hint = "击杀掉落回血球 · 拾取时生效"
+			hint = L10n.text("击杀掉落回血球 · 拾取时生效")
 		"lifesteal_up":
 			_row(rows,"命中回复比例",player.lifesteal_percent_for(rank)*player.total_healing_multiplier()*100 if rank > 0 else 0,player.lifesteal_percent_for(next)*next_heal_scale*100,"%",false)
 			_row(rows,"固定回复",player.LIFESTEAL_FLAT*player.total_healing_multiplier() if rank > 0 else 0,player.LIFESTEAL_FLAT*next_heal_scale,"",false)
 			_row(rows,"每次回复上限",player.effective_heal_amount(player.lifesteal_cap_for(rank)) if rank > 0 else 0,player.lifesteal_cap_for(next)*next_heal_scale,"",false)
-			hint = "直接命中伤害至少8 · 持续伤害不吸血"
+			hint = L10n.text("直接命中伤害至少8 · 持续伤害不吸血")
 		"shield_up":
 			_row(rows,"每杀护盾",player.shield_gain_for(rank),player.shield_gain_for(next),"",false)
 			_row(rows,"衰减等待",player.shield_idle_for(rank) if rank > 0 else 0,player.shield_idle_for(next),"s")
@@ -115,7 +115,7 @@ static func build(game: Node, id: String) -> Dictionary:
 		"critical_glasses":
 			_row(rows,"暴击率",CRIT.chance_for(rank)*100,CRIT.chance_for(next)*100,"%",false)
 			_row(rows,"暴击伤害",CRIT.damage_multiplier_for(rank)*100,CRIT.damage_multiplier_for(next)*100,"%",false)
-			hint = "最高5级 · 直接攻击生效\n满级暴击伤害200% · 持续伤害不暴击"
+			hint = L10n.text("最高5级 · 直接攻击生效\n满级暴击伤害200% · 持续伤害不暴击")
 		"left_fist", "right_fist":
 			var left: int = player.left_fist_level
 			var right: int = player.right_fist_level
@@ -125,7 +125,7 @@ static func build(game: Node, id: String) -> Dictionary:
 				var before: float = player.side_multiplier_for(side,left,right)*100
 				var after: float = player.side_multiplier_for(side,new_left,new_right)*100
 				_row(rows,"左侧伤害" if side else "右侧伤害",before,after,"%",false,after < before)
-			hint = "双持取消另一侧伤害惩罚"
+			hint = L10n.text("双持取消另一侧伤害惩罚")
 		"thorn_whip", "rune_bolt", "pulse_aura":
 			var before := ARCANE.stats_for(id,rank)
 			var after := ARCANE.stats_for(id,next)
@@ -133,7 +133,7 @@ static func build(game: Node, id: String) -> Dictionary:
 				if not after.has(key): continue
 				var label: String = {"damage":"单次伤害","count":"飞弹数量","range":"攻击距离","radius":"脉冲半径","duration":"持续时间","interval":"触发间隔"}[key]
 				_row(rows,label,float(before[key]) if rank>0 else 0,float(after[key]),"s" if key in ["duration","interval"] else "",key!="count")
-			hint = {"thorn_whip":"自动瞄准 · 120度近身横扫","rune_bolt":"固定符文区域边界反弹 · 穿透敌人\n同一飞弹对同一敌人命中间隔0.35秒","pulse_aura":"围绕玩家周期攻击 · 不暴击或传播异常"}[id]+"\n最高5级"
+			hint = {"thorn_whip":L10n.text("自动瞄准 · 120度近身横扫"),"rune_bolt":L10n.text("固定符文区域边界反弹 · 穿透敌人\n同一飞弹对同一敌人命中间隔0.35秒"),"pulse_aura":L10n.text("围绕玩家周期攻击 · 不暴击或传播异常")}[id]+L10n.text("\n最高5级")
 		"silver_knife", "cross_blade", "holy_water":
 			var before := RELICS.stats_for(id,rank)
 			var after := RELICS.stats_for(id,next)
@@ -141,7 +141,7 @@ static func build(game: Node, id: String) -> Dictionary:
 				if not after.has(key): continue
 				var label: String = {"damage":"单次伤害","dps":"每秒伤害","count":"飞刀数量","range":"飞行距离","radius":"净化半径","duration":"持续时间","interval":"触发间隔"}[key]
 				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key in ["duration","interval"] else "",key != "count")
-			hint = {"silver_knife":"自动瞄准附近敌人穿透 · 每把对同一目标命中一次","cross_blade":"自动瞄准 · 固定路径往返各命中一次","holy_water":"敌人脚下净化区域 · 每0.5秒结算\n重叠区域不叠伤，不触发暴击和异常传播"}[id]+"\n最高5级"
+			hint = {"silver_knife":L10n.text("自动瞄准附近敌人穿透 · 每把对同一目标命中一次"),"cross_blade":L10n.text("自动瞄准 · 固定路径往返各命中一次"),"holy_water":L10n.text("敌人脚下净化区域 · 每0.5秒结算\n重叠区域不叠伤，不触发暴击和异常传播")}[id]+L10n.text("\n最高5级")
 		"bomb", "banana_fan", "black_hole", "poison_trail", "lightning_ring", "wind_emblem", "echo_ember":
 			var source: Script = {"bomb":BOMB,"banana_fan":FAN,"black_hole":HOLE,"poison_trail":POISON,"lightning_ring":RING}.get(id,VARIETY)
 			var before: Dictionary = source.wind_stats(maxi(rank,1)) if id == "wind_emblem" else (source.echo_stats(maxi(rank,1)) if id == "echo_ember" else source.stats_for(maxi(rank,1)))
@@ -150,7 +150,7 @@ static func build(game: Node, id: String) -> Dictionary:
 				if not after.has(key): continue
 				var label: String = {"damage":"基础伤害","dps":"每秒伤害","radius":"作用半径","range":"作用距离","interval":"触发间隔","bolts":"闪电目标","kills":"所需击杀"}[key]
 				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key == "interval" else "",key not in ["bolts","kills"])
-			hint = {"bomb":"爆炸击飞 · 最高5级","banana_fan":"气流击退 · 最高5级\n已有灼烧/中毒追加一跳，不传播","black_hole":"牵引聚怪 · 持续3秒 · 最高5级","poison_trail":"移动留雾 · 持续4 秒\n最高5级减速25% · 重叠不叠伤","lightning_ring":"同时击中不同目标","wind_emblem":"冲刺结束释放风压","echo_ember":"最后击杀处引爆回响"}[id]
+			hint = {"bomb":L10n.text("爆炸击飞 · 最高5级"),"banana_fan":L10n.text("气流击退 · 最高5级\n已有灼烧/中毒追加一跳，不传播"),"black_hole":L10n.text("牵引聚怪 · 持续3秒 · 最高5级"),"poison_trail":L10n.text("移动留雾 · 持续4 秒\n最高5级减速25% · 重叠不叠伤"),"lightning_ring":L10n.text("同时击中不同目标"),"wind_emblem":L10n.text("冲刺结束释放风压"),"echo_ember":L10n.text("最后击杀处引爆回响")}[id]
 	var combo: String = COMBOS.hint_for(id)
 	if not combo.is_empty(): hint += ("\n" if not hint.is_empty() else "") + combo
 	var suffix := ("\n" + hint) if not hint.is_empty() else ""

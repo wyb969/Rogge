@@ -62,8 +62,8 @@ func begin(value: String) -> void :
 	game.spawner_ui.hide()
 	_set_controls(false)
 	get_node("/root/AudioManager").play_game_bgm(game.spawner.stage)
-	_show_modal(TITLES[kind] + " · 挑战说明", RULES[kind])
-	start_button = _button("开始试炼", start_attempt)
+	_show_modal(L10n.text(TITLES[kind]) + L10n.text(" · 挑战说明"), L10n.text(RULES[kind]))
+	start_button = _button(L10n.text("开始试炼"), start_attempt)
 	_fit()
 	get_tree().paused = true
 	start_button.grab_focus()
@@ -120,19 +120,19 @@ func _process(delta: float) -> void :
 	_update_clock()
 	if kind == "wooden":
 		if player.player_health <= 0:
-			fail("生命耗尽：未能抵挡本次怪潮。")
+			fail(L10n.text("生命耗尽：未能抵挡本次怪潮。"))
 		elif elapsed >= 60.0:
 			_finish(true, "")
 		else:
 			horde.advance(active_delta, elapsed)
 	elif kind == "power" and elapsed >= 60:
-		fail("时间已到：需要在 60 秒内完成击杀。")
+		fail(L10n.text("时间已到：需要在 60 秒内完成击杀。"))
 
 func _on_enemy_defeated(token: int) -> void :
 	if token != _token or flow != TrialFlow.ACTIVE:
 		return
 	if kind == "power" and elapsed > 60:
-		fail("时间已到：本次未在限时内完成。")
+		fail(L10n.text("时间已到：本次未在限时内完成。"))
 		return
 	game.spawner.enemy_killed_num += 1
 	_finish(true, "")
@@ -152,22 +152,22 @@ func _finish(passed: bool, reason: String) -> void :
 	_hud.hide()
 	_set_controls(false)
 	get_node("/root/AudioManager").play_game_bgm(game.spawner.stage)
-	var name_text: String = TITLES[kind]
-	var body: = ("成功击败试炼敌人！\n用时 %.1f 秒。\n继续后进入休整区，保留当前全部构筑。" % elapsed) if passed else reason + "\n卡片与神兽技能会保留。\n重试会回复生命，并重置冲刺。\n也可以放弃本次试炼，按下方选项继续。"
+	var name_text: String = L10n.text(TITLES[kind])
+	var body: = (L10n.text("成功击败试炼敌人！\n用时 %.1f 秒。\n继续后进入休整区，保留当前全部构筑。") % elapsed) if passed else reason + L10n.text("\n卡片与神兽技能会保留。\n重试会回复生命，并重置冲刺。\n也可以放弃本次试炼，按下方选项继续。")
 	if passed and kind == "speed":
-		body = "成功抓住冲刺反击的时机，击败巫刃术士！\n接下来是木头人挑战：原地抵挡 60 秒怪潮。\n保留全部装备与神兽技能，准备好后继续。"
+		body = L10n.text("成功抓住冲刺反击的时机，击败巫刃术士！\n接下来是木头人挑战：原地抵挡 60 秒怪潮。\n保留全部装备与神兽技能，准备好后继续。")
 	if passed and kind == "wooden":
-		body = "成功抵挡 60 秒怪潮！\n移动与冲刺已恢复，木头人挑战通过。\n可通关结算，或进入自由试炼。"
-	_show_modal(name_text + (" · 通过" if passed else " · 未通过"), body)
+		body = L10n.text("成功抵挡 60 秒怪潮！\n移动与冲刺已恢复，木头人挑战通过。\n可通关结算，或进入自由试炼。")
+	_show_modal(name_text + (L10n.text(" · 通过") if passed else L10n.text(" · 未通过")), body)
 	if not passed:
-		retry_button = _button("重试试炼", start_attempt)
+		retry_button = _button(L10n.text("重试试炼"), start_attempt)
 	if kind == "power":
-		continue_button = _button("继续休整" if passed else "放弃本次试炼 · 继续主线", _continue.bind(false))
+		continue_button = _button(L10n.text("继续休整") if passed else L10n.text("放弃本次试炼 · 继续主线"), _continue.bind(false))
 	elif kind == "speed":
-		continue_button = _button("进入木头人挑战" if passed else "放弃本次试炼 · 进入木头人挑战", _continue.bind(false))
+		continue_button = _button(L10n.text("进入木头人挑战") if passed else L10n.text("放弃本次试炼 · 进入木头人挑战"), _continue.bind(false))
 	else:
-		continue_button = _button("进入自由试炼" if passed else "放弃本次试炼 · 进入自由试炼", _continue.bind(false))
-		settle_button = _button("通关结算" if passed else "放弃本次试炼 · 通关结算", _continue.bind(true))
+		continue_button = _button(L10n.text("进入自由试炼") if passed else L10n.text("放弃本次试炼 · 进入自由试炼"), _continue.bind(false))
+		settle_button = _button(L10n.text("通关结算") if passed else L10n.text("放弃本次试炼 · 通关结算"), _continue.bind(true))
 	_fit()
 	get_tree().paused = true
 	(continue_button if passed else retry_button).grab_focus()
@@ -292,9 +292,9 @@ func _button(text_value: String, callback: Callable) -> Button:
 
 func _update_clock() -> void :
 	if kind == "wooden":
-		_clock.text = "木头人 · %.1f 秒 · 第%d/3波\n移动 / 冲刺锁定 · 神兽技能可用" % [maxf(0, 60 - elapsed), mini(3, int(elapsed / 20.0) + 1)]
+		_clock.text = L10n.text("木头人 · %.1f 秒 · 第%d/3波\n移动 / 冲刺锁定 · 神兽技能可用") % [maxf(0, 60 - elapsed), mini(3, int(elapsed / 20.0) + 1)]
 		return
-	_clock.text = "力量试炼 · %.1f 秒" % maxf(0, 60 - elapsed) if kind == "power" else "速度试炼 · 冲刺后反击"
+	_clock.text = L10n.text("力量试炼 · %.1f 秒") % maxf(0, 60 - elapsed) if kind == "power" else L10n.text("速度试炼 · 冲刺后反击")
 
 func _fit() -> void :
 	if not is_instance_valid(_panel):

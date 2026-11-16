@@ -190,7 +190,7 @@ func export_report() -> String:
 		_save()
 	var data: = latest()
 	if data.is_empty():
-		return "暂无记录，请先游玩或运行压力测试"
+		return L10n.text("暂无记录，请先游玩或运行压力测试")
 	var name: = "rogge-diagnostics-%s-%d.json" % [data.get("build", "dev"), Time.get_unix_time_from_system()]
 	var bytes: = JSON.stringify(data, "\t").to_utf8_buffer()
 	if _js != null:
@@ -200,6 +200,6 @@ func export_report() -> String:
 		last_export_path = "user://" + name
 		var file: = FileAccess.open(last_export_path, FileAccess.WRITE)
 		if file == null:
-			return "报告保存失败"
+			return L10n.text("报告保存失败")
 		file.store_buffer(bytes)
-	return "诊断报告已导出，请保存 JSON 文件"
+	return L10n.text("诊断报告已导出，请保存 JSON 文件")

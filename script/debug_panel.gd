@@ -24,9 +24,9 @@ func update_text() -> void :
 
 	debug_label.text = """DEBUG
 """ + \
-	"Level: %s\n" % level_manager.level + \
-	"HP: %s / %s\n" % [player.player_health, player.max_player_health] + \
-	"MoveSpeed: %s\n" % player.effective_move_speed() + \
-	"Enemy Killed: %s\n" % spawner.enemy_killed_num + \
-	"Enemy Alive: %s\n" % enemy_count + \
-	"Stage: %s\n" % spawner.stage
+	L10n.text("Level: %s\n") % level_manager.level + \
+	L10n.text("HP: %s / %s\n") % [player.player_health, player.max_player_health] + \
+	L10n.text("MoveSpeed: %s\n") % player.effective_move_speed() + \
+	L10n.text("Enemy Killed: %s\n") % spawner.enemy_killed_num + \
+	L10n.text("Enemy Alive: %s\n") % enemy_count + \
+	L10n.text("Stage: %s\n") % spawner.stage

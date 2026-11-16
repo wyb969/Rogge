@@ -166,7 +166,7 @@ func _ready():
 	reroll_button.add_theme_stylebox_override("disabled", disabled_style)
 	JuicyHover.bind(reroll_button)
 	reroll_hint = Label.new()
-	reroll_hint.text = "每局 2 次 · 击败宝囊精可补充"
+	reroll_hint.text = L10n.text("每局 2 次 · 击败宝囊精可补充")
 	reroll_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	reroll_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	reroll_hint.modulate = GamePalette.UI_GREY_BORDER
@@ -186,7 +186,7 @@ func show_upgrade_options():
 	visible = true
 	var player: = get_tree().get_first_node_in_group("player")
 	if player != null:
-		growth_hint.text = "人物每升一级：生命上限 +%d，同时补充 %d" % [player.HEALTH_PER_LEVEL, player.HEALTH_PER_LEVEL]
+		growth_hint.text = L10n.text("人物每升一级：生命上限 +%d，同时补充 %d") % [player.HEALTH_PER_LEVEL, player.HEALTH_PER_LEVEL]
 	_display_options([])
 
 func _display_options(excluded: Array) -> void :
@@ -219,9 +219,9 @@ func grant_reroll() -> bool:
 
 func _refresh_reroll() -> void :
 	if reroll_button == null: return
-	reroll_button.text = "换一组 · 剩余 %d 次" % rerolls
+	reroll_button.text = L10n.text("换一组 · 剩余 %d 次") % rerolls
 	reroll_button.disabled = rerolls <= 0
-	reroll_button.tooltip_text = "每局 2 次，击败宝囊精补充；最多储存 3 次"
+	reroll_button.tooltip_text = L10n.text("每局 2 次，击败宝囊精补充；最多储存 3 次")
 
 func _on_reroll() -> void :
 	if not visible or not get_tree().paused or rerolls <= 0: return
@@ -317,7 +317,7 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 	result.merge(PREVIEW.build(game, id), true)
 	if game != null:
 		var rank: int = PREVIEW.rank_for(game,id)
-		result.title = str(game.equipment_panel.EQUIP_DEFS[id].title) + " · %d → %d级" % [rank, rank + 1]
+		result.title = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title)) + L10n.text(" · %d → %d级") % [rank, rank + 1]
 	return result
 
 

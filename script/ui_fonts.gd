@@ -52,6 +52,7 @@ static func apply_to_label(label: Control, size: int = 14, bold: bool = false) -
 static func apply_to_button(button: Button, size: int = 14) -> void :
 	if button == null:
 		return
+	L10n.button_overflow(button)
 	var font: = ui()
 	button.add_theme_font_override("font", font)
 	button.add_theme_font_size_override("font_size", size)

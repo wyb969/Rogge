@@ -7,11 +7,11 @@ func _ready() -> void:
 	game.ink_surf.debug_training = false
 	game.ink_surf.clear_combat_effects()
 	bomber.set_elite_status()
-	_panel.get_child(0).text = "命中：白闪 + 短顿帧 · 受伤：淡红 + 较强顿帧\n按钮走真实伤害流程；左侧精英 / 右侧普通怪"
+	_panel.get_child(0).text = L10n.text("命中：白闪 + 短顿帧 · 受伤：淡红 + 较强顿帧\n按钮走真实伤害流程；左侧精英 / 右侧普通怪")
 	replay_button.pressed.disconnect(replay)
 	dash_button.pressed.disconnect(game.player.reset_dash)
-	replay_button.text = "命中敌人 · 白色"
-	dash_button.text = "玩家受击 · 淡红"
+	replay_button.text = L10n.text("命中敌人 · 白色")
+	dash_button.text = L10n.text("玩家受击 · 淡红")
 	replay_button.pressed.connect(strike_enemy)
 	dash_button.pressed.connect(strike_player)
 

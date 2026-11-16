@@ -32,7 +32,7 @@ func _sync_caption() -> void :
 	var left: = maxi(0, int(ceil(LIFETIME - age)))
 	if left == _caption_second: return
 	_caption_second = left
-	_caption.text = "宝囊精 · %ds" % left
+	_caption.text = L10n.text("宝囊精 · %ds") % left
 
 func _physics_process(delta: float) -> void :
 	if _death_started or not is_instance_valid(player_reference): return

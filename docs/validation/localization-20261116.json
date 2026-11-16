@@ -1,0 +1,131 @@
+{
+  "version": "20261116-173723",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "catalog": {
+    "passed": true,
+    "catalog_rows": 805,
+    "locales": [
+      "en",
+      "zh_CN"
+    ],
+    "checks": [
+      "unique keys",
+      "nonempty translations",
+      "printf placeholder parity",
+      "English has no Chinese",
+      "source Chinese display-string coverage"
+    ]
+  },
+  "source_checks": [
+    {
+      "name": "smoke_localization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.67,
+      "errors": [],
+      "markers": [
+        "LOCALIZATION OK: 382 checks; default, live switch, persistence, migration, stats parity, all cards, four powers and three layouts"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.37,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 464 checks; all28 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.22,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 7773 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_menu_layout",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.41,
+      "errors": [],
+      "markers": [
+        "MENU LAYOUT OK"
+      ],
+      "shutdown_warnings": []
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_localization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.76,
+      "errors": [],
+      "markers": [
+        "LOCALIZATION OK: 382 checks; default, live switch, persistence, migration, stats parity, all cards, four powers and three layouts"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.51,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 464 checks; all28 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_menu_layout",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.03,
+      "errors": [],
+      "markers": [
+        "MENU LAYOUT OK"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "import_errors": [],
+  "export_errors": [],
+  "native_screenshots": "docs/screenshots/localization-20261116",
+  "loader_checks": {
+    "passed": true,
+    "checks": 26,
+    "coverage": "WASM/PCK gzip and host-decoded responses; exact bytes, MIME, query strings, unrelated requests, truncated and invalid resources"
+  },
+  "limitations": [
+    "No browser / Safari / mobile hardware test this turn",
+    "Existing resource and GL teardown warnings remain; not a runtime parse error",
+    "Settings language changes are available from the home menu; hot-switching during an active run is not exposed"
+  ]
+}

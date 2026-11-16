@@ -1,5 +1,7 @@
 extends Node
 
+signal language_changed(language: String)
+
 
 
 const PATH: = "user://rogge_settings.cfg"
@@ -20,15 +22,18 @@ var difficulty: int = DIFF_MEDIUM
 var camera_shake: = 0.65
 var weather_intensity: = 1.0
 var mix_generation: = 0
+var language: String = L10n.DEFAULT_LANGUAGE
 
 func _ready() -> void :
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	load_from_disk()
+	TranslationServer.set_locale(language)
 
 func load_from_disk() -> void :
 	var file: = ConfigFile.new()
 	if file.load(PATH) != OK:
 		return
+	language = L10n.normalized_language(str(file.get_value("play", "language", L10n.DEFAULT_LANGUAGE)))
 	master_linear = clampf(float(file.get_value("audio", "master", master_linear)), 0.0, 1.0)
 	music_linear = clampf(float(file.get_value("audio", "music", 0.55)), 0, 1)
 	sfx_linear = clampf(float(file.get_value("audio", "sfx", 1.0)), 0, 1)
@@ -64,6 +69,7 @@ func save_to_disk() -> void :
 	file.set_value("controls", "dash_x", dash_norm.x)
 	file.set_value("controls", "dash_y", dash_norm.y)
 	file.set_value("play", "difficulty", difficulty)
+	file.set_value("play", "language", language)
 	file.set_value("visual", "camera_shake", camera_shake)
 	file.set_value("visual", "weather_intensity", weather_intensity)
 	file.save(PATH)
@@ -136,6 +142,12 @@ func set_control_opacity(value: float) -> void :
 func set_difficulty(index: int) -> void :
 	difficulty = clampi(index, DIFF_EASY, DIFF_HARD)
 	save_to_disk()
+
+func set_language(value: String) -> void:
+	language = L10n.normalized_language(value)
+	TranslationServer.set_locale(language)
+	save_to_disk()
+	language_changed.emit(language)
 
 func set_camera_shake(value: float) -> void :
 	camera_shake = clampf(value, 0, 1)

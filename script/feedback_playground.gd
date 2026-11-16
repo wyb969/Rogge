@@ -13,7 +13,7 @@ func _ready() -> void :
 	_buttons = HBoxContainer.new()
 	_buttons.add_theme_constant_override("separation", 12)
 	layer.add_child(_buttons)
-	for text in ["再来一次连击", "返回主页"]:
+	for text in [L10n.text("再来一次连击"), L10n.text("返回主页")]:
 		var button: = Button.new()
 		button.text = text
 		_buttons.add_child(button)

@@ -37,7 +37,7 @@ func _ready() -> void :
 	queue_free()
 
 func _setup_label() -> void :
-	label.text = banner_text
+	label.text = L10n.text(banner_text)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 

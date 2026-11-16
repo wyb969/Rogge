@@ -32,7 +32,9 @@ func _ready() -> void :
 func _configure_labels() -> void :
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	L10n.title_overflow(title_label)
 	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_label.custom_minimum_size.y = 40
 	UiFonts.apply_to_label(title_label, 16)
 
 	desc_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -46,7 +48,9 @@ func _configure_labels() -> void :
 func setup(data: Dictionary):
 	upgrade_id = data["id"]
 
-	title_label.text = str(data.get("title", ""))
+	title_label.tooltip_text = L10n.text(str(data.get("title", "")))
+	# Keep the rank comparison visible instead of truncating it after a long name.
+	title_label.text = title_label.tooltip_text.replace(" · ", "\n")
 	desc_label.text = str(data.get("rich_desc", data.get("desc", "")))
 	icon.texture = load(data["icon"])
 	preload("res://script/visual_style.gd").style_icon(icon, upgrade_id)
@@ -56,6 +60,7 @@ func setup(data: Dictionary):
 func set_display_width(width: float, ui_scale: float = 1.0, compact: bool = false) -> void :
 	desc_label.custom_minimum_size.x = width - 24.0 * ui_scale
 	UiFonts.apply_to_label(title_label, int(16 * ui_scale))
+	title_label.custom_minimum_size.y = (UiFonts.ui().get_height(int(16 * ui_scale)) + title_label.get_theme_constant("line_spacing")) * 2
 	_style_description(int(14 * ui_scale))
 	icon.custom_minimum_size = Vector2.ONE * (24 if compact else 48) * ui_scale
 	$VBoxContainer.add_theme_constant_override("separation", int(5 * ui_scale))

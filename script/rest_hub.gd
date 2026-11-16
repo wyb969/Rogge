@@ -58,11 +58,11 @@ func _refresh_reward_numbers() -> void:
 		var id: String = button.get_meta("reward_id")
 		var text := ""
 		match id:
-			"max_hp": text = CardNumbers.change("最大生命",player.max_player_health,player.max_player_health+MAX_HP_BONUS,"",false).text
-			"defense": text = CardNumbers.change("减伤",player.damage_reduction*100,player.rest_defense_for(DEFENSE_BONUS)*100,"%",false).text
-			"move_speed": text = CardNumbers.change("移速",player.effective_move_speed(),player.move_speed_for(player.SPEED+MOVE_SPEED_BONUS,player.growth_move_multiplier)).text
-			"cooldown": text = CardNumbers.change("冲刺冷却",player.DASH_COOLDOWN*player.cooldown_scale,player.DASH_COOLDOWN*player.rest_cooldown_for(COOLDOWN_SCALE),"s").text + "\n枪支使用相同冷却倍率"
-			_: text = str(game.equipment_panel.EQUIP_DEFS[id].title) + "\n" + str(preload("res://script/card_preview.gd").build(game,id).rows[0].text)
+			"max_hp": text = CardNumbers.change(L10n.text("最大生命"),player.max_player_health,player.max_player_health+MAX_HP_BONUS,"",false).text
+			"defense": text = CardNumbers.change(L10n.text("减伤"),player.damage_reduction*100,player.rest_defense_for(DEFENSE_BONUS)*100,"%",false).text
+			"move_speed": text = CardNumbers.change(L10n.text("移速"),player.effective_move_speed(),player.move_speed_for(player.SPEED+MOVE_SPEED_BONUS,player.growth_move_multiplier)).text
+			"cooldown": text = CardNumbers.change(L10n.text("冲刺冷却"),player.DASH_COOLDOWN*player.cooldown_scale,player.DASH_COOLDOWN*player.rest_cooldown_for(COOLDOWN_SCALE),"s").text + L10n.text("\n枪支使用相同冷却倍率")
+			_: text = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title)) + "\n" + str(preload("res://script/card_preview.gd").build(game,id).rows[0].text)
 		button.set_meta("reward_label",text)
 
 func _build_ui() -> void :
@@ -109,30 +109,30 @@ func _build_ui() -> void :
 	_box = box
 
 	var title: = Label.new()
-	title.text = "休整  Rest"
+	title.text = L10n.text("休整  Rest")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	UiFonts.apply_to_label(title, 28, true)
 	box.add_child(title)
 
 	var sub: = Label.new()
 	_subtitle = sub
-	sub.text = "预选一项奖励，可改选；进入下一关时领取"
+	sub.text = L10n.text("预选一项奖励，可改选；进入下一关时领取")
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	UiFonts.apply_to_label(sub, 16)
 	box.add_child(sub)
 
-	_add_reward_button(box, "max_hp", "生命 +120")
-	_add_reward_button(box, "defense", "减伤 15%")
-	_add_reward_button(box, "move_speed", "移速 +35")
-	_add_reward_button(box, "cooldown", "冷却 -20%  Dash+Gun")
-	_add_reward_button(box, "regen_up", "回复  Regen")
-	_add_reward_button(box, "lifesteal_up", "吸血  Lifesteal")
-	_add_reward_button(box, "shield_up", "玉佩  Shield")
-	_add_reward_button(box, "monster_necklace", "怪物项链  击杀回血球")
+	_add_reward_button(box, "max_hp", L10n.text("生命 +120"))
+	_add_reward_button(box, "defense", L10n.text("减伤 15%"))
+	_add_reward_button(box, "move_speed", L10n.text("移速 +35"))
+	_add_reward_button(box, "cooldown", L10n.text("冷却 -20%  Dash+Gun"))
+	_add_reward_button(box, "regen_up", L10n.text("回复  Regen"))
+	_add_reward_button(box, "lifesteal_up", L10n.text("吸血  Lifesteal"))
+	_add_reward_button(box, "shield_up", L10n.text("玉佩  Shield"))
+	_add_reward_button(box, "monster_necklace", L10n.text("怪物项链  击杀回血球"))
 
 	next_button = Button.new()
 	next_button.name = "NextStage"
-	next_button.text = "确认奖励并进入下一关"
+	next_button.text = L10n.text("确认奖励并进入下一关")
 	next_button.disabled = true
 	next_button.custom_minimum_size = Vector2(460, 52)
 	UiFonts.apply_to_button(next_button, 18)
@@ -213,7 +213,7 @@ func _button_style(fill: Color, border: Color) -> StyleBoxFlat:
 func _refresh_selection() -> void :
 	for button in _buttons:
 		var chosen: = str(button.get_meta("reward_id")) == _selected_id
-		button.text = ("已选  /  " if chosen else "") + str(button.get_meta("reward_label"))
+		button.text = (L10n.text("已选  /  ") if chosen else "") + str(button.get_meta("reward_label"))
 		button.add_theme_stylebox_override("normal", _selected_style if chosen else _idle_style)
 		button.add_theme_stylebox_override("hover", _selected_style if chosen else _hover_style)
 		button.add_theme_stylebox_override("pressed", _selected_style)
@@ -223,7 +223,7 @@ func _refresh_selection() -> void :
 		button.add_theme_color_override("font_pressed_color", GamePalette.UI_GREY_COOLDOWN)
 		button.add_theme_color_override("font_focus_color", GamePalette.UI_GREY_COOLDOWN if chosen else Color.WHITE)
 	if _subtitle != null:
-		_subtitle.text = "已预选，可继续改选；确认后领取" if _picked else "预选一项奖励，可改选；进入下一关时领取"
+		_subtitle.text = L10n.text("已预选，可继续改选；确认后领取") if _picked else L10n.text("预选一项奖励，可改选；进入下一关时领取")
 
 func _on_next_pressed() -> void :
 	if not _picked or _committed or not visible: return

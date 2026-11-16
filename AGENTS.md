@@ -34,3 +34,5 @@
 - Each stage owns one cached hazard selected independently from weather (mines/electric/spikes). Debug overrides are explicit; changing weather must not reroll hazards. Electric skeleton replacement restores prior body/weapon visibility on expiration and lifecycle exits, without overwriting material/status tint.
 
 - Wind trails target Web/Compatibility: use the bounded world-space particle-history ribbon pool, not unsupported GPU trail rendering. Keep cosmetic flow independent of gameplay wind and combat RNG; advance at bounded fixed steps with render interpolation and clear histories on lifecycle exits.
+
+- Player-facing text uses `locale/messages.csv` and `L10n`/TranslationServer (English default, zh_CN optional). Translate templates before formatting, not IDs/actions/audio buses. Keep CardNumbers stat keys/formulas stable, maintain English aliases for live static UI translation, and run the localization audit plus focused UI checks. Import CSV before Web export; long card descriptions must stay reachable via the outer scroll.

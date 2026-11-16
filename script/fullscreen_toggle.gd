@@ -62,7 +62,7 @@ func _is_fullscreen() -> bool:
 func _refresh_label() -> void :
 	if button == null:
 		return
-	button.text = "退出全屏" if _is_fullscreen() else "全屏"
+	button.text = L10n.text("退出全屏") if _is_fullscreen() else L10n.text("全屏")
 	var vp: = get_viewport().get_visible_rect().size
 	if vp.x < 8.0 or vp.y < 8.0:
 		return

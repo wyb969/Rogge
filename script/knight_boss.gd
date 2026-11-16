@@ -49,7 +49,7 @@ func _ready() -> void :
 	UiFonts.apply_to_label(_title, 17, true)
 	_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.04))
 	_title.add_theme_constant_override("outline_size", 4)
-	_title.text = "IRON KNIGHT  /  I"
+	_title.text = L10n.text("IRON KNIGHT  /  I")
 	_build_boss_hud()
 	_build_sword()
 
@@ -137,7 +137,7 @@ func _physics_process(delta: float) -> void :
 				_set_state(AttackState.APPROACH, 0.25 if phase == 2 else 0.45)
 		AttackState.PHASE_SHIFT:
 			if state_left <= 0.0:
-				_title.text = "IRON KNIGHT  /  II"
+				_title.text = L10n.text("IRON KNIGHT  /  II")
 				_set_state(AttackState.APPROACH, 0.3)
 
 func _set_state(next: AttackState, duration: float) -> void :
@@ -177,7 +177,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 		queue_redraw()
 	if not is_dying and phase == 1 and boss_current_health <= health_max_value * PHASE_TWO_HEALTH:
 		phase = 2
-		_title.text = "PHASE II  /  ENRAGED"
+		_title.text = L10n.text("PHASE II  /  ENRAGED")
 		_title.add_theme_color_override("font_color", Color(1.0, 0.62, 0.25))
 		_apply_phase2_outline()
 

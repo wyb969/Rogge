@@ -1,5 +1,12 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-16 中英文第一版（当前开发）
+
+- `feature/localization-20261116` 基于 `a7f8641`（风场 PR #26），版本 **20261116-173723**。设置页 English / 简体中文，默认英文、持久保存、旧存档迁移，保留原音量/难度/按钮位置大小透明度。只在主页切换，动态局内 UI 随新局创建。
+- 集中 `locale/messages.csv`（805 键含别名）+ `L10n`/TranslationServer，覆盖卡牌/神兽/按钮/提示/试炼/天气/结算/Debug；格式化前翻译，常量在读取处翻译，不改内部 ID 或任何玩法数值。CardNumbers 原始 label 键不变。卡牌标题与等级分行、按钮省略、说明换行/外层滚动、技能装备 tooltip 限宽。
+- 4 源码专项、3 最终 Web PCK 专项通过；新多语言 382、实际卡值 464、Debug 7773 检查。集中翻译审计、原生中英横竖屏截图和复现命令见 [localization.md](localization.md)、`validation/localization-20261116.json`。未做浏览器/Safari/手机实机验证，既有退出资源/GL 警告仍记录。
+- 多语言 ICU 使原 PCK 超过试玩站 25 MiB 单文件限制；原 Site gzip loader 扩展 PCK，26 项流式恢复检查保持原导出字节。源路径仍 `/workspace/Rogge-electric-grid-20261116/project`，临时构建/日志 `../localization`。正式 master/itch 本轮不更新。后续优先收集英文措辞、长说明和真实手机触屏反馈。 源码 `14c9621` 已保存于 [PR #27](https://github.com/wyb969/Rogge/pull/27)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新至 20261116-173723，权限不变；Site source `ff5e01eed808dcb03b64e6ddfefeab559b4c1eab`，deployment `appgdep_6afad0ca46848191adb537d0fe5534f3` 于北京时间 2026-11-16 17:46 发布 succeeded。发布证据见 `validation/localization-playtest-20261116.json`。
+
 ## 2026-11-16 风场拖尾重做（当前开发）
 
 - `feature/wind-trails-20261116`基于`f481f39`（PR #25），版本**20261116-170330**。用户提供Ryan GPUParticles2D风拖尾教程/截图；能读标题说明，无法读取完整视频参数，未声称逐参数复刻。4.7原生Compatibility探针明确不支持GPU粒子拖尾，因此实现Web兼容的粒子历史线带。

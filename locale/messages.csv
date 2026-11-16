@@ -1,0 +1,1310 @@
+keys,en,zh_CN
+"
+Gun uses the same cooldown multiplier","
+Gun uses the same cooldown multiplier","
+枪支使用相同冷却倍率"
+"
+Keep all cards and guardian powers.
+Retrying restores health and resets dash.
+You can also skip this trial and continue below.","
+Keep all cards and guardian powers.
+Retrying restores health and resets dash.
+You can also skip this trial and continue below.","
+卡片与神兽技能会保留。
+重试会回复生命，并重置冲刺。
+也可以放弃本次试炼，按下方选项继续。"
+"
+Max rank 5","
+Max rank 5","
+最高5级"
+"
+Tap to cast / E: selected power / Q: cycle","
+Tap to cast / E: selected power / Q: cycle","
+点击直接释放 / E 释放当前 / Q 键切换"
+"
+卡片与神兽技能会保留。
+重试会回复生命，并重置冲刺。
+也可以放弃本次试炼，按下方选项继续。","
+Keep all cards and guardian powers.
+Retrying restores health and resets dash.
+You can also skip this trial and continue below.","
+卡片与神兽技能会保留。
+重试会回复生命，并重置冲刺。
+也可以放弃本次试炼，按下方选项继续。"
+"
+最高5级","
+Max rank 5","
+最高5级"
+"
+枪支使用相同冷却倍率","
+Gun uses the same cooldown multiplier","
+枪支使用相同冷却倍率"
+"
+点击直接释放 / E 释放当前 / Q 键切换","
+Tap to cast / E: selected power / Q: cycle","
+点击直接释放 / E 释放当前 / Q 键切换"
+ +1 rank, +1 rank, +1 级
+ +1 级, +1 rank, +1 级
+ Enabled, Enabled, 启用
+ · %d → %d级, · Rank %d → %d, · %d → %d级
+ · Chain charge, · Chain charge, · 连冲
+ · Complete, · Complete, · 通过
+ · Failed, · Failed, · 未通过
+ · Instructions, · Instructions, · 挑战说明
+ · Rank %d → %d, · Rank %d → %d, · %d → %d级
+ · 挑战说明, · Instructions, · 挑战说明
+ · 未通过, · Failed, · 未通过
+ · 连冲, · Chain charge, · 连冲
+ · 通过, · Complete, · 通过
+ 启用, New, 启用
+%d COMBO%s,%d COMBO%s,%d 连击%s
+%s  +%d ranks,%s  +%d ranks,%s  +%d 级
+%s  +%d 级,%s  +%d ranks,%s  +%d 级
+0.5 秒后挥刀 · DASH！,Slash in 0.5s · DASH!,0.5 秒后挥刀 · DASH！
+2 per run · Loot Couriers refill rerolls,2 per run · Loot Couriers refill rerolls,每局 2 次 · 击败宝囊精可补充
+"2 per run. Loot Couriers refill rerolls, up to 3 stored.","2 per run. Loot Couriers refill rerolls, up to 3 stored.",每局 2 次，击败宝囊精补充；最多储存 3 次
+25 damage per second · 25% slow,25 damage per second · 25% slow,每秒 25 点伤害 · 移速降低 25%
+"3×3 mines: flashing red lights warn of danger.
+Contact triggers a blast; mines reset 3s after triggering.
+Damage starts at 24 to players / 72 to enemies. Dash to avoid damage.","3×3 mines: flashing red lights warn of danger.
+Contact triggers a blast; mines reset 3s after triggering.
+Damage starts at 24 to players / 72 to enemies. Dash to avoid damage.","九宫格地雷：红灯闪烁表示危险
+踩中后爆炸击退，触发3秒后恢复
+玩家24 / 怪物72起；冲刺可避伤害"
+5 damage per second · Slow unlocks at rank 5,5 damage per second · Slow unlocks at rank 5,每秒 5 点伤害 · 5 级解锁减速
+"6 秒内受到的伤害降低 90%
+冷却 40 秒","90% damage reduction for 6s
+40s cooldown","6 秒内受到的伤害降低 90%
+冷却 40 秒"
+"90% damage reduction for 6s
+40s cooldown","90% damage reduction for 6s
+40s cooldown","6 秒内受到的伤害降低 90%
+冷却 40 秒"
+A Little Luck,A Little Luck,小小幸运
+Above the Clouds,Above the Clouds,云上漫游
+"Add books and increase damage
+Up to 12 books; further upgrades increase damage","Add books and increase damage
+Up to 12 books; further upgrades increase damage","增加书本并提高伤害
+最多12本，之后继续强化伤害"
+Adjust camera shake and movement inertia; 0 disables extra motion,Adjust camera shake and movement inertia; 0 disables extra motion,控制镜头震动和移动惯性；0 关闭额外动效
+Aim locked!,Aim locked!,瞄准已固定！
+Approaching slowly,Approaching slowly,缓慢接近
+Approaching · Keep your distance,Approaching · Keep your distance,逼近 · 保持距离
+"Arrow keys: move
+Shift: dash · E: power · Q: cycle
+Touch: left stick to move · right DASH to dodge","Arrow keys: move
+Shift: dash · E: power · Q: cycle
+Touch: left stick to move · right DASH to dodge","↑ ↓ ← → 方向键移动
+Shift 冲刺 · E 技能 · Q 切换
+触屏：左侧摇杆移动，右侧 DASH 冲刺"
+Arsenal %d/3,Arsenal %d/3,军械组合 %d/3
+Arsenal shield %.1fs,Arsenal shield %.1fs,军械护盾 %.1fs
+"Arsenal shield active
+1s invincibility every 3s · Drone + Gun + Bomb","Arsenal shield active
+1s invincibility every 3s · Drone + Gun + Bomb","军械护盾组合已激活
+每3秒获得1秒无敌 · 无人机 + 枪支 + 炸弹"
+Arsenal · Invincible Shield,Arsenal · Invincible Shield,军械组合 · 无敌护盾
+Arsenal: 1s invincibility every 3s,Arsenal: 1s invincibility every 3s,军械组合：每3秒获得1秒无敌
+"Arsenal: Drone + Gun + Bomb
+Equip all three for a 1s invincible shield every 3s","Arsenal: Drone + Gun + Bomb
+Equip all three for a 1s invincible shield every 3s","军械组合：无人机 + 枪支 + 炸弹
+三件均装备后，每3秒获得1秒无敌护盾"
+"Arsenal: Gun + Drone + Bomb
+1s invincible shield every 3s","Arsenal: Gun + Drone + Bomb
+1s invincible shield every 3s","军械：枪支+无人机+炸弹
+每3秒获得1秒无敌护盾"
+Attack Reach,Attack Reach,攻击距离
+Auto aim · 120-degree close-range sweep,Auto aim · 120-degree close-range sweep,自动瞄准 · 120度近身横扫
+Auto aim · Fixed return path · One hit each way,Auto aim · Fixed return path · One hit each way,自动瞄准 · 固定路径往返各命中一次
+Auto aims at nearby enemies · Pierces · Each knife hits each target once,Auto aims at nearby enemies · Pierces · Each knife hits each target once,自动瞄准附近敌人穿透 · 每把对同一目标命中一次
+Axe,Axe,斧头
+BOSS IS COMING!!!,BOSS IS COMING!!!,首领来袭！
+Back,Back,返回
+BackToMenu,BackToMenu,返回主页
+Banana Fan,Banana Fan,芭蕉扇
+Banana Fan + Black Hole · Max Rank,Banana Fan + Black Hole · Max Rank,芭蕉扇 + 黑洞 · 满级
+Banana Fan · Rank 1,Banana Fan · Rank 1,芭蕉扇 · 1级
+Banana Fan · Rank 5,Banana Fan · Rank 5,芭蕉扇 · 5级
+Banana Fan · Status Tick,Banana Fan · Status Tick,芭蕉扇 · 异常追加
+Banners in the Wind,Banners in the Wind,旌旗如风
+Barrier active · Prepare to dash,Barrier active · Prepare to dash,屏障关闭 · 等待冲刺时机
+Base Damage,Base Damage,基础伤害
+Black Hole,Black Hole,黑洞
+Black Hole · Rank 1,Black Hole · Rank 1,黑洞 · 1级
+Black Hole · Rank 5,Black Hole · Rank 5,黑洞 · 5级
+Blade Mage / ,Blade Mage / ,巫刃术士 / 
+Blast Radius,Blast Radius,爆炸半径
+Blast launches targets · Max rank 5,Blast launches targets · Max rank 5,爆炸击飞 · 最高5级
+Bolt Count,Bolt Count,飞弹数量
+Bomb,Bomb,炸弹
+"Bomb rank %d · Automatic throws, area blasts and launches
+%s","Bomb rank %d · Automatic throws, area blasts and launches
+%s","炸弹 %d 级 · 自动抛投、范围爆破与击飞
+%s"
+Bomb · Rank 1,Bomb · Rank 1,炸弹 · 1级
+Bomb · Rank 5,Bomb · Rank 5,炸弹 · 5级
+Book Count,Book Count,书本数量
+Both Combos · Cyan / Gold,Both Combos · Cyan / Gold,双组合 · 青 / 金色流光
+Both combos active: synchronized cyan / gold highlights,Both combos active: synchronized cyan / gold highlights,两组图标已激活：青色 / 金色同步流光
+Bubble Impact,Bubble Impact,水泡落点
+Build time · Beijing UTC+8,Build time · Beijing UTC+8,打包时间 · 北京时间 UTC+8
+Burn DPS per Stack,Burn DPS per Stack,每层秒伤
+Burn Stacks,Burn Stacks,燃烧层数
+Burn chance on hit ,Burn chance on hit ,命中附燃几率 
+Button Size,Button Size,按键大小
+CHARGE!,CHARGE!,冲锋！
+Camera Motion,Camera Motion,镜头震动
+Casting · ,Casting · ,释放 · 
+Castle After Dark,Castle After Dark,古堡夜行
+Chain charge ready · Watch the next path,Chain charge ready · Watch the next path,连冲蓄势 · 留意下一条路线
+Chain coins to ignite the XP bar. Try rapid gunfire; replay with the button below.,Chain coins to ignite the XP bar. Try rapid gunfire; replay with the button below.,连拾金币点燃经验条；体验轻巧连射，点击下方可重播
+Chasing the Light,Chasing the Light,逐光冒险
+Choose a reward. You can change it before confirming.,Choose a reward. You can change it before confirming.,预选一项奖励，可改选；进入下一关时领取
+Claim Blessing · Continue,Claim Blessing · Continue,领取祝福 · 继续
+Claim · Finish Run,Claim · Finish Run,领取并通关结算
+Claim · Free Trials,Claim · Free Trials,领取 · 进入自由试炼
+Claim · Resume Battle,Claim · Resume Battle,领取奖励 · 继续战斗
+Clear,Clear,晴天
+Coin Fever  %.1fs,Coin Fever  %.1fs,吸金狂欢  %.1fs
+Coins,Coins,金币
+Confirm · Next Stage,Confirm · Next Stage,确认奖励并进入下一关
+Continue,Continue,继续
+Continue to Rest,Continue to Rest,继续休整
+"Control cards rank %d
+Banana Fan blows along movement direction. Black Hole gathers enemies.","Control cards rank %d
+Banana Fan blows along movement direction. Black Hole gathers enemies.","控场卡片 %d 级
+芭蕉扇沿移动方向吹风 · 黑洞自动聚怪"
+Cooldown -20% · Dash + Gun,Cooldown -20% · Dash + Gun,冲刺与枪支冷却 -20%
+Could not save report,Could not save report,报告保存失败
+Courier caught! Rerolls full: bonus XP instead,Courier caught! Rerolls full: bonus XP instead,截获宝囊！重抽已满，转为额外经验
+Courier caught! XP + 1 reroll,Courier caught! XP + 1 reroll,截获宝囊！经验 + 重抽 1 次
+Crit Chance,Crit Chance,暴击率
+Crit Damage,Crit Damage,暴击伤害
+Critical Glasses,Critical Glasses,暴击眼镜
+"Critical Glasses rank %d · Crit chance %d%%
+Large golden damage numbers and ! mark critical hits","Critical Glasses rank %d · Crit chance %d%%
+Large golden damage numbers and ! mark critical hits","暴击眼镜 %d 级 · 暴击率 %d%%
+大号金色伤害字与 ! 表示暴击"
+Critical Glasses · Rank 1,Critical Glasses · Rank 1,暴击眼镜 · 1级
+Critical Glasses · Rank 5,Critical Glasses · Rank 5,暴击眼镜 · 5级
+Cross Lightning,Cross Lightning,交叉落雷
+DASH,DASH,冲刺
+DEFEAT,DEFEAT,挑战失败
+Damage Reduction,Damage Reduction,减伤
+Damage Reduction 15%,Damage Reduction 15%,减伤 15%
+Damage per Book,Damage per Book,每本伤害
+Damage per Hit,Damage per Hit,单次伤害
+Damage per Second,Damage per Second,每秒伤害
+Dash Cooldown,Dash Cooldown,冲刺冷却
+Dawn,Dawn,黎明
+Day,Day,日间
+Debug,Debug,调试
+Debug · Recent Tests,Debug · Recent Tests,Debug · 近期测试
+Debug · 近期测试,Debug · Recent Tests,Debug · 近期测试
+Decay Delay,Decay Delay,衰减等待
+Decay per Second,Decay per Second,每秒衰减
+"Defeat the armored mechanical octopus within 60 seconds.
+It moves slowly, has high health and locks on with a laser.
+Listen for the lock-on sound and watch the red aim line.
+The aim locks before firing: move sideways or dash to dodge.
+The timer starts when you press Start.
+Your cards and guardian powers remain available.","Defeat the armored mechanical octopus within 60 seconds.
+It moves slowly, has high health and locks on with a laser.
+Listen for the lock-on sound and watch the red aim line.
+The aim locks before firing: move sideways or dash to dodge.
+The timer starts when you press Start.
+Your cards and guardian powers remain available.","目标：60 秒内击败重甲机械章鱼。
+它移动较慢、血量很高，会用激光锁定你。
+听到锁定音，留意红色瞄准线和准星。
+最后一段预警方向固定：横移或冲刺躲激光。
+说明页不计时，准备好后点击开始。
+卡片和已获得的神兽技能均可使用。"
+"Defeat the teleporting Blade Mage.
+It teleports beside you and slashes after 0.5 seconds.
+Use Shift / DASH during the red warning to dodge.
+A successful dash dodge opens a 1.5-second attack window.
+Otherwise its barrier blocks damage; wait for another opening.
+No time limit. Your cards and guardian powers remain available.","Defeat the teleporting Blade Mage.
+It teleports beside you and slashes after 0.5 seconds.
+Use Shift / DASH during the red warning to dodge.
+A successful dash dodge opens a 1.5-second attack window.
+Otherwise its barrier blocks damage; wait for another opening.
+No time limit. Your cards and guardian powers remain available.","目标：击败近身瞬移的巫刃术士。
+它瞬移到你身边后，0.5 秒内发起扇形斩击。
+红色预警期间按 Shift / DASH 冲刺避开。
+成功冲刺躲斩后，才有 1.5 秒反击窗口。
+屏障关闭时攻击无效，耐心等下一轮。
+本关不限总时间，卡片与神兽技能均可使用。"
+Detonates an echo at the last kill,Detonates an echo at the last kill,最后击杀处引爆回响
+Diagnostics exported. Save the JSON file.,Diagnostics exported. Save the JSON file.,诊断报告已导出，请保存 JSON 文件
+Difficulty,Difficulty,难度
+Direct hits need at least 8 damage · No lifesteal from damage over time,Direct hits need at least 8 damage · No lifesteal from damage over time,直接命中伤害至少8 · 持续伤害不吸血
+Dive,Dive,俯冲
+Diving Assault,Diving Assault,俯冲突袭
+Dodge successful · Strike!,Dodge successful · Strike!,闪避成功 · 反击！
+Drag the stick and DASH to reposition,Drag the stick and DASH to reposition,拖动摇杆和冲刺键
+Drone,Drone,无人机
+Drone Count,Drone Count,无人机数
+Dual wielding removes the opposite-hand damage penalty,Dual wielding removes the opposite-hand damage penalty,双持取消另一侧伤害惩罚
+Duration,Duration,存活时间
+Dusk,Dusk,黄昏
+Each player level: max health +%d and heal %d,Each player level: max health +%d and heal %d,人物每升一级：生命上限 +%d，同时补充 %d
+Easy,Easy,简单
+Echo Ember,Echo Ember,回响火种
+Echo Ember  %d / %d,Echo Ember  %d / %d,回响火种  %d / %d
+Effect Radius,Effect Radius,作用半径
+Effect Range,Effect Range,作用距离
+Electric Grid,Electric Grid,电网
+Electric Grid · 0.5s / Conduction,Electric Grid · 0.5s / Conduction,电网 · 0.5秒 / 骨架传导
+"Electric terrain: pulses every 0.5s; exploring refreshes 4 circle / square zones.
+Stun: 1s; protection after recovery: 0.5s.
+Lure enemies inside. Nearby targets conduct once per pulse.","Electric terrain: pulses every 0.5s; exploring refreshes 4 circle / square zones.
+Stun: 1s; protection after recovery: 0.5s.
+Lure enemies inside. Nearby targets conduct once per pulse.","电网：每0.5秒放电，探索刷新4处圆形 / 方形区域
+麻痹1秒；恢复后0.5秒电网保护
+引怪入网，近距离传导每次脉冲只命中一次"
+End this run and return home,End this run and return home,结束当前局并返回主页
+Enemies · Slash / Boomerang / Bombs,Enemies · Slash / Boomerang / Bombs,新怪物 · 斩击 / 回旋 / 炮击
+"Enemy and Boss health: 150%
+XP and healing: 100%
+Applies to your next run","Enemy and Boss health: 150%
+XP and healing: 100%
+Applies to your next run","敌人与 Boss 血量 150%
+经验、回血量保持 100%
+下一局开始生效"
+"Enemy and Boss health: 50%
+XP and healing: +50%
+Applies to your next run","Enemy and Boss health: 50%
+XP and healing: +50%
+Applies to your next run","敌人与 Boss 血量 50%
+经验、回血量 +50%
+下一局开始生效"
+"Enemy hit: white flash + brief hitstop. Player hurt: red flash + stronger hitstop.
+Buttons apply real damage. Elite on the left / minion on the right.","Enemy hit: white flash + brief hitstop. Player hurt: red flash + stronger hitstop.
+Buttons apply real damage. Elite on the left / minion on the right.","命中：白闪 + 短顿帧 · 受伤：淡红 + 较强顿帧
+按钮走真实伤害流程；左侧精英 / 右侧普通怪"
+Enter Free Trials,Enter Free Trials,进入自由试炼
+Enter a run to view stats,Enter a run to view stats,进入对局后显示当前数值
+Equip Drone + Gun + Bomb to activate the Arsenal shield,Equip Drone + Gun + Bomb to activate the Arsenal shield,集齐无人机 + 枪支 + 炸弹可激活军械护盾
+Exit Fullscreen,Exit Fullscreen,退出全屏
+Export Diagnostics,Export Diagnostics,导出诊断
+Export Report,Export Report,导出报告
+Falling Embers,Falling Embers,火种坠落
+Finish Run,Finish Run,通关结算
+Fire Interval,Fire Interval,射击间隔
+"First Boss overlap test: Shift to dash away, then watch its next charge.","First Boss overlap test: Shift to dash away, then watch its next charge.",第一关 Boss 重合测试：Shift 冲刺脱离，观察下一轮冲刺
+Flat Healing,Flat Healing,固定回复
+Flight Range,Flight Range,飞行距离
+Flight Speed,Flight Speed,飞行速度
+Fortune is spinning…,Fortune is spinning…,好运正在转动…
+Freeze Chance,Freeze Chance,冰冻几率
+Frost,Frost,寒冰
+Frost Bonus,Frost Bonus,冻伤增伤
+Fullscreen,Fullscreen,全屏
+Gale Gathering,Gale Gathering,苍风牵引
+Gale Mage · Ranged,Gale Mage · Ranged,苍风术隼 · 远程
+Game Rogge,Game Rogge,ROGGE
+"Gather all dropped coins and healing orbs across the map
+No charge spent if none are available · 22s cooldown","Gather all dropped coins and healing orbs across the map
+No charge spent if none are available · 22s cooldown","牵引全地图已掉落的金币与回血球
+没有掉落时不消耗，冷却 22 秒"
+Grand Jackpot!,Grand Jackpot!,超级大奖！
+Guardian defeated · A new blessing,Guardian defeated · A new blessing,神兽已击败 · 新的祝福
+Guardian defeated · Reward ready,Guardian defeated · Reward ready,守卫已击败 · 你的奖励已就绪
+Gun,Gun,枪支
+Gusts push normal movement sideways,Gusts push normal movement sideways,阵风会推偏普通移动
+Hard,Hard,困难
+Heal Cap per Hit,Heal Cap per Hit,每次回复上限
+Heal Interval,Heal Interval,回复间隔
+Heal per Orb,Heal per Orb,每球回复
+Heal per Tick,Heal per Tick,每次回复
+Healing Orb,Healing Orb,回血球
+Health +120,Health +120,生命 +120
+Health full. Power saved.,Health full. Power saved.,生命已满，技能保留
+Hit Enemy · White,Hit Enemy · White,命中敌人 · 白色
+Hits different targets simultaneously,Hits different targets simultaneously,同时击中不同目标
+Hitstop · White / Red,Hitstop · White / Red,命中顿帧 · 白色 / 淡红
+"Hold Ground · %.1fs · Wave %d/3
+Move / dash locked · Powers available","Hold Ground · %.1fs · Wave %d/3
+Move / dash locked · Powers available","木头人 · %.1f 秒 · 第%d/3波
+移动 / 冲刺锁定 · 神兽技能可用"
+Hold Ground · 60s Horde,Hold Ground · 60s Horde,木头人挑战 · 60秒怪潮
+Holy Water,Holy Water,净化圣水
+Home,Home,返回主页
+Hurt Player · Red,Hurt Player · Red,玩家受击 · 淡红
+IRON KNIGHT  /  I,IRON KNIGHT  /  I,钢铁骑士 / 一阶段
+IRON KNIGHT  /  II,IRON KNIGHT  /  II,钢铁骑士 / 二阶段
+Ice,Ice,冰面
+Ice · Sliding / Spikes,Ice · Sliding / Spikes,冰面场景 · 滑行 / 尖刺
+Improve gun stats,Improve gun stats,提高枪支属性
+Increase axe damage,Increase axe damage,提高斧头攻击力
+Increase movement speed,Increase movement speed,提高移动速度
+Increase pickup range,Increase pickup range,提高拾取范围
+Ink %d/3,Ink %d/3,彩墨 %d/3
+Ink Surf · Dash Shockwave,Ink Surf · Dash Shockwave,彩墨冲浪 · 冲刺吸墨震波
+"Ink Surf: dash across 3 fresh splashes
+to release a knockback wave at the end of your dash.","Ink Surf: dash across 3 fresh splashes
+to release a knockback wave at the end of your dash.","彩墨冲浪：冲刺掠过3处新鲜溅痕
+在冲刺终点释放击退震波"
+"Ink Surf: dash right across 3 splashes
+60 damage + knockback at the endpoint · 6s cooldown · No card needed","Ink Surf: dash right across 3 splashes
+60 damage + knockback at the endpoint · 6s cooldown · No card needed","彩墨冲浪：向右冲刺，掠过3处溅痕
+终点60伤害+击退 · 6秒冷却 · 无需选卡"
+Ink cooldown,Ink cooldown,彩墨冷却
+Invincible %.1fs,Invincible %.1fs,无敌护盾 %.1fs
+Jackpot,Jackpot,幸运大奖
+Jade Amulet,Jade Amulet,玉佩
+Kills Required,Kills Required,所需击杀
+Kills drop healing orbs,Kills drop healing orbs,击杀掉落回血球 · 拾取时生效
+Kills: %d,Kills: %d,击杀：%d
+Kill：1000,Kill：1000,击杀：1000
+Knife Count,Knife Count,飞刀数量
+Language,Language,语言
+Laser Damage,Laser Damage,激光伤害
+Laser firing,Laser firing,激光发射
+"Late-game stress test %.0f / %.0fs
+FPS %d · Nodes %d · Books %d · FX %d · Pickups %d","Late-game stress test %.0f / %.0fs
+FPS %d · Nodes %d · Books %d · FX %d · Pickups %d","后期压力测试  %.0f / %.0f 秒
+FPS %d · 节点 %d · 书本 %d · 特效 %d · 拾取 %d"
+Lava Ring,Lava Ring,熔岩环
+Lava Tortoise / AEGIS,Lava Tortoise / AEGIS,熔岩玄龟 / AEGIS
+Left Damage,Left Damage,左侧伤害
+Left Fist,Left Fist,左拳
+Level: ,Level: ,等级：
+Level: %d    Stage: %d,Level: %d    Stage: %d,等级：%d    关卡：%d
+Level: %d (Guardian test),Level: %d (Guardian test),等级：%d（神兽测试）
+Level: %d (Trial test),Level: %d (Trial test),等级：%d（试炼测试）
+Level: 0  ,Level: 0  ,等级：0  
+Level: 0 (Necklace test),Level: 0 (Necklace test),等级：0（项链测试）
+Level: 1 (Lightning test),Level: 1 (Lightning test),等级：1（闪电测试）
+Level: 18,Level: 18,等级：18
+Level: 5 (Boss test),Level: 5 (Boss test),等级：5（首领测试）
+Level: 6 (Treasure test),Level: 6 (Treasure test),等级：6（宝藏测试）
+Lifesteal,Lifesteal,吸血
+Lifesteal Ratio,Lifesteal Ratio,命中回复比例
+"Lighting test: watch beams, muzzle flashes and healing orbs. Chain pickups light up the XP bar.","Lighting test: watch beams, muzzle flashes and healing orbs. Chain pickups light up the XP bar.",光影测试：观察光束、枪火与回血球；连续拾币会点亮经验条
+Lightning Ring,Lightning Ring,闪电戒指
+Lightning Targets,Lightning Targets,闪电目标
+Locked! Dash sideways,Locked! Dash sideways,锁定！横向冲刺
+Locked! Move sideways,Locked! Move sideways,锁定！横向移动
+Locking on · Move sideways,Locking on · Move sideways,锁定中 · 准备横移
+Loot Courier spotted! Catch it for XP and a reroll.,Loot Courier spotted! Catch it for XP and a reroll.,宝囊精出现！追上它获得经验和重抽次数
+Loot Courier · %ds,Loot Courier · %ds,宝囊精 · %ds
+"Lv.%d  →  Lv.%d
+同一张卡连续升级 %d 次，领取后生效","Rank %d → %d
+Upgrade this card %d times when claimed","Lv.%d  →  Lv.%d
+同一张卡连续升级 %d 次，领取后生效"
+Master Volume,Master Volume,音量
+Max Bullet Damage,Max Bullet Damage,单弹上限
+Max Health,Max Health,最大生命
+"Max rank 5 · Direct attacks only
+200% crit damage at max rank · No critical damage over time","Max rank 5 · Direct attacks only
+200% crit damage at max rank · No critical damage over time","最高5级 · 直接攻击生效
+满级暴击伤害200% · 持续伤害不暴击"
+Mechanical Octopus / ,Mechanical Octopus / ,机械章鱼 / 
+Medium,Medium,中等
+Meteor gift · %s ×%d,Meteor gift · %s ×%d,流星馈赠 · %s ×%d
+Meteor shower! Golden impact spots clear minions and leave supplies.,Meteor shower! Golden impact spots clear minions and leave supplies.,流星雨！金色落点会清除小怪，留下补给
+Min Bullet Damage,Min Bullet Damage,单弹下限
+Mines,Mines,地雷
+Mines · Blast / Launch,Mines · Blast / Launch,九宫格地雷 · 爆炸 / 腾空
+Molotov,Molotov,汽油瓶
+Molten March,Molten March,熔火行军
+Molten Roll,Molten Roll,熔壳滚动
+Monster Necklace,Monster Necklace,怪物项链
+Monster Necklace · Healing drops,Monster Necklace · Healing drops,怪物项链  击杀回血球
+Motion · Ink / Afterimages / Bombs,Motion · Ink / Afterimages / Bombs,动态表现 · 彩墨 / 残影 / 投弹
+Move Speed,Move Speed,移速
+Move Speed +35,Move Speed +35,移速 +35
+"Move to leave mist · Lasts 4s
+25% slow at rank 5 · Overlaps do not stack damage","Move to leave mist · Lasts 4s
+25% slow at rank 5 · Overlaps do not stack damage","移动留雾 · 持续4 秒
+最高5级减速25% · 重叠不叠伤"
+"Move vertically to check ink; dash to check afterimages.
+Enemy bombs on the left / player bombs on the right (no damage).","Move vertically to check ink; dash to check afterimages.
+Enemy bombs on the left / player bombs on the right (no damage).","纵向移动看彩墨 · 冲刺看残影
+左侧敌方投弹 / 右侧玩家投弹（无伤练习）"
+Music,Music,背景音乐
+"New enemies: Mantis slash / Boomerang Imp / Spore bombardment
+Leave the red zone after it locks. Wind, freeze and knockback interrupt attacks.","New enemies: Mantis slash / Boomerang Imp / Spore bombardment
+Leave the red zone after it locks. Wind, freeze and knockback interrupt attacks.","新怪物：刃螳扇形斩 / 回旋镖妖 / 孢子炮击
+红区锁定后走开；风、冰冻与击退可打断"
+Next,Next,下一页
+Next Weather,Next Weather,下个天气
+Night,Night,夜间
+No pickups on the map. Power saved.,No pickups on the map. Power saved.,地图上没有可拾取物，技能保留
+No records yet. Play a run or start a stress test first.,No records yet. Play a run or start a stress test first.,暂无记录，请先游玩或运行压力测试
+Not equipped → ,Not equipped → ,未装备 → 
+One hit each way · Does not spread burning,One hit each way · Does not spread burning,往返各命中一次 · 不附带灼烧
+Opacity,Opacity,透明度
+Orbit Speed,Orbit Speed,环绕速度
+Orbiting Book,Orbiting Book,书本
+Out of health: trial failed.,Out of health: trial failed.,生命耗尽：这次试炼未通过。
+Out of health: you did not survive the horde.,Out of health: you did not survive the horde.,生命耗尽：未能抵挡本次怪潮。
+Overcast,Overcast,阴天
+PHASE II  /  ENRAGED,PHASE II  /  ENRAGED,二阶段 / 狂暴
+Periodic attacks around the player · No crits or status spread,Periodic attacks around the player · No crits or status spread,围绕玩家周期攻击 · 不暴击或传播异常
+Phase Two,Phase Two,二阶段
+Pickup,Pickup,拾取
+Pickup Radius,Pickup Radius,拾取半径
+"Pickup, Speed and Regen icons: synchronized cyan highlights","Pickup, Speed and Regen icons: synchronized cyan highlights",右侧拾取、移速、回复图标：青色同步流光
+"Pierces enemies and bounces within a fixed rune area
+Each bolt can hit the same target once per 0.35s","Pierces enemies and bounces within a fixed rune area
+Each bolt can hit the same target once per 0.35s","固定符文区域边界反弹 · 穿透敌人
+同一飞弹对同一敌人命中间隔0.35秒"
+Piercing,Piercing,穿透
+Play Again,Play Again,再玩一局
+Poison Trail,Poison Trail,剧毒踪迹
+"Poison Trail rank %d · Move to leave mist
+%s","Poison Trail rank %d · Move to leave mist
+%s","剧毒踪迹 %d 级 · 移动留下毒雾
+%s"
+Preview: %s (%d/8) · Next,Preview: %s (%d/8) · Next,试听：%s（%d/8）· 下一首
+Previous,Previous,上一页
+Pulls enemies together · Lasts 3s · Max rank 5,Pulls enemies together · Lasts 3s · Max rank 5,牵引聚怪 · 持续3秒 · 最高5级
+Pulse Aura,Pulse Aura,脉冲法阵
+Pulse Radius,Pulse Radius,脉冲半径
+Purification Radius,Purification Radius,净化半径
+"Purification zones under enemies · Damage every 0.5s
+Overlapping zones do not stack damage; no crits or status spread","Purification zones under enemies · Damage every 0.5s
+Overlapping zones do not stack damage; no crits or status spread","敌人脚下净化区域 · 每0.5秒结算
+重叠区域不叠伤，不触发暴击和异常传播"
+Rain,Rain,雨天
+Rampaging Lizard / %s%s,Rampaging Lizard / %s%s,狂奔巨蜥 / %s%s
+"Rank %d → %d
+Upgrade this card %d times when claimed","Rank %d → %d
+Upgrade this card %d times when claimed","Lv.%d  →  Lv.%d
+同一张卡连续升级 %d 次，领取后生效"
+"Rank 5 Banana Fan + Molotov / Poison
+One extra status tick per gust, with no repeated hits or spread","Rank 5 Banana Fan + Molotov / Poison
+One extra status tick per gust, with no repeated hits or spread","芭蕉扇5级 + 汽油瓶 / 剧毒
+已有异常额外一跳 · 同次吹风不重复、不传播"
+Recent tests · Use the page buttons below,Recent tests · Use the page buttons below,近期测试 · 下方按钮翻页
+Recovering · Attack now,Recovering · Attack now,冷却 · 趁机输出
+Recovering · Counterattack,Recovering · Counterattack,硬直 · 反击机会
+Regeneration,Regeneration,回复
+Releases wind pressure when dash ends,Releases wind pressure when dash ends,冲刺结束释放风压
+Replay Bombs,Replay Bombs,重放投弹
+Replay Combo,Replay Combo,再来一次连击
+Replay Star Trail,Replay Star Trail,重放星轨
+Repositioning,Repositioning,走位
+Reroll · %d left,Reroll · %d left,换一组 · 剩余 %d 次
+Reset Dash,Reset Dash,重置冲刺
+Rest,Rest,休整
+"Restore %s%% max health
+35s cooldown · No charge spent at full health","Restore %s%% max health
+35s cooldown · No charge spent at full health","回复 %s%% 最大生命
+冷却 35 秒，满血不消耗"
+"Restore 45% max health
+35s cooldown · No charge spent at full health","Restore 45% max health
+35s cooldown · No charge spent at full health","回复 45% 最大生命
+冷却 35 秒，满血不消耗"
+Retry,Retry,重试
+Retry Trial,Retry Trial,重试试炼
+Returning Cross,Returning Cross,回旋十字刃
+Right Damage,Right Damage,右侧伤害
+Right Fist,Right Fist,右拳
+Rune Bolt,Rune Bolt,符文飞弹
+STAGE %d,STAGE %d,第 %d 关
+Selected / ,Selected / ,已选  /  
+Selected. Change your choice or confirm to claim.,Selected. Change your choice or confirm to claim.,已预选，可继续改选；确认后领取
+Settings,Settings,设置
+Shield per Kill,Shield per Kill,每杀护盾
+Silverwing Knife,Silverwing Knife,银翼飞刀
+Skip Trial · Continue,Skip Trial · Continue,放弃本次试炼 · 继续主线
+Skip · Finish Run,Skip · Finish Run,放弃本次试炼 · 通关结算
+Skip · Free Trials,Skip · Free Trials,放弃本次试炼 · 进入自由试炼
+Skip · Stand Your Ground,Skip · Stand Your Ground,放弃本次试炼 · 进入木头人挑战
+Sky Falcon / GALE,Sky Falcon / GALE,苍穹灵隼 / GALE
+Slash in 0.5s · DASH!,Slash in 0.5s · DASH!,0.5 秒后挥刀 · DASH！
+Slow,Slow,减速幅度
+Snow,Snow,雪天
+Sound Effects,Sound Effects,游戏音效
+Spikes,Spikes,尖刺
+Spin,Spin,开启抽奖
+Spinning…,Spinning…,抽奖中…
+Stand Your Ground,Stand Your Ground,木头人挑战
+"Standard balance
+Enemy health, XP and healing: 100%
+Applies to your next run","Standard balance
+Enemy health, XP and healing: 100%
+Applies to your next run","保持当前数值
+敌人血量、经验、回血均为 100%
+下一局开始生效"
+"Star Trail complete! Coin Fever for 5s.
+Nearby coins fly to you and grant bonus XP.","Star Trail complete! Coin Fever for 5s.
+Nearby coins fly to you and grant bonus XP.","星轨完成！吸金狂欢 5秒
+附近金币自动飞来 + 额外经验"
+Star Trail · Chase / Coin Fever,Star Trail · Chase / Coin Fever,星轨连锁 · 追光 / 吸金狂欢
+"Star Trail! Touch 3 bright stars in order within 8s.
+Complete it for Coin Fever. No penalty for skipping it.","Star Trail! Touch 3 bright stars in order within 8s.
+Complete it for Coin Fever. No penalty for skipping it.","星轨出现！8秒内依次触碰3颗亮星
+完成后进入吸金狂欢；不追也没有损失"
+Star charge %d/%d,Star charge %d/%d,星轨蓄能 %d/%d
+"Stars %d/3 · %.1fs
+Touch bright stars in order","Stars %d/3 · %.1fs
+Touch bright stars in order","星轨 %d/3  ·  %.1fs
+依次触碰亮星"
+Start,Start,开始游戏
+Start Trial,Start Trial,开始试炼
+Stone Aegis,Stone Aegis,玄岩壁垒
+Stop / Home,Stop / Home,停止 / 返回主页
+Storm Sprint,Storm Sprint,风雷疾驰
+"Stress test complete. Export available.
+Peak nodes %d · Books %d · FX %d","Stress test complete. Export available.
+Peak nodes %d · Books %d · FX %d","压力测试完成，可导出报告
+最大节点 %d · 书本 %d · 特效 %d"
+"Strike visible enemies and clear enemy bullets
+Boss damage: 6% max health (up to 420)
+45s cooldown","Strike visible enemies and clear enemy bullets
+Boss damage: 6% max health (up to 420)
+45s cooldown","雷击屏幕内敌人并清除敌弹
+对 Boss 造成 6% 最大生命伤害（上限 420）
+冷却 45 秒"
+"Survive a 60-second horde without moving.
+Movement and dash are locked; automatic attacks and equipment still work.
+Tap guardian powers on the left to heal, attack or defend.
+A stronger wave arrives every 20 seconds. Enemies still drop supplies.
+Starting or retrying restores full health. This screen does not use trial time.","Survive a 60-second horde without moving.
+Movement and dash are locked; automatic attacks and equipment still work.
+Tap guardian powers on the left to heal, attack or defend.
+A stronger wave arrives every 20 seconds. Enemies still drop supplies.
+Starting or retrying restores full health. This screen does not use trial time.","目标：原地抵挡 60 秒怪潮，活下来即通过。
+移动和冲刺锁定，自动攻击与装备效果保留。
+可点击左侧神兽技能治疗、清场或防御。
+每 20 秒增强一波，击杀仍会掉落补给。
+开始与重试都会补满生命，说明页不计时。"
+Survived: %02d:%02d,Survived: %02d:%02d,存活：%02d:%02d
+Swift Falcon · Melee,Swift Falcon · Melee,疾羽猎隼 · 近程
+TREASURE,TREASURE,战利品
+TREASURE GUARDIAN,TREASURE GUARDIAN,宝藏守卫
+"Tap a left icon to cast · Icons show cooldown
+Keyboard: E to cast · Q to cycle","Tap a left icon to cast · Icons show cooldown
+Keyboard: E to cast · Q to cycle","点击左侧图标直接释放 · 图标显示冷却
+键盘：E 释放当前 · Q 切换"
+"Tap the four left icons to test blessings, sounds and map-wide pickup.","Tap the four left icons to test blessings, sounds and map-wide pickup.",点击左侧四个图标：体验祝福特效、音效与全图拾取
+The stars faded. Try the next trail!,The stars faded. Try the next trail!,星轨散去了，下次再试
+Thorn Whip,Thorn Whip,荆棘鞭
+Throw Interval,Throw Interval,投掷间隔
+Thunder Judgment,Thunder Judgment,雷霆裁决
+Thunder Leap,Thunder Leap,雷跃突袭
+Thunder Lion / THUNDER,Thunder Lion / THUNDER,雷鬃狮王 / THUNDER
+Thunder Marks,Thunder Marks,雷印追击
+Tidal Channels,Tidal Channels,潮汐水道
+Tidal Charge,Tidal Charge,潮涌冲锋
+Tidal Colossus / TIDE,Tidal Colossus / TIDE,潮汐巨象 / TIDE
+Tidal Echoes,Tidal Echoes,碧潮回响
+Tidal Renewal,Tidal Renewal,潮汐复苏
+Time is up: defeat the enemy within 60 seconds.,Time is up: defeat the enemy within 60 seconds.,时间已到：需要在 60 秒内完成击杀。
+Time is up: the trial was not completed in time.,Time is up: the trial was not completed in time.,时间已到：本次未在限时内完成。
+Time:,Time:,时间：
+Time： 1min,Time： 1min,时间：1分钟
+Toggle Day / Night,Toggle Day / Night,切换昼夜
+Tracking · Prepare to dodge,Tracking · Prepare to dodge,蓄力追踪 · 准备闪避
+Treasure Lottery,Treasure Lottery,宝藏老虎机
+"Trial enemy defeated!
+Time: %.1f seconds.
+Continue to rest with your entire build intact.","Trial enemy defeated!
+Time: %.1f seconds.
+Continue to rest with your entire build intact.","成功击败试炼敌人！
+用时 %.1f 秒。
+继续后进入休整区，保留当前全部构筑。"
+Trial of Power,Trial of Power,力量试炼
+Trial of Power · %.1fs,Trial of Power · %.1fs,力量试炼 · %.1f 秒
+Trial of Speed,Trial of Speed,速度试炼
+"Trial of Speed · Dash, then strike","Trial of Speed · Dash, then strike",速度试炼 · 冲刺后反击
+Trigger Interval,Trigger Interval,触发间隔
+Up to 12 books; later upgrades increase damage,Up to 12 books; later upgrades increase damage,最多12本 · 达上限后继续增伤
+"Upgrade a random card
++2 ranks: 80% · +3 ranks: 15% · +1 rank: 5%","Upgrade a random card
++2 ranks: 80% · +3 ranks: 15% · +1 rank: 5%","随机一张卡，直接提升等级
++2 级 80%  ·  +3 级 15%  ·  +1 级 5%"
+VICTORY,VICTORY,胜利
+Vitality %d/3,Vitality %d/3,生机组合 %d/3
+Vitality active,Vitality active,生机组合 已激活
+"Vitality combo active
+XP +30% · Move speed and healing +20%","Vitality combo active
+XP +30% · Move speed and healing +20%","生机组合已激活
+经验 +30% · 移动速度与回复效果 +20%"
+Vitality · XP / Healing,Vitality · XP / Healing,生机组合 · 经验与回复
+"Vitality: Pickup + Speed + Regen
+Complete: XP +30%
+Move speed and healing +20%","Vitality: Pickup + Speed + Regen
+Complete: XP +30%
+Move speed and healing +20%","生机：拾取+移速+回复
+集齐后经验 +30%
+移速、回复效果 +20%"
+"Vitality: Pickup + Speed + Regen
+Complete: XP +30%, move speed and healing +20%","Vitality: Pickup + Speed + Regen
+Complete: XP +30%, move speed and healing +20%","生机组合：拾取 + 移速 + 回复
+集齐：经验+30%，移速与回复效果+20%"
+"Vitality: XP +30%% · Move speed / healing +20%%
+%s","Vitality: XP +30%% · Move speed / healing +20%%
+%s","生机组合：经验+30%% · 移速/回复+20%%
+%s"
+Wandering Hero,Wandering Hero,江湖行
+Warning · ,Warning · ,预警 · 
+Weapons II · Whip / Rune / Aura,Weapons II · Whip / Rune / Aura,新武器二期 · 鞭 / 符文 / 法阵
+Weapons · Knife / Cross / Holy Water,Weapons · Knife / Cross / Holy Water,新武器 · 飞刀 / 十字 / 圣水
+Weather Ambience,Weather Ambience,环境音
+Weather Effects,Weather Effects,天气特效
+Weather Lighting · Sun / Rain,Weather Lighting · Sun / Rain,天气光影 · 阳光 / 雨灯
+Wind,Wind,刮风
+Wind Emblem,Wind Emblem,踏风徽记
+"Wind Emblem / Echo Ember equipped
+Dash releases wind pressure. Every 8 kills triggers an echo.","Wind Emblem / Echo Ember equipped
+Dash releases wind pressure. Every 8 kills triggers an echo.","已装备踏风徽记 / 回响火种
+冲刺结束触发风压 · 击杀 8 个敌人触发回响"
+"Wind knocks enemies back · Max rank 5
+Adds one burn / poison tick to affected targets; no spread","Wind knocks enemies back · Max rank 5
+Adds one burn / poison tick to affected targets; no spread","气流击退 · 最高5级
+已有灼烧/中毒追加一跳，不传播"
+Wind · Trails / Drift,Wind · Trails / Drift,阵风场景 · 风向 / 偏移
+Windblade,Windblade,风刃
+Windblade Fan,Windblade Fan,风刃扇击
+Winter · Footprints / Dash Tracks,Winter · Footprints / Dash Tracks,冬季雪景 · 脚印 / 冲刺雪痕
+"You dashed through the slash and defeated the Blade Mage!
+Next: survive a 60-second horde without moving.
+Keep all equipment and guardian powers. Continue when ready.","You dashed through the slash and defeated the Blade Mage!
+Next: survive a 60-second horde without moving.
+Keep all equipment and guardian powers. Continue when ready.","成功抓住冲刺反击的时机，击败巫刃术士！
+接下来是木头人挑战：原地抵挡 60 秒怪潮。
+保留全部装备与神兽技能，准备好后继续。"
+"You survived the 60-second horde!
+Movement and dash are restored. Trial complete.
+Finish your run or continue to Free Trials.","You survived the 60-second horde!
+Movement and dash are restored. Trial complete.
+Finish your run or continue to Free Trials.","成功抵挡 60 秒怪潮！
+移动与冲刺已恢复，木头人挑战通过。
+可通关结算，或进入自由试炼。"
+"↑ ↓ ← → 方向键移动
+Shift 冲刺 · E 技能 · Q 切换
+触屏：左侧摇杆移动，右侧 DASH 冲刺","Arrow keys: move
+Shift: dash · E: power · Q: cycle
+Touch: left stick to move · right DASH to dodge","↑ ↓ ← → 方向键移动
+Shift 冲刺 · E 技能 · Q 切换
+触屏：左侧摇杆移动，右侧 DASH 冲刺"
+上一页,Previous,上一页
+下一页,Next,下一页
+下个天气,Next Weather,下个天气
+两组图标已激活：荧光绿 / 金色同步流光,Both combos active: synchronized cyan / gold highlights,两组图标已激活：青色 / 金色同步流光
+中等,Medium,中等
+中等  Medium,Medium,中等
+九宫格地雷 · 爆炸 / 腾空,Mines · Blast / Launch,九宫格地雷 · 爆炸 / 腾空
+"九宫格地雷：红灯闪烁表示危险
+踩中后爆炸击退，触发3秒后恢复
+玩家24 / 怪物72起；冲刺可避伤害","3×3 mines: flashing red lights warn of danger.
+Contact triggers a blast; mines reset 3s after triggering.
+Damage starts at 24 to players / 72 to enemies. Dash to avoid damage.","九宫格地雷：红灯闪烁表示危险
+踩中后爆炸击退，触发3秒后恢复
+玩家24 / 怪物72起；冲刺可避伤害"
+书本,Orbiting Book,书本
+书本数量,Book Count,书本数量
+二阶段,Phase Two,二阶段
+云上漫游,Above the Clouds,云上漫游
+交叉落雷,Cross Lightning,交叉落雷
+人物每升一级：生命上限 +%d，同时补充 %d,Each player level: max health +%d and heal %d,人物每升一级：生命上限 +%d，同时补充 %d
+休整  Rest,Rest,休整
+作用半径,Effect Radius,作用半径
+作用距离,Range,作用距离
+"保持当前数值
+敌人血量、经验、回血均为 100%
+下一局开始生效","Standard balance
+Enemy health, XP and healing: 100%
+Applies to your next run","保持当前数值
+敌人血量、经验、回血均为 100%
+下一局开始生效"
+俯冲,Dive,俯冲
+俯冲突袭,Diving Assault,俯冲突袭
+停止 / 返回主页,Stop / Home,停止 / 返回主页
+光影测试：观察光束、枪火与回血球；连续拾币会点亮经验条,"Lighting test: watch beams, muzzle flashes and healing orbs. Chain pickups light up the XP bar.",光影测试：观察光束、枪火与回血球；连续拾币会点亮经验条
+全屏,Fullscreen,全屏
+再来一次连击,Replay Combo,再来一次连击
+军械护盾 %.1fs,Arsenal shield %.1fs,军械护盾 %.1fs
+"军械护盾组合已激活
+每3秒获得1秒无敌 · 无人机 + 枪支 + 炸弹","Arsenal shield active
+1s invincibility every 3s · Drone + Gun + Bomb","军械护盾组合已激活
+每3秒获得1秒无敌 · 无人机 + 枪支 + 炸弹"
+军械组合 %d/3,Arsenal %d/3,军械组合 %d/3
+军械组合 · 无敌护盾,Arsenal · Invincible Shield,军械组合 · 无敌护盾
+"军械组合：无人机 + 枪支 + 炸弹
+三件均装备后，每3秒获得1秒无敌护盾","Arsenal: Drone + Gun + Bomb
+Equip all three for a 1s invincible shield every 3s","军械组合：无人机 + 枪支 + 炸弹
+三件均装备后，每3秒获得1秒无敌护盾"
+军械组合：每3秒获得1秒无敌,Arsenal: 1s invincibility every 3s,军械组合：每3秒获得1秒无敌
+"军械：枪支+无人机+炸弹
+每3秒获得1秒无敌护盾","Arsenal: Gun + Drone + Bomb
+1s invincible shield every 3s","军械：枪支+无人机+炸弹
+每3秒获得1秒无敌护盾"
+冬季雪景 · 脚印 / 冲刺雪痕,Winter · Footprints / Dash Tracks,冬季雪景 · 脚印 / 冲刺雪痕
+冰冻几率,Freeze Chance,冰冻几率
+冰面,Ice,冰面
+冰面场景 · 滑行 / 尖刺,Ice · Sliding / Spikes,冰面场景 · 滑行 / 尖刺
+冲刺冷却,Dash Cooldown,冲刺冷却
+冲刺结束释放风压,Releases wind pressure when dash ends,冲刺结束释放风压
+冲锋！,CHARGE!,冲锋！
+冷却 -20%  Dash+Gun,Cooldown -20% · Dash + Gun,冲刺与枪支冷却 -20%
+冷却 · 趁机输出,Recovering · Attack now,冷却 · 趁机输出
+冻伤增伤,Frost Bonus,冻伤增伤
+净化半径,Purification Radius,净化半径
+净化圣水,Holy Water,净化圣水
+减伤,Damage Reduction,减伤
+减伤 15%,Damage Reduction 15%,减伤 15%
+减速幅度,Slow,减速幅度
+击杀掉落回血球 · 拾取时生效,Kills drop healing orbs,击杀掉落回血球 · 拾取时生效
+切换昼夜,Toggle Day / Night,切换昼夜
+刮风,Wind,刮风
+剧毒踪迹,Poison Trail,剧毒踪迹
+"剧毒踪迹 %d 级 · 移动留下毒雾
+%s","Poison Trail rank %d · Move to leave mist
+%s","剧毒踪迹 %d 级 · 移动留下毒雾
+%s"
+力量试炼,Trial of Power,力量试炼
+力量试炼 · %.1f 秒,Trial of Power · %.1fs,力量试炼 · %.1f 秒
+动态表现 · 彩墨 / 残影 / 投弹,Motion · Ink / Afterimages / Bombs,动态表现 · 彩墨 / 残影 / 投弹
+单弹上限,Max Bullet Damage,单弹上限
+单弹下限,Min Bullet Damage,单弹下限
+单次伤害,Hit Damage,单次伤害
+"压力测试完成，可导出报告
+最大节点 %d · 书本 %d · 特效 %d","Stress test complete. Export available.
+Peak nodes %d · Books %d · FX %d","压力测试完成，可导出报告
+最大节点 %d · 书本 %d · 特效 %d"
+双持取消另一侧伤害惩罚,Dual wielding removes the opposite-hand damage penalty,双持取消另一侧伤害惩罚
+双组合 · 绿 / 金色流光,Both Combos · Cyan / Gold,双组合 · 青 / 金色流光
+古堡夜行,Castle After Dark,古堡夜行
+右侧伤害,Right Damage,右侧伤害
+右侧拾取、移速、回复图标：荧光绿同步流光,"Pickup, Speed and Regen icons: synchronized cyan highlights",右侧拾取、移速、回复图标：青色同步流光
+右拳,Right Fist,右拳
+同时击中不同目标,Hits different targets simultaneously,同时击中不同目标
+"后期压力测试  %.0f / %.0f 秒
+FPS %d · 节点 %d · 书本 %d · 特效 %d · 拾取 %d","Late-game stress test %.0f / %.0fs
+FPS %d · Nodes %d · Books %d · FX %d · Pickups %d","后期压力测试  %.0f / %.0f 秒
+FPS %d · 节点 %d · 书本 %d · 特效 %d · 拾取 %d"
+吸血,Lifesteal,吸血
+吸血  Lifesteal,Lifesteal,吸血
+吸金狂欢  %.1fs,Coin Fever  %.1fs,吸金狂欢  %.1fs
+命中回复比例,Lifesteal Ratio,命中回复比例
+命中敌人 · 白色,Hit Enemy · White,命中敌人 · 白色
+命中附燃几率 ,Burn chance on hit ,命中附燃几率 
+命中顿帧 · 白色 / 淡红,Hitstop · White / Red,命中顿帧 · 白色 / 淡红
+"命中：白闪 + 短顿帧 · 受伤：淡红 + 较强顿帧
+按钮走真实伤害流程；左侧精英 / 右侧普通怪","Enemy hit: white flash + brief hitstop. Player hurt: red flash + stronger hitstop.
+Buttons apply real damage. Elite on the left / minion on the right.","命中：白闪 + 短顿帧 · 受伤：淡红 + 较强顿帧
+按钮走真实伤害流程；左侧精英 / 右侧普通怪"
+回响火种,Echo Ember,回响火种
+回响火种  %d / %d,Echo Ember  %d / %d,回响火种  %d / %d
+回复,Regeneration,回复
+回复  Regen,Regeneration,回复
+"回复 %s%% 最大生命
+冷却 35 秒，满血不消耗","Restore %s%% max health
+35s cooldown · No charge spent at full health","回复 %s%% 最大生命
+冷却 35 秒，满血不消耗"
+"回复 45% 最大生命
+冷却 35 秒，满血不消耗","Restore 45% max health
+35s cooldown · No charge spent at full health","回复 45% 最大生命
+冷却 35 秒，满血不消耗"
+回复间隔,Heal Interval,回复间隔
+回旋十字刃,Returning Cross,回旋十字刃
+回血球,Healing Orb,回血球
+困难,Hard,困难
+困难  Hard,Hard,困难
+围绕玩家周期攻击 · 不暴击或传播异常,Periodic attacks around the player · No crits or status spread,围绕玩家周期攻击 · 不暴击或传播异常
+固定回复,Flat Healing,固定回复
+"固定符文区域边界反弹 · 穿透敌人
+同一飞弹对同一敌人命中间隔0.35秒","Pierces enemies and bounces within a fixed rune area
+Each bolt can hit the same target once per 0.35s","固定符文区域边界反弹 · 穿透敌人
+同一飞弹对同一敌人命中间隔0.35秒"
+地图上没有可拾取物，技能保留,No pickups on the map. Power saved.,地图上没有可拾取物，技能保留
+地雷,Mines,地雷
+基础伤害,Base Damage,基础伤害
+"增加书本并提高伤害
+最多12本，之后继续强化伤害","Add books and increase damage
+Up to 12 books; further upgrades increase damage","增加书本并提高伤害
+最多12本，之后继续强化伤害"
+夜间,Night,夜间
+天气光影 · 阳光 / 雨灯,Weather Lighting · Sun / Rain,天气光影 · 阳光 / 雨灯
+天气特效  Weather FX,Weather Effects,天气特效
+好运正在转动…,Fortune is spinning…,好运正在转动…
+存活时间,Duration,存活时间
+守卫已击败 · 你的奖励已就绪,Guardian defeated · Reward ready,守卫已击败 · 你的奖励已就绪
+宝囊精 · %ds,Loot Courier · %ds,宝囊精 · %ds
+宝囊精出现！追上它获得经验和重抽次数,Loot Courier spotted! Catch it for XP and a reroll.,宝囊精出现！追上它获得经验和重抽次数
+宝藏老虎机,Treasure Lottery,宝藏老虎机
+寒冰,Frost,寒冰
+导出报告,Export Report,导出报告
+导出诊断,Export Diagnostics,导出诊断
+射击间隔,Fire Interval,射击间隔
+小小幸运,A Little Luck,小小幸运
+尖刺,Spikes,尖刺
+屏障关闭 · 等待冲刺时机,Barrier active · Prepare to dash,屏障关闭 · 等待冲刺时机
+左侧伤害,Left Damage,左侧伤害
+左拳,Left Fist,左拳
+巫刃术士 / ,Blade Mage / ,巫刃术士 / 
+"已装备踏风徽记 / 回响火种
+冲刺结束触发风压 · 击杀 8 个敌人触发回响","Wind Emblem / Echo Ember equipped
+Dash releases wind pressure. Every 8 kills triggers an echo.","已装备踏风徽记 / 回响火种
+冲刺结束触发风压 · 击杀 8 个敌人触发回响"
+已选  /  ,Selected / ,已选  /  
+已预选，可继续改选；确认后领取,Selected. Change your choice or confirm to claim.,已预选，可继续改选；确认后领取
+幸运大奖,Jackpot,幸运大奖
+开启抽奖,Spin,开启抽奖
+开始试炼,Start Trial,开始试炼
+彩墨 %d/3,Ink %d/3,彩墨 %d/3
+彩墨冲浪 · 冲刺吸墨震波,Ink Surf · Dash Shockwave,彩墨冲浪 · 冲刺吸墨震波
+"彩墨冲浪：冲刺掠过3处新鲜溅痕
+在冲刺终点释放击退震波","Ink Surf: dash across 3 fresh splashes
+to release a knockback wave at the end of your dash.","彩墨冲浪：冲刺掠过3处新鲜溅痕
+在冲刺终点释放击退震波"
+"彩墨冲浪：向右冲刺，掠过3处溅痕
+终点60伤害+击退 · 6秒冷却 · 无需选卡","Ink Surf: dash right across 3 splashes
+60 damage + knockback at the endpoint · 6s cooldown · No card needed","彩墨冲浪：向右冲刺，掠过3处溅痕
+终点60伤害+击退 · 6秒冷却 · 无需选卡"
+彩墨冷却,Ink cooldown,彩墨冷却
+往返各命中一次 · 不附带灼烧,One hit each way · Does not spread burning,往返各命中一次 · 不附带灼烧
+怪物项链,Monster Necklace,怪物项链
+怪物项链  击杀回血球,Monster Necklace · Healing drops,怪物项链  击杀回血球
+"成功击败试炼敌人！
+用时 %.1f 秒。
+继续后进入休整区，保留当前全部构筑。","Trial enemy defeated!
+Time: %.1f seconds.
+Continue to rest with your entire build intact.","成功击败试炼敌人！
+用时 %.1f 秒。
+继续后进入休整区，保留当前全部构筑。"
+"成功抓住冲刺反击的时机，击败巫刃术士！
+接下来是木头人挑战：原地抵挡 60 秒怪潮。
+保留全部装备与神兽技能，准备好后继续。","You dashed through the slash and defeated the Blade Mage!
+Next: survive a 60-second horde without moving.
+Keep all equipment and guardian powers. Continue when ready.","成功抓住冲刺反击的时机，击败巫刃术士！
+接下来是木头人挑战：原地抵挡 60 秒怪潮。
+保留全部装备与神兽技能，准备好后继续。"
+"成功抵挡 60 秒怪潮！
+移动与冲刺已恢复，木头人挑战通过。
+可通关结算，或进入自由试炼。","You survived the 60-second horde!
+Movement and dash are restored. Trial complete.
+Finish your run or continue to Free Trials.","成功抵挡 60 秒怪潮！
+移动与冲刺已恢复，木头人挑战通过。
+可通关结算，或进入自由试炼。"
+战利品  /  TREASURE,TREASURE,战利品
+截获宝囊！经验 + 重抽 1 次,Courier caught! XP + 1 reroll,截获宝囊！经验 + 重抽 1 次
+截获宝囊！重抽已满，转为额外经验,Courier caught! Rerolls full: bonus XP instead,截获宝囊！重抽已满，转为额外经验
+所需击杀,Kills Required,所需击杀
+打包时间 · 北京时间 UTC+8,Build time · Beijing UTC+8,打包时间 · 北京时间 UTC+8
+投掷间隔,Throw Interval,投掷间隔
+报告保存失败,Could not save report,报告保存失败
+抽奖中…,Spinning…,抽奖中…
+拖动摇杆和冲刺键   Drag stick and DASH,Drag the stick and DASH to reposition,拖动摇杆和冲刺键
+拾取,Pickup,拾取
+拾取半径,Pickup Radius,拾取半径
+持续时间,Duration,持续时间
+按键大小  Button size,Button Size,按键大小
+换一组 · 剩余 %d 次,Reroll · %d left,换一组 · 剩余 %d 次
+控制镜头震动和移动惯性；0 关闭额外动效,Adjust camera shake and movement inertia; 0 disables extra motion,控制镜头震动和移动惯性；0 关闭额外动效
+"控场卡片 %d 级
+芭蕉扇沿移动方向吹风 · 黑洞自动聚怪","Control cards rank %d
+Banana Fan blows along movement direction. Black Hole gathers enemies.","控场卡片 %d 级
+芭蕉扇沿移动方向吹风 · 黑洞自动聚怪"
+提高拾取范围,Increase pickup range,提高拾取范围
+提高斧头攻击力,Increase axe damage,提高斧头攻击力
+提高枪支属性,Improve gun stats,提高枪支属性
+提高移动速度,Increase movement speed,提高移动速度
+攻击距离,Reach,攻击距离
+放弃本次试炼 · 继续主线,Skip Trial · Continue,放弃本次试炼 · 继续主线
+放弃本次试炼 · 进入木头人挑战,Skip · Stand Your Ground,放弃本次试炼 · 进入木头人挑战
+放弃本次试炼 · 进入自由试炼,Skip · Free Trials,放弃本次试炼 · 进入自由试炼
+放弃本次试炼 · 通关结算,Skip · Finish Run,放弃本次试炼 · 通关结算
+"敌人与 Boss 血量 150%
+经验、回血量保持 100%
+下一局开始生效","Enemy and Boss health: 150%
+XP and healing: 100%
+Applies to your next run","敌人与 Boss 血量 150%
+经验、回血量保持 100%
+下一局开始生效"
+"敌人与 Boss 血量 50%
+经验、回血量 +50%
+下一局开始生效","Enemy and Boss health: 50%
+XP and healing: +50%
+Applies to your next run","敌人与 Boss 血量 50%
+经验、回血量 +50%
+下一局开始生效"
+"敌人脚下净化区域 · 每0.5秒结算
+重叠区域不叠伤，不触发暴击和异常传播","Purification zones under enemies · Damage every 0.5s
+Overlapping zones do not stack damage; no crits or status spread","敌人脚下净化区域 · 每0.5秒结算
+重叠区域不叠伤，不触发暴击和异常传播"
+斧头,Axe,斧头
+新怪物 · 斩击 / 回旋 / 炮击,Enemies · Slash / Boomerang / Bombs,新怪物 · 斩击 / 回旋 / 炮击
+"新怪物：刃螳扇形斩 / 回旋镖妖 / 孢子炮击
+红区锁定后走开；风、冰冻与击退可打断","New enemies: Mantis slash / Boomerang Imp / Spore bombardment
+Leave the red zone after it locks. Wind, freeze and knockback interrupt attacks.","新怪物：刃螳扇形斩 / 回旋镖妖 / 孢子炮击
+红区锁定后走开；风、冰冻与击退可打断"
+新武器 · 飞刀 / 十字 / 圣水,Weapons · Knife / Cross / Holy Water,新武器 · 飞刀 / 十字 / 圣水
+新武器二期 · 鞭 / 符文 / 法阵,Weapons II · Whip / Rune / Aura,新武器二期 · 鞭 / 符文 / 法阵
+旌旗如风,Banners in the Wind,旌旗如风
+无人机,Drone,无人机
+无人机数,Drone Count,无人机数
+无敌护盾 %.1fs,Invincible %.1fs,无敌护盾 %.1fs
+日间,Day,日间
+时间已到：本次未在限时内完成。,Time is up: the trial was not completed in time.,时间已到：本次未在限时内完成。
+时间已到：需要在 60 秒内完成击杀。,Time is up: defeat the enemy within 60 seconds.,时间已到：需要在 60 秒内完成击杀。
+"星轨 %d/3  ·  %.1fs
+依次触碰亮星","Stars %d/3 · %.1fs
+Touch bright stars in order","星轨 %d/3  ·  %.1fs
+依次触碰亮星"
+"星轨出现！8秒内依次触碰3颗亮星
+完成后进入吸金狂欢；不追也没有损失","Star Trail! Touch 3 bright stars in order within 8s.
+Complete it for Coin Fever. No penalty for skipping it.","星轨出现！8秒内依次触碰3颗亮星
+完成后进入吸金狂欢；不追也没有损失"
+"星轨完成！吸金狂欢 5秒
+附近金币自动飞来 + 额外经验","Star Trail complete! Coin Fever for 5s.
+Nearby coins fly to you and grant bonus XP.","星轨完成！吸金狂欢 5秒
+附近金币自动飞来 + 额外经验"
+星轨散去了，下次再试,The stars faded. Try the next trail!,星轨散去了，下次再试
+星轨蓄能 %d/%d,Star charge %d/%d,星轨蓄能 %d/%d
+星轨连锁 · 追光 / 吸金狂欢,Star Trail · Chase / Coin Fever,星轨连锁 · 追光 / 吸金狂欢
+晴天,Clear,晴天
+暂无记录，请先游玩或运行压力测试,No records yet. Play a run or start a stress test first.,暂无记录，请先游玩或运行压力测试
+暴击伤害,Crit Damage,暴击伤害
+暴击率,Crit Chance,暴击率
+暴击眼镜,Critical Glasses,暴击眼镜
+"暴击眼镜 %d 级 · 暴击率 %d%%
+大号金色伤害字与 ! 表示暴击","Critical Glasses rank %d · Crit chance %d%%
+Large golden damage numbers and ! mark critical hits","暴击眼镜 %d 级 · 暴击率 %d%%
+大号金色伤害字与 ! 表示暴击"
+暴击眼镜 · 1级,Critical Glasses · Rank 1,暴击眼镜 · 1级
+暴击眼镜 · 5级,Critical Glasses · Rank 5,暴击眼镜 · 5级
+最后击杀处引爆回响,Detonates an echo at the last kill,最后击杀处引爆回响
+最多12本 · 达上限后继续增伤,Up to 12 books; later upgrades increase damage,最多12本 · 达上限后继续增伤
+最大生命,Max Health,最大生命
+"最高5级 · 直接攻击生效
+满级暴击伤害200% · 持续伤害不暴击","Max rank 5 · Direct attacks only
+200% crit damage at max rank · No critical damage over time","最高5级 · 直接攻击生效
+满级暴击伤害200% · 持续伤害不暴击"
+"木头人 · %.1f 秒 · 第%d/3波
+移动 / 冲刺锁定 · 神兽技能可用","Hold Ground · %.1fs · Wave %d/3
+Move / dash locked · Powers available","木头人 · %.1f 秒 · 第%d/3波
+移动 / 冲刺锁定 · 神兽技能可用"
+木头人挑战,Stand Your Ground,木头人挑战
+木头人挑战 · 60秒怪潮,Hold Ground · 60s Horde,木头人挑战 · 60秒怪潮
+未装备 → ,None → ,未装备 → 
+机械章鱼 / ,Mechanical Octopus / ,机械章鱼 / 
+枪支,Gun,枪支
+每局 2 次 · 击败宝囊精可补充,2 per run · Loot Couriers refill rerolls,每局 2 次 · 击败宝囊精可补充
+每局 2 次，击败宝囊精补充；最多储存 3 次,"2 per run. Loot Couriers refill rerolls, up to 3 stored.",每局 2 次，击败宝囊精补充；最多储存 3 次
+每层秒伤,Burn DPS / Stack,每层秒伤
+每本伤害,Damage per Book,每本伤害
+每杀护盾,Shield per Kill,每杀护盾
+每次回复,Heal per Tick,每次回复
+每次回复上限,Heal Cap per Hit,每次回复上限
+每球回复,Heal per Orb,每球回复
+每秒 25 点伤害 · 移速降低 25%,25 damage per second · 25% slow,每秒 25 点伤害 · 移速降低 25%
+每秒 5 点伤害 · 5 级解锁减速,5 damage per second · Slow unlocks at rank 5,每秒 5 点伤害 · 5 级解锁减速
+每秒伤害,Damage / s,每秒伤害
+每秒衰减,Decay per Second,每秒衰减
+"气流击退 · 最高5级
+已有灼烧/中毒追加一跳，不传播","Wind knocks enemies back · Max rank 5
+Adds one burn / poison tick to affected targets; no spread","气流击退 · 最高5级
+已有灼烧/中毒追加一跳，不传播"
+水泡落点,Bubble Impact,水泡落点
+江湖行,Wandering Hero,江湖行
+汽油瓶,Molotov,汽油瓶
+流星雨！金色落点会清除小怪，留下补给,Meteor shower! Golden impact spots clear minions and leave supplies.,流星雨！金色落点会清除小怪，留下补给
+流星馈赠 · %s ×%d,Meteor gift · %s ×%d,流星馈赠 · %s ×%d
+游戏音效  Sound effects,Sound Effects,游戏音效
+潮汐复苏,Tidal Renewal,潮汐复苏
+潮汐巨象 / TIDE,Tidal Colossus / TIDE,潮汐巨象 / TIDE
+潮汐水道,Tidal Channels,潮汐水道
+潮涌冲锋,Tidal Charge,潮涌冲锋
+激光伤害,Laser Damage,激光伤害
+激光发射,Laser firing,激光发射
+火种坠落,Falling Embers,火种坠落
+炸弹,Bomb,炸弹
+"炸弹 %d 级 · 自动抛投、范围爆破与击飞
+%s","Bomb rank %d · Automatic throws, area blasts and launches
+%s","炸弹 %d 级 · 自动抛投、范围爆破与击飞
+%s"
+炸弹 · 1级,Bomb · Rank 1,炸弹 · 1级
+炸弹 · 5级,Bomb · Rank 5,炸弹 · 5级
+点击左侧四个图标：体验祝福特效、音效与全图拾取,"Tap the four left icons to test blessings, sounds and map-wide pickup.",点击左侧四个图标：体验祝福特效、音效与全图拾取
+"点击左侧图标直接释放 · 图标显示冷却
+键盘：E 释放当前 · Q 切换","Tap a left icon to cast · Icons show cooldown
+Keyboard: E to cast · Q to cycle","点击左侧图标直接释放 · 图标显示冷却
+键盘：E 释放当前 · Q 切换"
+熔壳滚动,Molten Roll,熔壳滚动
+熔岩玄龟 / AEGIS,Lava Tortoise / AEGIS,熔岩玄龟 / AEGIS
+熔岩环,Lava Ring,熔岩环
+熔火行军,Molten March,熔火行军
+燃烧层数,Burn Stacks,燃烧层数
+爆炸击飞 · 最高5级,Blast launches targets · Max rank 5,爆炸击飞 · 最高5级
+爆炸半径,Blast Radius,爆炸半径
+"牵引全地图已掉落的金币与回血球
+没有掉落时不消耗，冷却 22 秒","Gather all dropped coins and healing orbs across the map
+No charge spent if none are available · 22s cooldown","牵引全地图已掉落的金币与回血球
+没有掉落时不消耗，冷却 22 秒"
+牵引聚怪 · 持续3秒 · 最高5级,Pulls enemies together · Lasts 3s · Max rank 5,牵引聚怪 · 持续3秒 · 最高5级
+狂奔巨蜥 / %s%s,Rampaging Lizard / %s%s,狂奔巨蜥 / %s%s
+玄岩壁垒,Stone Aegis,玄岩壁垒
+玉佩,Jade Amulet,玉佩
+玉佩  Shield,Jade Amulet,玉佩
+玩家受击 · 淡红,Hurt Player · Red,玩家受击 · 淡红
+环境音  Weather ambience,Weather Ambience,环境音
+环绕速度,Orbit Speed,环绕速度
+生命 +120,Health +120,生命 +120
+生命已满，技能保留,Health full. Power saved.,生命已满，技能保留
+生命耗尽：未能抵挡本次怪潮。,Out of health: you did not survive the horde.,生命耗尽：未能抵挡本次怪潮。
+生命耗尽：这次试炼未通过。,Out of health: trial failed.,生命耗尽：这次试炼未通过。
+生机组合 %d/3,Vitality %d/3,生机组合 %d/3
+生机组合 · 经验与回复,Vitality · XP / Healing,生机组合 · 经验与回复
+生机组合 已激活,Vitality active,生机组合 已激活
+"生机组合已激活
+经验 +30% · 移动速度与回复效果 +20%","Vitality combo active
+XP +30% · Move speed and healing +20%","生机组合已激活
+经验 +30% · 移动速度与回复效果 +20%"
+"生机组合：拾取 + 移速 + 回复
+集齐：经验+30%，移速与回复效果+20%","Vitality: Pickup + Speed + Regen
+Complete: XP +30%, move speed and healing +20%","生机组合：拾取 + 移速 + 回复
+集齐：经验+30%，移速与回复效果+20%"
+"生机组合：经验+30%% · 移速/回复+20%%
+%s","Vitality: XP +30%% · Move speed / healing +20%%
+%s","生机组合：经验+30%% · 移速/回复+20%%
+%s"
+"生机：拾取+移速+回复
+集齐后经验 +30%
+移速、回复效果 +20%","Vitality: Pickup + Speed + Regen
+Complete: XP +30%
+Move speed and healing +20%","生机：拾取+移速+回复
+集齐后经验 +30%
+移速、回复效果 +20%"
+电网,Electric Grid,电网
+电网 · 0.5秒 / 骨架传导,Electric Grid · 0.5s / Conduction,电网 · 0.5秒 / 骨架传导
+"电网：每0.5秒放电，探索刷新4处圆形 / 方形区域
+麻痹1秒；恢复后0.5秒电网保护
+引怪入网，近距离传导每次脉冲只命中一次","Electric terrain: pulses every 0.5s; exploring refreshes 4 circle / square zones.
+Stun: 1s; protection after recovery: 0.5s.
+Lure enemies inside. Nearby targets conduct once per pulse.","电网：每0.5秒放电，探索刷新4处圆形 / 方形区域
+麻痹1秒；恢复后0.5秒电网保护
+引怪入网，近距离传导每次脉冲只命中一次"
+疾羽猎隼 · 近程,Swift Falcon · Melee,疾羽猎隼 · 近程
+"目标：60 秒内击败重甲机械章鱼。
+它移动较慢、血量很高，会用激光锁定你。
+听到锁定音，留意红色瞄准线和准星。
+最后一段预警方向固定：横移或冲刺躲激光。
+说明页不计时，准备好后点击开始。
+卡片和已获得的神兽技能均可使用。","Defeat the armored mechanical octopus within 60 seconds.
+It moves slowly, has high health and locks on with a laser.
+Listen for the lock-on sound and watch the red aim line.
+The aim locks before firing: move sideways or dash to dodge.
+The timer starts when you press Start.
+Your cards and guardian powers remain available.","目标：60 秒内击败重甲机械章鱼。
+它移动较慢、血量很高，会用激光锁定你。
+听到锁定音，留意红色瞄准线和准星。
+最后一段预警方向固定：横移或冲刺躲激光。
+说明页不计时，准备好后点击开始。
+卡片和已获得的神兽技能均可使用。"
+"目标：击败近身瞬移的巫刃术士。
+它瞬移到你身边后，0.5 秒内发起扇形斩击。
+红色预警期间按 Shift / DASH 冲刺避开。
+成功冲刺躲斩后，才有 1.5 秒反击窗口。
+屏障关闭时攻击无效，耐心等下一轮。
+本关不限总时间，卡片与神兽技能均可使用。","Defeat the teleporting Blade Mage.
+It teleports beside you and slashes after 0.5 seconds.
+Use Shift / DASH during the red warning to dodge.
+A successful dash dodge opens a 1.5-second attack window.
+Otherwise its barrier blocks damage; wait for another opening.
+No time limit. Your cards and guardian powers remain available.","目标：击败近身瞬移的巫刃术士。
+它瞬移到你身边后，0.5 秒内发起扇形斩击。
+红色预警期间按 Shift / DASH 冲刺避开。
+成功冲刺躲斩后，才有 1.5 秒反击窗口。
+屏障关闭时攻击无效，耐心等下一轮。
+本关不限总时间，卡片与神兽技能均可使用。"
+"目标：原地抵挡 60 秒怪潮，活下来即通过。
+移动和冲刺锁定，自动攻击与装备效果保留。
+可点击左侧神兽技能治疗、清场或防御。
+每 20 秒增强一波，击杀仍会掉落补给。
+开始与重试都会补满生命，说明页不计时。","Survive a 60-second horde without moving.
+Movement and dash are locked; automatic attacks and equipment still work.
+Tap guardian powers on the left to heal, attack or defend.
+A stronger wave arrives every 20 seconds. Enemies still drop supplies.
+Starting or retrying restores full health. This screen does not use trial time.","目标：原地抵挡 60 秒怪潮，活下来即通过。
+移动和冲刺锁定，自动攻击与装备效果保留。
+可点击左侧神兽技能治疗、清场或防御。
+每 20 秒增强一波，击杀仍会掉落补给。
+开始与重试都会补满生命，说明页不计时。"
+直接命中伤害至少8 · 持续伤害不吸血,Direct hits need at least 8 damage · No lifesteal from damage over time,直接命中伤害至少8 · 持续伤害不吸血
+瞄准已固定！,Aim locked!,瞄准已固定！
+硬直 · 反击,Recovering · Counterattack,硬直 · 反击
+硬直 · 反击机会,Recovering · Counterattack,硬直 · 反击机会
+确认奖励并进入下一关,Confirm · Next Stage,确认奖励并进入下一关
+碧潮回响,Tidal Echoes,碧潮回响
+神兽已击败 · 新的祝福,Guardian defeated · A new blessing,神兽已击败 · 新的祝福
+"移动留雾 · 持续4 秒
+最高5级减速25% · 重叠不叠伤","Move to leave mist · Lasts 4s
+25% slow at rank 5 · Overlaps do not stack damage","移动留雾 · 持续4 秒
+最高5级减速25% · 重叠不叠伤"
+移速,Move Speed,移速
+移速 +35,Move Speed +35,移速 +35
+穿透,Piercing,穿透
+符文飞弹,Rune Bolt,符文飞弹
+第一关 Boss 重合测试：Shift 冲刺脱离，观察下一轮冲刺,"First Boss overlap test: Shift to dash away, then watch its next charge.",第一关 Boss 重合测试：Shift 冲刺脱离，观察下一轮冲刺
+简单,Easy,简单
+简单  Easy,Easy,简单
+"纵向移动看彩墨 · 冲刺看残影
+左侧敌方投弹 / 右侧玩家投弹（无伤练习）","Move vertically to check ink; dash to check afterimages.
+Enemy bombs on the left / player bombs on the right (no damage).","纵向移动看彩墨 · 冲刺看残影
+左侧敌方投弹 / 右侧玩家投弹（无伤练习）"
+结束当前局并返回主页,End this run and return home,结束当前局并返回主页
+继续休整,Continue to Rest,继续休整
+缓慢接近,Approaching slowly,缓慢接近
+背景音乐  Music,Music,背景音乐
+脉冲半径,Pulse Radius,脉冲半径
+脉冲法阵,Pulse Aura,脉冲法阵
+自动瞄准 · 120度近身横扫,Auto aim · 120-degree close-range sweep,自动瞄准 · 120度近身横扫
+自动瞄准 · 固定路径往返各命中一次,Auto aim · Fixed return path · One hit each way,自动瞄准 · 固定路径往返各命中一次
+自动瞄准附近敌人穿透 · 每把对同一目标命中一次,Auto aims at nearby enemies · Pierces · Each knife hits each target once,自动瞄准附近敌人穿透 · 每把对同一目标命中一次
+芭蕉扇,Banana Fan,芭蕉扇
+芭蕉扇 + 黑洞 · 满级,Banana Fan + Black Hole · Max Rank,芭蕉扇 + 黑洞 · 满级
+芭蕉扇 · 1级,Banana Fan · Rank 1,芭蕉扇 · 1级
+芭蕉扇 · 5级,Banana Fan · Rank 5,芭蕉扇 · 5级
+芭蕉扇 · 异常追加,Banana Fan · Status Tick,芭蕉扇 · 异常追加
+"芭蕉扇5级 + 汽油瓶 / 剧毒
+已有异常额外一跳 · 同次吹风不重复、不传播","Rank 5 Banana Fan + Molotov / Poison
+One extra status tick per gust, with no repeated hits or spread","芭蕉扇5级 + 汽油瓶 / 剧毒
+已有异常额外一跳 · 同次吹风不重复、不传播"
+苍穹灵隼 / GALE,Sky Falcon / GALE,苍穹灵隼 / GALE
+苍风术隼 · 远程,Gale Mage · Ranged,苍风术隼 · 远程
+苍风牵引,Gale Gathering,苍风牵引
+荆棘鞭,Thorn Whip,荆棘鞭
+蓄力追踪 · 准备闪避,Tracking · Prepare to dodge,蓄力追踪 · 准备闪避
+衰减等待,Decay Delay,衰减等待
+触发间隔,Interval,触发间隔
+设置  Settings,Settings,设置
+诊断报告已导出，请保存 JSON 文件,Diagnostics exported. Save the JSON file.,诊断报告已导出，请保存 JSON 文件
+试听：%s（%d/8）· 下一首,Preview: %s (%d/8) · Next,试听：%s（%d/8）· 下一首
+语言,Language,语言
+走位,Repositioning,走位
+超级大奖！,Grand Jackpot!,超级大奖！
+踏风徽记,Wind Emblem,踏风徽记
+近期测试 · 下方按钮翻页,Recent tests · Use the page buttons below,近期测试 · 下方按钮翻页
+返回  Back,Back,返回
+返回主页,Home,返回主页
+进入对局后显示当前数值,Enter a run to view stats,进入对局后显示当前数值
+进入木头人挑战,Stand Your Ground,进入木头人挑战
+进入自由试炼,Enter Free Trials,进入自由试炼
+连冲蓄势 · 留意下一条路线,Chain charge ready · Watch the next path,连冲蓄势 · 留意下一条路线
+连拾金币点燃经验条；体验轻巧连射，点击下方可重播,Chain coins to ignite the XP bar. Try rapid gunfire; replay with the button below.,连拾金币点燃经验条；体验轻巧连射，点击下方可重播
+退出全屏,Exit Fullscreen,退出全屏
+透明度  Opacity,Opacity,透明度
+逐光冒险,Chasing the Light,逐光冒险
+通关结算,Finish Run,通关结算
+速度试炼,Trial of Speed,速度试炼
+速度试炼 · 冲刺后反击,"Trial of Speed · Dash, then strike",速度试炼 · 冲刺后反击
+逼近 · 保持距离,Approaching · Keep your distance,逼近 · 保持距离
+释放 · ,Casting · ,释放 · 
+重放投弹,Replay Bombs,重放投弹
+重放星轨,Replay Star Trail,重放星轨
+重置冲刺,Reset Dash,重置冲刺
+重试试炼,Retry Trial,重试试炼
+金币,Coins,金币
+银翼飞刀,Silverwing Knife,银翼飞刀
+锁定中 · 准备横移,Locking on · Move sideways,锁定中 · 准备横移
+锁定！横向冲刺,Locked! Dash sideways,锁定！横向冲刺
+锁定！横向移动,Locked! Move sideways,锁定！横向移动
+镜头震动  Camera shake,Camera Motion,镜头震动
+闪电戒指,Lightning Ring,闪电戒指
+闪电目标,Lightning Targets,闪电目标
+闪避成功 · 反击！,Dodge successful · Strike!,闪避成功 · 反击！
+阴天,Overcast,阴天
+阵风会推偏普通移动,Gusts push normal movement sideways,阵风会推偏普通移动
+阵风场景 · 风向 / 偏移,Wind · Trails / Drift,阵风场景 · 风向 / 偏移
+"随机一张卡，直接提升等级
++2 级 80%  ·  +3 级 15%  ·  +1 级 5%","Upgrade a random card
++2 ranks: 80% · +3 ranks: 15% · +1 rank: 5%","随机一张卡，直接提升等级
++2 级 80%  ·  +3 级 15%  ·  +1 级 5%"
+难度  Difficulty,Difficulty,难度
+集齐无人机 + 枪支 + 炸弹可激活军械护盾,Equip Drone + Gun + Bomb to activate the Arsenal shield,集齐无人机 + 枪支 + 炸弹可激活军械护盾
+雨天,Rain,雨天
+雪天,Snow,雪天
+"雷击屏幕内敌人并清除敌弹
+对 Boss 造成 6% 最大生命伤害（上限 420）
+冷却 45 秒","Strike visible enemies and clear enemy bullets
+Boss damage: 6% max health (up to 420)
+45s cooldown","雷击屏幕内敌人并清除敌弹
+对 Boss 造成 6% 最大生命伤害（上限 420）
+冷却 45 秒"
+雷印追击,Thunder Marks,雷印追击
+雷跃突袭,Thunder Leap,雷跃突袭
+雷霆裁决,Thunder Judgment,雷霆裁决
+雷鬃狮王 / THUNDER,Thunder Lion / THUNDER,雷鬃狮王 / THUNDER
+音量  Volume,Master Volume,音量
+预警 · ,Warning · ,预警 · 
+预选一项奖励，可改选；进入下一关时领取,Choose a reward. You can change it before confirming.,预选一项奖励，可改选；进入下一关时领取
+领取 · 进入自由试炼,Claim · Free Trials,领取 · 进入自由试炼
+领取奖励 · 继续战斗,Claim · Resume Battle,领取奖励 · 继续战斗
+领取并通关结算,Claim · Finish Run,领取并通关结算
+领取祝福 · 继续,Claim Blessing · Continue,领取祝福 · 继续
+风刃,Windblade,风刃
+风刃扇击,Windblade Fan,风刃扇击
+风雷疾驰,Storm Sprint,风雷疾驰
+飞刀数量,Knife Count,飞刀数量
+飞弹数量,Bolt Count,飞弹数量
+飞行距离,Flight Range,飞行距离
+飞行速度,Flight Speed,飞行速度
+黄昏,Dusk,黄昏
+黎明,Dawn,黎明
+黑洞,Black Hole,黑洞
+黑洞 · 1级,Black Hole · Rank 1,黑洞 · 1级
+黑洞 · 5级,Black Hole · Rank 5,黑洞 · 5级
+"三武器1级 · 飞刀自动瞄准 / 十字往返 / 圣水净化
+正常刷怪练习 · 升级卡可继续强化到5级","Three rank-1 weapons: auto-aim knives / returning cross / holy water
+Practice against normal waves. Upgrade cards to rank 5.","三武器1级 · 飞刀自动瞄准 / 十字往返 / 圣水净化
+正常刷怪练习 · 升级卡可继续强化到5级"
+"Three rank-1 weapons: auto-aim knives / returning cross / holy water
+Practice against normal waves. Upgrade cards to rank 5.","Three rank-1 weapons: auto-aim knives / returning cross / holy water
+Practice against normal waves. Upgrade cards to rank 5.","三武器1级 · 飞刀自动瞄准 / 十字往返 / 圣水净化
+正常刷怪练习 · 升级卡可继续强化到5级"
+"新增三武器 + 自动飞刀 / 圣水伤害表现
+鞭子近身横扫 · 符文反弹 · 法阵脉冲","Three new weapons + auto-aim knives / holy water hit effects
+Whip sweeps · Bouncing runes · Pulsing aura","新增三武器 + 自动飞刀 / 圣水伤害表现
+鞭子近身横扫 · 符文反弹 · 法阵脉冲"
+"Three new weapons + auto-aim knives / holy water hit effects
+Whip sweeps · Bouncing runes · Pulsing aura","Three new weapons + auto-aim knives / holy water hit effects
+Whip sweeps · Bouncing runes · Pulsing aura","新增三武器 + 自动飞刀 / 圣水伤害表现
+鞭子近身横扫 · 符文反弹 · 法阵脉冲"
+"冰面有惯性：松开后滑行，反向输入刹车
+位移 +30%；红尖刺伤玩家12 / 怪物36，每秒一次","Ice has inertia: release to slide; move against it to brake.
+Dashes +30%; red spikes deal 12 to players / 36 to enemies, once per second.","冰面有惯性：松开后滑行，反向输入刹车
+位移 +30%；红尖刺伤玩家12 / 怪物36，每秒一次"
+"Ice has inertia: release to slide; move against it to brake.
+Dashes +30%; red spikes deal 12 to players / 36 to enemies, once per second.","Ice has inertia: release to slide; move against it to brake.
+Dashes +30%; red spikes deal 12 to players / 36 to enemies, once per second.","冰面有惯性：松开后滑行，反向输入刹车
+位移 +30%；红尖刺伤玩家12 / 怪物36，每秒一次"
+"Level: %s
+","Level: %s
+","等级：%s
+"
+"HP: %s / %s
+","HP: %s / %s
+","生命：%s / %s
+"
+"MoveSpeed: %s
+","MoveSpeed: %s
+","移速：%s
+"
+"Enemy Killed: %s
+","Enemy Killed: %s
+","击杀：%s
+"
+"Enemy Alive: %s
+","Enemy Alive: %s
+","存活敌人：%s
+"
+"Stage: %s
+","Stage: %s
+","关卡：%s
+"
+Hit Damage,Hit Damage,单次伤害
+Damage / s,Damage / s,每秒伤害
+Range,Range,作用距离
+Reach,Reach,攻击距离
+Interval,Interval,触发间隔
+Burn DPS / Stack,Burn DPS / Stack,每层秒伤
+ New, New, 启用
+None → ,None → ,未装备 → 

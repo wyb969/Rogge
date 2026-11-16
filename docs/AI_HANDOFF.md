@@ -6,6 +6,7 @@
 - 取消宝囊精/组合/Debug的居中说明通知及回响蓄能文字、选卡成长/重抽说明；说明仍可从词典和试炼前页面查看。Boss隐藏名称、动作说明和蓄力条，只显示血量；风双Boss分行。地面攻击预警不变。
 - 星轨/吸金狂欢仅倒计时数字，隐藏蓄能/倒计时进度条；力量/木头人局内倒计时也只数字。经验条和技能冷却保留。关卡、经验、时钟、天气和装备起点重新分层，避免竖屏相互遮挡；微小/无头窗口缩放有边界。
 - 只改显示，不改奖励、Boss3秒受控/3秒免控、武器数值、计时或试炼规则。中英横竖屏原生截图、最终Web PCK验证见 [compact-combat-hud.md](compact-combat-hud.md) / `validation/compact-combat-hud-20261116.json`。无本轮真实浏览器/Safari验证；既有退出资源/GL警告保留。
+- 源码 `de24cb7` 已推送 [PR #30](https://github.com/wyb969/Rogge/pull/30)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新194322，Site `4255b44ec9b8fdd3e6f4715842c69c5e27130607` / deployment `appgdep_6afaed5af95481918bd356613d339eeb` 于北京时间19:47发布成功。9文件字节核对/26 loader检查通过；证据 `validation/compact-combat-hud-playtest-20261116.json`。
 - 本轮日志/包 `../compact-hud` 在RAM临时目录，以GitHub提交为准。沿用原私有试玩，不合并master、不上传正式itch；Site构建用 `TMPDIR=/dev/shm`，不清理旧文件。
 
 ## 2026-11-16 Boss血条、横排三卡与免控（当前开发）

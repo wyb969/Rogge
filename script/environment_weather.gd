@@ -282,7 +282,7 @@ func _update_environment() -> void :
 	var stamp: = (int(current_weather) * 4 + period)*3+hazard_kind
 	if stamp != _caption_stamp:
 		_caption_stamp = stamp
-		_caption.text = NAMES[current_weather] + " · " + time_name() + " · " + HAZARD_NAMES[hazard_kind]
+		_caption.text = L10n.text(NAMES[current_weather]) + " · " + time_name() + " · " + L10n.text(HAZARD_NAMES[hazard_kind])
 	_background.set_snow_cover(_weights[Weather.SNOW] * intensity)
 	if winter != null: winter.sync(_weights[Weather.SNOW] * intensity)
 	_background.set_ice_cover(_weights[Weather.ICE]) # Gameplay surface stays identifiable at zero cosmetic FX.
@@ -294,9 +294,9 @@ func _exit_tree() -> void :
 	if is_instance_valid(AudioManager.weather_audio): AudioManager.weather_audio.detach(self)
 
 func time_name() -> String:
-	if daylight > 0.72: return "日间"
-	if daylight < 0.18: return "夜间"
-	return "黄昏" if solar_phase < 0.5 else "黎明"
+	if daylight > 0.72: return L10n.text("日间")
+	if daylight < 0.18: return L10n.text("夜间")
+	return L10n.text("黄昏") if solar_phase < 0.5 else L10n.text("黎明")
 
 func draw_weather(canvas: Node2D) -> void :
 	if not running: return
@@ -349,7 +349,7 @@ func enable_preview() -> void :
 	_buttons = HBoxContainer.new()
 	_buttons.add_theme_constant_override("separation", 10)
 	_preview.add_child(_buttons)
-	for title in ["下个天气", "切换昼夜", "返回主页"]:
+	for title in [L10n.text("下个天气"), L10n.text("切换昼夜"), L10n.text("返回主页")]:
 		var button: = Button.new()
 		button.text = title
 		_buttons.add_child(button)

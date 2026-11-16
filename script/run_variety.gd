@@ -116,7 +116,7 @@ func upgrade(id: String) -> void :
 	_refresh_charge()
 
 func _refresh_charge() -> void :
-	_charge_label.text = "回响火种  %d / %d" % [echo_charge, int(echo_stats(echo_level).kills)] if echo_level > 0 else ""
+	_charge_label.text = L10n.text("回响火种  %d / %d") % [echo_charge, int(echo_stats(echo_level).kills)] if echo_level > 0 else ""
 	_charge_label.visible = echo_level > 0 and _notice_left <= 0
 
 func clear_combat_effects() -> void :
@@ -225,7 +225,7 @@ func spawn_courier() -> Node2D:
 	game.add_child(actor)
 	actor.global_position = game.player.global_position + direction * maxf(reach, 110)
 	_courier = weakref(actor)
-	notify("宝囊精出现！追上它获得经验和重抽次数")
+	notify(L10n.text("宝囊精出现！追上它获得经验和重抽次数"))
 	AudioManager.play_juice("ready")
 	RunDiagnostics.mark("courier_spawn", {"stage": game.spawner.stage})
 	return actor
@@ -237,7 +237,7 @@ func reward_courier(at: Vector2) -> void :
 	game.spawn_xp_coin(at, 14 + 4 * game.spawner.stage + (0 if added else 8))
 	game.combat_feedback.reward(at)
 	AudioManager.play_upgrade()
-	notify("截获宝囊！经验 + 重抽 1 次" if added else "截获宝囊！重抽已满，转为额外经验")
+	notify(L10n.text("截获宝囊！经验 + 重抽 1 次") if added else L10n.text("截获宝囊！重抽已满，转为额外经验"))
 	RunDiagnostics.mark("courier_defeated", {"reroll_added": added})
 
 func _draw() -> void :

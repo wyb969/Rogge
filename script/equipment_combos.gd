@@ -26,6 +26,6 @@ static func color_for(group: String) -> Color:
 
 static func hint_for(id: String) -> String:
 	match group_for(id):
-		"growth": return GROWTH_HINT
-		"arsenal": return ARSENAL_HINT
+		"growth": return L10n.text(GROWTH_HINT)
+		"arsenal": return L10n.text(ARSENAL_HINT)
 	return ""

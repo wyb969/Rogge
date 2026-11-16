@@ -29,20 +29,20 @@ func show_result(stats: Dictionary) -> void :
 
 	var victory: bool = stats.get("victory", false)
 	if victory:
-		result_title.text = "VICTORY"
+		result_title.text = L10n.text("VICTORY")
 		result_title.modulate = Color(1.0, 0.86, 0.35, 1.0)
-		retry_button.text = "Play Again"
+		retry_button.text = L10n.text("Play Again")
 	else:
-		result_title.text = "DEFEAT"
+		result_title.text = L10n.text("DEFEAT")
 		result_title.modulate = Color(1.0, 0.45, 0.45, 1.0)
-		retry_button.text = "Retry"
+		retry_button.text = L10n.text("Retry")
 
 	var minutes: int = stats.get("minutes", 0)
 	var seconds: int = stats.get("seconds", 0)
 
-	time_label.text = "Survived: %02d:%02d" % [minutes, seconds]
-	kill_label.text = "Kills: %d" % stats.get("kills", 0)
-	level_label.text = "Level: %d    Stage: %d" % [stats.get("level", 1), int(stats.get("stage", 1))]
+	time_label.text = L10n.text("Survived: %02d:%02d") % [minutes, seconds]
+	kill_label.text = L10n.text("Kills: %d") % stats.get("kills", 0)
+	level_label.text = L10n.text("Level: %d    Stage: %d") % [stats.get("level", 1), int(stats.get("stage", 1))]
 
 func hide_result() -> void :
 	root_ui.hide()

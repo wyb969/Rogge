@@ -404,7 +404,7 @@ func _refresh_growth_combo() -> void:
 	var active := owned == EQUIPMENT_COMBOS.GROWTH_MEMBERS.size()
 	if active != growth_combo_active:
 		_growth_xp_tenths = 0
-		if active: variety.notify("生机组合已激活\n经验 +30% · 移动速度与回复效果 +20%")
+		if active: variety.notify(L10n.text("生机组合已激活\n经验 +30% · 移动速度与回复效果 +20%"))
 	growth_combo_active = active
 	player.growth_move_multiplier = EQUIPMENT_COMBOS.MOVE_MULTIPLIER if active else 1.0
 	player.growth_heal_multiplier = EQUIPMENT_COMBOS.HEAL_MULTIPLIER if active else 1.0
@@ -456,7 +456,7 @@ func _on_prepared_coin_collected(_raw: int, coin: Node) -> void :
 
 func on_player_died() -> void :
 	if trials.active_fight():
-		trials.fail("生命耗尽：这次试炼未通过。")
+		trials.fail(L10n.text("生命耗尽：这次试炼未通过。"))
 		return
 	if _death_presented:
 		return
@@ -654,7 +654,7 @@ func prepare_lighting_debug() -> void :
 	variety.upgrade("echo_ember")
 	for i in 24:
 		_spawn_xp_coin_now(player.global_position + Vector2(-190 + i * 12, -95 + float(i % 3) * 12), 2)
-	variety.notify("光影测试：观察光束、枪火与回血球；连续拾币会点亮经验条")
+	variety.notify(L10n.text("光影测试：观察光束、枪火与回血球；连续拾币会点亮经验条"))
 
 func prepare_feedback_debug() -> void :
 	prepare_lighting_debug()
@@ -665,7 +665,7 @@ func prepare_feedback_debug() -> void :
 	var fixture: = preload("res://script/feedback_playground.gd").new()
 	fixture.name = "FeedbackPlayground"
 	add_child(fixture)
-	variety.notify("连拾金币点燃经验条；体验轻巧连射，点击下方可重播")
+	variety.notify(L10n.text("连拾金币点燃经验条；体验轻巧连射，点击下方可重播"))
 
 func prepare_first_boss_debug() -> void :
 	player.apply_rest_max_hp(500)
@@ -676,7 +676,7 @@ func prepare_first_boss_debug() -> void :
 		boss.reset_physics_interpolation()
 		boss.rush_timer.stop()
 		boss.start_charge_attack()
-	variety.notify("第一关 Boss 重合测试：Shift 冲刺脱离，观察下一轮冲刺")
+	variety.notify(L10n.text("第一关 Boss 重合测试：Shift 冲刺脱离，观察下一轮冲刺"))
 
 func prepare_blessing_debug() -> void :
 	player.apply_rest_max_hp(500)
@@ -696,14 +696,14 @@ func prepare_blessing_debug() -> void :
 		add_child(target)
 		target.global_position = player.global_position + offset
 		target.set_physics_process(false)
-	variety.notify("点击左侧四个图标：体验祝福特效、音效与全图拾取")
+	variety.notify(L10n.text("点击左侧四个图标：体验祝福特效、音效与全图拾取"))
 
 func prepare_knight_debug_fight() -> void :
 	current_level = 5
 	player.apply_level_growth(current_level)
 	spawner.handle_level_up(current_level)
 	level_manager.level = current_level
-	level_manager.label.text = "Level: 5 (Boss test)"
+	level_manager.label.text = L10n.text("Level: 5 (Boss test)")
 	_on_upgrade_selected("axe_up")
 	_on_upgrade_selected("gun_up")
 	_on_upgrade_selected("gun_up")
@@ -758,7 +758,7 @@ func prepare_necklace_debug_run() -> void :
 
 	player.player_health = maxf(1.0, player.max_player_health - 50.0)
 	player.health_bar.set_health(player.player_health)
-	level_manager.label.text = "Level: 0 (Necklace test)"
+	level_manager.label.text = L10n.text("Level: 0 (Necklace test)")
 	for offset in [Vector2(-90, -45), Vector2(90, -45), Vector2(0, 85)]:
 		spawner.spawn(player.global_position + offset, false)
 
@@ -768,7 +768,7 @@ func prepare_lightning_debug_run() -> void :
 	spawner.handle_level_up(current_level)
 	_on_upgrade_selected("lightning_ring")
 	beast_powers.unlock(1)
-	level_manager.label.text = "Level: 1 (Lightning test)"
+	level_manager.label.text = L10n.text("Level: 1 (Lightning test)")
 	for offset in [Vector2(-130, 35), Vector2(70, -45), Vector2(140, 70), Vector2(-65, 105)]:
 		spawner.spawn(player.global_position + offset, false)
 
@@ -777,7 +777,7 @@ func prepare_variety_debug() -> void :
 	_on_upgrade_selected("echo_ember")
 	variety._courier_left = 999
 	variety.spawn_courier()
-	variety.notify("已装备踏风徽记 / 回响火种\n冲刺结束触发风压 · 击杀 8 个敌人触发回响")
+	variety.notify(L10n.text("已装备踏风徽记 / 回响火种\n冲刺结束触发风压 · 击杀 8 个敌人触发回响"))
 
 func prepare_motion_vfx_debug() -> void:
 	var sandbox := preload("res://script/motion_vfx_debug.gd").new()
@@ -790,7 +790,7 @@ func prepare_hitstop_debug() -> void:
 	add_child(sandbox)
 
 func prepare_ink_surf_debug() -> void:
-	variety.notify("彩墨冲浪：向右冲刺，掠过3处溅痕\n终点60伤害+击退 · 6秒冷却 · 无需选卡")
+	variety.notify(L10n.text("彩墨冲浪：向右冲刺，掠过3处溅痕\n终点60伤害+击退 · 6秒冷却 · 无需选卡"))
 	ink_surf.enable_debug_training()
 	for offset in [Vector2(118,-22),Vector2(135,20),Vector2(160,-5)]:
 		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
@@ -807,7 +807,7 @@ func prepare_tactical_enemy_debug() -> void:
 	spawner.get_node("Elite").stop()
 	spawner.set_process(false)
 	variety._courier_left = 99999
-	variety.notify("新怪物：刃螳扇形斩 / 回旋镖妖 / 孢子炮击\n红区锁定后走开；风、冰冻与击退可打断")
+	variety.notify(L10n.text("新怪物：刃螳扇形斩 / 回旋镖妖 / 孢子炮击\n红区锁定后走开；风、冰冻与击退可打断"))
 	var data = [load("res://resource/BladeMantis.tres"),load("res://resource/BoomerangImp.tres"),load("res://resource/SporeBomber.tres")]
 	var offsets = [Vector2(-82,30),Vector2(170,-65),Vector2(-170,-95)]
 	for i in data.size():
@@ -828,7 +828,7 @@ func _on_treasure_earned() -> void :
 
 func prepare_poison_debug(rank: int) -> void :
 	for _i in clampi(rank, 1, 5): _on_upgrade_selected("poison_trail")
-	variety.notify("剧毒踪迹 %d 级 · 移动留下毒雾\n%s" % [poison_trail.level, "每秒 25 点伤害 · 移速降低 25%" if rank >= 5 else "每秒 5 点伤害 · 5 级解锁减速"])
+	variety.notify(L10n.text("剧毒踪迹 %d 级 · 移动留下毒雾\n%s") % [poison_trail.level, L10n.text("每秒 25 点伤害 · 移速降低 25%") if rank >= 5 else L10n.text("每秒 5 点伤害 · 5 级解锁减速")])
 	for at in [Vector2(-100, 0), Vector2(100, 0), Vector2(0, 110)]:
 		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
 		actor.set_player_ref(player)
@@ -842,7 +842,7 @@ func prepare_poison_debug(rank: int) -> void :
 func prepare_critical_debug(rank: int) -> void:
 	for _i in clampi(rank, 1, 5): _on_upgrade_selected("critical_glasses")
 	_on_upgrade_selected("gun_up")
-	variety.notify("暴击眼镜 %d 级 · 暴击率 %d%%\n大号金色伤害字与 ! 表示暴击" % [player.critical_glasses_level, roundi(player.CRITICAL_GLASSES.chance_for(player.critical_glasses_level) * 100.0)])
+	variety.notify(L10n.text("暴击眼镜 %d 级 · 暴击率 %d%%\n大号金色伤害字与 ! 表示暴击") % [player.critical_glasses_level, roundi(player.CRITICAL_GLASSES.chance_for(player.critical_glasses_level) * 100.0)])
 	for offset in [Vector2(95, -28), Vector2(125, 22), Vector2(-100, -45)]:
 		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
 		actor.set_player_ref(player)
@@ -864,7 +864,7 @@ func prepare_fan_status_debug() -> void:
 		poison_trail._clouds[0].at = targets[0].global_position
 		poison_trail._clouds[0].left = poison_trail.CLOUD_LIFE
 		poison_trail._scan(0.0)
-	variety.notify("芭蕉扇5级 + 汽油瓶 / 剧毒\n已有异常额外一跳 · 同次吹风不重复、不传播")
+	variety.notify(L10n.text("芭蕉扇5级 + 汽油瓶 / 剧毒\n已有异常额外一跳 · 同次吹风不重复、不传播"))
 
 func prepare_control_debug(mode: StringName) -> void:
 	var rank := 5 if mode in [&"fan5", &"black_hole5", &"control_cards"] else 1
@@ -873,7 +873,7 @@ func prepare_control_debug(mode: StringName) -> void:
 	if mode in [&"black_hole", &"black_hole5", &"control_cards"]: ids.append("black_hole")
 	for id in ids:
 		for _i in rank: _on_upgrade_selected(id)
-	variety.notify("控场卡片 %d 级\n芭蕉扇沿移动方向吹风 · 黑洞自动聚怪" % rank)
+	variety.notify(L10n.text("控场卡片 %d 级\n芭蕉扇沿移动方向吹风 · 黑洞自动聚怪") % rank)
 	for offset in [Vector2(95, -28), Vector2(125, 22), Vector2(165, 0), Vector2(-100, -45), Vector2(65, 105)]:
 		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
 		actor.set_player_ref(player)
@@ -892,7 +892,7 @@ func prepare_bomb_debug(mode: StringName) -> void:
 		_on_upgrade_selected("drone_up")
 	player.apply_rest_max_hp(250)
 	player.full_heal()
-	variety.notify("炸弹 %d 级 · 自动抛投、范围爆破与击飞\n%s" % [rank, "军械组合：每3秒获得1秒无敌" if mode == &"arsenal" else "集齐无人机 + 枪支 + 炸弹可激活军械护盾"])
+	variety.notify(L10n.text("炸弹 %d 级 · 自动抛投、范围爆破与击飞\n%s") % [rank, L10n.text("军械组合：每3秒获得1秒无敌") if mode == &"arsenal" else L10n.text("集齐无人机 + 枪支 + 炸弹可激活军械护盾")])
 	for offset in [Vector2(125, -28), Vector2(145, 24), Vector2(175, 0), Vector2(-145, -35), Vector2(85, 130)]:
 		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
 		actor.set_player_ref(player)
@@ -909,7 +909,7 @@ func prepare_growth_debug(both: bool = false) -> void:
 		for id in EQUIPMENT_COMBOS.ARSENAL_MEMBERS: _on_upgrade_selected(id)
 	player.player_health = player.max_player_health - 60.0
 	player.health_bar.set_health(player.player_health)
-	variety.notify("生机组合：经验+30%% · 移速/回复+20%%\n%s" % ("两组图标已激活：荧光绿 / 金色同步流光" if both else "右侧拾取、移速、回复图标：荧光绿同步流光"))
+	variety.notify(L10n.text("生机组合：经验+30%% · 移速/回复+20%%\n%s") % (L10n.text("两组图标已激活：荧光绿 / 金色同步流光") if both else L10n.text("右侧拾取、移速、回复图标：荧光绿同步流光")))
 
 func _show_next_reward() -> void :
 	if _death_presented or player.player_health <= 0.0 or process_mode == Node.PROCESS_MODE_DISABLED:
@@ -956,7 +956,7 @@ func prepare_treasure_debug_run() -> void :
 	player.apply_level_growth(current_level)
 	spawner.handle_level_up(current_level)
 	level_manager.level = current_level
-	level_manager.label.text = "Level: 6 (Treasure test)"
+	level_manager.label.text = L10n.text("Level: 6 (Treasure test)")
 	_on_upgrade_selected("axe_up")
 	_on_upgrade_selected("gun_up")
 	_on_upgrade_selected("gun_up")
@@ -991,7 +991,7 @@ func prepare_beast_debug(stage_num: int) -> void :
 	player.apply_level_growth(current_level)
 	spawner.handle_level_up(current_level)
 	level_manager.level = current_level
-	level_manager.label.text = "Level: %d (Guardian test)" % current_level
+	level_manager.label.text = L10n.text("Level: %d (Guardian test)") % current_level
 	_on_upgrade_selected("axe_up")
 	for _i in 3 + (stage_num - 3):
 		_on_upgrade_selected("gun_up")
@@ -1021,7 +1021,7 @@ func prepare_trial_debug(kind: String) -> void :
 	player.apply_level_growth(current_level)
 	level_manager.level = current_level
 	spawner.handle_level_up(current_level)
-	level_manager.label.text = "Level: %d (Trial test)" % current_level
+	level_manager.label.text = L10n.text("Level: %d (Trial test)") % current_level
 	_on_upgrade_selected("axe_up")
 	for _i in (4 if kind == "power" else 6):
 		_on_upgrade_selected("gun_up")
@@ -1045,16 +1045,14 @@ func prepare_relic_debug() -> void:
 	for id in RELIC_WEAPONS.IDS: _on_upgrade_selected(id)
 	player.apply_rest_max_hp(500)
 	player.full_heal()
-	variety.notify("三武器1级 · 飞刀自动瞄准 / 十字往返 / 圣水净化
-正常刷怪练习 · 升级卡可继续强化到5级")
+	variety.notify(L10n.text("三武器1级 · 飞刀自动瞄准 / 十字往返 / 圣水净化\n正常刷怪练习 · 升级卡可继续强化到5级"))
 
 func prepare_arcane_debug() -> void:
 	for id in ARCANE_WEAPONS.IDS: _on_upgrade_selected(id)
 	for id in ["silver_knife","holy_water"]: _on_upgrade_selected(id)
 	player.apply_rest_max_hp(500)
 	player.full_heal()
-	variety.notify("新增三武器 + 自动飞刀 / 圣水伤害表现
-鞭子近身横扫 · 符文反弹 · 法阵脉冲")
+	variety.notify(L10n.text("新增三武器 + 自动飞刀 / 圣水伤害表现\n鞭子近身横扫 · 符文反弹 · 法阵脉冲"))
 
 func prepare_star_chain_debug() -> void:
 	player.max_player_health += 500
@@ -1071,5 +1069,4 @@ func prepare_surface_debug(kind: int) -> void:
 	for i in 3:
 		_on_upgrade_selected("banana_fan")
 		_on_upgrade_selected("black_hole")
-	variety.notify("阵风会推偏普通移动" if kind==4 else "冰面有惯性：松开后滑行，反向输入刹车
-位移 +30%；红尖刺伤玩家12 / 怪物36，每秒一次")
+	variety.notify(L10n.text("阵风会推偏普通移动") if kind==4 else L10n.text("冰面有惯性：松开后滑行，反向输入刹车\n位移 +30%；红尖刺伤玩家12 / 怪物36，每秒一次"))

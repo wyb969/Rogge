@@ -112,10 +112,10 @@ func _process(delta: float) -> void :
 	var warn: bool = boss.charge_state == boss.ChargeState.WARN
 	var recover: bool = boss.charge_state == boss.ChargeState.RECOVER
 	var locked: bool = boss.warning_locked
-	var caption: = "逼近 · 保持距离"
-	if warn: caption = ("锁定！横向移动" if boss._chain_warning else "锁定！横向冲刺") if locked else "蓄力追踪 · 准备闪避"
-	elif recover: caption = "连冲蓄势 · 留意下一条路线" if boss._combo_left > 0 else "硬直 · 反击机会"
-	elif boss.is_charging: caption = "冲锋！"
+	var caption: = L10n.text("逼近 · 保持距离")
+	if warn: caption = (L10n.text("锁定！横向移动") if boss._chain_warning else L10n.text("锁定！横向冲刺")) if locked else L10n.text("蓄力追踪 · 准备闪避")
+	elif recover: caption = L10n.text("连冲蓄势 · 留意下一条路线") if boss._combo_left > 0 else L10n.text("硬直 · 反击机会")
+	elif boss.is_charging: caption = L10n.text("冲锋！")
 	if caption != _last_caption:
 		_last_caption = caption
 		_status.text = caption
@@ -124,7 +124,7 @@ func _process(delta: float) -> void :
 	var title_stamp: int = int(boss.enraged()) * 2 + int(chained)
 	if _title_stamp != title_stamp:
 		_title_stamp = title_stamp
-		_title.text = "狂奔巨蜥 / %s%s" % ["II" if boss.enraged() else "I", " · 连冲" if chained else ""]
+		_title.text = L10n.text("狂奔巨蜥 / %s%s") % ["II" if boss.enraged() else "I", L10n.text(" · 连冲") if chained else ""]
 	_progress.visible = warn
 	if warn: _progress.value = (1 - boss._state_left / boss.warning_duration()) * 100
 	_redraw_left -= delta

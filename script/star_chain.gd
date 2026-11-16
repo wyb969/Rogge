@@ -134,7 +134,7 @@ func enable_debug() -> void:
 	if _debug_button == null:
 		_debug_button = Button.new()
 		_debug_button.name = "ReplayStarRoute"
-		_debug_button.text = "重放星轨"
+		_debug_button.text = L10n.text("重放星轨")
 		_hud.add_child(_debug_button)
 		_debug_button.pressed.connect(func():
 			clear_combat_effects()
@@ -173,7 +173,7 @@ func start_route() -> bool:
 		_points[i] = at.clamp(bounds.position, bounds.end)
 	_audio.pitch_scale = 0.9
 	_audio.play()
-	game.variety.notify("星轨出现！8秒内依次触碰3颗亮星\n完成后进入吸金狂欢；不追也没有损失")
+	game.variety.notify(L10n.text("星轨出现！8秒内依次触碰3颗亮星\n完成后进入吸金狂欢；不追也没有损失"))
 	_update_hud()
 	return true
 
@@ -205,7 +205,7 @@ func _finish_route() -> void:
 	game.spawn_xp_coin(game.player.global_position, 8 + 2 * game.spawner.stage)
 	game.combat_feedback.reward(game.player.global_position, true)
 	AudioManager.play_juice("ready")
-	game.variety.notify("星轨完成！吸金狂欢 5秒\n附近金币自动飞来 + 额外经验")
+	game.variety.notify(L10n.text("星轨完成！吸金狂欢 5秒\n附近金币自动飞来 + 额外经验"))
 	RunDiagnostics.mark("star_chain", {"completed": completed})
 
 func _magnet_batch() -> void:
@@ -244,7 +244,7 @@ func _physics_process(delta: float) -> void:
 			route_left = maxf(0, route_left - delta)
 			if route_left <= 0:
 				cooldown = REST_SECONDS
-				game.variety.notify("星轨散去了，下次再试")
+				game.variety.notify(L10n.text("星轨散去了，下次再试"))
 	elif fever_left > 0:
 		fever_left = maxf(0, fever_left - delta)
 		_magnet_left -= delta
@@ -260,9 +260,9 @@ func _update_hud() -> void:
 	_label.visible = activity
 	_bar.visible = activity
 	_bar.value = route_left / ROUTE_SECONDS if route_left > 0 else (fever_left / FEVER_SECONDS if fever_left > 0 else float(charge) / REQUIRED)
-	if route_left > 0: _label.text = "星轨 %d/3  ·  %.1fs\n依次触碰亮星" % [step, route_left]
-	elif fever_left > 0: _label.text = "吸金狂欢  %.1fs" % fever_left
-	else: _label.text = "星轨蓄能 %d/%d" % [charge, REQUIRED]
+	if route_left > 0: _label.text = L10n.text("星轨 %d/3  ·  %.1fs\n依次触碰亮星") % [step, route_left]
+	elif fever_left > 0: _label.text = L10n.text("吸金狂欢  %.1fs") % fever_left
+	else: _label.text = L10n.text("星轨蓄能 %d/%d") % [charge, REQUIRED]
 
 func _process(delta: float) -> void:
 	_note_left = maxf(0, _note_left - delta)

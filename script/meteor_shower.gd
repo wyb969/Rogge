@@ -79,7 +79,7 @@ func start_shower(center: Vector2) -> bool:
 		meteor.hit = false
 	showers_started += 1
 	_next_event = _rng.randf_range(75, 110)
-	game.variety.notify("流星雨！金色落点会清除小怪，留下补给")
+	game.variety.notify(L10n.text("流星雨！金色落点会清除小怪，留下补给"))
 	AudioManager.play_juice("ready")
 	RunDiagnostics.mark("meteor_shower", {"count": _count, "reward_count": _reward_count, "healing": _reward_healing})
 	queue_redraw()
@@ -148,7 +148,7 @@ func _spawn_reward() -> void :
 	_reward_index += 1
 	drops_spawned += 1
 	if _reward_left == 0:
-		game.variety.notify("流星馈赠 · %s ×%d" % ["回血球" if _reward_healing else "金币", _reward_count])
+		game.variety.notify(L10n.text("流星馈赠 · %s ×%d") % [L10n.text("回血球") if _reward_healing else L10n.text("金币"), _reward_count])
 
 func _draw() -> void :
 	for i in _count:

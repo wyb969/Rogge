@@ -191,10 +191,10 @@ func start_defeat_sequence() -> void :
 
 func _update_title() -> void :
 	if kind == "power":
-		var status: = "缓慢接近" if trial_state == TrialState.ROAM else ("锁定中 · 准备横移" if trial_state == TrialState.TRACK else ("瞄准已固定！" if trial_state == TrialState.LOCK else ("激光发射" if trial_state == TrialState.ACTIVE else "冷却 · 趁机输出")))
-		_title.text = "机械章鱼 / " + status
+		var status: = L10n.text("缓慢接近") if trial_state == TrialState.ROAM else (L10n.text("锁定中 · 准备横移") if trial_state == TrialState.TRACK else (L10n.text("瞄准已固定！") if trial_state == TrialState.LOCK else (L10n.text("激光发射") if trial_state == TrialState.ACTIVE else L10n.text("冷却 · 趁机输出"))))
+		_title.text = L10n.text("机械章鱼 / ") + status
 	else:
-		_title.text = "巫刃术士 / " + ("闪避成功 · 反击！" if vulnerable() else ("0.5 秒后挥刀 · DASH！" if trial_state == TrialState.LOCK else "屏障关闭 · 等待冲刺时机"))
+		_title.text = L10n.text("巫刃术士 / ") + (L10n.text("闪避成功 · 反击！") if vulnerable() else (L10n.text("0.5 秒后挥刀 · DASH！") if trial_state == TrialState.LOCK else L10n.text("屏障关闭 · 等待冲刺时机")))
 	_title.add_theme_color_override("font_color", Color(0.6, 0.9, 1.0) if kind == "power" else Color(0.87, 0.65, 1.0))
 
 func _draw() -> void :

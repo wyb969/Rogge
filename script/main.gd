@@ -31,7 +31,7 @@ func _ready() -> void :
 	UiFonts.ui()
 	UiFonts.ui_bold()
 	build_version_label.text = "v" + str(ProjectSettings.get_setting("application/config/version", "dev"))
-	build_version_label.tooltip_text = "打包时间 · 北京时间 UTC+8"
+	build_version_label.tooltip_text = L10n.text("打包时间 · 北京时间 UTC+8")
 	get_viewport().size_changed.connect(_layout_build_version)
 	_layout_build_version()
 	AudioManager.game_track_changed.connect(_on_game_track_changed)
@@ -262,7 +262,7 @@ func _on_game_track_changed(title: String) -> void :
 	if button == null or not debug_page.visible or not AudioManager.adventure_music.preview_mode:
 		return
 	var index: int = AudioManager.adventure_music.track_index + 1
-	button.text = "试听：%s（%d/8）· 下一首" % [title, index]
+	button.text = L10n.text("试听：%s（%d/8）· 下一首") % [L10n.text(title), index]
 
 func _on_debug_knight_pressed() -> void :
 	await _launch_run(&"knight")
@@ -317,11 +317,11 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_weather_debug()
 			game.weather.set_preview(1,0)
 			game.weather.set_hazard(0)
-			game.variety.notify("九宫格地雷：红灯闪烁表示危险\n踩中后爆炸击退，触发3秒后恢复\n玩家24 / 怪物72起；冲刺可避伤害")
+			game.variety.notify(L10n.text("九宫格地雷：红灯闪烁表示危险\n踩中后爆炸击退，触发3秒后恢复\n玩家24 / 怪物72起；冲刺可避伤害"))
 		&"electric_grid":
 			game.prepare_weather_debug()
 			game.weather.set_hazard(1)
-			game.variety.notify("电网：每0.5秒放电，探索刷新4处圆形 / 方形区域\n麻痹1秒；恢复后0.5秒电网保护\n引怪入网，近距离传导每次脉冲只命中一次")
+			game.variety.notify(L10n.text("电网：每0.5秒放电，探索刷新4处圆形 / 方形区域\n麻痹1秒；恢复后0.5秒电网保护\n引怪入网，近距离传导每次脉冲只命中一次"))
 		&"wind_scene":
 			game.prepare_surface_debug(4)
 		&"ice_scene":

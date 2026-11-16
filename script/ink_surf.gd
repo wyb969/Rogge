@@ -68,7 +68,7 @@ func begin_run() -> void:
 	set_process(true)
 	set_physics_process(true)
 	if game.diagnostic_mode=="normal":
-		game.variety.notify("彩墨冲浪：冲刺掠过3处新鲜溅痕\n在冲刺终点释放击退震波")
+		game.variety.notify(L10n.text("彩墨冲浪：冲刺掠过3处新鲜溅痕\n在冲刺终点释放击退震波"))
 
 func clear_combat_effects() -> void:
 	_generation += 1
@@ -170,7 +170,7 @@ func _process(delta: float) -> void:
 	var show_hud := charge>0 or _tracking or cooldown>0
 	var changed := _foot_hud.visible != show_hud
 	_foot_hud.visible = show_hud
-	var caption := "彩墨冷却" if cooldown>0 else "彩墨 %d/3" % charge
+	var caption := L10n.text("彩墨冷却") if cooldown>0 else L10n.text("彩墨 %d/3") % charge
 	if _caption.text != caption:
 		_caption.text = caption
 		changed = true

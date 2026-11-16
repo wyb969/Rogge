@@ -359,3 +359,10 @@ static func compact_stats(rows: Array) -> String:
 	for row in selected:
 		lines.append(L10n.text(row.label)+"\n[b]"+CardNumbers.value_pair(row.before,row.after,row.unit)+"[/b]")
 	return "\n".join(lines)
+
+const DRAFT_LINES = {"axe_up": "穿透 %s伤", "circle_up": "环绕 %s伤", "gun_up": "射击≥%s伤", "pickup_up": "拾取 %s", "speed_up": "移速 %s", "left_fist": "左侧 %s%%", "right_fist": "右侧 %s%%", "drone_up": "激光 %s伤", "molotov_up": "灼烧 %s/秒", "freeze_up": "冰冻 %s%%", "regen_up": "回复 %s生命", "lifesteal_up": "吸血 %s%%", "shield_up": "击杀+%s盾", "monster_necklace": "拾取回%s血", "lightning_ring": "雷击 %s伤", "critical_glasses": "暴击 %s%%", "banana_fan": "击退 %s伤", "black_hole": "聚怪 %s/秒", "poison_trail": "中毒 %s/秒", "bomb": "爆炸 %s伤", "wind_emblem": "风压 %s伤", "echo_ember": "回响 %s伤", "silver_knife": "飞刀 %s伤", "cross_blade": "回旋 %s伤", "holy_water": "净化 %s/秒", "thorn_whip": "横扫 %s伤", "rune_bolt": "反弹 %s伤", "pulse_aura": "脉冲 %s伤"}
+
+static func draft_line(id: String, rows: Array) -> String:
+	if rows.is_empty(): return ""
+	var row: Dictionary=rows[1] if id=="right_fist" else rows[0]
+	return L10n.text(DRAFT_LINES[id]) % CardNumbers.number(row.after)

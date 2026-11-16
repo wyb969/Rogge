@@ -25,7 +25,7 @@ func _ready() -> void :
 	half_size = boss.collision_shape_2d.shape.get_rect().size * boss.collision_shape_2d.global_scale.abs() * 0.5 + hurt.shape.get_rect().size * hurt.global_scale.abs() * 0.5
 	center_offset = boss.collision_shape_2d.global_position - boss.global_position - (hurt.global_position - boss.player.global_position)
 	var layer: = CanvasLayer.new()
-	layer.layer = 35
+	layer.layer = 90
 	add_child(layer)
 	_panel = Control.new()
 	_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -55,20 +55,9 @@ func _ready() -> void :
 	_layout()
 
 func _layout() -> void :
-	var vp: = get_viewport().get_visible_rect().size
-	var scale_ui: = 1.5 if vp.y > vp.x else 1.0
-	var width: = minf(480 * scale_ui, vp.x - 48)
-	_panel.size = Vector2(width, 82 * scale_ui)
-	_panel.position = Vector2((vp.x - width) * 0.5, vp.y - (270 if vp.y > vp.x else 108) * scale_ui)
-	_title.size = Vector2(width, 26 * scale_ui)
-	UiFonts.apply_to_label(_title, int(16 * scale_ui), true)
-	boss.health_bar.position = Vector2(0, 28 * scale_ui)
-	boss.health_bar.size = Vector2(width, 18 * scale_ui)
-	_status.position = Vector2(0, 49 * scale_ui)
-	_status.size = Vector2(width, 24 * scale_ui)
-	UiFonts.apply_to_label(_status, int(12 * scale_ui), true)
-	_progress.position = Vector2(0, 76 * scale_ui)
-	_progress.size = Vector2(width, 5 * scale_ui)
+	var ui: float=preload("res://script/boss_hud_layout.gd").fit(_panel,boss.health_bar,_title,_status)
+	_progress.position=Vector2(0,53*ui)
+	_progress.size=Vector2(_panel.size.x,3*ui)
 
 func path_changed() -> void :
 	var a: Vector2 = boss.global_position + center_offset
@@ -100,6 +89,13 @@ func sweep_hits(a: Vector2, b: Vector2, hero: Vector2) -> bool:
 			last = minf(last, maxf(start, finish))
 			if first > last: return false
 	return true
+
+func clear_warning() -> void:
+	# Attack cancellation is not HUD teardown: keep health and status updates alive.
+	_polygon.clear()
+	_outline.clear()
+	_progress.hide()
+	queue_redraw()
 
 func reset() -> void :
 	_panel.hide()

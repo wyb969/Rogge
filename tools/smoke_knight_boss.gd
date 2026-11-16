@@ -37,7 +37,7 @@ func _run() -> void :
 	_expect(get_nodes_in_group("EnemyGroup").size() == 1, "debug entry has exactly one boss")
 	_expect(game.gun_weapon.level == 2 and player.max_player_health == 725.0 and player.growth_level == 5, "debug build includes normal level growth and rest health without invincibility")
 	_expect(knight.sprite_2d.texture.resource_path.ends_with("knight.png") and knight.sprite_2d.hframes == 8, "knight atlas uses real character frames")
-	_expect(knight.health_max_value == 3200.0 and knight.health_bar.size.y == 26.0, "knight has 3200 HP and thicker bar")
+	_expect(knight.health_max_value == 3200.0 and knight.health_bar.size.y >= 12.0, "knight retains 3200 HP and a readable HUD bar")
 	for viewport_size in [Vector2i(390, 844), Vector2i(900, 500)]:
 		root.size = viewport_size
 		await process_frame

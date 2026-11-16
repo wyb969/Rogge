@@ -116,6 +116,9 @@ func _physics_process(delta: float) -> void :
 	if is_dying or not is_instance_valid(player) or player.player_health <= 0.0 or get_tree().paused:
 		return
 	if _tick_environment_control(delta): return
+	_advance_battle(delta)
+
+func _advance_battle(delta: float) -> void:
 	state_left -= delta
 	match state:
 		State.APPROACH:
@@ -300,7 +303,7 @@ func _draw() -> void :
 		draw_arc(Vector2.ZERO, 62.0 + sin(_elapsed * 5) * 3, 0, TAU, 48, Color(COLORS[element], 0.6), 2.0, true)
 func _build_hud() -> void :
 	var layer: = CanvasLayer.new()
-	layer.layer = 35
+	layer.layer = 90
 	add_child(layer)
 	_hud = Control.new()
 	_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -325,14 +328,7 @@ func _build_hud() -> void :
 	_layout_hud()
 
 func _layout_hud() -> void :
-	var vp: = get_viewport().get_visible_rect().size
-	var width: = minf(480, vp.x - 48)
-	_hud.position = Vector2((vp.x - width) * 0.5, vp.y - (220 if vp.y > vp.x else 92))
-	_title.size = Vector2(width, 30)
-	health_bar.position = Vector2(0, 34)
-	health_bar.size = Vector2(width, 26)
-	_action_label.position = Vector2(0, 63)
-	_action_label.size = Vector2(width, 20)
+	preload("res://script/boss_hud_layout.gd").fit(_hud,health_bar,_title,_action_label)
 
 func _cancel_controlled_attack() -> void:
 	super._cancel_controlled_attack()

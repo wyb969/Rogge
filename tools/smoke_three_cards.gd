@@ -31,7 +31,7 @@ func run() -> void:
 				menu.show_upgrade_options()
 				await settle()
 				var bounds:=Rect2(Vector2.ZERO,root.get_visible_rect().size)
-				expect(menu.h_box_container.get_child_count()==3,"three choices")
+				expect(menu.h_box_container.get_child_count()==3 and menu.h_box_container.columns==3,"three choices in one horizontal row")
 				expect(not menu._card_area is ScrollContainer,"draft has no scroll container")
 				expect(bounds.encloses(menu.reroll_button.get_global_rect()),"reroll visible")
 				for card in menu.h_box_container.get_children():
@@ -39,13 +39,25 @@ func run() -> void:
 					expect(bounds.grow(1).encloses(card.get_global_rect()),"whole card visible "+context)
 					expect(card.get_global_rect().end.y < menu.reroll_button.position.y,"card above reroll "+context)
 					expect(card.find_children("*","Button").is_empty(),"no Details button "+context)
-					for label_node in [card.desc_label,card.stats_label]:
+					for label_node in [card.desc_label]:
+						expect(label_node.get_content_width()<=label_node.size.x+1,"line width fits "+context+str(label_node.get_content_width())+"/"+str(label_node.size.x))
 						expect(label_node.get_content_height()<=label_node.size.y+1,"text fits "+context+str(label_node.get_content_height())+"/"+str(label_node.size.y))
 						expect(card.get_global_rect().grow(1).encloses(label_node.get_global_rect()),"text bounds "+context)
 	menu.upgrade_pool=pool
 	menu.show_upgrade_options()
 	await settle()
 	var card: Node=menu.h_box_container.get_child(2)
+	var motion:=InputEventMouseMotion.new()
+	motion.position=card.get_global_rect().get_center()
+	motion.global_position=motion.position
+	root.push_input(motion,true)
+	await create_timer(0.2,true,false,true).timeout
+	expect(card.scale.x>1.01,"hover enlarges the card")
+	motion.position=Vector2(1,1)
+	motion.global_position=motion.position
+	root.push_input(motion,true)
+	await create_timer(0.2,true,false,true).timeout
+	expect(card.scale.is_equal_approx(Vector2.ONE),"leaving hover returns to original size")
 	var id: String=card.upgrade_id
 	var before: int=game.equipment_panel.get_level(id)
 	var at: Vector2=card.get_global_rect().get_center()

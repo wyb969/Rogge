@@ -242,17 +242,17 @@ func _fit_cards() -> void:
 	var ui := ratio / maxf((transform * Vector2.RIGHT - transform * Vector2.ZERO).length(),0.1)
 	var portrait := vp.y > vp.x
 	var count := h_box_container.get_child_count()
-	h_box_container.columns = 1 if portrait else count
-	var gap := 8.0*ui
-	var top := 88.0*ui
+	h_box_container.columns = count
+	var gap := 12.0*ui
+	var top := 150.0*ui
 	var bottom := 72.0*ui
 	var available := maxf(100*ui,vp.y-top-bottom)
-	var width := minf(vp.x-24*ui,460*ui) if portrait else minf((vp.x-32*ui-gap*(count-1))/count,280*ui)
-	var height := minf(190*ui,(available-gap*(count-1))/count) if portrait else minf(270*ui,available)
-	for card in h_box_container.get_children(): card.set_display_size(Vector2(width,height),ui,portrait)
+	var width := minf((vp.x-48*ui-gap*(count-1))/count,190*ui)
+	var height := minf(154*ui,available-8*ui)
+	for card in h_box_container.get_children(): card.set_display_size(Vector2(width,height),ui,false)
 	h_box_container.add_theme_constant_override("h_separation",int(gap))
 	h_box_container.add_theme_constant_override("v_separation",int(gap))
-	var content := Vector2(width,height*count+gap*(count-1)) if portrait else Vector2(width*count+gap*(count-1),height)
+	var content := Vector2(width*count+gap*(count-1),height)
 	h_box_container.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	h_box_container.scale=Vector2.ONE
 	h_box_container.size=content
@@ -318,6 +318,7 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 	result.merge(PREVIEW.build(game, id), true)
 	result.short_desc = CodexData.summary(id)
 	result.compact_stats = CodexData.compact_stats(result.rows)
+	result.draft_line = CodexData.draft_line(id,result.rows)
 	if game != null:
 		var rank: int = PREVIEW.rank_for(game,id)
 		result.title = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title)) + L10n.text(" · %d → %d级") % [rank, rank + 1]

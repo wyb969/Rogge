@@ -1539,3 +1539,65 @@ Reposition touch controls in home-screen Settings.,Reposition touch controls in 
 "Creates purification zones under enemies, dealing damage every 0.5 seconds. Overlaps do not stack damage, crit or spread statuses. Each zone lasts 3 seconds. Upgrades improve damage, area and frequency, up to rank 5.","Creates purification zones under enemies, dealing damage every 0.5 seconds. Overlaps do not stack damage, crit or spread statuses. Each zone lasts 3 seconds. Upgrades improve damage, area and frequency, up to rank 5.",在敌人脚下制造净化区域，每半秒结算一次伤害。重叠区域不会叠加伤害，也不触发暴击或异常传播。每个区域持续三秒；升级提高每秒伤害、范围和出现频率，最高五级。
 飞弹在固定符文区域边界内反弹并穿透敌人。同一飞弹对同一敌人的再次命中至少间隔零点三五秒。升级提高数量、伤害、范围并缩短攻击间隔，最高五级。,"Bolts bounce within a fixed rune area and pierce enemies. Each bolt can hit the same enemy again only after 0.35 seconds. Upgrades improve count, damage and area and reduce the attack interval, up to rank 5.",飞弹在固定符文区域边界内反弹并穿透敌人。同一飞弹对同一敌人的再次命中至少间隔零点三五秒。升级提高数量、伤害、范围并缩短攻击间隔，最高五级。
 "Bolts bounce within a fixed rune area and pierce enemies. Each bolt can hit the same enemy again only after 0.35 seconds. Upgrades improve count, damage and area and reduce the attack interval, up to rank 5.","Bolts bounce within a fixed rune area and pierce enemies. Each bolt can hit the same enemy again only after 0.35 seconds. Upgrades improve count, damage and area and reduce the attack interval, up to rank 5.",飞弹在固定符文区域边界内反弹并穿透敌人。同一飞弹对同一敌人的再次命中至少间隔零点三五秒。升级提高数量、伤害、范围并缩短攻击间隔，最高五级。
+穿透 %s伤,%s pierce,穿透 %s伤
+%s dmg pierce,%s dmg pierce,穿透 %s伤
+环绕 %s伤,%s orbit,环绕 %s伤
+%s dmg orbit,%s dmg orbit,环绕 %s伤
+射击 %s伤,%s shot,射击 %s伤
+%s dmg shot,%s dmg shot,射击 %s伤
+拾取 %s,%s pickup,拾取 %s
+%s pickup,%s pickup,拾取 %s
+移速 %s,%s speed,移速 %s
+%s speed,%s speed,移速 %s
+左拳 %s伤,%s left,左拳 %s伤
+%s left dmg,%s left dmg,左拳 %s伤
+右拳 %s伤,%s right,右拳 %s伤
+%s right dmg,%s right dmg,右拳 %s伤
+激光 %s伤,%s laser,激光 %s伤
+%s laser dmg,%s laser dmg,激光 %s伤
+灼烧 %s/秒,%s burn/s,灼烧 %s/秒
+%s burn/s,%s burn/s,灼烧 %s/秒
+冰冻 %s%%,%s%% freeze,冰冻 %s%%
+%s%% freeze,%s%% freeze,冰冻 %s%%
+回复 %s生命,Heal %s HP,回复 %s生命
+Heal %s HP,Heal %s HP,回复 %s生命
+吸血 %s%%,%s%% leech,吸血 %s%%
+%s%% leech,%s%% leech,吸血 %s%%
+击杀+%s盾,+%s shield,击杀+%s盾
++%s shield,+%s shield,击杀+%s盾
+拾取回%s血,Heal %s/orb,拾取回%s血
+Heal %s/orb,Heal %s/orb,拾取回%s血
+雷击 %s伤,%s zap,雷击 %s伤
+%s zap dmg,%s zap dmg,雷击 %s伤
+暴击 %s%%,%s%% crit,暴击 %s%%
+%s%% crit,%s%% crit,暴击 %s%%
+击退 %s伤,%s push,击退 %s伤
+%s dmg push,%s dmg push,击退 %s伤
+聚怪 %s/秒,%s pull/s,聚怪 %s/秒
+%s pull/s,%s pull/s,聚怪 %s/秒
+中毒 %s/秒,%s poison/s,中毒 %s/秒
+%s poison/s,%s poison/s,中毒 %s/秒
+爆炸 %s伤,%s blast,爆炸 %s伤
+%s blast dmg,%s blast dmg,爆炸 %s伤
+风压 %s伤,%s gust,风压 %s伤
+%s gust dmg,%s gust dmg,风压 %s伤
+回响 %s伤,%s echo,回响 %s伤
+%s echo dmg,%s echo dmg,回响 %s伤
+飞刀 %s伤,%s knife,飞刀 %s伤
+%s knife dmg,%s knife dmg,飞刀 %s伤
+回旋 %s伤,%s cross,回旋 %s伤
+%s cross dmg,%s cross dmg,回旋 %s伤
+净化 %s/秒,%s holy/s,净化 %s/秒
+%s holy/s,%s holy/s,净化 %s/秒
+横扫 %s伤,%s sweep,横扫 %s伤
+%s sweep dmg,%s sweep dmg,横扫 %s伤
+反弹 %s伤,%s bounce,反弹 %s伤
+%s bounce dmg,%s bounce dmg,反弹 %s伤
+脉冲 %s伤,%s pulse,脉冲 %s伤
+%s pulse dmg,%s pulse dmg,脉冲 %s伤
+射击≥%s伤,%s+ shot,射击≥%s伤
+%s+ shot,%s+ shot,射击≥%s伤
+左侧 %s%%,%s%% left,左侧 %s%%
+%s%% left,%s%% left,左侧 %s%%
+右侧 %s%%,%s%% right,右侧 %s%%
+%s%% right,%s%% right,右侧 %s%%

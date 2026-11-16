@@ -169,6 +169,7 @@ func _restore_zap(zap: Dictionary) -> void:
 		if is_instance_valid(item): item.visible = saved.visible
 
 func _zap(actor: Node2D) -> void:
+	if actor.has_method("is_control_immune") and actor.is_control_immune(): return
 	if ("_death_started" in actor and actor._death_started) or ("is_dying" in actor and actor.is_dying): return
 	if actor.has_method("apply_electric_stun"):
 		actor.apply_electric_stun(STUN_SECONDS)

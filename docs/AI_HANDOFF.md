@@ -1,5 +1,32 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-16 按标注图调整UI（当前开发）
+
+- 继续 `feature/compact-combat-hud-20261116` / PR #30，基于 `f6c89ae`，版本 **20261116-200630**。左侧关卡/等级/天气统一16显示像素、左对齐并按40像素行距布局；XP仍200×30，时间移到右侧等级行。窄屏将左侧块移到工具栏下面，时间与关卡同排，避免碰撞；长天气单行省略。
+- 工具栏整体居中，Button的icon_alignment和vertical_icon_alignment也显式居中，修复图标在按钮内偏左。Boss血条/装备跟随头部占高下移；仅血条的规则保留。
+- 三张卡保持横排，常规卡宽高约1:1.618（上限220×356）；窄手机保留至少200高度以容纳说明，短横屏按可用高度缩放。图标/名称/真实主数值下增加既有Codex的一句功能说明。数值仍读CardPreview，不改机制。中英长句自适应字号与行距，无滚动/详情按钮，保留hover1.02→1.0。
+- 换一组位于整排卡片下方20显示像素，不再贴底。28卡两语言五尺寸的数值和说明边界检查升级为3008项；最终PCK、截图与命令见 [reference-ui.md](reference-ui.md)、`validation/reference-ui-20261116.json`。未做真实浏览器/Safari测试，既有退出资源/GL警告保留。
+- 临时日志/导出 `../reference-ui` 在RAM，以GitHub为准；只更新原私有试玩，不合并master/发布正式itch。
+
+- 源码 `462b6e9` 已推送PR #30；[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 更新 **20261116-200630**，Site `b0930e37bab654b20366c8cbd776176bf9592be3` / deployment `appgdep_6afaf2e0598c819189e897ae55c8a158` 于北京时间20:11发布成功。9文件字节核对与26 loader检查通过，见 `validation/reference-ui-playtest-20261116.json`。
+
+## 2026-11-16 HUD对齐跟进（当前开发）
+
+- 同一 `feature/compact-combat-hud-20261116` / PR #30，基于 `69d9994`，版本 **20261116-195315**。顶部菜单/主页/全屏三枚图标整体居中；主页只显示全屏时也按可见按钮居中。关卡与时间分列两侧。
+- 经验条从48×16恢复200×30显示像素，字号12；等级旁8像素间隔，仍保留短中英等级。天气/临时倒计时放经验条下方，Boss血条与装备相应下移，横竖屏避免重叠。只改布局。
+- 原生中英四视口截图检查，菜单/暂停与Boss血条最终PCK专项见 `validation/centered-hud-20261116.json`。未做本轮浏览器/Safari验证，既有退出资源/GL警告保留。构建/日志 `../centered-hud` 在RAM，正式itch/master未更新。
+
+- 源码 `8bf0d29` 已推送PR #30；原私有试玩更新 **20261116-195315**，Site `b20e3d2399f28a2ff0d61b927072dd88eedc0fa7` / deployment `appgdep_6afaef4d88348191a205709e0f1cbe4e` 于北京时间19:56发布成功。9文件字节核对和26 loader检查通过，记录 `validation/centered-hud-playtest-20261116.json`。
+
+## 2026-11-16 战斗HUD减负（当前开发）
+
+- `feature/compact-combat-hud-20261116` 基于 `b32e8d5` / PR #29，版本 **20261116-194322**。菜单/主页/全屏改为三枚SVG线条图标，40显示像素点击区、20图标，保留原事件和中英tooltip。不依赖Unicode字符绘制图标。
+- 取消宝囊精/组合/Debug的居中说明通知及回响蓄能文字、选卡成长/重抽说明；说明仍可从词典和试炼前页面查看。Boss隐藏名称、动作说明和蓄力条，只显示血量；风双Boss分行。地面攻击预警不变。
+- 星轨/吸金狂欢仅倒计时数字，隐藏蓄能/倒计时进度条；力量/木头人局内倒计时也只数字。经验条和技能冷却保留。关卡、经验、时钟、天气和装备起点重新分层，避免竖屏相互遮挡；微小/无头窗口缩放有边界。
+- 只改显示，不改奖励、Boss3秒受控/3秒免控、武器数值、计时或试炼规则。中英横竖屏原生截图、最终Web PCK验证见 [compact-combat-hud.md](compact-combat-hud.md) / `validation/compact-combat-hud-20261116.json`。无本轮真实浏览器/Safari验证；既有退出资源/GL警告保留。
+- 源码 `de24cb7` 已推送 [PR #30](https://github.com/wyb969/Rogge/pull/30)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新194322，Site `4255b44ec9b8fdd3e6f4715842c69c5e27130607` / deployment `appgdep_6afaed5af95481918bd356613d339eeb` 于北京时间19:47发布成功。9文件字节核对/26 loader检查通过；证据 `validation/compact-combat-hud-playtest-20261116.json`。
+- 本轮日志/包 `../compact-hud` 在RAM临时目录，以GitHub提交为准。沿用原私有试玩，不合并master、不上传正式itch；Site构建用 `TMPDIR=/dev/shm`，不清理旧文件。
+
 ## 2026-11-16 Boss血条、横排三卡与免控（当前开发）
 
 - `feature/boss-control-hud-20261116` 基于 `0872a07` / PR #28，版本 **20261116-192020**。已复现第一关Boss触电后血条消失：取消攻击误调用完整反馈reset，隐藏包含血条的面板并停用处理。改为只清预警；其他Boss在基线原生测试中有血条，未证实“全被卡片挤掉”。统一屏幕顶部响应式血条，风双Boss分两行，HUD层级90。

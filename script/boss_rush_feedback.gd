@@ -121,7 +121,7 @@ func _process(delta: float) -> void :
 	if _title_stamp != title_stamp:
 		_title_stamp = title_stamp
 		_title.text = L10n.text("狂奔巨蜥 / %s%s") % ["II" if boss.enraged() else "I", L10n.text(" · 连冲") if chained else ""]
-	_progress.visible = warn
+	_progress.visible = false
 	if warn: _progress.value = (1 - boss._state_left / boss.warning_duration()) * 100
 	_redraw_left -= delta
 	if _redraw_left <= 0:

@@ -1601,3 +1601,5 @@ Heal %s/orb,Heal %s/orb,拾取回%s血
 %s%% left,%s%% left,左侧 %s%%
 右侧 %s%%,%s%% right,右侧 %s%%
 %s%% right,%s%% right,右侧 %s%%
+等级 %d,Lv %d,等级 %d
+Lv %d,Lv %d,等级 %d

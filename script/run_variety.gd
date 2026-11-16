@@ -117,7 +117,7 @@ func upgrade(id: String) -> void :
 
 func _refresh_charge() -> void :
 	_charge_label.text = L10n.text("回响火种  %d / %d") % [echo_charge, int(echo_stats(echo_level).kills)] if echo_level > 0 else ""
-	_charge_label.visible = echo_level > 0 and _notice_left <= 0
+	_charge_label.visible = false
 
 func clear_combat_effects() -> void :
 	if game.get("star_chain") != null: game.star_chain.clear_combat_effects()
@@ -142,10 +142,10 @@ func clear_combat_effects() -> void :
 	queue_redraw()
 
 func notify(text_value: String) -> void :
+	# Combat explanations live in the Codex; avoid covering enemies with banners.
 	_notice.text = text_value
-	_notice_left = 3.3
-	_notice.modulate.a = 1
-	_notice.show()
+	_notice_left = 0
+	_notice.hide()
 	_charge_label.hide()
 
 func _process(delta: float) -> void :

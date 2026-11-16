@@ -299,10 +299,7 @@ func _button(text_value: String, callback: Callable) -> Button:
 	return button
 
 func _update_clock() -> void :
-	if kind == "wooden":
-		_clock.text = L10n.text("木头人 · %.1f 秒 · 第%d/3波\n移动 / 冲刺锁定 · 神兽技能可用") % [maxf(0, 60 - elapsed), mini(3, int(elapsed / 20.0) + 1)]
-		return
-	_clock.text = L10n.text("力量试炼 · %.1f 秒") % maxf(0, 60 - elapsed) if kind == "power" else L10n.text("速度试炼 · 冲刺后反击")
+	_clock.text = "%.1f" % maxf(0,60-elapsed) if kind in ["wooden","power"] else ""
 
 func _fit() -> void :
 	if not is_instance_valid(_panel):
@@ -323,9 +320,10 @@ func _fit() -> void :
 	for button in _actions.get_children():
 		button.custom_minimum_size.y = 48 * scale_ui
 		UiFonts.apply_to_button(button, int(17 * scale_ui))
-	_clock.position = Vector2(24, 14)
-	_clock.size = Vector2(vp.x - 48, (64 if kind == "wooden" else 44) * scale_ui)
-	UiFonts.apply_to_label(_clock, int((20 if kind == "wooden" else 24) * scale_ui), true)
+	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	_clock.position = Vector2(vp.x-64*hud_ui,(preload("res://script/boss_hud_layout.gd").header_top(self)+80)*hud_ui)
+	_clock.size = Vector2(48*hud_ui,20*hud_ui)
+	UiFonts.apply_to_label(_clock,int(14*hud_ui),true)
 
 func refresh_language() -> void:
 	if flow == TrialFlow.INTRO:

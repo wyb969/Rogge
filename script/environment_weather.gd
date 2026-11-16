@@ -369,9 +369,14 @@ func owns_pointer(point: Vector2) -> bool:
 func _fit() -> void :
 	var vp: = get_viewport().get_visible_rect().size
 	var scale: = 2.0 if vp.y > vp.x else 1.0
-	UiFonts.apply_to_label(_caption, int(12 * scale))
-	_caption.position = Vector2(vp.x * 0.15, 56 * scale)
-	_caption.size = Vector2(vp.x * 0.7, 24 * scale)
+	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	UiFonts.apply_to_label(_caption, int(16*hud_ui))
+	_caption.position = Vector2(12*hud_ui,(preload("res://script/boss_hud_layout.gd").header_top(self)+80)*hud_ui)
+	_caption.size = Vector2(vp.x-88*hud_ui,26*hud_ui)
+	_caption.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
+	_caption.clip_text=true
+	_caption.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
 	if _buttons == null: return
 	var width: = minf(780, vp.x - 40)
 	_buttons.position = Vector2((vp.x - width) * 0.5, vp.y - 76 * scale)

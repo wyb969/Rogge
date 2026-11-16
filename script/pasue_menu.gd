@@ -149,6 +149,7 @@ func _ready():
 	growth_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	growth_hint.add_theme_color_override("font_color", GamePalette.PLAYER_DAMAGE_WHITE)
 	$Panel.add_child(growth_hint)
+	growth_hint.hide()
 	reroll_button = Button.new()
 	reroll_button.name = "RerollButton"
 	reroll_button.pressed.connect(_on_reroll)
@@ -170,6 +171,7 @@ func _ready():
 	reroll_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	reroll_hint.modulate = GamePalette.UI_GREY_BORDER
 	$Panel.add_child(reroll_hint)
+	reroll_hint.hide()
 	_refresh_reroll()
 	get_viewport().size_changed.connect(_fit_cards)
 	h_box_container.minimum_size_changed.connect(_queue_fit_cards)
@@ -240,15 +242,15 @@ func _fit_cards() -> void:
 		var css: Variant = JavaScriptBridge.eval("(function(){var c=document.getElementById('canvas');return c?c.getBoundingClientRect().width:window.innerWidth;})()",true)
 		if (css is float or css is int) and float(css) > 0: ratio = float(get_tree().root.size.x) / float(css)
 	var ui := ratio / maxf((transform * Vector2.RIGHT - transform * Vector2.ZERO).length(),0.1)
-	var portrait := vp.y > vp.x
 	var count := h_box_container.get_child_count()
 	h_box_container.columns = count
 	var gap := 12.0*ui
-	var top := 150.0*ui
-	var bottom := 72.0*ui
-	var available := maxf(100*ui,vp.y-top-bottom)
-	var width := minf((vp.x-48*ui-gap*(count-1))/count,190*ui)
-	var height := minf(154*ui,available-8*ui)
+	var top := (140.0 if vp.y/ui>=500 else 90.0)*ui
+	var available := vp.y-top-16*ui
+	var height_limit := available-60*ui
+	var width := minf((vp.x-48*ui-gap*(count-1))/count,minf(220*ui,height_limit/1.618))
+	# Preserve readable text on narrow phones; roomy screens use the golden ratio.
+	var height := minf(height_limit,maxf(width*1.618,200*ui))
 	for card in h_box_container.get_children(): card.set_display_size(Vector2(width,height),ui,false)
 	h_box_container.add_theme_constant_override("h_separation",int(gap))
 	h_box_container.add_theme_constant_override("v_separation",int(gap))
@@ -257,13 +259,13 @@ func _fit_cards() -> void:
 	h_box_container.scale=Vector2.ONE
 	h_box_container.size=content
 	h_box_container.position=Vector2.ZERO
-	_card_area.position=Vector2((vp.x-content.x)*0.5,top+(available-content.y)*0.5)
+	_card_area.position=Vector2((vp.x-content.x)*0.5,top+(available-content.y-60*ui)*0.5)
 	_card_area.size=content
 	UiFonts.apply_to_label(growth_hint,int(11*ui))
 	growth_hint.position=Vector2(12*ui,48*ui)
 	growth_hint.size=Vector2(vp.x-24*ui,36*ui)
 	UiFonts.apply_to_button(reroll_button,int(14*ui))
-	reroll_button.position=Vector2((vp.x-250*ui)*0.5,vp.y-64*ui)
+	reroll_button.position=Vector2((vp.x-250*ui)*0.5,_card_area.position.y+content.y+20*ui)
 	reroll_button.size=Vector2(250,40)*ui
 	UiFonts.apply_to_label(reroll_hint,int(10*ui))
 	reroll_hint.position=Vector2(8*ui,vp.y-22*ui)

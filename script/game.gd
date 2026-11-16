@@ -1074,7 +1074,7 @@ func prepare_surface_debug(kind: int) -> void:
 func refresh_language() -> void:
 	# Presentation-only refresh, including currently paused reward screens.
 	pause_menu.refresh_language()
-	level_manager.label.text=L10n.text("Level: ")+str(level_manager.level)
+	level_manager.label.text=L10n.text("等级 %d")%level_manager.level
 	spawner._stage_label.text=L10n.text("STAGE %d")%spawner.stage
 	weather._caption_stamp=-1
 	weather._caption.text=L10n.text(weather.NAMES[weather.current_weather])+" · "+weather.time_name()+" · "+L10n.text(weather.HAZARD_NAMES[weather.hazard_kind])

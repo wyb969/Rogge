@@ -76,10 +76,10 @@ func _ready() -> void:
 
 func _fit() -> void:
 	var vp := get_viewport().get_visible_rect().size
-	var ui := 2.0 if vp.y > vp.x else 1.0
+	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
 	UiFonts.apply_to_label(_label, int(12 * ui), true)
-	_label.position = Vector2(vp.x * 0.2, 154 * ui)
-	_label.size = Vector2(vp.x * 0.6, 42 * ui)
+	_label.position = Vector2(vp.x-64*ui,(preload("res://script/boss_hud_layout.gd").header_top(self)+80)*ui)
+	_label.size = Vector2(48*ui,20*ui)
 	_label.pivot_offset = _label.size * 0.5
 	var width := minf(vp.x * 0.4, 200 * ui)
 	_bar.position = Vector2((vp.x - width) * 0.5, 198 * ui)
@@ -257,12 +257,10 @@ func _physics_process(delta: float) -> void:
 func _update_hud() -> void:
 	var activity := charge > 0 or route_left > 0 or fever_left > 0
 	_hud.visible = _eligible() and (activity or debug_training)
-	_label.visible = activity
-	_bar.visible = activity
+	_label.visible = route_left > 0 or fever_left > 0
+	_bar.visible = false
 	_bar.value = route_left / ROUTE_SECONDS if route_left > 0 else (fever_left / FEVER_SECONDS if fever_left > 0 else float(charge) / REQUIRED)
-	if route_left > 0: _label.text = L10n.text("星轨 %d/3  ·  %.1fs\n依次触碰亮星") % [step, route_left]
-	elif fever_left > 0: _label.text = L10n.text("吸金狂欢  %.1fs") % fever_left
-	else: _label.text = L10n.text("星轨蓄能 %d/%d") % [charge, REQUIRED]
+	_label.text = "%.1f" % (route_left if route_left>0 else fever_left) if route_left>0 or fever_left>0 else ""
 
 func _process(delta: float) -> void:
 	_note_left = maxf(0, _note_left - delta)

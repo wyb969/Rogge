@@ -345,3 +345,7 @@ func _cancel_controlled_attack() -> void:
 	_visual_state = -1
 	if attack_visual != null: attack_visual.clear()
 	queue_redraw()
+
+func refresh_language() -> void:
+	_title.text=L10n.text(NAMES[element])+(" / II" if phase==2 else " / I")
+	_move_name=L10n.text(_move_name)

@@ -1,0 +1,64 @@
+{
+  "deployment": {
+    "id": "appgdep_6afae075ae70819194c1b58240d5b927",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "title": "ROGGE \u00b7 Color & Card Readability Playtest",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_d9d50751b254819182b1128b8ce18b82",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6af1e5b586688191b2677024b2e27023",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-11-16T10:52:54.562590+00:00"
+  },
+  "site_source_commit": "eade81849038239f6cfb54f10cd674e5329ede24",
+  "version": "20261116-184844",
+  "game_pr": "https://github.com/wyb969/Rogge/pull/28",
+  "audience": "owner-private unchanged",
+  "browser_verified": false,
+  "game_source_commit": "16f2f32f48dbe9a423b32cf570b44989adbff96a",
+  "hosting_checks": {
+    "game_pr": "https://github.com/wyb969/Rogge/pull/28",
+    "game_source_commit": "16f2f32f48dbe9a423b32cf570b44989adbff96a",
+    "version": "20261116-184844",
+    "exact_export_bytes": {
+      "index.apple-touch-icon.png": true,
+      "index.audio.position.worklet.js": true,
+      "index.audio.worklet.js": true,
+      "index.html": true,
+      "index.icon.png": true,
+      "index.js": true,
+      "index.pck": true,
+      "index.png": true,
+      "index.wasm": true
+    },
+    "asset_bytes": {
+      "index.pck.gz": 23163180,
+      "build-info.json": 1797,
+      "preview-loader.js": 2553,
+      "index.wasm.gz": 10052173,
+      "index.png": 21443,
+      "index.js": 279815,
+      "index.icon.png": 3209,
+      "index.html": 5479,
+      "index.audio.worklet.js": 7298,
+      "index.audio.position.worklet.js": 2973,
+      "index.apple-touch-icon.png": 11441
+    },
+    "javascript_syntax": "preview-loader.js and dist/index.js checked with node --check",
+    "loader_checks": {
+      "passed": true,
+      "checks": 26,
+      "coverage": "WASM/PCK gzip and host-decoded responses; exact bytes, MIME, query strings, unrelated requests, truncated and invalid resources"
+    },
+    "native_checks": 4,
+    "packed_checks": 4,
+    "screenshots": "native Chinese DASH; English/Chinese three-card layouts including small portrait and landscape",
+    "hosted_browser": "not tested",
+    "safari": "not tested",
+    "audience": "existing owner-private unchanged"
+  }
+}

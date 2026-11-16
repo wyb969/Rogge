@@ -246,3 +246,9 @@ func _reveal() -> void :
 	_fanfare.pitch_scale = 0.9 + 0.1 * bonus_levels
 	_fanfare.play()
 	_button.grab_focus()
+
+func refresh_language() -> void:
+	if not revealed or reward.is_empty(): return
+	var card_name:=L10n.text(str(reward.title)).replace(L10n.text(" +1 级"),"")
+	_result.text=L10n.text("%s  +%d 级")%[card_name,bonus_levels]
+	_detail.text=L10n.text("Lv.%d  →  Lv.%d\n同一张卡连续升级 %d 次，领取后生效")%[old_level,old_level+bonus_levels,bonus_levels]

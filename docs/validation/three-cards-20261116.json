@@ -1,0 +1,192 @@
+{
+  "version": "20261116-184844",
+  "base": "356c5e0",
+  "branch": "feature/codex-pause-menu-20261116",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "source_suites": [
+    {
+      "name": "smoke_three_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 7.14,
+      "errors": [],
+      "markers": [
+        "THREE CARDS OK: 2406 checks; all 28 cards, both languages, five viewports, no scrolling, CJK DASH"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.06,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 464 checks; all28 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_localization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 12.6,
+      "errors": [],
+      "markers": [
+        "LOCALIZATION OK: 382 checks; default, live switch, persistence, migration, stats parity, all cards, four powers and three layouts"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_codex_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 24.28,
+      "errors": [],
+      "markers": [
+        "CODEX MENU OK: 636 checks; 53 entries, bilingual content, exact card sizing, pause ownership, Esc/settings/details, no rerolls, rest/trial lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_suites": [
+    {
+      "name": "smoke_three_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.13,
+      "errors": [],
+      "markers": [
+        "THREE CARDS OK: 2406 checks; all 28 cards, both languages, five viewports, no scrolling, CJK DASH"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_codex_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 26.29,
+      "errors": [],
+      "markers": [
+        "CODEX MENU OK: 636 checks; 53 entries, bilingual content, exact card sizing, pause ownership, Esc/settings/details, no rerolls, rest/trial lifecycle"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_localization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 12.4,
+      "errors": [],
+      "markers": [
+        "LOCALIZATION OK: 382 checks; default, live switch, persistence, migration, stats parity, all cards, four powers and three layouts"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.42,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 464 checks; all28 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "headless_import": true,
+  "web_export": true,
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "beef6a73ead3903c06b016870c009d80baf5524cc3f57fdc891599602d5f78f4"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 28808828,
+      "sha256": "ee105357d493d63293a9efa76c5fd5d2ac8cebfbd63ba241653e2e563f525e8a"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "catalog_audit": {
+    "passed": true,
+    "catalog_rows": 1036,
+    "locales": [
+      "en",
+      "zh_CN"
+    ],
+    "checks": [
+      "unique keys",
+      "nonempty translations",
+      "printf placeholder parity",
+      "English has no Chinese",
+      "source Chinese display-string coverage"
+    ]
+  },
+  "screenshots": [
+    "dash-zh_CN-390.png",
+    "cards-en-844.png",
+    "cards-zh_CN-390.png",
+    "cards-en-320.png"
+  ],
+  "capture_warnings": [
+    "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+    "ERROR: Texture with GL ID of 19: leaked 1364 bytes.",
+    "ERROR: Parameter \"RenderingServer::get_singleton()\" is null.",
+    "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+    "ERROR: 1 resources still in use at exit (run with --verbose for details).",
+    "ERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit."
+  ],
+  "limitations": [
+    "Native screenshots and native execution of final Web PCK; no browser/Safari/device verification.",
+    "Existing shutdown resource/renderer warnings are recorded, not fixed."
+  ]
+}

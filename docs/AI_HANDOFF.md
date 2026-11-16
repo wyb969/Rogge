@@ -1,5 +1,21 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-16 DASH 中文与一屏三卡修正（当前开发）
+
+- 继续 `feature/codex-pause-menu-20261116` / PR #28，基于 `356c5e0`，版本 **20261116-184844**。DASH 场景标签此前使用缺少中文的默认字体；现在由 `dash_button.gd` 使用 UiFonts 中英复合字体，保留“冲刺”翻译、冷却/灰白风格/保存的尺寸位置透明度。
+- 根据最新反馈删除选卡页的“查看详情”和 ScrollContainer；竖屏三张横向卡片上下排列，横屏三列，按可用视口尺寸统一分配高度。卡片仅保留大图标、名称/等级、一句功能简介和主要伤害或功能数值对比，完整说明仍从 Esc / Menu 的游戏词典进入。卡片点击、重抽、战斗数值不变。
+- 新测试 `tools/smoke_three_cards.gd` 覆盖28卡、两语言、320×568 / 390×844 / 844×390 / 900×600 / 667×375、所有卡片及文案不溢出、真实点击第三张生效、DASH中文字形。既有词典/多语言/卡值测试同步新布局；最终 Web PCK 验证和截图见 `docs/validation/three-cards-20261116.json` 与 [three-cards.md](three-cards.md)。未作浏览器/Safari实测，既有退出资源/GL警告保留。
+- 本轮原始日志/导出 `../cards-fit`，仍为临时内存路径；不合并 master，不发布正式 itch。此条取代下方旧版“330高/详情按钮/选卡滚动”布局规则。源码 `16f2f32` 已推送 [PR #28](https://github.com/wyb969/Rogge/pull/28)；[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新 20261116-184844，Site `eade81849038239f6cfb54f10cd674e5329ede24`、deployment `appgdep_6afae075ae70819194c1b58240d5b927` 于北京时间18:52发布成功。9文件字节核对/26 loader检查通过，证据 `validation/three-cards-playtest-20261116.json`。根分区已满，后续构建临时目录使用 `TMPDIR=/dev/shm`，不要删除历史工作文件。
+
+## 2026-11-16 游戏词典、统一卡牌与局内暂停（当前开发）
+
+- `feature/codex-pause-menu-20261116` 基于 `cf109d9`（多语言 PR #27），版本 **20261116-182759**。新增主页 Game Codex 和局内 Esc / Menu：继续、设置、词典、回主页。词典 53 条：28 装备、9 怪物、7 首领、3 试炼、4 神兽技能、2 组合；中英随设置切换，可分类/搜索/滚动，手机列表与详情分屏。
+- `codex_data.gd` 读取 EQUIP_DEFS、CardPreview、试炼 RULES、神兽描述；详细数值使用当前构筑只读预览。`codex_page.gd` 负责响应式显示；`session_menu.gd` 独占嵌套暂停，恢复原 paused / 焦点 / 控件可见性，保留原选卡 RNG、待领休整和试炼计时。销毁旧局仅 dismiss，不恢复旧局。
+- 升级卡统一 280×330 逻辑显示像素、72×72 图标、一句简介、两项关键数值及详情按钮；完整数值在词典。CardNumbers.value_pair 共享显示格式，新装备冷却写“未装备 → …”，不误写 0 秒。战斗/升级数值不变。
+- 局内语言设置重绘现有卡牌、HUD、休整/试炼/抽奖/神兽说明，不重新抽卡/领取。控件尺寸透明度保留，位置拖动仍在主页设置；局内设置中触控战斗输入保持禁用。英文试炼长正文改滚动区，操作按钮常驻。
+- 源码7专项、最终 Web PCK 4专项通过；新增636检查、翻译审计1036键。验证、原生中英横竖屏截图和命令见 [codex-menu.md](codex-menu.md)、`validation/codex-menu-20261116.json`。未做本轮浏览器/Safari/手机实机测试，既有退出资源/GL 警告保留。
+- 工程路径 `/workspace/Rogge-electric-grid-20261116/project`，本轮构建/日志 `../codex`（临时内存目录）；源码以 GitHub 保存为准。后续优先收集词典文案、卡片可读性和手机滚动/返回反馈；不追加机制。本轮不合并正式 master、不发布正式 itch。 源码 `9ac0283` 已保存于 [PR #28](https://github.com/wyb969/Rogge/pull/28)。[私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新 20261116-182759；Site `65db5ef5944a407860722c47e3d12fdd41ac84dc`、deployment `appgdep_6afadc58e2c88191a36379885becaa61` 于北京时间 18:35 succeeded。磁盘空间不足，本轮 Site 工作副本在 `/dev/shm/Rogge-codex-site-20261116`，旧 checkout 保留未覆盖；后续先同步远端。发布证据 `validation/codex-menu-playtest-20261116.json`。
+
 ## 2026-11-16 中英文第一版（当前开发）
 
 - `feature/localization-20261116` 基于 `a7f8641`（风场 PR #26），版本 **20261116-173723**。设置页 English / 简体中文，默认英文、持久保存、旧存档迁移，保留原音量/难度/按钮位置大小透明度。只在主页切换，动态局内 UI 随新局创建。

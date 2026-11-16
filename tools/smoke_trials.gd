@@ -37,7 +37,7 @@ func _run() -> void :
 	var trials: Node = game.trials
 	var player: Node = game.player
 	_expect(paused and trials.flow == trials.TrialFlow.INTRO and trials.enemy == null, "legacy trial preset opens explanation before creating the enemy")
-	_expect(trials._body.text.contains("60 秒") and trials._body.text.contains("锁定音"), "strength introduction explains time and laser lock audio")
+	_expect(trials._body.text == L10n.text(trials.RULES["power"]), "strength introduction explains time and laser lock audio")
 	trials._process(30)
 	_expect(trials.elapsed == 0, "reading the introduction does not consume trial time")
 	for size in [Vector2i(390, 844), Vector2i(900, 500)]:
@@ -116,7 +116,7 @@ func _run() -> void :
 	game = await _enter("speed")
 	trials = game.trials
 	player = game.player
-	_expect(trials._body.text.contains("0.5") and trials._body.text.contains("反击"), "speed introduction teaches the reaction/window mechanic")
+	_expect(trials._body.text == L10n.text(trials.RULES["speed"]), "speed introduction teaches the reaction/window mechanic")
 	trials.start_button.pressed.emit()
 	actor = trials.enemy
 	actor.set_physics_process(false)

@@ -19,12 +19,14 @@ var game: Node
 var player: Node
 var _token: = 0
 var _passed: = false
+var _result_reason := ""
 var _modal: CanvasLayer
 var _panel: PanelContainer
 var _box: VBoxContainer
 var _title: Label
 var _icon: TextureRect
 var _body: Label
+var _body_scroll: ScrollContainer
 var _actions: VBoxContainer
 var _hud: CanvasLayer
 var _clock: Label
@@ -143,6 +145,7 @@ func fail(reason: String) -> void :
 	_finish(false, reason)
 
 func _finish(passed: bool, reason: String) -> void :
+	_result_reason=reason
 	flow = TrialFlow.RESULT
 	Engine.time_scale = 1.0
 	game.spawner._boss_fight_active = false
@@ -253,6 +256,7 @@ func _build_ui() -> void :
 	_panel.add_child(_box)
 	_title = Label.new()
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_box.add_child(_title)
 	_icon = TextureRect.new()
 	_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -262,7 +266,11 @@ func _build_ui() -> void :
 	_body = Label.new()
 	_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_box.add_child(_body)
+	_body_scroll = ScrollContainer.new()
+	_body_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_box.add_child(_body_scroll)
+	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_body_scroll.add_child(_body)
 	_actions = VBoxContainer.new()
 	_actions.add_theme_constant_override("separation", 8)
 	_box.add_child(_actions)
@@ -305,7 +313,10 @@ func _fit() -> void :
 	var width: = minf(vp.x - 48, 620 * scale_ui)
 	_panel.custom_minimum_size.x = width
 	_title.custom_minimum_size.x = width - 36
-	_body.custom_minimum_size.x = width - 36
+	_body.custom_minimum_size.x = 0
+	_body_scroll.custom_minimum_size.x = width - 36
+	var reserved: float = 28 + 64 * scale_ui + (36 if compact else 64) * scale_ui + 40 + maxf(1, _actions.get_child_count()) * (48 * scale_ui + 8)
+	_body_scroll.custom_minimum_size.y = clampf(vp.y - 48 - reserved, 60 * scale_ui, 210 * scale_ui)
 	UiFonts.apply_to_label(_title, int((22 if compact else 26) * scale_ui), true)
 	UiFonts.apply_to_label(_body, int((14 if compact else 16) * scale_ui))
 	_icon.custom_minimum_size = Vector2.ONE * (36 if compact else 64) * scale_ui
@@ -315,3 +326,15 @@ func _fit() -> void :
 	_clock.position = Vector2(24, 14)
 	_clock.size = Vector2(vp.x - 48, (64 if kind == "wooden" else 44) * scale_ui)
 	UiFonts.apply_to_label(_clock, int((20 if kind == "wooden" else 24) * scale_ui), true)
+
+func refresh_language() -> void:
+	if flow == TrialFlow.INTRO:
+		_title.text=L10n.text(TITLES[kind])+L10n.text(" · 挑战说明")
+		_body.text=L10n.text(RULES[kind])
+	elif flow == TrialFlow.RESULT:
+		_title.text=L10n.text(TITLES[kind])+(L10n.text(" · 通过") if _passed else L10n.text(" · 未通过"))
+		if _passed:
+			if kind=="speed": _body.text=L10n.text("成功抓住冲刺反击的时机，击败巫刃术士！\n接下来是木头人挑战：原地抵挡 60 秒怪潮。\n保留全部装备与神兽技能，准备好后继续。")
+			elif kind=="wooden": _body.text=L10n.text("成功抵挡 60 秒怪潮！\n移动与冲刺已恢复，木头人挑战通过。\n可通关结算，或进入自由试炼。")
+			else: _body.text=L10n.text("成功击败试炼敌人！\n用时 %.1f 秒。\n继续后进入休整区，保留当前全部构筑。")%elapsed
+		else: _body.text=L10n.text(_result_reason)+L10n.text("\n卡片与神兽技能会保留。\n重试会回复生命，并重置冲刺。\n也可以放弃本次试炼，按下方选项继续。")

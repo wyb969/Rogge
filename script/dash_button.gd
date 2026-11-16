@@ -21,6 +21,8 @@ var ready_glow: = 0.0:
 		queue_redraw()
 
 func _ready() -> void :
+	# Scene text translates to Chinese; the default font has no CJK glyphs.
+	UiFonts.apply_to_label($Label, 18)
 	resized.connect(_rebuild_circle)
 	visibility_changed.connect( func():
 		if not is_visible_in_tree(): reset_feedback())

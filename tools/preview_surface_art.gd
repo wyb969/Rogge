@@ -65,7 +65,7 @@ func _ready() -> void:
 	g.weather.spikes._clock = 2
 	g.weather.set_process(false)
 	g.weather.spikes.set_physics_process(false)
-	g.weather.surface._gust_rng.seed = 241
+	g.weather.surface.wind_trails._rng.seed = 241
 	for mode in ["wind","ice-left","ice-right"]:
 		g.weather.set_preview(4 if mode=="wind" else 5,0)
 		for size in [Vector2i(900,600),Vector2i(390,844)]:
@@ -78,7 +78,7 @@ func _ready() -> void:
 				if sprite.visible and sprite.texture==bg._decor_atlases[5]:
 					sprite.global_position = p+Vector2(100,15)
 					break
-			g.weather.surface._gust_live = false
+			g.weather.surface.wind_trails.stop()
 			g.weather.surface.sync()
 			var tilt := Vector2.LEFT if mode=="ice-left" else Vector2.RIGHT
 			bg.set_ice_view(g.player.get_node("Camera2D").get_screen_center_position(),tilt,1)

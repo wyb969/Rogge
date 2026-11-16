@@ -7,7 +7,8 @@ var _press_at := Vector2.ZERO
 var _tracking_press := false
 var _dragged := false
 
-const CARD_SIZE: = Vector2(240, 230)
+const CARD_SIZE: = Vector2(190, 307.42)
+var stats_label: RichTextLabel
 
 @onready var title_label: Label = $VBoxContainer / TitleLabel
 @onready var desc_label: RichTextLabel = $VBoxContainer / DescLabel
@@ -15,7 +16,9 @@ const CARD_SIZE: = Vector2(240, 230)
 
 func _ready() -> void :
 	# Keep readable card panels after removing the old global recoloring theme.
-	add_theme_stylebox_override("panel", GamePalette.neutral_surface(GamePalette.UI_SLOT, GamePalette.UI_GREY_BORDER))
+	var style := GamePalette.neutral_surface(GamePalette.UI_SLOT, GamePalette.UI_GREY_BORDER)
+	for side in ["left","right","top","bottom"]: style.set("content_margin_"+side,0)
+	add_theme_stylebox_override("panel", style)
 	custom_minimum_size = CARD_SIZE
 	size = CARD_SIZE
 	size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -28,40 +31,95 @@ func _ready() -> void :
 	mouse_exited.connect(_on_mouse_exited)
 
 	_configure_labels()
+	stats_label = RichTextLabel.new()
+	stats_label.bbcode_enabled = true
+	stats_label.fit_content = false
+	stats_label.scroll_active = false
+	stats_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stats_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stats_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	$VBoxContainer.add_child(stats_label)
 
 func _configure_labels() -> void :
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	L10n.title_overflow(title_label)
 	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_label.custom_minimum_size.y = 40
 	UiFonts.apply_to_label(title_label, 16)
 
 	desc_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	desc_label.custom_minimum_size = Vector2(CARD_SIZE.x - 24.0, 0.0)
+	desc_label.fit_content = false
 	_style_description(14)
 
 	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	$VBoxContainer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func setup(data: Dictionary):
 	upgrade_id = data["id"]
 
-	title_label.text = str(data.get("title", ""))
-	desc_label.text = str(data.get("rich_desc", data.get("desc", "")))
+	title_label.tooltip_text = L10n.text(str(data.get("title", "")))
+	# Keep the rank comparison visible instead of truncating it after a long name.
+	title_label.text = title_label.tooltip_text.split(" · ")[0]
+	title_label.max_lines_visible = 1
+	tooltip_text = title_label.tooltip_text+"\n"+str(data.get("short_desc",""))+"\n"+str(data.get("desc",""))
+	desc_label.text = str(data.get("short_desc",CodexData.summary(upgrade_id)))
+	stats_label.text = str(data.get("draft_line",CodexData.draft_line(upgrade_id,data.get("rows",[]))))
+	stats_label.show()
 	icon.texture = load(data["icon"])
 	preload("res://script/visual_style.gd").style_icon(icon, upgrade_id)
-	custom_minimum_size = CARD_SIZE
-	size = CARD_SIZE
+	set_display_width(CARD_SIZE.x)
 
-func set_display_width(width: float, ui_scale: float = 1.0, compact: bool = false) -> void :
-	desc_label.custom_minimum_size.x = width - 24.0 * ui_scale
-	UiFonts.apply_to_label(title_label, int(16 * ui_scale))
-	_style_description(int(14 * ui_scale))
-	icon.custom_minimum_size = Vector2.ONE * (24 if compact else 48) * ui_scale
-	$VBoxContainer.add_theme_constant_override("separation", int(5 * ui_scale))
-	custom_minimum_size = Vector2(width, (120 if compact else CARD_SIZE.y) * ui_scale)
-	size = custom_minimum_size
-	pivot_offset = size * 0.5
+func set_display_width(width: float, ui_scale: float = 1.0, compact: bool = false) -> void:
+	set_display_size(Vector2(width,CARD_SIZE.y*ui_scale),ui_scale,compact)
+
+func set_display_size(dimensions: Vector2, ui: float, row_layout: bool) -> void:
+	custom_minimum_size = dimensions
+	size = dimensions
+	pivot_offset = size*0.5
+	var narrow := dimensions.x/ui < 160
+	var padding := (6.0 if narrow else 12.0)*ui
+	var text_width := dimensions.x-padding*2
+	var icon_size := (40.0 if narrow else 72.0)*ui
+	var title_height := (19.0 if narrow else 24.0)*ui
+	var stat_height := 22*ui
+	var body_height := minf(96*ui,dimensions.y-icon_size-title_height-stat_height-32*ui)
+	var block_height := icon_size+8*ui+title_height+stat_height+8*ui+body_height
+	var top := maxf(8*ui,(dimensions.y-block_height)*0.5)
+	UiFonts.apply_to_label(title_label,int((10 if narrow else 16)*ui))
+	for label in [title_label,desc_label,stats_label]: label.custom_minimum_size=Vector2.ZERO
+	title_label.position=Vector2(padding,top+icon_size+8*ui)
+	title_label.size=Vector2(text_width,title_height)
+	stats_label.position=title_label.position+Vector2(0,title_height)
+	stats_label.size=Vector2(text_width,stat_height)
+	stats_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	UiFonts.apply_to_label(stats_label,int((9 if narrow else 12)*ui))
+	stats_label.add_theme_font_override("normal_font",UiFonts.ui_bold())
+	var stat_font:=int((9 if narrow else 12)*ui)
+	while stat_font>int(8*ui) and UiFonts.ui_bold().get_string_size(stats_label.get_parsed_text(),HORIZONTAL_ALIGNMENT_LEFT,-1,stat_font).x>text_width: stat_font-=1
+	stats_label.add_theme_font_size_override("normal_font_size",stat_font)
+	desc_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	desc_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	desc_label.position=stats_label.position+Vector2(0,stat_height+8*ui)
+	desc_label.size=Vector2(text_width,body_height)
+	desc_label.add_theme_constant_override("line_separation",maxi(1,int(ui)))
+	_style_description(int((9 if narrow else 13)*ui))
+	_fit_description.call_deferred(ui)
+	icon.custom_minimum_size=Vector2.ZERO
+	icon.size=Vector2.ONE*icon_size
+	icon.position=Vector2((dimensions.x-icon_size)*0.5,top)
+
+func _fit_description(ui: float) -> void:
+	if not is_instance_valid(desc_label): return
+	var font_size:=desc_label.get_theme_font_size("normal_font_size")
+	while font_size>int(8*ui) and desc_label.get_content_height()>desc_label.size.y+1:
+		font_size-=1
+		_style_description(font_size)
 
 func _on_selected_pressed():
 	selected.emit(upgrade_id)

@@ -1,0 +1,112 @@
+{
+  "version": "20261116-194322",
+  "base_commit": "b32e8d5",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "final_packed_checks": [
+    {
+      "name": "smoke_codex_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 24.44,
+      "errors": [],
+      "markers": [
+        "CODEX MENU OK: 636 checks; 53 entries, bilingual content, exact card sizing, pause ownership, Esc/settings/details, no rerolls, rest/trial lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_boss_control_guard",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.19,
+      "errors": [],
+      "markers": [
+        "BOSS CONTROL GUARD OK: 476 checks; seven boss actors, visible HUD, control 3s/immunity 3s, damage retained, pause and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 9 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_star_chain",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.13,
+      "errors": [],
+      "markers": [
+        "STAR CHAIN OK: 63 checks; real kills/duplicate gate, route order/sweeps, reward once, magnet bounds, expiry/pause/boss/trial/reset and fixed nodes"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 35 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_three_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 6.14,
+      "errors": [],
+      "markers": [
+        "THREE CARDS OK: 2108 checks; all 28 cards, both languages, five viewports, no scrolling, CJK DASH"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.41,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_localization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.06,
+      "errors": [],
+      "markers": [
+        "LOCALIZATION OK: 382 checks; default, live switch, persistence, migration, stats parity, all cards, four powers and three layouts"
+      ],
+      "shutdown_warnings": []
+    }
+  ],
+  "translation_audit": {
+    "passed": true,
+    "catalog_rows": 1100,
+    "locales": [
+      "en",
+      "zh_CN"
+    ],
+    "checks": [
+      "unique keys",
+      "nonempty translations",
+      "printf placeholder parity",
+      "English has no Chinese",
+      "source Chinese display-string coverage"
+    ]
+  },
+  "import": "passed; no script errors",
+  "web_export": "passed; no script errors",
+  "pck_sha256": "3e7636342b20d8c2eff4233114dd28ee180e1f1f903da683d0bfad37ff99c175",
+  "native_capture": "English/Chinese,320x568,390x844,844x390,900x600; toolbar bounds/icons/tooltips, numeric timer, hidden notice, health-only wind twins assertions passed",
+  "limitations": [
+    "No browser/mobile Safari playtest",
+    "Existing shutdown ObjectDB/resource/GL warnings remain"
+  ],
+  "resolved_during_validation": [
+    "Tiny headless window put icon toolbar offscreen; shared scale now capped to minimum virtual viewport",
+    "Initial packed check harness lacked working directory; final report uses existing empty packed-project directory"
+  ]
+}

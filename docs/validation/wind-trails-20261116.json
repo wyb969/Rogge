@@ -1,0 +1,136 @@
+{
+  "version": "20261116-170330",
+  "source_checks": [
+    {
+      "name": "smoke_wind_trails",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.4,
+      "errors": [],
+      "markers": [
+        "WIND TRAILS OK: 113 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_surface_art",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.2,
+      "errors": [],
+      "markers": [
+        "SURFACE ART OK: 50 assertions; upright/reused decor, pooled particle-history trails, world anchoring/RNG/budget, actual four-direction optical input, idle/pause/FX/reset"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_environment_surface",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.46,
+      "errors": [],
+      "markers": [
+        "ENVIRONMENT SURFACE OK: 36 checks; wind/quality isolation, actual input/coast/brake/dash, resisted 30% crowd impulses, 30/60Hz locked ice leaps, lifecycle and real Debug"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.06,
+      "errors": [],
+      "markers": [
+        "WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_stage_hazards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.34,
+      "errors": [],
+      "markers": [
+        "STAGE HAZARDS OK: 293 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_wind_trails",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.53,
+      "errors": [],
+      "markers": [
+        "WIND TRAILS OK: 113 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_environment_surface",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.93,
+      "errors": [],
+      "markers": [
+        "ENVIRONMENT SURFACE OK: 36 checks; wind/quality isolation, actual input/coast/brake/dash, resisted 30% crowd impulses, 30/60Hz locked ice leaps, lifecycle and real Debug"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_stage_hazards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.07,
+      "errors": [],
+      "markers": [
+        "STAGE HAZARDS OK: 293 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "headless_import": "passed; no errors/warnings",
+  "web_export": "passed; no errors/warnings",
+  "pck_sha256": "c866ec7c1096ce9f8bd1aec4e6c2877b2aae2b87fb0878ead35f21b0bcbb2523",
+  "reference": {
+    "url": "https://www.youtube.com/watch?v=IdcMU7gJtvI",
+    "access": "indexed title/description and user screenshot; full video/parameters unavailable"
+  },
+  "compatibility_probe": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org\nWARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.\n     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)\nOpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)\n\nWARNING: The Compatibility renderer does not support particle trails.\n     at: particles_set_trails (drivers/gles3/storage/particles_storage.cpp:303)\n     GDScript backtrace (most recent call first):\n         [0] run (/workspace/Rogge-electric-grid-20261116/wind-trails/probe.gd:6)\nWARNING: The Compatibility renderer does not support particle trails.\n     at: particles_set_trail_bind_poses (drivers/gles3/storage/particles_storage.cpp:309)\nPARTICLE PROBE OK\nERROR: Texture with GL ID of 19: leaked 1364 bytes.\n   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)\nERROR: Parameter \"RenderingServer::get_singleton()\" is null.\n   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)\nERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit.\n",
+  "native_capture_log": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org\nWARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.\n     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)\nOpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)\n\nERROR: Texture with GL ID of 19: leaked 1364 bytes.\n   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)\nERROR: Parameter \"RenderingServer::get_singleton()\" is null.\n   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)\nWARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2535)\nERROR: 4 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)\nERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit.\n",
+  "captures": [
+    "wind-motion.gif",
+    "wind-900x600-gray.png",
+    "wind-900x600.png",
+    "wind-390x844-gray.png",
+    "wind-390x844.png",
+    "wind-640x420-gray.png",
+    "wind-640x420.png"
+  ],
+  "gif": "48 native rendered deterministic frames at 24 simulated fps; not browser FPS evidence",
+  "browser_safari_phone_fps": "not tested this turn"
+}

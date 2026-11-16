@@ -48,7 +48,7 @@ func unlock(index: int) -> void :
 	selected = index
 	var button: = SKILL_ICON.new()
 	button.configure(load("res://assest/sprites/beasts/skill_%s.svg" % IDS[index]), COLORS[index])
-	button.tooltip_text = TITLES[index] + "\n" + description_for(index) + "\n点击直接释放 / E 释放当前 / Q 键切换"
+	button.tooltip_text = L10n.text(TITLES[index]) + "\n" + description_for(index) + L10n.text("\n点击直接释放 / E 释放当前 / Q 键切换")
 	button.pressed.connect(cast.bind(index))
 	_column.add_child(button)
 	_buttons[index] = button
@@ -68,12 +68,12 @@ func cast(index: int) -> bool:
 func description_for(index: int) -> String:
 	if index == 0:
 		var percent: = ("%.1f" % (45.0 * player.total_healing_multiplier())).trim_suffix(".0")
-		return "回复 %s%% 最大生命\n冷却 35 秒，满血不消耗" % percent
-	return DESCRIPTIONS[index]
+		return L10n.text("回复 %s%% 最大生命\n冷却 35 秒，满血不消耗") % percent
+	return L10n.text(DESCRIPTIONS[index])
 
 func refresh_healing_description() -> void:
 	if _buttons.has(0):
-		_buttons[0].tooltip_text = TITLES[0] + "\n" + description_for(0) + "\n点击直接释放 / E 释放当前 / Q 键切换"
+		_buttons[0].tooltip_text = L10n.text(TITLES[0]) + "\n" + description_for(0) + L10n.text("\n点击直接释放 / E 释放当前 / Q 键切换")
 
 func cycle() -> void :
 	if unlocked.is_empty() or get_tree().paused:
@@ -97,7 +97,7 @@ func cast_selected() -> bool:
 	match selected:
 		0:
 			if player.heal(player.max_player_health * 0.45) <= 0:
-				_notify("生命已满，技能保留")
+				_notify(L10n.text("生命已满，技能保留"))
 				return false
 		1:
 			_bolt_targets.clear()
@@ -128,14 +128,14 @@ func cast_selected() -> bool:
 					pickup.start_pickup()
 					count += 1
 			if count == 0:
-				_notify("地图上没有可拾取物，技能保留")
+				_notify(L10n.text("地图上没有可拾取物，技能保留"))
 				return false
 		3:
 			barrier_left = 6.0
 			player.beast_damage_scale = 0.1
 	cooldowns[selected] = COOLDOWNS[selected]
 	blessing_fx.play(selected)
-	_notify(TITLES[selected] + "！")
+	_notify(L10n.text(TITLES[selected]) + "！")
 	get_node("/root/AudioManager").play_beast_power(selected)
 	_refresh()
 	return true
@@ -193,7 +193,7 @@ func _build_ui() -> void :
 	_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_canvas.add_child(_column)
 	finish_button = Button.new()
-	finish_button.text = "通关结算"
+	finish_button.text = L10n.text("通关结算")
 	finish_button.pressed.connect(game.on_boss_defeated)
 	finish_button.hide()
 	_canvas.add_child(finish_button)
@@ -271,15 +271,15 @@ func open_reward(stage: int, final: bool) -> void :
 	var vp: = get_viewport().get_visible_rect().size
 	var scale_ui: = maxf(1, vp.x / 450) if vp.y > vp.x else 1.0
 	var width: = minf(vp.x - 40, 560 * scale_ui)
-	for text_value in ["神兽已击败 · 新的祝福", TITLES[i], description_for(i), "点击左侧图标直接释放 · 图标显示冷却\n键盘：E 释放当前 · Q 切换"]:
+	for text_value in [L10n.text("神兽已击败 · 新的祝福"), L10n.text(TITLES[i]), description_for(i), L10n.text("点击左侧图标直接释放 · 图标显示冷却\n键盘：E 释放当前 · Q 切换")]:
 		var label: = Label.new()
 		label.text = text_value
 		label.custom_minimum_size.x = width - 24
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		UiFonts.apply_to_label(label, int((26 if text_value == TITLES[i] else 15) * scale_ui), text_value == TITLES[i])
+		UiFonts.apply_to_label(label, int((26 if text_value == L10n.text(TITLES[i]) else 15) * scale_ui), text_value == L10n.text(TITLES[i]))
 		box.add_child(label)
-		if text_value == TITLES[i]:
+		if text_value == L10n.text(TITLES[i]):
 			var icon: = TextureRect.new()
 			_reward_icon = icon
 			icon.texture = load("res://assest/sprites/beasts/skill_%s.svg" % IDS[i])
@@ -288,14 +288,14 @@ func open_reward(stage: int, final: bool) -> void :
 			icon.custom_minimum_size = Vector2(100, 100) * scale_ui
 			box.add_child(icon)
 	reward_claim = Button.new()
-	reward_claim.text = "领取 · 进入自由试炼" if final else "领取祝福 · 继续"
+	reward_claim.text = L10n.text("领取 · 进入自由试炼") if final else L10n.text("领取祝福 · 继续")
 	reward_claim.custom_minimum_size.y = 54 * scale_ui
 	UiFonts.apply_to_button(reward_claim, int(18 * scale_ui))
 	reward_claim.pressed.connect(_claim_reward.bind(stage, false), CONNECT_ONE_SHOT)
 	box.add_child(reward_claim)
 	if final:
 		reward_finish = Button.new()
-		reward_finish.text = "领取并通关结算"
+		reward_finish.text = L10n.text("领取并通关结算")
 		reward_finish.custom_minimum_size.y = 48 * scale_ui
 		UiFonts.apply_to_button(reward_finish, int(16 * scale_ui))
 		reward_finish.pressed.connect(_claim_reward.bind(stage, true), CONNECT_ONE_SHOT)
@@ -314,7 +314,7 @@ func _layout_reward() -> void :
 	for child in _reward_box.get_children():
 		if child is Label:
 			child.custom_minimum_size.x = width - 24
-			var title: bool = child.text == TITLES[_pending_reward - 3]
+			var title: bool = child.text == L10n.text(TITLES[_pending_reward - 3])
 			UiFonts.apply_to_label(child, int((26 if title else 15) * scale_ui), title)
 		elif child is Button:
 			child.custom_minimum_size.y = 50 * scale_ui
@@ -345,3 +345,14 @@ func reset_effects() -> void :
 	if is_instance_valid(_reward):
 		_reward.hide()
 	_canvas.hide()
+
+func refresh_language() -> void:
+	for index in unlocked:
+		_buttons[index].tooltip_text=L10n.text(TITLES[index])+"\n"+description_for(index)+L10n.text("\n点击直接释放 / E 释放当前 / Q 键切换")
+	if is_instance_valid(_reward_box) and _pending_reward>=3:
+		var i:=_pending_reward-3
+		var labels: Array=[]
+		for child in _reward_box.get_children():
+			if child is Label: labels.append(child)
+		var values: Array=[L10n.text("神兽已击败 · 新的祝福"),L10n.text(TITLES[i]),description_for(i),L10n.text("点击左侧图标直接释放 · 图标显示冷却\n键盘：E 释放当前 · Q 切换")]
+		for n in mini(labels.size(),values.size()): labels[n].text=values[n]

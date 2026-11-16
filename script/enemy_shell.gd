@@ -53,6 +53,7 @@ var contact_cooldown: float = 0.8
 var contact_radius: float = 26.0
 var contact_timer: float = 0.15
 var dash_speed: float = 260.0
+var _dash_surface_scale := 1.0
 var dash_cooldown: float = 2.0
 var dash_timer: float = 0.4
 var dash_windup: float = 0.0
@@ -79,6 +80,8 @@ const MAX_BURN_STACKS: = 10
 const BURN_SPREAD_RADIUS: = 78.0
 
 
+var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
+var electric_stun_left := 0.0
 var freeze_time: float = 0.0
 var freeze_slow: float = 0.5
 var poison_slow: = 1.0
@@ -119,7 +122,7 @@ func _draw() -> void :
 		var unit: = 1.0 / maxf(body_scale, 0.4)
 		var progress: = clampf((DASH_WINDUP_SECONDS - dash_windup) / DASH_AIM_SECONDS, 0.0, 1.0)
 		var eased: = smoothstep(0.0, 1.0, progress)
-		var length: = dash_speed * DASH_SECONDS * lerpf(0.82, 1.0, eased)
+		var length: = dash_speed * _dash_surface_scale * DASH_SECONDS * lerpf(0.82, 1.0, eased)
 		var arrow: = PackedVector2Array([
 			Vector2(7, -3.5), Vector2(length - 15, -3.5), Vector2(length - 15, -9), 
 			Vector2(length, 0), Vector2(length - 15, 9), Vector2(length - 15, 3.5), Vector2(7, 3.5), 
@@ -238,7 +241,8 @@ func _player_owner() -> Node:
 func _process(delta: float) -> void :
 	_hit_flash_left = maxf(0, _hit_flash_left - delta)
 	sprite_2d.self_modulate = _poison_tint * Color.WHITE.lerp(preload("res://script/visual_style.gd").HIT_FLASH, clampf(_hit_flash_left / 0.065, 0, 1))
-	if _hit_flash_left == 0: set_process(false)
+	if terrain_impulse.is_active(): _tick_airborne_visual(delta)
+	if _hit_flash_left == 0 and not terrain_impulse.is_active(): set_process(false)
 
 func is_frozen() -> bool:
 	return freeze_time > 0.0
@@ -258,7 +262,7 @@ func crowd_control_scale() -> float:
 
 func apply_airflow(push_velocity: Vector2, seconds: float) -> void:
 	if _death_started: return
-	_airflow_velocity = push_velocity.limit_length(500.0) * crowd_control_scale()
+	_airflow_velocity = push_velocity.limit_length(500.0) * crowd_control_scale() * (1.0 + 0.3 * _surface_ice())
 	_airflow_left = clampf(seconds, 0.0, 0.45)
 	if archetype == EnemyData.Archetype.DASHER:
 		_finish_dash()
@@ -276,7 +280,7 @@ func clear_airflow() -> void:
 func apply_gravity_pull(pull_velocity: Vector2, seconds: float) -> void:
 	if _death_started: return
 	# Refresh a bounded velocity, never add impulses every scan.
-	_gravity_velocity = pull_velocity.limit_length(280.0) * crowd_control_scale()
+	_gravity_velocity = pull_velocity.limit_length(280.0) * crowd_control_scale() * (1.0 + 0.3 * _surface_ice())
 	_gravity_left = clampf(seconds, 0.0, 0.2)
 
 func clear_gravity_pull() -> void:
@@ -286,7 +290,7 @@ func clear_gravity_pull() -> void:
 func apply_blast_impulse(push_velocity: Vector2, seconds: float) -> void:
 	if _death_started: return
 	var resistance := crowd_control_scale()
-	_blast_velocity = push_velocity.limit_length(480.0) * resistance
+	_blast_velocity = push_velocity.limit_length(480.0) * resistance * (1.0 + 0.3 * _surface_ice())
 	_blast_duration = clampf(seconds, 0.05, 0.35)
 	_blast_left = _blast_duration
 	_blast_height = 13.0 * resistance
@@ -336,9 +340,12 @@ func _physics_process(delta: float) -> void :
 	_update_statuses(delta)
 	if _death_started:
 		return
+	if _tick_environment_control(delta): return
 	contact_timer = maxf(0.0, contact_timer - delta)
 	var recovering: = archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0
 
+	var previous_velocity := velocity
+	var was_committed: bool = is_dashing or dash_windup>0 or slam_windup>0 or slam_time_left>0 or shot_windup>0 or contact_recovery_left>0 or is_frozen() or (tactical_ai != null and tactical_ai.committed)
 	var to_player: = player_reference.global_position - global_position
 	var dist: = to_player.length()
 	var dir: = to_player / dist if dist > 0.001 else Vector2.ZERO
@@ -364,6 +371,7 @@ func _physics_process(delta: float) -> void :
 		_apply_move_juice(delta)
 		return
 
+	if not was_committed: _apply_environment_motion(delta, previous_velocity)
 	if knockback.length() > 0.1:
 		velocity += knockback
 		knockback = knockback.move_toward(Vector2.ZERO, knockback_decay * delta)
@@ -402,7 +410,7 @@ func _steer_dasher(delta: float, dir: Vector2, dist: float, move_speed: float) -
 		var dash_mul: = status_move_scale()
 
 
-		velocity = dash_dir * dash_speed * dash_mul * step_time / maxf(delta, 1e-06)
+		velocity = dash_dir * dash_speed * _dash_surface_scale * dash_mul * step_time / maxf(delta, 1e-06)
 		if sprite_2d:
 			sprite_2d.modulate = Color(1.7, 0.55, 0.35, 1)
 		return
@@ -427,6 +435,7 @@ func _steer_dasher(delta: float, dir: Vector2, dist: float, move_speed: float) -
 	velocity = dir * move_speed
 	if dash_timer <= 0.0 and dist < 180.0 and dist > 46.0 and not is_frozen():
 		if _dash_slot_available():
+			_dash_surface_scale = 1.0 + 0.25 * _surface_ice()
 			dash_windup = DASH_WINDUP_SECONDS
 			dash_dir = dir
 			velocity = Vector2.ZERO
@@ -538,6 +547,7 @@ func _fire_projectile(dir: Vector2) -> void :
 	shots_fired += 1
 
 func _try_contact(dist: float) -> void :
+	if electric_stun_left>0: return
 	if tactical_ai!=null and (tactical_ai.committed or tactical_ai.recovery>0): return
 	if _death_started or _blast_left > 0.0 or is_queued_for_deletion() or (archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or contact_recovery_left > 0.0)):
 		return
@@ -628,6 +638,11 @@ func _apply_move_juice(delta: float) -> void :
 			sprite_2d.rotation = 0
 
 	sprite_2d.position.y -= blast_jump_height() / maxf(body_scale, 0.4)
+	# Compose in both physics and render poses; physics must not erase airborne Z.
+	sprite_2d.position.y -= terrain_impulse.height()/maxf(body_scale,0.4)
+	var landing := terrain_impulse.landing_strength()
+	sprite_2d.scale *= Vector2(1+0.16*landing,1-0.14*landing)
+	sprite_2d.rotation += signf(terrain_impulse.push.x)*0.16*terrain_impulse.height_ratio()
 
 func _face(dir: Vector2, prefer_velocity: bool = true) -> void :
 	if sprite_2d == null:
@@ -861,3 +876,78 @@ func spaw_icon() -> void :
 	if game == null:
 		return
 	game.spawn_xp_coin(global_position, 5 if is_elite else 2)
+
+func _surface_ice() -> float:
+	var owner := _game_owner()
+	return owner.weather.surface.ice_amount() if owner != null and owner.get("weather") != null else 0.0
+
+func _apply_environment_motion(delta: float, previous_velocity: Vector2) -> void:
+	# Never drift a committed attack away from its telegraph or break contact recovery.
+	if is_dashing or dash_windup>0 or slam_windup>0 or slam_time_left>0 or shot_windup>0 or contact_recovery_left>0 or is_frozen(): return
+	if tactical_ai != null and tactical_ai.committed: return
+	var owner := _game_owner()
+	if owner == null or owner.get("weather") == null: return
+	var surface: Node = owner.weather.surface
+	var ice: float = surface.ice_amount()
+	var desired: Vector2 = velocity + surface.wind_velocity(0.75 * crowd_control_scale())
+	if ice > 0 and _airflow_left<=0 and _blast_left<=0 and _gravity_left<=0:
+		velocity = previous_velocity.move_toward(desired,lerpf(900.0,180.0,ice)*delta)
+	else:
+		velocity = desired
+
+func apply_electric_stun(seconds: float) -> void:
+	if _death_started: return
+	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
+	clear_terrain_impulse()
+	_cancel_controlled_attack()
+
+func _cancel_controlled_attack() -> void:
+	_finish_dash()
+	shot_windup = 0
+	slam_windup = 0
+	slam_time_left = 0
+	clear_airflow()
+	clear_gravity_pull()
+	_blast_left = 0
+	knockback = Vector2.ZERO
+	velocity = Vector2.ZERO
+	attack_timer = maxf(attack_timer,0.5)
+	if tactical_ai != null:
+		var owner := _game_owner()
+		if tactical_ai.slot != null and owner != null: owner.enemy_attacks.cancel(tactical_ai.slot,self)
+		tactical_ai.slot = null
+		tactical_ai.committed = false
+		tactical_ai.recovery = 0.5
+	queue_redraw()
+
+func _tick_electric_stun(delta: float) -> bool:
+	if electric_stun_left<=0: return false
+	electric_stun_left = maxf(0,electric_stun_left-delta)
+	velocity = Vector2.ZERO
+	return true
+
+func apply_terrain_impulse(push: Vector2) -> void:
+	if _death_started: return
+	_cancel_controlled_attack()
+	terrain_impulse.start(push*crowd_control_scale()*(1.0+0.3*_surface_ice()),0.28,lerpf(42,32,clampf(body_scale-1,0,1)))
+	set_process(true)
+
+func _tick_environment_control(delta: float) -> bool:
+	var stunned := _tick_electric_stun(delta)
+	if terrain_impulse.tick(self,delta): return true
+	return stunned
+
+func _tick_airborne_visual(delta: float) -> void:
+	if _death_started:
+		terrain_impulse.clear()
+		set_process(false)
+		return
+	terrain_impulse.advance_visual(delta)
+	_apply_move_juice(0)
+
+	queue_redraw()
+
+func clear_terrain_impulse() -> void:
+	terrain_impulse.clear()
+	if is_instance_valid(sprite_2d) and not _death_started: _apply_move_juice(0)
+	set_process(_hit_flash_left>0)

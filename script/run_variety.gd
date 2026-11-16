@@ -116,10 +116,13 @@ func upgrade(id: String) -> void :
 	_refresh_charge()
 
 func _refresh_charge() -> void :
-	_charge_label.text = "回响火种  %d / %d" % [echo_charge, int(echo_stats(echo_level).kills)] if echo_level > 0 else ""
-	_charge_label.visible = echo_level > 0 and _notice_left <= 0
+	_charge_label.text = L10n.text("回响火种  %d / %d") % [echo_charge, int(echo_stats(echo_level).kills)] if echo_level > 0 else ""
+	_charge_label.visible = false
 
 func clear_combat_effects() -> void :
+	if game.get("star_chain") != null: game.star_chain.clear_combat_effects()
+	if game.get("arcane_weapons") != null: game.arcane_weapons.clear_combat_effects()
+	if game.get("relic_weapons") != null: game.relic_weapons.clear_combat_effects()
 	if game.get("combat_feedback") != null and game.combat_feedback.impact_feedback != null:
 		game.combat_feedback.impact_feedback.clear_combat_effects()
 	if game.get("enemy_attacks")!=null: game.enemy_attacks.clear_combat_effects()
@@ -139,10 +142,10 @@ func clear_combat_effects() -> void :
 	queue_redraw()
 
 func notify(text_value: String) -> void :
+	# Combat explanations live in the Codex; avoid covering enemies with banners.
 	_notice.text = text_value
-	_notice_left = 3.3
-	_notice.modulate.a = 1
-	_notice.show()
+	_notice_left = 0
+	_notice.hide()
 	_charge_label.hide()
 
 func _process(delta: float) -> void :
@@ -222,7 +225,7 @@ func spawn_courier() -> Node2D:
 	game.add_child(actor)
 	actor.global_position = game.player.global_position + direction * maxf(reach, 110)
 	_courier = weakref(actor)
-	notify("宝囊精出现！追上它获得经验和重抽次数")
+	notify(L10n.text("宝囊精出现！追上它获得经验和重抽次数"))
 	AudioManager.play_juice("ready")
 	RunDiagnostics.mark("courier_spawn", {"stage": game.spawner.stage})
 	return actor
@@ -234,7 +237,7 @@ func reward_courier(at: Vector2) -> void :
 	game.spawn_xp_coin(at, 14 + 4 * game.spawner.stage + (0 if added else 8))
 	game.combat_feedback.reward(at)
 	AudioManager.play_upgrade()
-	notify("截获宝囊！经验 + 重抽 1 次" if added else "截获宝囊！重抽已满，转为额外经验")
+	notify(L10n.text("截获宝囊！经验 + 重抽 1 次") if added else L10n.text("截获宝囊！重抽已满，转为额外经验"))
 	RunDiagnostics.mark("courier_defeated", {"reroll_added": added})
 
 func _draw() -> void :

@@ -129,7 +129,7 @@ func _run() -> void :
 		spawner.spawn(player.global_position + Vector2(200, 0), false)
 		var later_actor: Node = get_nodes_in_group("EnemyGroup")[0]
 		later_actor.set_physics_process(false)
-		_expect(is_equal_approx(later_actor.health, 42 * spawner.threat_hp_multiplier() * scale), "later enemies keep the initial difficulty snapshot")
+		_expect(is_equal_approx(later_actor.health, load("res://resource/Enemy2.tres").health * spawner.threat_hp_multiplier() * scale), "later enemies keep the initial difficulty snapshot")
 		_expect(game._build_run_stats(false).difficulty == index, "run statistics keep the actual run difficulty")
 
 		for stage_num in range(1, 7):

@@ -121,7 +121,7 @@ func cast(actor: Node2D, kind: StringName) -> Slot:
 	return free
 
 func _source_ready(actor: Node2D) -> bool:
-	return is_instance_valid(actor) and not actor.is_queued_for_deletion() and not actor._death_started and not actor.is_frozen() and actor._airflow_left<=0 and actor._blast_left<=0
+	return is_instance_valid(actor) and not actor.is_queued_for_deletion() and not actor._death_started and not actor.is_frozen() and actor.electric_stun_left<=0 and actor.terrain_impulse.left<=0 and actor._airflow_left<=0 and actor._blast_left<=0
 
 func cancel(slot: Slot, owner_actor: Node2D) -> void:
 	if slot.active and slot.source_id==owner_actor.get_instance_id():

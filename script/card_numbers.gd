@@ -6,6 +6,11 @@ static func number(value: float, decimals: int = 2) -> String:
 	if text.contains("."): text = text.rstrip("0").trim_suffix(".")
 	return text
 
+static func value_pair(before: float, after: float, unit: String = "") -> String:
+	if unit == "s" and before <= 0 and after > 0:
+		return L10n.text("未装备 → ") + number(after) + unit
+	return "%s%s → %s%s" % [number(before), unit, number(after), unit]
+
 static func change(label: String, before: float, after: float, unit: String = "", relative: bool = true, cost: bool = false) -> Dictionary:
 	var delta := after - before
 	var benefit := ""
@@ -13,14 +18,14 @@ static func change(label: String, before: float, after: float, unit: String = ""
 		benefit = " " + ("+" if delta > 0 else "-") + number(absf(delta / before) * 100, 1) + "%"
 	elif not is_equal_approx(delta, 0) and unit != "%":
 		benefit = " " + ("+" if delta > 0 else "-") + number(absf(delta)) + unit
-	var values := "%s%s → %s%s" % [number(before), unit, number(after), unit]
+	var values := value_pair(before, after, unit)
 	if unit == "s" and before <= 0 and after > 0:
-		benefit = " 启用"
-		values = "未装备 → " + number(after) + unit
-	var text := label + benefit + "（" + values + "）"
+		benefit = L10n.text(" 启用")
+	var display_label := L10n.text(label)
+	var text := display_label + benefit + "（" + values + "）"
 	var color := GamePalette.CARD_COST if cost else GamePalette.CARD_GAIN
 	return {"label":label,"before":before,"after":after,"unit":unit,"cost":cost,"text":text,
-		"rich":"[color=#%s]%s[b]%s[/b]（[b]%s[/b]）[/color]" % [color.to_html(false),label,benefit,values]}
+		"rich":"[color=#%s]%s[b]%s[/b]（[b]%s[/b]）[/color]" % [color.to_html(false),display_label,benefit,values]}
 
 static func join(rows: Array[Dictionary], rich: bool = false) -> String:
 	var parts := PackedStringArray()

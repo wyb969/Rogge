@@ -25,7 +25,7 @@ func _ready() -> void :
 	_buttons = HBoxContainer.new()
 	_buttons.add_theme_constant_override("separation", 12)
 	_layer.add_child(_buttons)
-	for title in ["导出报告", "停止 / 返回主页"]:
+	for title in [L10n.text("导出报告"), L10n.text("停止 / 返回主页")]:
 		var button: = Button.new()
 		button.text = title
 		button.custom_minimum_size = Vector2(260, 56)
@@ -41,7 +41,7 @@ func start(seconds: float = 60.0) -> void :
 	seed(969969)
 	game.current_level = 18
 	game.level_manager.level = 18
-	game.level_manager.label.text = "Level: 18"
+	game.level_manager.label.text = L10n.text("Level: 18")
 	game.level_manager.level_need_coin_number = game.level_manager.get_need_exp(18)
 	game.spawner.handle_level_up(18)
 	game.player.apply_level_growth(18)
@@ -76,11 +76,11 @@ func _process(delta: float) -> void :
 	if _spawn_left <= 0.0:
 		_spawn_left = 1.0
 		_replenish()
-	_label.text = "后期压力测试  %.0f / %.0f 秒\nFPS %d · 节点 %d · 书本 %d · 特效 %d · 拾取 %d" % [elapsed, duration, Engine.get_frames_per_second(), Performance.get_monitor(Performance.OBJECT_NODE_COUNT), game.circle_weapon.get_child_count(), game.effect_container.get_child_count(), game.pickup_container.get_child_count()]
+	_label.text = L10n.text("后期压力测试  %.0f / %.0f 秒\nFPS %d · 节点 %d · 书本 %d · 特效 %d · 拾取 %d") % [elapsed, duration, Engine.get_frames_per_second(), Performance.get_monitor(Performance.OBJECT_NODE_COUNT), game.circle_weapon.get_child_count(), game.effect_container.get_child_count(), game.pickup_container.get_child_count()]
 	if elapsed >= duration:
 		_done = true
 		RunDiagnostics.finish("stress_complete")
-		_label.text = "压力测试完成，可导出报告\n最大节点 %d · 书本 %d · 特效 %d" % [RunDiagnostics.report.peaks.get("nodes", 0), RunDiagnostics.report.peaks.get("books", 0), RunDiagnostics.report.peaks.get("effects", 0)]
+		_label.text = L10n.text("压力测试完成，可导出报告\n最大节点 %d · 书本 %d · 特效 %d") % [RunDiagnostics.report.peaks.get("nodes", 0), RunDiagnostics.report.peaks.get("books", 0), RunDiagnostics.report.peaks.get("effects", 0)]
 		get_tree().paused = true
 
 func _replenish() -> void :

@@ -65,7 +65,7 @@ func _run() -> void :
 	weather._buttons.get_child(1).pressed.emit()
 	_advance(5)
 	_expect(weather.daylight < 0.18 and ambience._last_event == "owl", "real day/night control replaces day birds with sparse quiet night calls")
-	for kind in range(4):
+	for kind in range(6):
 		weather.set_preview(kind, 0)
 		_advance(3)
 		_expect(ambience.kind == kind and ambience._players[ambience._current].stream == ambience.BEDS[kind] and _beds() == 1, "each weather settles on its own single bed")
@@ -141,7 +141,7 @@ func _run() -> void :
 	audio.unlock_web_audio()
 	_expect( not ambience.active and _beds() == 0, "late browser gesture cannot resurrect an ended run")
 	main.show_main_menu()
-	if failures.is_empty(): print("WEATHER AUDIO OK: four weather beds, day/night calls, thunder timing, real preview, bounded stream crossfades, pause/boss mix, RNG, volume, unlock, Back/result/Retry ownership")
+	if failures.is_empty(): print("WEATHER AUDIO OK: six weather kinds / four reused beds, day/night calls, thunder timing, real preview, bounded stream crossfades, pause/boss mix, RNG, volume, unlock, Back/result/Retry ownership")
 	else:
 		for failure in failures: push_error(failure)
 	paused = false

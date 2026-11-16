@@ -83,9 +83,9 @@ func _check_menu(main: Node, size: Vector2i, label: String, failures: Array[Stri
 	_expect_inside(debug, vp, "debug entry %s" % label, failures)
 	_expect_inside(title, vp, "title %s" % label, failures)
 	_expect_inside(hint, vp, "controls hint %s" % label, failures)
-	if not hint.text.contains("↑ ↓ ← →") or not hint.text.contains("Shift") or hint.text.contains("WASD"):
+	if not (hint.text.contains("↑ ↓ ← →") or hint.text.contains("Arrow keys")) or not hint.text.contains("Shift") or hint.text.contains("WASD"):
 		failures.append("controls hint %s missing keyboard keys" % label)
-	if not hint.text.contains("方向键") or not hint.text.contains("摇杆"):
+	if not (hint.text.contains("方向键") and hint.text.contains("摇杆")) and not (hint.text.contains("Arrow keys") and hint.text.contains("stick")):
 		failures.append("controls hint %s missing touch or arrow text" % label)
 	if start.custom_minimum_size.y < 48.0:
 		failures.append("start %s button is too short (%s)" % [label, start.custom_minimum_size])
@@ -139,15 +139,18 @@ func _check_settings(main: Node, failures: Array[String]) -> void :
 	var page: Variant = main.get_node("SettingsPage")
 	if not page.visible:
 		failures.append("settings page did not open")
+	page._scroll.ensure_control_visible(page.difficulty_button)
+	await process_frame
+	await process_frame
 	var picker: Variant = page.difficulty_button
 	var choices: Variant = page.difficulty_list
 	if choices.get_child_count() != 3:
 		failures.append("difficulty choice count %s" % choices.get_child_count())
 	var easy_label: Variant = choices.get_child(0).get_child(0)
 	var hard_label: Variant = choices.get_child(2).get_child(0)
-	if easy_label.text != "简单  Easy" or hard_label.text != "困难  Hard":
+	if L10n.text(easy_label.text) != L10n.text("简单  Easy") or L10n.text(hard_label.text) != L10n.text("困难  Hard"):
 		failures.append("difficulty labels mismatch")
-	if picker.text != "困难  Hard  v":
+	if picker.text != L10n.text("困难  Hard") + "  v":
 		failures.append("picker did not sync to hard (%s)" % picker.text)
 	var controls: Variant = host.mobile_controls
 	if not controls.visible or not controls.layout_edit:

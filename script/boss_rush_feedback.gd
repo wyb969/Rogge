@@ -25,7 +25,7 @@ func _ready() -> void :
 	half_size = boss.collision_shape_2d.shape.get_rect().size * boss.collision_shape_2d.global_scale.abs() * 0.5 + hurt.shape.get_rect().size * hurt.global_scale.abs() * 0.5
 	center_offset = boss.collision_shape_2d.global_position - boss.global_position - (hurt.global_position - boss.player.global_position)
 	var layer: = CanvasLayer.new()
-	layer.layer = 35
+	layer.layer = 90
 	add_child(layer)
 	_panel = Control.new()
 	_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -55,20 +55,9 @@ func _ready() -> void :
 	_layout()
 
 func _layout() -> void :
-	var vp: = get_viewport().get_visible_rect().size
-	var scale_ui: = 1.5 if vp.y > vp.x else 1.0
-	var width: = minf(480 * scale_ui, vp.x - 48)
-	_panel.size = Vector2(width, 82 * scale_ui)
-	_panel.position = Vector2((vp.x - width) * 0.5, vp.y - (270 if vp.y > vp.x else 108) * scale_ui)
-	_title.size = Vector2(width, 26 * scale_ui)
-	UiFonts.apply_to_label(_title, int(16 * scale_ui), true)
-	boss.health_bar.position = Vector2(0, 28 * scale_ui)
-	boss.health_bar.size = Vector2(width, 18 * scale_ui)
-	_status.position = Vector2(0, 49 * scale_ui)
-	_status.size = Vector2(width, 24 * scale_ui)
-	UiFonts.apply_to_label(_status, int(12 * scale_ui), true)
-	_progress.position = Vector2(0, 76 * scale_ui)
-	_progress.size = Vector2(width, 5 * scale_ui)
+	var ui: float=preload("res://script/boss_hud_layout.gd").fit(_panel,boss.health_bar,_title,_status)
+	_progress.position=Vector2(0,53*ui)
+	_progress.size=Vector2(_panel.size.x,3*ui)
 
 func path_changed() -> void :
 	var a: Vector2 = boss.global_position + center_offset
@@ -101,6 +90,13 @@ func sweep_hits(a: Vector2, b: Vector2, hero: Vector2) -> bool:
 			if first > last: return false
 	return true
 
+func clear_warning() -> void:
+	# Attack cancellation is not HUD teardown: keep health and status updates alive.
+	_polygon.clear()
+	_outline.clear()
+	_progress.hide()
+	queue_redraw()
+
 func reset() -> void :
 	_panel.hide()
 	hide()
@@ -112,10 +108,10 @@ func _process(delta: float) -> void :
 	var warn: bool = boss.charge_state == boss.ChargeState.WARN
 	var recover: bool = boss.charge_state == boss.ChargeState.RECOVER
 	var locked: bool = boss.warning_locked
-	var caption: = "逼近 · 保持距离"
-	if warn: caption = ("锁定！横向移动" if boss._chain_warning else "锁定！横向冲刺") if locked else "蓄力追踪 · 准备闪避"
-	elif recover: caption = "连冲蓄势 · 留意下一条路线" if boss._combo_left > 0 else "硬直 · 反击机会"
-	elif boss.is_charging: caption = "冲锋！"
+	var caption: = L10n.text("逼近 · 保持距离")
+	if warn: caption = (L10n.text("锁定！横向移动") if boss._chain_warning else L10n.text("锁定！横向冲刺")) if locked else L10n.text("蓄力追踪 · 准备闪避")
+	elif recover: caption = L10n.text("连冲蓄势 · 留意下一条路线") if boss._combo_left > 0 else L10n.text("硬直 · 反击机会")
+	elif boss.is_charging: caption = L10n.text("冲锋！")
 	if caption != _last_caption:
 		_last_caption = caption
 		_status.text = caption
@@ -124,8 +120,8 @@ func _process(delta: float) -> void :
 	var title_stamp: int = int(boss.enraged()) * 2 + int(chained)
 	if _title_stamp != title_stamp:
 		_title_stamp = title_stamp
-		_title.text = "狂奔巨蜥 / %s%s" % ["II" if boss.enraged() else "I", " · 连冲" if chained else ""]
-	_progress.visible = warn
+		_title.text = L10n.text("狂奔巨蜥 / %s%s") % ["II" if boss.enraged() else "I", L10n.text(" · 连冲") if chained else ""]
+	_progress.visible = false
 	if warn: _progress.value = (1 - boss._state_left / boss.warning_duration()) * 100
 	_redraw_left -= delta
 	if _redraw_left <= 0:

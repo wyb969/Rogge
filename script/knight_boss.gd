@@ -49,7 +49,7 @@ func _ready() -> void :
 	UiFonts.apply_to_label(_title, 17, true)
 	_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.04))
 	_title.add_theme_constant_override("outline_size", 4)
-	_title.text = "IRON KNIGHT  /  I"
+	_title.text = L10n.text("IRON KNIGHT  /  I")
 	_build_boss_hud()
 	_build_sword()
 
@@ -73,6 +73,7 @@ func recovery_seconds() -> float:
 func _process(delta: float) -> void :
 	if is_dying:
 		return
+	_tick_terrain_visual(delta,_terrain_base_position)
 	_anim_time += delta
 	var running: = attack_state == AttackState.DASH or attack_state == AttackState.APPROACH
 	var frames: = 8 if running else 4
@@ -87,6 +88,7 @@ func _process(delta: float) -> void :
 func _physics_process(delta: float) -> void :
 	if is_dying or not is_instance_valid(player) or player.player_health <= 0:
 		return
+	if _tick_environment_control(delta): return
 	state_left -= delta
 	match attack_state:
 		AttackState.APPROACH:
@@ -135,7 +137,7 @@ func _physics_process(delta: float) -> void :
 				_set_state(AttackState.APPROACH, 0.25 if phase == 2 else 0.45)
 		AttackState.PHASE_SHIFT:
 			if state_left <= 0.0:
-				_title.text = "IRON KNIGHT  /  II"
+				_title.text = L10n.text("IRON KNIGHT  /  II")
 				_set_state(AttackState.APPROACH, 0.3)
 
 func _set_state(next: AttackState, duration: float) -> void :
@@ -175,7 +177,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 		queue_redraw()
 	if not is_dying and phase == 1 and boss_current_health <= health_max_value * PHASE_TWO_HEALTH:
 		phase = 2
-		_title.text = "PHASE II  /  ENRAGED"
+		_title.text = L10n.text("PHASE II  /  ENRAGED")
 		_title.add_theme_color_override("font_color", Color(1.0, 0.62, 0.25))
 		_apply_phase2_outline()
 
@@ -219,7 +221,7 @@ func _draw() -> void :
 
 func draw_ellipse_shadow() -> void :
 	draw_set_transform(Vector2(0, 44), 0, Vector2(1.0, 0.35))
-	draw_circle(Vector2.ZERO, 42.0, GamePalette.shadow(0.82))
+	draw_circle(Vector2.ZERO, lerpf(42,30,terrain_impulse.height_ratio()), GamePalette.shadow(lerpf(0.82,0.5,terrain_impulse.height_ratio())))
 	draw_set_transform(Vector2.ZERO)
 
 func _build_sword() -> void :
@@ -244,7 +246,7 @@ func _build_sword() -> void :
 func _build_boss_hud() -> void :
 
 	var canvas: = CanvasLayer.new()
-	canvas.layer = 35
+	canvas.layer = 90
 	add_child(canvas)
 	_health_panel = Control.new()
 	_health_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -257,12 +259,16 @@ func _build_boss_hud() -> void :
 	_layout_boss_hud()
 
 func _layout_boss_hud() -> void :
-	var vp: = get_viewport().get_visible_rect().size
-	var width: = minf(460.0, vp.x - 48.0)
-	var bottom: = 170.0 if vp.y > vp.x else 20.0
-	_health_panel.position = Vector2((vp.x - width) * 0.5, vp.y - bottom - 64.0)
-	_health_panel.size = Vector2(width, 64)
-	_title.position = Vector2.ZERO
-	_title.size = Vector2(width, 28)
-	health_bar.position = Vector2(0, 32)
-	health_bar.size = Vector2(width, 26)
+	preload("res://script/boss_hud_layout.gd").fit(_health_panel,health_bar,_title)
+
+func _cancel_controlled_attack() -> void:
+	super._cancel_controlled_attack()
+	attack_state = AttackState.RECOVER
+	state_left = 0.4
+	state_duration = 0.4
+	dash_distance_left = 0
+	attack_hit = true
+	queue_redraw()
+
+func _sync_airborne_attachments(height: float) -> void:
+	if is_instance_valid(_sword): _sword.position = Vector2(0,8-height)

@@ -32,12 +32,14 @@ var _base_right: float
 var _base_top: float
 var _base_bottom: float
 var _follow: Vector2 = Vector2.ZERO
+var language_buttons: Array[Button] = []
 
 func _ready() -> void :
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 70
 	visible = false
 	_build_ui()
+	SettingsStore.language_changed.connect(_on_language_changed)
 	if not get_viewport().size_changed.is_connected(_fit):
 		get_viewport().size_changed.connect(_fit)
 	call_deferred("_fit")
@@ -70,6 +72,8 @@ func close_page() -> void :
 	closed.emit()
 
 func _sync_from_store() -> void :
+	for index in language_buttons.size():
+		language_buttons[index].set_pressed_no_signal(SettingsStore.language == L10n.LANGUAGES[index])
 	if volume_slider:
 		volume_slider.set_value_no_signal(SettingsStore.master_linear)
 		_refresh_volume_label()
@@ -90,7 +94,7 @@ func _sync_from_store() -> void :
 	if difficulty_button:
 		difficulty_button.text = _difficulty_caption(SettingsStore.difficulty)
 	if difficulty_description:
-		difficulty_description.text = DIFFICULTY.RULES[SettingsStore.difficulty]
+		difficulty_description.text = L10n.text(DIFFICULTY.RULES[SettingsStore.difficulty])
 
 func _build_ui() -> void :
 	var dim: = ColorRect.new()
@@ -133,52 +137,70 @@ func _build_ui() -> void :
 	_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_scroll.add_child(_box)
 
-	_box.add_child(_label("设置  Settings", 28, true))
-	_box.add_child(_label("音量  Volume", 16, false))
+	_box.add_child(_label(L10n.text("设置  Settings"), 28, true))
+	_box.add_child(_label(L10n.text("语言"), 16, false))
+	var languages := HBoxContainer.new()
+	languages.name = "LanguagePicker"
+	var language_group := ButtonGroup.new()
+	for index in L10n.LANGUAGES.size():
+		var choice := Button.new()
+		choice.name = "English" if index == 0 else "Chinese"
+		choice.text = "English" if index == 0 else "简体中文"
+		choice.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		choice.toggle_mode = true
+		choice.button_group = language_group
+		choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		choice.custom_minimum_size.y = 48
+		_style_action(choice)
+		choice.pressed.connect(SettingsStore.set_language.bind(L10n.LANGUAGES[index]))
+		languages.add_child(choice)
+		language_buttons.append(choice)
+	_box.add_child(languages)
+	_box.add_child(_label(L10n.text("音量  Volume"), 16, false))
 	volume_slider = _slider(0.0, 1.0, 0.01)
 	volume_slider.value_changed.connect(_on_volume)
 	volume_slider.drag_ended.connect(_on_volume_released)
 	_box.add_child(volume_slider)
 	volume_value = _label("100%", 14, false)
 	_box.add_child(volume_value)
-	_box.add_child(_label("背景音乐  Music", 16, false))
+	_box.add_child(_label(L10n.text("背景音乐  Music"), 16, false))
 	music_slider = _slider(0, 1, 0.01)
 	music_slider.name = "MusicVolume"
 	music_slider.value_changed.connect( func(value: float): SettingsStore.set_music_linear(value))
 	_box.add_child(music_slider)
-	_box.add_child(_label("游戏音效  Sound effects", 16, false))
+	_box.add_child(_label(L10n.text("游戏音效  Sound effects"), 16, false))
 	sfx_slider = _slider(0, 1, 0.01)
 	sfx_slider.name = "SfxVolume"
 	sfx_slider.value_changed.connect( func(value: float): SettingsStore.set_sfx_linear(value))
 	_box.add_child(sfx_slider)
-	_box.add_child(_label("环境音  Weather ambience", 16, false))
+	_box.add_child(_label(L10n.text("环境音  Weather ambience"), 16, false))
 	ambience_slider = _slider(0, 1, 0.01)
 	ambience_slider.name = "AmbienceVolume"
 	ambience_slider.value_changed.connect( func(value: float): SettingsStore.set_ambience_linear(value))
 	_box.add_child(ambience_slider)
 
-	_box.add_child(_label("按键大小  Button size", 16, false))
+	_box.add_child(_label(L10n.text("按键大小  Button size"), 16, false))
 	size_slider = _slider(SIZE_MIN, SIZE_MAX, 0.05)
 	size_slider.value_changed.connect(_on_size)
 	_box.add_child(size_slider)
 
-	_box.add_child(_label("透明度  Opacity", 16, false))
+	_box.add_child(_label(L10n.text("透明度  Opacity"), 16, false))
 	opacity_slider = _slider(0.25, 1.0, 0.05)
 	opacity_slider.value_changed.connect(_on_opacity)
 	_box.add_child(opacity_slider)
-	_box.add_child(_label("镜头震动  Camera shake", 16, false))
+	_box.add_child(_label(L10n.text("镜头震动  Camera shake"), 16, false))
 	shake_slider = _slider(0.0, 1.0, 0.05)
 	shake_slider.name = "CameraShake"
-	shake_slider.tooltip_text = "控制镜头震动和移动惯性；0 关闭额外动效"
+	shake_slider.tooltip_text = L10n.text("控制镜头震动和移动惯性；0 关闭额外动效")
 	shake_slider.value_changed.connect( func(value: float): SettingsStore.set_camera_shake(value))
 	_box.add_child(shake_slider)
-	_box.add_child(_label("天气特效  Weather FX", 16, false))
+	_box.add_child(_label(L10n.text("天气特效  Weather FX"), 16, false))
 	weather_slider = _slider(0, 1, 0.05)
 	weather_slider.name = "WeatherIntensity"
 	weather_slider.value_changed.connect( func(value: float): SettingsStore.set_weather_intensity(value))
 	_box.add_child(weather_slider)
 
-	_box.add_child(_label("难度  Difficulty", 16, false))
+	_box.add_child(_label(L10n.text("难度  Difficulty"), 16, false))
 	difficulty_button = Button.new()
 	difficulty_button.name = "DifficultyPicker"
 	difficulty_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -210,12 +232,12 @@ func _build_ui() -> void :
 	difficulty_description.name = "DifficultyDescription"
 	_box.add_child(difficulty_description)
 
-	hint_label = _label("拖动摇杆和冲刺键   Drag stick and DASH", 14, false)
+	hint_label = _label(L10n.text("拖动摇杆和冲刺键   Drag stick and DASH"), 14, false)
 	outer.add_child(hint_label)
 
 	back_button = Button.new()
 	back_button.name = "BackButton"
-	back_button.text = "返回  Back"
+	back_button.text = L10n.text("返回  Back")
 	back_button.custom_minimum_size = Vector2(0, 52)
 	_style_action(back_button)
 	back_button.pressed.connect(close_page)
@@ -224,7 +246,11 @@ func _build_ui() -> void :
 
 func _difficulty_caption(index: int) -> String:
 	var safe: = clampi(index, 0, DIFF_LABELS.size() - 1)
-	return "%s  v" % DIFF_LABELS[safe]
+	return "%s  v" % L10n.text(DIFF_LABELS[safe])
+
+func _on_language_changed(_language: String) -> void:
+	_sync_from_store()
+	call_deferred("_fit")
 
 func _toggle_difficulty_list() -> void :
 	if difficulty_list:
@@ -239,7 +265,7 @@ func _on_difficulty_choice(index: int) -> void :
 	if difficulty_list:
 		difficulty_list.visible = false
 	if difficulty_description:
-		difficulty_description.text = DIFFICULTY.RULES[SettingsStore.difficulty]
+		difficulty_description.text = L10n.text(DIFFICULTY.RULES[SettingsStore.difficulty])
 		_scroll.call_deferred("ensure_control_visible", difficulty_description)
 
 func _style_action(button: Button) -> void :
@@ -307,6 +333,9 @@ func _fit() -> void :
 	if vp.x < 8.0 or vp.y < 8.0:
 		return
 	var ui_scale: = 2.0 if vp.y > vp.x else 1.0
+	for button in language_buttons:
+		button.custom_minimum_size.y = 48 * ui_scale
+		UiFonts.apply_to_button(button, int(18 * ui_scale))
 	var width: = clampf(vp.x * 0.88, 240.0 * ui_scale, 460.0 * ui_scale)
 	var height: = minf(vp.y - 80.0 * ui_scale, 620.0 * ui_scale)
 	_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)

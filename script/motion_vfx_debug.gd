@@ -36,7 +36,7 @@ func _ready() -> void:
 	_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_layer.add_child(_panel)
 	var caption := Label.new()
-	caption.text = "纵向移动看彩墨 · 冲刺看残影\n左侧敌方投弹 / 右侧玩家投弹（无伤练习）"
+	caption.text = L10n.text("纵向移动看彩墨 · 冲刺看残影\n左侧敌方投弹 / 右侧玩家投弹（无伤练习）")
 	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	caption.add_theme_color_override("font_color",GamePalette.UI_TEXT)
@@ -46,7 +46,7 @@ func _ready() -> void:
 	var row := HBoxContainer.new()
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_panel.add_child(row)
-	for title in ["重放投弹", "重置冲刺"]:
+	for title in [L10n.text("重放投弹"), L10n.text("重置冲刺")]:
 		var button := Button.new()
 		button.text = title
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL

@@ -19,6 +19,12 @@ var _combo_clock := 0.0
 var _border_tick_left := 0.0
 
 const EQUIP_DEFS: = {
+	"thorn_whip": {"title": "荆棘鞭", "icon": "res://assest/sprites/thorn_whip.svg", "start_level": 0, "max_level": 5},
+	"rune_bolt": {"title": "符文飞弹", "icon": "res://assest/sprites/rune_bolt.svg", "start_level": 0, "max_level": 5},
+	"pulse_aura": {"title": "脉冲法阵", "icon": "res://assest/sprites/pulse_aura.svg", "start_level": 0, "max_level": 5},
+	"silver_knife": {"title": "银翼飞刀", "icon": "res://assest/sprites/silver_knife.svg", "start_level": 0, "max_level": 5},
+	"cross_blade": {"title": "回旋十字刃", "icon": "res://assest/sprites/cross_blade.svg", "start_level": 0, "max_level": 5},
+	"holy_water": {"title": "净化圣水", "icon": "res://assest/sprites/holy_water.svg", "start_level": 0, "max_level": 5},
 	"bomb": {"title": "炸弹", "icon": "res://assest/sprites/bomb.svg", "start_level": 0, "max_level": 5},
 	"critical_glasses": {"title": "暴击眼镜", "icon": "res://assest/sprites/critical_glasses.svg", "start_level": 0, "max_level": 5},
 	"banana_fan": {"title": "芭蕉扇", "icon": "res://assest/sprites/banana_fan.svg", "start_level": 0, "max_level": 5},
@@ -107,12 +113,12 @@ func _ready() -> void :
 	_arsenal_label = Label.new()
 	_arsenal_label.size = Vector2(125, 20)
 	UiFonts.apply_to_label(_arsenal_label, 12)
-	_arsenal_label.tooltip_text = ARSENAL_HINT
+	_arsenal_label.tooltip_text = L10n.text(ARSENAL_HINT)
 	add_child(_arsenal_label)
 	_growth_label = Label.new()
 	_growth_label.size = Vector2(125, 20)
 	UiFonts.apply_to_label(_growth_label, 12)
-	_growth_label.tooltip_text = COMBOS.GROWTH_HINT
+	_growth_label.tooltip_text = L10n.text(COMBOS.GROWTH_HINT)
 	_growth_label.modulate = COMBOS.GROWTH_COLOR
 	add_child(_growth_label)
 	get_viewport().size_changed.connect(_fit_equipment)
@@ -131,7 +137,8 @@ func _fit_equipment() -> void :
 	var grid_width := SLOT_FOOTPRINT.x * slot_list.columns + 8.0 * (slot_list.columns - 1)
 	var width: = maxf(grid_width, 128.0 if status_rows > 0 else 0.0)
 	scale = Vector2.ONE * factor
-	global_position = Vector2(vp.x - width * factor - 18, 120)
+	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	global_position = Vector2(vp.x - width * factor - 18, (preload("res://script/boss_hud_layout.gd").header_top(self)+154)*hud_ui)
 	slot_list.position.x = width - grid_width
 	slot_list.size = Vector2(grid_width, icon_height)
 	_arsenal_label.position = Vector2(0, icon_height + 4)
@@ -167,7 +174,7 @@ func set_arsenal_status(owned: int, active: bool, seconds: float) -> void:
 	if _arsenal_label == null: return
 	var was_visible := _arsenal_label.visible
 	_arsenal_label.visible = owned > 0
-	_arsenal_label.text = ("无敌护盾 %.1fs" % seconds if active else "军械护盾 %.1fs" % seconds) if owned == 3 else "军械组合 %d/3" % owned
+	_arsenal_label.text = (L10n.text("无敌护盾 %.1fs") % seconds if active else L10n.text("军械护盾 %.1fs") % seconds) if owned == 3 else L10n.text("军械组合 %d/3") % owned
 	_arsenal_label.modulate = COMBOS.ARSENAL_COLOR.lightened(0.2 if active else 0.0) if owned == 3 else LEVEL_COLOR
 	if was_visible != _arsenal_label.visible: _fit_equipment()
 
@@ -175,7 +182,7 @@ func set_growth_status(owned: int, active: bool) -> void:
 	if _growth_label == null: return
 	var was_visible := _growth_label.visible
 	_growth_label.visible = owned > 0
-	_growth_label.text = "生机组合 已激活" if active else "生机组合 %d/3" % owned
+	_growth_label.text = L10n.text("生机组合 已激活") if active else L10n.text("生机组合 %d/3") % owned
 	if was_visible != _growth_label.visible: _fit_equipment()
 
 func reset_combo_effects() -> void:
@@ -231,6 +238,7 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var icon_wrap: = Panel.new()
+	icon_wrap.set_script(preload("res://script/equipment_tooltip.gd"))
 	icon_wrap.position = Vector2(6, 6)
 	icon_wrap.size = SLOT_SIZE
 	icon_wrap.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -250,7 +258,7 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = load(def["icon"])
 	var combo_hint := COMBOS.hint_for(upgrade_id)
-	icon_wrap.tooltip_text = str(def.title) + ("\n" + combo_hint if not combo_hint.is_empty() else "")
+	icon_wrap.tooltip_text = L10n.text(str(def.title)) + ("\n" + combo_hint if not combo_hint.is_empty() else "")
 	preload("res://script/visual_style.gd").style_icon(icon, upgrade_id)
 	if def.has("modulate"):
 		icon.modulate = def["modulate"]
@@ -391,3 +399,8 @@ func _play_new_slot_juice(upgrade_id: String) -> void :
 	tween.tween_property(label, "scale", Vector2.ONE, 0.24)\
 	.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(label, "modulate", Color.WHITE, 0.2)
+
+func refresh_language() -> void:
+	for id in _slots:
+		var hint:=COMBOS.hint_for(id)
+		_slots[id].icon_wrap.tooltip_text=L10n.text(EQUIP_DEFS[id].title)+("\n"+hint if not hint.is_empty() else "")

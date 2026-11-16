@@ -7,7 +7,7 @@ enum Archetype{CHASER, DASHER, TANK, RANGED}
 
 @export var title: String = "enemy"
 @export var sprite: Texture2D
-@export var health: float = 34.0
+@export var health: float = 42.0
 @export var damage: float = 2.0
 @export var archetype: Archetype = Archetype.CHASER
 @export var move_speed: float = 56.0

@@ -3,3 +3,4 @@
 __pycache__/
 export/
 docs/**/*.import
+locale/*.translation

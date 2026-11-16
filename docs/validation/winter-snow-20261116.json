@@ -1,0 +1,197 @@
+{
+  "version": "20261116-091750",
+  "branch": "feature/winter-snow-20261116",
+  "base": "3d4da7f",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "native_checks": [
+    {
+      "name": "smoke_winter",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.51,
+      "errors": [],
+      "markers": [
+        "WINTER OK: 51 checks; snowy Debug/materials, world marks, spacing/alternation, dash signals, teleports, bounded reuse, fade/pause/weather/settings and new run"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_world_snow",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "WORLD SNOW OK: camera/subframe independence, exact wind/fall, only offscreen recycling, portrait/Retina reuse, pause and return"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.59,
+      "errors": [],
+      "markers": [
+        "WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather_lighting",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "WEATHER LIGHTING OK: 21 checks; real Debug, shared lamp/bounds, solar/radial shadows, movement, pause, crossfade, zero intensity, stop and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.14,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 6351 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_player_motion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 7.99,
+      "errors": [],
+      "markers": [
+        "PLAYER MOTION OK: 32 checks; real30/60Hz input, travel/acceleration, actual-distance gait, speed card, stop/wall/vertical/mouse, last-direction dash, lock/reset, no walking particles, clipped frames and stable collider"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "actual_web_pck_checks": [
+    {
+      "name": "smoke_winter",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.8,
+      "errors": [],
+      "markers": [
+        "WINTER OK: 51 checks; snowy Debug/materials, world marks, spacing/alternation, dash signals, teleports, bounded reuse, fade/pause/weather/settings and new run"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_world_snow",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.31,
+      "errors": [],
+      "markers": [
+        "WORLD SNOW OK: camera/subframe independence, exact wind/fall, only offscreen recycling, portrait/Retina reuse, pause and return"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.21,
+      "errors": [],
+      "markers": [
+        "WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "import_export": "final import and export passed with no error/warning lines",
+  "native_render": {
+    "renderer": "Godot Compatibility / Mesa llvmpipe / Xorg dummy",
+    "screenshots": [
+      "docs/screenshots/winter-snow-20261116/winter-390x844.png",
+      "docs/screenshots/winter-snow-20261116/winter-900x600-gray.png",
+      "docs/screenshots/winter-snow-20261116/winter-900x600.png"
+    ],
+    "checked": "landscape, portrait and grayscale; red hostile warning/shot, purple poison, green healing and gold XP remain distinguishable on snow",
+    "fixture": "manual trail path and frozen harmless color samples in a QA-only scene; normal entry unchanged",
+    "runtime_script_shader_errors": false,
+    "shutdown_warnings": [
+      "Texture GL ID19 leaked1364 bytes",
+      "RenderingServer singleton null at CompressedTexture2D destructor",
+      "1 GLES3 Texture RID leaked",
+      "ObjectDB/resources referenced at exit"
+    ]
+  },
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "6febed4d7a0c7760b052579d64ded1a24f4e413e26df6b50d40d38e8e8588160"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23653468,
+      "sha256": "ce03d77c91418aac66c84b89b5667a64d34256915e69cd14c6535a0a3ac2347e"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "limitations": [
+    "No hosted browser or Safari/device FPS check this turn",
+    "No full campaign or crowd-performance benchmark",
+    "CLI and native renderer exit-resource warnings remain"
+  ]
+}

@@ -1,8 +1,15 @@
 extends Node
 
 
-enum Weather{CLEAR, OVERCAST, RAIN, SNOW}
-const NAMES: Array[String] = ["晴天", "阴天", "雨天", "雪天"]
+enum Hazard {MINES, ELECTRIC, SPIKES}
+const HAZARD_NAMES := ["地雷", "电网", "尖刺"]
+var hazard_kind := 0
+var _hazard_profiles: Dictionary = {}
+var _hazard_bag: Array[int] = []
+var _hazard_rng := RandomNumberGenerator.new()
+
+enum Weather{CLEAR, OVERCAST, RAIN, SNOW, WIND, ICE}
+const NAMES: Array[String] = ["晴天", "阴天", "雨天", "雪天", "刮风", "冰面"]
 const CYCLE_SECONDS: = 240.0
 const TRANSITION_SECONDS: = 2.5
 const MAX_RAIN: = 96
@@ -16,12 +23,19 @@ var solar_phase: = 0.0
 var daylight: = 1.0
 var ambient: = Color.WHITE
 var sun_strength: = 0.0
+var sun_direction := Vector2(0.65, 0.76).normalized()
+var lighting: Node2D
+var winter: Node2D
+var surface: Node2D
+var spikes: Node2D
+var electric_grid: Node2D
+var minefield: Node2D
 var cloud_strength: = 0.0
 var rain_count: = 0
 var snow_count: = 0
 var _start_phase: = 0.0
-var _weights: = PackedFloat32Array([1, 0, 0, 0])
-var _transition_start: = PackedFloat32Array([1, 0, 0, 0])
+var _weights: = PackedFloat32Array([1, 0, 0, 0, 0, 0])
+var _transition_start: = PackedFloat32Array([1, 0, 0, 0, 0, 0])
 var _transition_left: = 0.0
 var _stage_profiles: = {}
 var _bag: Array[int] = []
@@ -55,6 +69,7 @@ class WeatherField:
 
 func _ready() -> void :
 	_rng.randomize()
+	_hazard_rng.randomize()
 	_background = get_parent().get_node("InfiniteBackground")
 	for i in MAX_RAIN:
 		_rain.append(Vector4(_rng.randf(), _rng.randf(), _rng.randf(), _rng.randf()))
@@ -73,7 +88,7 @@ func _ready() -> void :
 	_snow_field.weather = self
 	_snow_field.world_snow = true
 	_snow_field.top_level = true
-	_snow_field.z_index = -5
+	_snow_field.z_index = 3
 	add_child(_snow_field)
 	_snow_field.global_transform = Transform2D.IDENTITY
 	_ui = CanvasLayer.new()
@@ -88,9 +103,34 @@ func _ready() -> void :
 	_ui.add_child(_caption)
 	get_viewport().size_changed.connect(_fit)
 	_fit()
+	lighting = preload("res://script/weather_lighting.gd").new()
+	lighting.name = "WeatherLighting"
+	add_child(lighting)
+	winter = preload("res://script/winter_tracks.gd").new()
+	winter.name = "WinterTracks"
+	add_child(winter)
+	surface = preload("res://script/environment_surface.gd").new()
+	surface.name = "EnvironmentSurface"
+	add_child(surface)
+	spikes = preload("res://script/ice_spikes.gd").new()
+	spikes.name = "IceSpikes"
+	add_child(spikes)
+	electric_grid = preload("res://script/electric_grid.gd").new()
+	electric_grid.name = "ElectricGrid"
+	add_child(electric_grid)
+	minefield = preload("res://script/minefield.gd").new()
+	minefield.name = "Minefield"
+	add_child(minefield)
 	stop()
 
 func begin_run() -> void :
+	spikes.reset_run()
+	electric_grid.reset_run()
+	minefield.reset_run()
+	winter.clear()
+	winter.stamped = 0
+	_hazard_profiles.clear()
+	_hazard_bag.clear()
 	_stage_profiles.clear()
 	_bag.clear()
 	elapsed = 0
@@ -110,10 +150,11 @@ func begin_run() -> void :
 func apply_stage(value: int, immediate: bool = false) -> void :
 	if not running: return
 	stage = maxi(1, value)
+	_select_stage_hazard()
 	if not _stage_profiles.has(stage):
 		var previous: int = _last_opening if stage == 1 else current_weather
 		if _bag.is_empty():
-			_bag.assign([0, 1, 2, 3])
+			_bag.assign([0, 1, 2, 3, 4, 5])
 			for i in range(_bag.size() - 1, 0, -1):
 				var other: = _rng.randi_range(0, i)
 				var temp: = _bag[i]
@@ -144,6 +185,14 @@ func _select(kind: int, immediate: bool) -> void :
 func stop() -> void :
 	AudioManager.weather_audio.detach(self)
 	running = false
+	if lighting != null: lighting.stop()
+	if winter != null: winter.sync(0)
+	if surface != null: surface.stop()
+	if spikes != null: spikes.stop()
+	if electric_grid != null: electric_grid.stop()
+	if minefield != null: minefield.stop()
+	_background.set_ice_cover(0)
+	_background.set_snow_cover(0)
 	rain_count = 0
 	snow_count = 0
 	set_process(false)
@@ -165,8 +214,9 @@ func _process(delta: float) -> void :
 	if _transition_left > 0:
 		_transition_left = maxf(0, _transition_left - delta)
 		var blend: = smoothstep(0, 1, 1.0 - _transition_left / TRANSITION_SECONDS)
-		for i in 4:
+		for i in NAMES.size():
 			_weights[i] = lerpf(_transition_start[i], 1.0 if i == current_weather else 0.0, blend)
+	if surface != null: surface.sync()
 	_field.global_transform = get_viewport().get_canvas_transform().affine_inverse()
 	_redraw_left -= delta
 	if _redraw_left > 0: return
@@ -223,25 +273,30 @@ func _update_environment() -> void :
 	var intensity: float = SettingsStore.weather_intensity
 	sun_strength = daylight * (_weights[0] * 0.14 + _weights[1] * 0.02 + _weights[3] * 0.03) * intensity
 	cloud_strength = (_weights[0] * 0.12 + _weights[1] * 0.45 + _weights[2] * 0.6 + _weights[3] * 0.35) * intensity
-	var direction: = Vector2(0.9, 0.35).rotated(sin(solar_phase * TAU) * 0.35)
-	_background.set_environment_light(ambient, sun_strength, direction, elapsed, cloud_strength)
+	sun_direction = Vector2(0.65, 0.76).rotated(sin(solar_phase * TAU) * 0.25).normalized()
+	_background.set_environment_light(ambient, sun_strength, sun_direction, elapsed, cloud_strength)
 	var boss_factor: = 0.72 if get_parent().spawner._boss_fight_active else 1.0
 	rain_count = int(MAX_RAIN * _weights[Weather.RAIN] * intensity * boss_factor)
 	snow_count = int(MAX_SNOW * _weights[Weather.SNOW] * intensity * boss_factor)
 	var period: = 0 if daylight > 0.72 else (1 if daylight < 0.18 else (2 if solar_phase < 0.5 else 3))
-	var stamp: = int(current_weather) * 4 + period
+	var stamp: = (int(current_weather) * 4 + period)*3+hazard_kind
 	if stamp != _caption_stamp:
 		_caption_stamp = stamp
-		_caption.text = NAMES[current_weather] + " · " + time_name()
+		_caption.text = L10n.text(NAMES[current_weather]) + " · " + time_name() + " · " + L10n.text(HAZARD_NAMES[hazard_kind])
+	_background.set_snow_cover(_weights[Weather.SNOW] * intensity)
+	if winter != null: winter.sync(_weights[Weather.SNOW] * intensity)
+	_background.set_ice_cover(_weights[Weather.ICE]) # Gameplay surface stays identifiable at zero cosmetic FX.
+	if surface != null: surface.sync()
+	if lighting != null: lighting.sync()
 	AudioManager.weather_audio.sync(self, current_weather, daylight)
 
 func _exit_tree() -> void :
 	if is_instance_valid(AudioManager.weather_audio): AudioManager.weather_audio.detach(self)
 
 func time_name() -> String:
-	if daylight > 0.72: return "日间"
-	if daylight < 0.18: return "夜间"
-	return "黄昏" if solar_phase < 0.5 else "黎明"
+	if daylight > 0.72: return L10n.text("日间")
+	if daylight < 0.18: return L10n.text("夜间")
+	return L10n.text("黄昏") if solar_phase < 0.5 else L10n.text("黎明")
 
 func draw_weather(canvas: Node2D) -> void :
 	if not running: return
@@ -262,26 +317,27 @@ func draw_snow(canvas: Node2D) -> void :
 	for i in snow_count:
 		var seed: Vector4 = _snow[i]
 		var point: = _snow_positions[i]
-		var alpha: = (0.18 + seed.w * 0.16) * lerpf(0.25, 1, smoothstep(20, 85, ((point - hero) * zoom).length()))
+		var alpha: = (0.32 + seed.w * 0.2) * lerpf(0.25, 1, smoothstep(20, 85, ((point - hero) * zoom).length()))
 
 
-		var size: = Vector2.ONE * (1.4 + seed.z * 2.0) / zoom
-		canvas.draw_rect(Rect2(point - size * 0.5, size), Color(0.85, 0.94, 1, alpha))
+		var size: = Vector2.ONE * ((3.0 + seed.z * 2.5) if i % 4 == 0 else (1.8 + seed.z * 2.2)) / zoom
+		canvas.draw_rect(Rect2(point - size * 0.5 + Vector2(0.7, 1.0) / zoom, size), Color(GamePalette.SNOW_TRACK, alpha * 0.5))
+		canvas.draw_rect(Rect2(point - size * 0.5, size), Color(GamePalette.SNOW_FLAKE, alpha))
 		if i % 4 == 0:
 			_snow_stars[i / 4] = Vector3(point.x, point.y, alpha)
 
 	for i in (snow_count + 3) / 4:
 		var star: Vector3 = _snow_stars[i]
 		var point: = Vector2(star.x, star.y)
-		canvas.draw_line(point - Vector2(2.8, 0) / zoom, point + Vector2(2.8, 0) / zoom, Color(0.92, 0.98, 1, star.z * 0.8), 1.0 / zoom.x, false)
-		canvas.draw_line(point - Vector2(0, 2.8) / zoom, point + Vector2(0, 2.8) / zoom, Color(0.92, 0.98, 1, star.z * 0.8), 1.0 / zoom.y, false)
+		canvas.draw_line(point - Vector2(4.0, 0) / zoom, point + Vector2(4.0, 0) / zoom, Color(GamePalette.SNOW_FLAKE, star.z * 0.9), 1.0 / zoom.x, false)
+		canvas.draw_line(point - Vector2(0, 4.0) / zoom, point + Vector2(0, 4.0) / zoom, Color(GamePalette.SNOW_FLAKE, star.z * 0.9), 1.0 / zoom.y, false)
 
 func describe() -> Dictionary:
 	return {"running": running, "stage": stage, "weather": NAMES[current_weather], "solar_phase": snappedf(solar_phase, 0.001), "daylight": snappedf(daylight, 0.001), "rain": rain_count, "snow": snow_count, "intensity": SettingsStore.weather_intensity, "audio": AudioManager.weather_audio.describe()}
 
 func set_preview(kind: int, phase: float = -1) -> void :
 	if phase >= 0: _start_phase = fposmod(phase - elapsed / CYCLE_SECONDS, 1)
-	_select(clampi(kind, 0, 3), true)
+	_select(clampi(kind, 0, NAMES.size()-1), true)
 
 func enable_preview() -> void :
 	if _preview != null: return
@@ -293,11 +349,11 @@ func enable_preview() -> void :
 	_buttons = HBoxContainer.new()
 	_buttons.add_theme_constant_override("separation", 10)
 	_preview.add_child(_buttons)
-	for title in ["下个天气", "切换昼夜", "返回主页"]:
+	for title in [L10n.text("下个天气"), L10n.text("切换昼夜"), L10n.text("返回主页")]:
 		var button: = Button.new()
 		button.text = title
 		_buttons.add_child(button)
-	_buttons.get_child(0).pressed.connect( func(): set_preview((current_weather + 1) % 4))
+	_buttons.get_child(0).pressed.connect( func(): set_preview((current_weather + 1) % NAMES.size()))
 	_buttons.get_child(1).pressed.connect( func(): set_preview(current_weather, 0.0 if daylight < 0.5 else 0.5))
 	_buttons.get_child(2).pressed.connect( func():
 		get_parent().end_game()
@@ -313,9 +369,14 @@ func owns_pointer(point: Vector2) -> bool:
 func _fit() -> void :
 	var vp: = get_viewport().get_visible_rect().size
 	var scale: = 2.0 if vp.y > vp.x else 1.0
-	UiFonts.apply_to_label(_caption, int(12 * scale))
-	_caption.position = Vector2(vp.x * 0.3, 56 * scale)
-	_caption.size = Vector2(vp.x * 0.4, 24 * scale)
+	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	UiFonts.apply_to_label(_caption, int(16*hud_ui))
+	_caption.position = Vector2(12*hud_ui,(preload("res://script/boss_hud_layout.gd").header_top(self)+80)*hud_ui)
+	_caption.size = Vector2(vp.x-88*hud_ui,26*hud_ui)
+	_caption.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
+	_caption.clip_text=true
+	_caption.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
 	if _buttons == null: return
 	var width: = minf(780, vp.x - 40)
 	_buttons.position = Vector2((vp.x - width) * 0.5, vp.y - 76 * scale)
@@ -323,3 +384,32 @@ func _fit() -> void :
 		button.custom_minimum_size = Vector2((width - 20) / 3, 56 * scale)
 		UiFonts.apply_to_button(button, int(16 * scale))
 	_buttons.set_deferred("size", Vector2(width, 56 * scale))
+
+# Independent shuffled bag: every stage has exactly one hazard, regardless of weather.
+func _select_stage_hazard() -> void:
+	if not _hazard_profiles.has(stage):
+		if _hazard_bag.is_empty():
+			_hazard_bag.assign([0,1,2])
+			for i in range(2,0,-1):
+				var j := _hazard_rng.randi_range(0,i)
+				var temp := _hazard_bag[i]
+				_hazard_bag[i] = _hazard_bag[j]
+				_hazard_bag[j] = temp
+			if _hazard_profiles.size()>0 and _hazard_bag.back()==hazard_kind:
+				var temp := _hazard_bag[0]
+				_hazard_bag[0] = _hazard_bag[2]
+				_hazard_bag[2] = temp
+		_hazard_profiles[stage] = _hazard_bag.pop_back()
+	set_hazard(_hazard_profiles[stage])
+
+func set_hazard(kind: int) -> void:
+	# Explicit override for Debug; weather preview never silently changes hazards.
+	if hazard_kind!=kind:
+		spikes.stop()
+		electric_grid.stop()
+		minefield.stop()
+	hazard_kind = clampi(kind,0,2)
+	_caption_stamp = -1
+
+func hazard_enabled(kind: int) -> bool:
+	return hazard_kind==kind and surface.active()

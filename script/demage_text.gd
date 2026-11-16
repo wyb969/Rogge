@@ -35,7 +35,7 @@ func show_damage(text: String, _start_pos: Vector2, _height: float, _spread: flo
 	label.add_theme_constant_override("outline_size", 3 if _critical else 2)
 	if _status:
 		_healing = false
-		label.add_theme_color_override("font_color", GamePalette.POISON_TINT if visual_effect == &"poison_trail" else STATUS_YELLOW)
+		label.add_theme_color_override("font_color", GamePalette.PLAYER_CYAN if visual_effect == &"holy_water" else (GamePalette.POISON_TINT if visual_effect == &"poison_trail" else STATUS_YELLOW))
 	elif not _healing: label.add_theme_color_override("font_color", CRITICAL_GOLD if _critical else GamePalette.PLAYER_DAMAGE_WHITE)
 	label.text = text + "!" if _critical else text
 	label.position = Vector2(-30, -26) if _critical else Vector2(-24, -22)
@@ -43,7 +43,7 @@ func show_damage(text: String, _start_pos: Vector2, _height: float, _spread: flo
 	label.scale = Vector2.ONE * (1.28 if _critical else 1.12)
 	var sideways: = float((get_instance_id() % 7) - 3) * 1.5
 	tween = create_tween().set_ignore_time_scale(true).set_parallel(true)
-	if _status and visual_effect != &"poison_trail": tween.tween_property(label, "theme_override_colors/font_color", STATUS_RED, 0.24)
+	if _status and visual_effect not in [&"poison_trail", &"holy_water"]: tween.tween_property(label, "theme_override_colors/font_color", STATUS_RED, 0.24)
 	tween.tween_property(label, "position", label.position + Vector2(sideways, -20 if _healing else -24), 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_property(label, "scale", Vector2.ONE, 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(label, "modulate:a", 0.0, 0.13).set_delay(0.21)

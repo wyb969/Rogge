@@ -32,7 +32,7 @@ func _sync_caption() -> void :
 	var left: = maxi(0, int(ceil(LIFETIME - age)))
 	if left == _caption_second: return
 	_caption_second = left
-	_caption.text = "宝囊精 · %ds" % left
+	_caption.text = L10n.text("宝囊精 · %ds") % left
 
 func _physics_process(delta: float) -> void :
 	if _death_started or not is_instance_valid(player_reference): return
@@ -42,6 +42,7 @@ func _physics_process(delta: float) -> void :
 		return
 	_update_statuses(delta)
 	if _death_started: return
+	if _tick_environment_control(delta): return
 	age += delta
 	if age >= LIFETIME:
 		queue_free()
@@ -54,8 +55,10 @@ func _physics_process(delta: float) -> void :
 	var dir: = away.normalized() if dist > 0.01 else Vector2.UP
 	var steering: = dir if dist < 185 else dir.orthogonal() * sin(age * 2.0)
 	if dist > 255: steering = - dir * 0.5
+	var previous_velocity := velocity
 	velocity = steering.limit_length() * speed * status_move_scale()
 	if age < 0.8: velocity = Vector2.ZERO
+	if age>=0.8: _apply_environment_motion(delta,previous_velocity)
 	_apply_crowd_motion(delta)
 	move_and_collide(velocity * delta)
 	_face( - dir)

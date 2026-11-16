@@ -2,6 +2,14 @@ extends Control
 
 # Only recent interactive tests live here. Older presets remain callable by smoke tests.
 const RECENT_ORDER: Array[String] = [
+	"DebugMinefieldButton",
+	"DebugElectricGridButton",
+	"DebugWindSceneButton", "DebugIceSceneButton",
+	"DebugWinterButton",
+	"DebugStarChainButton",
+	"DebugWeatherLightButton",
+	"DebugArcaneWeaponsButton",
+	"DebugRelicWeaponsButton",
 	"DebugHitstopButton",
 	"DebugMotionVfxButton",
 	"DebugWoodenTrialButton",
@@ -50,8 +58,8 @@ func _ready() -> void:
 			entries.append(button)
 	for button in entries + [back_button, report_button]:
 		_prepare_button(button)
-	prev_button = _new_button("PreviousPage", "上一页", -1)
-	next_button = _new_button("NextPage", "下一页", 1)
+	prev_button = _new_button("PreviousPage", L10n.text("上一页"), -1)
+	next_button = _new_button("NextPage", L10n.text("下一页"), 1)
 	page_label = Label.new()
 	page_label.name = "PageIndicator"
 	page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -63,10 +71,10 @@ func _ready() -> void:
 		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		label.custom_minimum_size = Vector2.ZERO
-	title.text = "Debug · 近期测试"
+	title.text = L10n.text("Debug · 近期测试")
 	hint.text = DEFAULT_HINT
-	back_button.text = "返回主页"
-	report_button.text = "导出诊断"
+	back_button.text = L10n.text("返回主页")
+	report_button.text = L10n.text("导出诊断")
 	get_viewport().size_changed.connect(_request_fit)
 	_request_fit()
 

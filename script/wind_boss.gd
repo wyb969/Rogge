@@ -34,12 +34,13 @@ func _ready() -> void :
 	_layout_hud()
 
 func _update_title() -> void :
-	_title.text = ROLE_NAMES[role] + (" / II" if phase == 2 else " / I")
+	_title.text = L10n.text(ROLE_NAMES[role]) + (" / II" if phase == 2 else " / I")
 	_title.add_theme_color_override("font_color", ROLE_COLORS[role])
 
 func _physics_process(delta: float) -> void :
-	if is_dying or not is_instance_valid(coordinator) or coordinator._run_closed or not is_instance_valid(player) or player.player_health <= 0:
+	if get_tree().paused or is_dying or not is_instance_valid(coordinator) or coordinator._run_closed or not is_instance_valid(player) or player.player_health <= 0:
 		return
+	if _tick_environment_control(delta): return
 	if state == State.APPROACH:
 		state_left -= delta
 		_move_in_role(delta)
@@ -61,7 +62,7 @@ func _physics_process(delta: float) -> void :
 	if state == State.RECOVER:
 		_move_in_role(delta)
 	var previous: = state
-	super._physics_process(delta)
+	super._advance_battle(delta)
 	if role == Role.RANGED and previous == State.WARN and state == State.ACTIVE:
 		_fire_wind_blades()
 	if previous == State.ACTIVE and state == State.RECOVER:
@@ -92,7 +93,7 @@ func begin_attack() -> void :
 	shapes.clear()
 	dive = false
 	_extra_dives = 0
-	_move_name = "风刃扇击" if role == Role.RANGED else "俯冲突袭"
+	_move_name = L10n.text("风刃扇击") if role == Role.RANGED else L10n.text("俯冲突袭")
 	_orbit_sign = (1.0 if role == Role.RANGED else -1.0) * (1.0 if pattern_index % 2 == 0 else -1.0)
 	if role == Role.RANGED:
 		var aim: = (player.global_position - global_position).normalized()
@@ -145,17 +146,12 @@ func apply_hit(data: Dictionary) -> void :
 func _layout_hud() -> void :
 	if _hud == null or _title == null:
 		return
-	var vp: = get_viewport().get_visible_rect().size
-	var portrait: = vp.y > vp.x
-	var scale_ui: = maxf(1, vp.x / 600.0) if portrait else 1.0
-	var width: = minf(470 * scale_ui, vp.x - 48)
-	var bottom: = 400.0 * scale_ui if portrait else 90.0
-	_hud.position = Vector2((vp.x - width) * 0.5, vp.y - bottom - 72.0 * scale_ui * float(1 - role))
-	_title.size = Vector2(width, 28 * scale_ui)
-	UiFonts.apply_to_label(_title, int(18 * scale_ui), true)
-	health_bar.position = Vector2(0, 30 * scale_ui)
-	health_bar.size = Vector2(width, 22 * scale_ui)
-	if _action_label != null:
-		_action_label.position = Vector2(0, 54 * scale_ui)
-		_action_label.size = Vector2(width, 16 * scale_ui)
-		UiFonts.apply_to_label(_action_label, int(11 * scale_ui), true)
+	preload("res://script/boss_hud_layout.gd").fit(_hud,health_bar,_title,_action_label,role)
+
+func refresh_language() -> void:
+	super.refresh_language()
+	_update_title()
+
+func _cancel_controlled_attack() -> void:
+	super._cancel_controlled_attack()
+	if is_instance_valid(coordinator): coordinator.release_wind_attack(self,role)

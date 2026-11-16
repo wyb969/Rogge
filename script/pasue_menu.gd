@@ -25,9 +25,15 @@ var reroll_hint: Label
 var _offered: Array = []
 var _draft_rng: = RandomNumberGenerator.new()
 var _fit_pending: = false
-var _card_scroll: ScrollContainer
+var _card_area: Control
 
 var upgrade_pool: = [
+	{"id": "thorn_whip", "title": "荆棘鞭", "desc": "", "icon": "res://assest/sprites/thorn_whip.svg", "max_level": 5},
+	{"id": "rune_bolt", "title": "符文飞弹", "desc": "", "icon": "res://assest/sprites/rune_bolt.svg", "max_level": 5},
+	{"id": "pulse_aura", "title": "脉冲法阵", "desc": "", "icon": "res://assest/sprites/pulse_aura.svg", "max_level": 5},
+	{"id": "silver_knife", "title": "银翼飞刀", "desc": "", "icon": "res://assest/sprites/silver_knife.svg", "max_level": 5},
+	{"id": "cross_blade", "title": "回旋十字刃", "desc": "", "icon": "res://assest/sprites/cross_blade.svg", "max_level": 5},
+	{"id": "holy_water", "title": "净化圣水", "desc": "", "icon": "res://assest/sprites/holy_water.svg", "max_level": 5},
 	{"id": "bomb", "title": "炸弹", "desc": "", "icon": "res://assest/sprites/bomb.svg", "max_level": 5},
 	{"id": "critical_glasses", "title": "暴击眼镜", "desc": "", "icon": "res://assest/sprites/critical_glasses.svg", "max_level": 5},
 	{"id": "banana_fan", "title": "芭蕉扇", "desc": "", "icon": "res://assest/sprites/banana_fan.svg", "max_level": 5},
@@ -130,12 +136,11 @@ var upgrade_pool: = [
 func _ready():
 	layer = 140
 	visible = false
-	_card_scroll = ScrollContainer.new()
-	_card_scroll.name = "CardScroll"
-	_card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_card_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	$Panel.add_child(_card_scroll)
-	h_box_container.reparent(_card_scroll)
+	_card_area = Control.new()
+	_card_area.name = "CardArea"
+	_card_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Panel.add_child(_card_area)
+	h_box_container.reparent(_card_area)
 	_draft_rng.randomize()
 	growth_hint = Label.new()
 	growth_hint.name = "GrowthHint"
@@ -144,6 +149,7 @@ func _ready():
 	growth_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	growth_hint.add_theme_color_override("font_color", GamePalette.PLAYER_DAMAGE_WHITE)
 	$Panel.add_child(growth_hint)
+	growth_hint.hide()
 	reroll_button = Button.new()
 	reroll_button.name = "RerollButton"
 	reroll_button.pressed.connect(_on_reroll)
@@ -160,11 +166,12 @@ func _ready():
 	reroll_button.add_theme_stylebox_override("disabled", disabled_style)
 	JuicyHover.bind(reroll_button)
 	reroll_hint = Label.new()
-	reroll_hint.text = "每局 2 次 · 击败宝囊精可补充"
+	reroll_hint.text = L10n.text("每局 2 次 · 击败宝囊精可补充")
 	reroll_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	reroll_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	reroll_hint.modulate = GamePalette.UI_GREY_BORDER
 	$Panel.add_child(reroll_hint)
+	reroll_hint.hide()
 	_refresh_reroll()
 	get_viewport().size_changed.connect(_fit_cards)
 	h_box_container.minimum_size_changed.connect(_queue_fit_cards)
@@ -180,7 +187,7 @@ func show_upgrade_options():
 	visible = true
 	var player: = get_tree().get_first_node_in_group("player")
 	if player != null:
-		growth_hint.text = "人物每升一级：生命上限 +%d，同时补充 %d" % [player.HEALTH_PER_LEVEL, player.HEALTH_PER_LEVEL]
+		growth_hint.text = L10n.text("人物每升一级：生命上限 +%d，同时补充 %d") % [player.HEALTH_PER_LEVEL, player.HEALTH_PER_LEVEL]
 	_display_options([])
 
 func _display_options(excluded: Array) -> void :
@@ -213,9 +220,9 @@ func grant_reroll() -> bool:
 
 func _refresh_reroll() -> void :
 	if reroll_button == null: return
-	reroll_button.text = "换一组 · 剩余 %d 次" % rerolls
+	reroll_button.text = L10n.text("换一组 · 剩余 %d 次") % rerolls
 	reroll_button.disabled = rerolls <= 0
-	reroll_button.tooltip_text = "每局 2 次，击败宝囊精补充；最多储存 3 次"
+	reroll_button.tooltip_text = L10n.text("每局 2 次，击败宝囊精补充；最多储存 3 次")
 
 func _on_reroll() -> void :
 	if not visible or not get_tree().paused or rerolls <= 0: return
@@ -235,32 +242,34 @@ func _fit_cards() -> void:
 		var css: Variant = JavaScriptBridge.eval("(function(){var c=document.getElementById('canvas');return c?c.getBoundingClientRect().width:window.innerWidth;})()",true)
 		if (css is float or css is int) and float(css) > 0: ratio = float(get_tree().root.size.x) / float(css)
 	var ui := ratio / maxf((transform * Vector2.RIGHT - transform * Vector2.ZERO).length(),0.1)
-	var portrait := vp.y > vp.x
-	var compact := portrait or vp.y / ui < 460
 	var count := h_box_container.get_child_count()
-	h_box_container.columns = 1 if portrait else count
-	var gap := 10.0 * ui
-	var width := minf((vp.x-48*ui-gap*(h_box_container.columns-1))/h_box_container.columns, (420.0 if portrait else 280.0)*ui)
-	for card in h_box_container.get_children(): card.set_display_width(width,ui,compact)
+	h_box_container.columns = count
+	var gap := 12.0*ui
+	var top := (140.0 if vp.y/ui>=500 else 90.0)*ui
+	var available := vp.y-top-16*ui
+	var height_limit := available-60*ui
+	var width := minf((vp.x-48*ui-gap*(count-1))/count,minf(220*ui,height_limit/1.618))
+	# Preserve readable text on narrow phones; roomy screens use the golden ratio.
+	var height := minf(height_limit,maxf(width*1.618,200*ui))
+	for card in h_box_container.get_children(): card.set_display_size(Vector2(width,height),ui,false)
 	h_box_container.add_theme_constant_override("h_separation",int(gap))
 	h_box_container.add_theme_constant_override("v_separation",int(gap))
-	var content := h_box_container.get_combined_minimum_size()
+	var content := Vector2(width*count+gap*(count-1),height)
 	h_box_container.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	h_box_container.scale = Vector2.ONE
-	h_box_container.size = content
-	var body_height := maxf(90*ui,vp.y-192*ui)
-	_card_scroll.position = Vector2((vp.x-content.x-16*ui)*0.5,96*ui+maxf(0,(body_height-content.y)*0.5))
-	_card_scroll.size = Vector2(content.x+16*ui,minf(content.y,body_height))
-	h_box_container.position = Vector2.ZERO
-	UiFonts.apply_to_label(growth_hint,int(13*ui))
-	growth_hint.position = Vector2(16*ui,56*ui)
-	growth_hint.size = Vector2(vp.x-32*ui,40*ui)
-	UiFonts.apply_to_button(reroll_button,int(16*ui))
-	reroll_button.position = Vector2((vp.x-260*ui)*0.5,vp.y-84*ui)
-	reroll_button.size = Vector2(260,44)*ui
-	UiFonts.apply_to_label(reroll_hint,int(11*ui))
-	reroll_hint.position = reroll_button.position + Vector2(-40,48)*ui
-	reroll_hint.size = Vector2(340,24)*ui
+	h_box_container.scale=Vector2.ONE
+	h_box_container.size=content
+	h_box_container.position=Vector2.ZERO
+	_card_area.position=Vector2((vp.x-content.x)*0.5,top+(available-content.y-60*ui)*0.5)
+	_card_area.size=content
+	UiFonts.apply_to_label(growth_hint,int(11*ui))
+	growth_hint.position=Vector2(12*ui,48*ui)
+	growth_hint.size=Vector2(vp.x-24*ui,36*ui)
+	UiFonts.apply_to_button(reroll_button,int(14*ui))
+	reroll_button.position=Vector2((vp.x-250*ui)*0.5,_card_area.position.y+content.y+20*ui)
+	reroll_button.size=Vector2(250,40)*ui
+	UiFonts.apply_to_label(reroll_hint,int(10*ui))
+	reroll_hint.position=Vector2(8*ui,vp.y-22*ui)
+	reroll_hint.size=Vector2(vp.x-16*ui,18*ui)
 	$Panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 
@@ -309,10 +318,24 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 	var game := _get_game()
 	var id: String = result.get("id", "")
 	result.merge(PREVIEW.build(game, id), true)
+	result.short_desc = CodexData.summary(id)
+	result.compact_stats = CodexData.compact_stats(result.rows)
+	result.draft_line = CodexData.draft_line(id,result.rows)
 	if game != null:
 		var rank: int = PREVIEW.rank_for(game,id)
-		result.title = str(game.equipment_panel.EQUIP_DEFS[id].title) + " · %d → %d级" % [rank, rank + 1]
+		result.title = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title)) + L10n.text(" · %d → %d级") % [rank, rank + 1]
 	return result
+
+func refresh_language() -> void:
+	_refresh_reroll()
+	var game := _get_game()
+	if game == null: return
+	growth_hint.text = L10n.text("人物每升一级：生命上限 +%d，同时补充 %d") % [game.player.HEALTH_PER_LEVEL,game.player.HEALTH_PER_LEVEL]
+	# Refresh offered cards in place: do not reroll or consume draft RNG.
+	for card in h_box_container.get_children():
+		for entry in upgrade_pool:
+			if entry.id==card.upgrade_id: card.setup(_build_card_data(entry));break
+	_fit_cards()
 
 
 func _get_game() -> Node:

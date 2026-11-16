@@ -71,7 +71,7 @@ func _run() -> void :
 	var tank_hp_before: float = tank.health
 	tank.take_damage(100.0)
 	var tank_lost: float = tank_hp_before - tank.health
-	_expect(tank_lost < 70.0 and tank_lost > 40.0, "tank defense reduced 100 dmg to %s" % tank_lost)
+	_expect(is_equal_approx(tank_lost, 75.0), "tank defense reduced 100 dmg to %s" % tank_lost)
 	_expect(is_instance_valid(tank), "tank survived the mitigated hit")
 
 	var chaser_dummy: = _spawn(spawner, load("res://resource/Enemy_1.tres"), Vector2(400, 400))
@@ -322,7 +322,7 @@ func _check_resources() -> void :
 	_expect(tank.archetype == EnemyData.Archetype.TANK, "Enemy_3 resource is tank")
 	_expect(ranged.archetype == EnemyData.Archetype.RANGED, "Enemy_4 resource is ranged")
 	_expect(chaser.archetype == EnemyData.Archetype.CHASER, "Enemy_1 resource is chaser")
-	_expect(tank.defense >= 0.4 and tank.health >= 100.0, "tank resource is bulky")
+	_expect(tank.health / (1.0 - tank.defense) >= 110.0 and tank.health / (1.0 - tank.defense) <= 140.0, "tank retains a bounded effective-health budget")
 	_expect(dasher.health <= 20.0 and dasher.move_speed >= 100.0, "dasher resource is fragile and fast")
 	_expect(ranged.projectile_damage > 20.0, "ranged resource has a projectile")
 

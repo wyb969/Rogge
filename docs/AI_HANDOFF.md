@@ -1,5 +1,185 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-16 主分支与正式itch发布（进行中）
+
+- 用户明确授权合入主分支、更新GitHub首页并发布ROGGE；下方各轮“不合并master/不上传itch”为历史边界。默认分支是master，远端204f7d8是当前611fa44的祖先（0分叉、44个开发提交）。发布分支 `release/master-itch-20261116`，版本 **20261116-202250**。
+- 本轮只更新版本号、README和发布记录，不新增游戏机制。README补全天气/冰面/随机危险、28卡、中英词典、暂停菜单和新版UI截图。
+- 复用PixelFishing独立Actions分支及 `ybwangrogger/rogue-white:html` / upload20115514；Secret仅在Actions中使用。发布检查覆盖自上次master后新增的模块及共享生命周期；成功后记录合并SHA、Actions构件、Butler build和线上资源核验。
+
+## 2026-11-16 按标注图调整UI（当前开发）
+
+- 继续 `feature/compact-combat-hud-20261116` / PR #30，基于 `f6c89ae`，版本 **20261116-200630**。左侧关卡/等级/天气统一16显示像素、左对齐并按40像素行距布局；XP仍200×30，时间移到右侧等级行。窄屏将左侧块移到工具栏下面，时间与关卡同排，避免碰撞；长天气单行省略。
+- 工具栏整体居中，Button的icon_alignment和vertical_icon_alignment也显式居中，修复图标在按钮内偏左。Boss血条/装备跟随头部占高下移；仅血条的规则保留。
+- 三张卡保持横排，常规卡宽高约1:1.618（上限220×356）；窄手机保留至少200高度以容纳说明，短横屏按可用高度缩放。图标/名称/真实主数值下增加既有Codex的一句功能说明。数值仍读CardPreview，不改机制。中英长句自适应字号与行距，无滚动/详情按钮，保留hover1.02→1.0。
+- 换一组位于整排卡片下方20显示像素，不再贴底。28卡两语言五尺寸的数值和说明边界检查升级为3008项；最终PCK、截图与命令见 [reference-ui.md](reference-ui.md)、`validation/reference-ui-20261116.json`。未做真实浏览器/Safari测试，既有退出资源/GL警告保留。
+- 临时日志/导出 `../reference-ui` 在RAM，以GitHub为准；只更新原私有试玩，不合并master/发布正式itch。
+
+- 源码 `462b6e9` 已推送PR #30；[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 更新 **20261116-200630**，Site `b0930e37bab654b20366c8cbd776176bf9592be3` / deployment `appgdep_6afaf2e0598c819189e897ae55c8a158` 于北京时间20:11发布成功。9文件字节核对与26 loader检查通过，见 `validation/reference-ui-playtest-20261116.json`。
+
+## 2026-11-16 HUD对齐跟进（当前开发）
+
+- 同一 `feature/compact-combat-hud-20261116` / PR #30，基于 `69d9994`，版本 **20261116-195315**。顶部菜单/主页/全屏三枚图标整体居中；主页只显示全屏时也按可见按钮居中。关卡与时间分列两侧。
+- 经验条从48×16恢复200×30显示像素，字号12；等级旁8像素间隔，仍保留短中英等级。天气/临时倒计时放经验条下方，Boss血条与装备相应下移，横竖屏避免重叠。只改布局。
+- 原生中英四视口截图检查，菜单/暂停与Boss血条最终PCK专项见 `validation/centered-hud-20261116.json`。未做本轮浏览器/Safari验证，既有退出资源/GL警告保留。构建/日志 `../centered-hud` 在RAM，正式itch/master未更新。
+
+- 源码 `8bf0d29` 已推送PR #30；原私有试玩更新 **20261116-195315**，Site `b20e3d2399f28a2ff0d61b927072dd88eedc0fa7` / deployment `appgdep_6afaef4d88348191a205709e0f1cbe4e` 于北京时间19:56发布成功。9文件字节核对和26 loader检查通过，记录 `validation/centered-hud-playtest-20261116.json`。
+
+## 2026-11-16 战斗HUD减负（当前开发）
+
+- `feature/compact-combat-hud-20261116` 基于 `b32e8d5` / PR #29，版本 **20261116-194322**。菜单/主页/全屏改为三枚SVG线条图标，40显示像素点击区、20图标，保留原事件和中英tooltip。不依赖Unicode字符绘制图标。
+- 取消宝囊精/组合/Debug的居中说明通知及回响蓄能文字、选卡成长/重抽说明；说明仍可从词典和试炼前页面查看。Boss隐藏名称、动作说明和蓄力条，只显示血量；风双Boss分行。地面攻击预警不变。
+- 星轨/吸金狂欢仅倒计时数字，隐藏蓄能/倒计时进度条；力量/木头人局内倒计时也只数字。经验条和技能冷却保留。关卡、经验、时钟、天气和装备起点重新分层，避免竖屏相互遮挡；微小/无头窗口缩放有边界。
+- 只改显示，不改奖励、Boss3秒受控/3秒免控、武器数值、计时或试炼规则。中英横竖屏原生截图、最终Web PCK验证见 [compact-combat-hud.md](compact-combat-hud.md) / `validation/compact-combat-hud-20261116.json`。无本轮真实浏览器/Safari验证；既有退出资源/GL警告保留。
+- 源码 `de24cb7` 已推送 [PR #30](https://github.com/wyb969/Rogge/pull/30)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新194322，Site `4255b44ec9b8fdd3e6f4715842c69c5e27130607` / deployment `appgdep_6afaed5af95481918bd356613d339eeb` 于北京时间19:47发布成功。9文件字节核对/26 loader检查通过；证据 `validation/compact-combat-hud-playtest-20261116.json`。
+- 本轮日志/包 `../compact-hud` 在RAM临时目录，以GitHub提交为准。沿用原私有试玩，不合并master、不上传正式itch；Site构建用 `TMPDIR=/dev/shm`，不清理旧文件。
+
+## 2026-11-16 Boss血条、横排三卡与免控（当前开发）
+
+- `feature/boss-control-hud-20261116` 基于 `0872a07` / PR #28，版本 **20261116-192020**。已复现第一关Boss触电后血条消失：取消攻击误调用完整反馈reset，隐藏包含血条的面板并停用处理。改为只清预警；其他Boss在基线原生测试中有血条，未证实“全被卡片挤掉”。统一屏幕顶部响应式血条，风双Boss分两行，HUD层级90。
+- 选卡横竖屏都三列，最大190×154显示像素，外边24、卡间12；图标下两行紧凑文字（名称、功能+真实升级后主数值）。长名称省略，完整等级/当前→升级数值在tooltip/词典；保留悬停1.02、离开1.0。中英28卡覆盖五种屏幕，卡牌伤害/升级公式不变。
+- 七个关卡Boss共用连续受控3秒→立即解除→免控3秒；免控阻挡电麻痹/地形击退/毒减速，伤害仍生效，暂停冻结计时，死亡/退场清理。风双Boss自定义路径原先跳过控制计时，已统一每帧只tick一次，并在打断时释放轮流攻击占用。不改变普通怪、宝藏守卫或试炼敌人规则。
+- 10源码专项、8最终Web PCK专项通过，新增476 Boss检查、三卡2108检查、翻译审计1098键。证据和原生截图见 [boss-control-hud.md](boss-control-hud.md)、`validation/boss-control-hud-20261116.json`。未做真实浏览器/Safari实测，既有退出资源/GL警告仍在。
+- 源码 `f9f417a` 与验证文档已推送 [PR #29](https://github.com/wyb969/Rogge/pull/29)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新192020，Site `9fc3c00f0df31449cfb304b4821bcc32aa8a0c25` / deployment `appgdep_6afae8983a948191954f9becb6a25e76` 于北京时间19:27发布成功。9导出文件字节核对、26 loader检查通过；证据 `validation/boss-control-hud-playtest-20261116.json`。
+- 本轮日志/导出在 `../boss-ui`，RAM临时路径；以GitHub提交为准。不合并master、不发布正式itch。Site更新原私有试玩，构建使用 `TMPDIR=/dev/shm`，不要清理旧文件。
+
+## 2026-11-16 DASH 中文与一屏三卡修正（当前开发）
+
+- 继续 `feature/codex-pause-menu-20261116` / PR #28，基于 `356c5e0`，版本 **20261116-184844**。DASH 场景标签此前使用缺少中文的默认字体；现在由 `dash_button.gd` 使用 UiFonts 中英复合字体，保留“冲刺”翻译、冷却/灰白风格/保存的尺寸位置透明度。
+- 根据最新反馈删除选卡页的“查看详情”和 ScrollContainer；竖屏三张横向卡片上下排列，横屏三列，按可用视口尺寸统一分配高度。卡片仅保留大图标、名称/等级、一句功能简介和主要伤害或功能数值对比，完整说明仍从 Esc / Menu 的游戏词典进入。卡片点击、重抽、战斗数值不变。
+- 新测试 `tools/smoke_three_cards.gd` 覆盖28卡、两语言、320×568 / 390×844 / 844×390 / 900×600 / 667×375、所有卡片及文案不溢出、真实点击第三张生效、DASH中文字形。既有词典/多语言/卡值测试同步新布局；最终 Web PCK 验证和截图见 `docs/validation/three-cards-20261116.json` 与 [three-cards.md](three-cards.md)。未作浏览器/Safari实测，既有退出资源/GL警告保留。
+- 本轮原始日志/导出 `../cards-fit`，仍为临时内存路径；不合并 master，不发布正式 itch。此条取代下方旧版“330高/详情按钮/选卡滚动”布局规则。源码 `16f2f32` 已推送 [PR #28](https://github.com/wyb969/Rogge/pull/28)；[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新 20261116-184844，Site `eade81849038239f6cfb54f10cd674e5329ede24`、deployment `appgdep_6afae075ae70819194c1b58240d5b927` 于北京时间18:52发布成功。9文件字节核对/26 loader检查通过，证据 `validation/three-cards-playtest-20261116.json`。根分区已满，后续构建临时目录使用 `TMPDIR=/dev/shm`，不要删除历史工作文件。
+
+## 2026-11-16 游戏词典、统一卡牌与局内暂停（当前开发）
+
+- `feature/codex-pause-menu-20261116` 基于 `cf109d9`（多语言 PR #27），版本 **20261116-182759**。新增主页 Game Codex 和局内 Esc / Menu：继续、设置、词典、回主页。词典 53 条：28 装备、9 怪物、7 首领、3 试炼、4 神兽技能、2 组合；中英随设置切换，可分类/搜索/滚动，手机列表与详情分屏。
+- `codex_data.gd` 读取 EQUIP_DEFS、CardPreview、试炼 RULES、神兽描述；详细数值使用当前构筑只读预览。`codex_page.gd` 负责响应式显示；`session_menu.gd` 独占嵌套暂停，恢复原 paused / 焦点 / 控件可见性，保留原选卡 RNG、待领休整和试炼计时。销毁旧局仅 dismiss，不恢复旧局。
+- 升级卡统一 280×330 逻辑显示像素、72×72 图标、一句简介、两项关键数值及详情按钮；完整数值在词典。CardNumbers.value_pair 共享显示格式，新装备冷却写“未装备 → …”，不误写 0 秒。战斗/升级数值不变。
+- 局内语言设置重绘现有卡牌、HUD、休整/试炼/抽奖/神兽说明，不重新抽卡/领取。控件尺寸透明度保留，位置拖动仍在主页设置；局内设置中触控战斗输入保持禁用。英文试炼长正文改滚动区，操作按钮常驻。
+- 源码7专项、最终 Web PCK 4专项通过；新增636检查、翻译审计1036键。验证、原生中英横竖屏截图和命令见 [codex-menu.md](codex-menu.md)、`validation/codex-menu-20261116.json`。未做本轮浏览器/Safari/手机实机测试，既有退出资源/GL 警告保留。
+- 工程路径 `/workspace/Rogge-electric-grid-20261116/project`，本轮构建/日志 `../codex`（临时内存目录）；源码以 GitHub 保存为准。后续优先收集词典文案、卡片可读性和手机滚动/返回反馈；不追加机制。本轮不合并正式 master、不发布正式 itch。 源码 `9ac0283` 已保存于 [PR #28](https://github.com/wyb969/Rogge/pull/28)。[私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新 20261116-182759；Site `65db5ef5944a407860722c47e3d12fdd41ac84dc`、deployment `appgdep_6afadc58e2c88191a36379885becaa61` 于北京时间 18:35 succeeded。磁盘空间不足，本轮 Site 工作副本在 `/dev/shm/Rogge-codex-site-20261116`，旧 checkout 保留未覆盖；后续先同步远端。发布证据 `validation/codex-menu-playtest-20261116.json`。
+
+## 2026-11-16 中英文第一版（当前开发）
+
+- `feature/localization-20261116` 基于 `a7f8641`（风场 PR #26），版本 **20261116-173723**。设置页 English / 简体中文，默认英文、持久保存、旧存档迁移，保留原音量/难度/按钮位置大小透明度。只在主页切换，动态局内 UI 随新局创建。
+- 集中 `locale/messages.csv`（805 键含别名）+ `L10n`/TranslationServer，覆盖卡牌/神兽/按钮/提示/试炼/天气/结算/Debug；格式化前翻译，常量在读取处翻译，不改内部 ID 或任何玩法数值。CardNumbers 原始 label 键不变。卡牌标题与等级分行、按钮省略、说明换行/外层滚动、技能装备 tooltip 限宽。
+- 4 源码专项、3 最终 Web PCK 专项通过；新多语言 382、实际卡值 464、Debug 7773 检查。集中翻译审计、原生中英横竖屏截图和复现命令见 [localization.md](localization.md)、`validation/localization-20261116.json`。未做浏览器/Safari/手机实机验证，既有退出资源/GL 警告仍记录。
+- 多语言 ICU 使原 PCK 超过试玩站 25 MiB 单文件限制；原 Site gzip loader 扩展 PCK，26 项流式恢复检查保持原导出字节。源路径仍 `/workspace/Rogge-electric-grid-20261116/project`，临时构建/日志 `../localization`。正式 master/itch 本轮不更新。后续优先收集英文措辞、长说明和真实手机触屏反馈。 源码 `14c9621` 已保存于 [PR #27](https://github.com/wyb969/Rogge/pull/27)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新至 20261116-173723，权限不变；Site source `ff5e01eed808dcb03b64e6ddfefeab559b4c1eab`，deployment `appgdep_6afad0ca46848191adb537d0fe5534f3` 于北京时间 2026-11-16 17:46 发布 succeeded。发布证据见 `validation/localization-playtest-20261116.json`。
+
+## 2026-11-16 风场拖尾重做（当前开发）
+
+- `feature/wind-trails-20261116`基于`f481f39`（PR #25），版本**20261116-170330**。用户提供Ryan GPUParticles2D风拖尾教程/截图；能读标题说明，无法读取完整视频参数，未声称逐参数复刻。4.7原生Compatibility探针明确不支持GPU粒子拖尾，因此实现Web兼容的粒子历史线带。
+- 新`wind_trails.gd`：14头粒子×64世界历史点，主风向/缓慢横波/3局部旋涡，固定60Hz中点积分+显示插值、渐细头尾/淡入淡出、共享柔边纹理。替换旧18条整形平移卷线；独立RNG/固定池/最多8步追赶，无群怪查询/新灯。
+- 风对玩家怪物的原力度与冰面、每关随机危险都不变。镜头不拖动既有历史，FX0只关视觉；暂停、休息、天气切换、退出清理。Debug仍用“阵风场景”。
+- 5源码专项、3最终Web PCK；新增113检查，含30/60/120Hz轨迹、120Hz插值、世界锚定、预算与生命周期。横/竖/灰度/原生48帧动图见[wind-trails.md](wind-trails.md)、`validation/wind-trails-20261116.json`。动图是确定步进渲染，不代表浏览器FPS；本轮未实测Safari，既有退出资源/GL警告保留。
+- 源路径仍`/workspace/Rogge-electric-grid-20261116/project`，构建/探针/原始帧在`../wind-trails`临时内存目录；持久依据为GitHub。后续重点试玩流速、密度与卷曲幅度。正式master/itch不在本轮发布范围。 源码`f7ea32e`保存于[PR #26](https://github.com/wyb969/Rogge/pull/26)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-170330，权限不变；Site source `8bd2733e6e0782169f7532e5a06089ac193b7e7f`，deployment `appgdep_6afac80eba048191b79e24361c6da139`于北京时间2026-11-16 17:08发布succeeded。证据见`validation/wind-trails-playtest-20261116.json`。
+
+## 2026-11-16 每关随机危险与电击调整（当前开发）
+
+- `feature/stage-hazards-20261116`基于`3c0fe96`（PR #24），版本**20261116-164203**。每关独立选地雷/电网/尖刺之一，独立RNG洗牌袋、关卡缓存，三关包含三种且相邻不重复；与天气解耦，页顶显示种类。Debug固定选定类型，保留移动/电网/冰面旧入口。
+- 电网旧4.5秒周期改为**0.5秒脉冲**（0.32通电/0.18间隙），初始/新地块0.75预警保留。同批去重+目标0.5秒截止，迭代传导不递归。玩家麻痹仍1秒，随后0.5秒脱离保护；怪物可持续受电，原单次伤害不变。
+- 骨架期间隐藏原本体与骑士剑，结束/死亡/换环境恢复原可见性，不覆盖染色材质；64骨架/128连线预算，重复命中刷新原槽。新增短电击0.18秒/地雷0.30秒原创SFX，单通道限流无逐怪叠音。
+- 普通怪位姿合成统一保留腾空高度，避免物理位姿覆盖渲染；怪32–42/Boss34高度。真实地雷存活伤害→腾空覆盖普通怪、恐龙、骑士、四神兽；物理击退/伤害/三秒恢复不变。
+- 11源码专项与5最终Web PCK专项，新293检查；横/竖/灰度/六Boss骨架/地雷Boss截图及命令见[stage-hazards.md](stage-hazards.md)、`validation/stage-hazards-20261116.json`。没有本轮浏览器/Safari/手机FPS或实机听音结论；既有退出资源/GL警告保留。
+- 源路径`/workspace/Rogge-electric-grid-20261116/project`、本轮原始构建日志`../hazards`仍在临时内存目录，持久依据为GitHub提交。后续试玩快速电击的区域压制、0.5秒脱离手感与音量。正式master/itch不在本轮发布范围。 源码`b57c36c`保存于[PR #25](https://github.com/wyb969/Rogge/pull/25)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-164203，权限不变；Site source `3137ecd77a2834f438e5285a02e37f1b349227db`，deployment `appgdep_6afac35b4d108191b368cb982806caae`于北京时间2026-11-16 16:48发布succeeded。证据见`validation/stage-hazards-playtest-20261116.json`。
+
+## 2026-11-16 脚底渐变与地雷腾空（当前开发）
+
+- `feature/airborne-feedback-20261116`基于`ede5163`（PR #23），版本**20261116-160724**。常驻金色定位菱形改为青蓝渐变地面圆环（非实际护盾），脚底固定、身体后层、单缓存径向纹理。
+- 地雷存活者增加0.44秒视觉腾空与0.12秒落地回弹：玩家高度42、普通怪24–34、Boss22。物理击退仍0.28秒，伤害/碰撞/保护/复活时间不变。血条跟随身体，骑士剑不分离，地面阴影随高度缩淡。
+- 起跳/落地震屏5/2.7走既有单相机mixer并遵守设置。电击、试炼锁位、结束清理还原姿态；地雷跟踪延长至视觉落地尾段。无新增粒子/灯或每怪节点。
+- 13源码专项、4最终Web PCK专项；新41检查。原生横/竖/灰度截图、机制边界和复现命令见[airborne-feedback.md](airborne-feedback.md)与`validation/airborne-feedback-20261116.json`。未做本轮浏览器/Safari/手机FPS实测，既有退出资源警告未修复。
+- 工作树`/workspace/Rogge-electric-grid-20261116/project`，构建/原始日志`../airborne`在临时内存目录；以GitHub提交为持久依据，不清理旧源码。后续试玩腾空高度与震屏手感。正式master/itch不在本轮发布范围。 源码`e9cc359`已保存至[PR #24](https://github.com/wyb969/Rogge/pull/24)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-160724，权限不变；Site source `dece4c033e10c102bf6afff882db5823d1769131`，deployment `appgdep_6afabab22f348191b8d91a49d63edbbb`于北京时间2026-11-16 16:11发布succeeded。证据见`validation/airborne-playtest-20261116.json`。
+
+## 2026-11-16 九宫格地雷（当前开发）
+
+- `feature/minefields-20261116`基于`a52e920`（PR #22），版本**20261116-143125**。所有天气可出现3×3固定世界阵列：间距96、触发16、爆炸44、起始预警1秒、踩中0.16秒后爆炸、从踩中起3秒恢复。第一关玩家24/怪物72，逐关+3/+9；初次避脚下，远离整片后重新在视野附近布置9枚。
+- 存活者碰撞式击退：玩家约36.4距离，敌人体型抗性/冰面、Boss28%力度。独立`terrain_impulse.gd`解析衰减，控制取消旧攻击；不复用试炼锁位/电麻痹。原电网0.5秒保护与4区探索保留。
+- `minefield.gd`九槽/单绘制节点/共用短音效，快照批处理和同批去重，无爆炸递归、每怪粒子/灯。红灯快闪、银灰外壳流动高光、橙白冲击环。Debug第一项，现27项分页。
+- 12源码专项、4最终Web PCK专项通过，新地雷252检查；原生横/竖/灰度/爆炸截图见[minefields.md](minefields.md)、`validation/minefields-20261116.json`。没有本轮浏览器/Safari/手机FPS实测，既有退出警告未宣称修复。
+- 源工作树仍`/workspace/Rogge-electric-grid-20261116/project`，本轮构建/日志在`../mines`（内存临时目录）；以GitHub提交为持久依据，不清理旧文件。后续试玩地雷可读性、三秒节奏、冰面击退与多环境叠加；正式master/itch未更新。 已验证源码`eb80370`保存于[PR #23](https://github.com/wyb969/Rogge/pull/23)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-143125，权限不变；Site source`3f230371f7b186921a3083434e9c43619d209ed0`，deployment`appgdep_6afaa4e8b1f08191a1246d88fee9f2db`于北京时间2026-11-16 14:38发布succeeded。PCK/解压WASM字节一致；见`validation/minefields-playtest-20261116.json`。
+
+## 2026-11-16 电网第二版（当前开发）
+
+- 继续`feature/electric-grid-20261116` / PR #22，基于`3f503cb`，版本**20261116-122338**。玩家麻痹后电网保护从2.5改为0.5秒，麻痹仍1秒；4.5秒周期/原伤害/同周期去重不变。
+- 改4个圆/方区域；按真实移动每64距离检查，仅回收距离420且屏外90余量的槽，在前方随机补充，保持世界锚定/避开玩家/完整0.75秒预警，不在脚下刷新。圆形扫掠按圆计算，非外接框。
+- `electric_zap_visual.gd`绘制4种体型小怪、恐龙/骑士/四神兽独立骨架和不规则闭合电环；几何每次触电缓存，25点环缓冲复用；64骨架/128连线/两个CanvasItem预算保持。
+- 本轮5源码专项、3最终Web PCK专项；电网1034断言，横/竖/灰度及六Boss骨架原生画廊；见[electric-grid.md](electric-grid.md)、`validation/electric-grid-v2-20261116.json`。没有浏览器/Safari/FPS实测，既有退出资源/GL警告仍保留。旧版2区域/2.5秒说明仅作历史。
+- 同一源工作树，构建/日志在`/workspace/Rogge-electric-grid-20261116/v2`（内存临时目录）；源码以GitHub为准，不清理旧文件。继续调节探索区域密度与Boss电环大小；正式master/itch未更新。 已验证源码`12fb119`已推送PR #22；[私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)更新至20261116-122338，权限不变。Site source`e07fc66c93f5ca4ef9f32f90412cc0f5c2d72d86`、deployment`appgdep_6afa861f22508191b478571f8e85645f`于北京时间2026-11-16 12:27发布succeeded。发布证据见`validation/electric-grid-v2-playtest-20261116.json`。
+
+## 2026-11-16 晴天电网（当前开发）
+
+- 分支`feature/electric-grid-20261116`基于`c07a63b`（PR #21），版本**20261116-114909**。晴天每关两条世界固定随机长矩形，4.5秒周期（预警0.75/通电1.2/断电2.55）；玩家18、怪物54起，每关+3/+9。
+- 麻痹1秒、玩家恢复后2.5秒电网保护；原Dash/护盾规则保留。42距离怪物传导采用位置快照、格桶、非递归队列、统一结算和每周期ID去重。怪物不反传玩家；取消旧蓄力后重新预警。骨架64/连线128/单批512目标，两个绘制节点。
+- 新Debug首项晴天电网，26项分页；原正常天气与其他卡牌保留。仅晴天启用，FX=0仍显示，暂停/结束/天气退出清理。详见[electric-grid.md](electric-grid.md)与验证JSON。12源码专项、最终Web PCK四项，原生横/竖/灰度；新700断言通过。无本轮浏览器/Safari/FPS实测，保留既有退出警告。
+- 由于工作盘接近满，源工作树/导入/构建经`/workspace/Rogge-electric-grid-20261116`链接放在内存目录；须以GitHub提交为持久依据，不清理历史源码或备份。后续重点试玩电网布局/危险可读性、手机密集传导流畅度与玩家脱离余量。正式master/itch未更新。 已验证源码`10463eb`保存于[PR #22](https://github.com/wyb969/Rogge/pull/22)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-114909，权限不变；Site source`9cc3ae63f5badd421cae69eb7bd52bb4cf25218c`、deployment`appgdep_6afa7e1d52788191b2968a9536f6a05b`于北京时间2026-11-16 11:53发布succeeded。原PCK/解压WASM一致，记录见`validation/electric-grid-playtest-20261116.json`。
+
+## 2026-11-16 草、卷风与冰面高光（当前开发）
+
+- 分支`fix/surface-art-20261116`基于`06f625f`（PR #20），版本**20261116-111619**。仅视觉：草图块`Rect2(0,32,32,32)`顺时针90°并同步投影，复用槽恢复其他图块方向；18×25点世界曲线阵风随机卷尾/弧度/寿命/淡出；冰面改相机位置+真实移动方向驱动的平面高光，删除重复扭曲/流动条纹。
+- 高光倾斜平滑且封顶，停下回稳；风用独立RNG与固定曲线池，形状只重生时改。原人物/怪倒影保留，无反射相机/新灯/屏幕复制。原风力、摩擦、冲刺与尖刺机制均不改。
+- 6项原生专项和3项实际最终Web PCK通过；新表现70断言涵盖真实四向输入、图块复用、世界锚定/RNG/节点预算、暂停/画质。横/竖/灰度与晴雨投影渲染检查详见[surface-art.md](surface-art.md)及`validation/surface-art-20261116.json`。没有本轮浏览器/Safari/FPS实测；既有退出警告保留。
+- 工作树/导入缓存/构建在内存临时目录，经`/workspace/Rogge-surface-art-20261116`链接访问；源代码必须以GitHub提交为准。已验证源码`fad044e`保存于[PR #21](https://github.com/wyb969/Rogge/pull/21)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-111619，权限不变。Site source`17898f0ba4b7d3c71641ddf7284eecf2f381bfc2`，deployment`appgdep_6afa76a302488191b486c75016f19399`于北京时间2026-11-16 11:21发布succeeded；原PCK/解压WASM字节一致，详见`validation/surface-art-playtest-20261116.json`；不自动合入master或正式itch。后续测试移动中高光强度与手机卷风密度。
+
+## 2026-11-16 冰面尖刺（当前开发）
+
+- 分支`feature/ice-spikes-20261116`基于`4f873f1`（PR #19），版本**20261116-102807**。冰面新增96格/10%出现率、半径22的世界固定尖刺；样本1006/10000。独立局种子+关卡哈希，探索生成/返回复原，进入点112安全区、0.8秒生效缓冲。
+- 第一关玩家12/敌人36伤害，逐关+2/+6，目标级1秒冷却；玩家原护盾/Dash无敌保留，敌方用最终环境伤害/from_status防止被动递归和玩家暴击增幅。路径扫掠检测快速穿越，>300瞬移只验落点。
+- `ice_spikes.gd`单绘制节点，128地形槽/12复用几何/512目标记录；每批一次注册表查询，按经过网格判断，非逐尖刺遍历所有怪。暂停/试炼/休息/转场/天气切换/结束处理；0天气FX仍可见。
+- Debug现有“冰面场景 · 滑行 / 尖刺”入口，仍25项分页。6项原生专项和3项最终Web PCK通过；尖刺41断言、原生横/竖/灰度见[ice-spikes.md](ice-spikes.md)及`validation/ice-spikes-20261116.json`。没有本轮浏览器/Safari/FPS结论，既有退出警告未解决。
+- 工作盘打包时用满，本次Web输出迁至内存临时目录并重新导出验证；不要清理源码/历史工作树/备份。源码`0e80537`已保存到[PR #20](https://github.com/wyb969/Rogge/pull/20)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-102807，权限不变。Site source`0100a17a581881348eb113c97518ae98d87556ed`，deployment`appgdep_6afa6baf014c8191bd8eed6af19878d4`于北京时间2026-11-16 10:34发布succeeded；原PCK/解压WASM字节一致，记录见`validation/ice-spikes-playtest-20261116.json`；不自动合入master或正式itch。后续收集密度与滑行难度反馈。
+
+## 2026-11-16 刮风与冰面（当前开发）
+
+- 分支`feature/wind-ice-20261116`基于冬季雪景`42b75c3`，版本**20261116-101336**（北京时间）。新增WIND/ICE进入六天气袋，保留已有雪天/28卡/星轨；不改伤害、生命和卡牌数值。
+- `environment_surface.gd`统一有界风速/冰面权重、最多48世界风线及玩家+16怪物倒影。玩家普通移动受最多16单位/秒风偏；冰面260加速/100减速，基础速松手约1秒停下。普通怪转向惯性，控制位移×1.3；敏捷怪起手快照×1.25（71.5距离），预警同步，不延长落地伤害。Boss只游走受轻风，锁定攻击保持。
+- Debug首屏两项刮风/冰面，自带3级扇/黑洞与练习生命；25项分页。天气FX不改变机制，冰面底色在FX=0时保留。暂停/试炼/休息/转场/结束与原玩家锁位优先。
+- 14项原生专项、4项最终实际Web PCK通过；36项环境断言与横/竖/灰度截图见[environment-surface.md](environment-surface.md)、`validation/wind-ice-20261116.json`。截图是原生Compatibility，未验证本轮浏览器/Safari群怪FPS；既有退出资源/渲染器警告未解决。
+- 待试玩调整风偏强度、升级后冰面停车距离与敏捷怪加速难度；不自动合入master或发布正式itch。已验证源码`d36a5be`保存于[PR #19](https://github.com/wyb969/Rogge/pull/19)；既有[私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-101336。Site source`edae8fc98901a34732381b3181ebfc162ca4dada`，deployment`appgdep_6afa67f443e88191bb075c35a5262c5f`于北京时间2026-11-16 10:18发布succeeded；原PCK/解压WASM字节校验一致，详见`validation/wind-ice-playtest-20261116.json`。
+
+## 2026-11-16 冬季雪景（当前开发）
+
+- 分支`feature/winter-snow-20261116`基于`3d4da7f`，版本**20261116-091750**（北京时间）。雪天天气增加冷白积雪地面/草丛覆雪、明显的世界雪花、行走左右脚印和冲刺双雪沟；保留28卡、星轨、光影与数值。
+- 地面和共享草丛材质按雪权重渐变，不改原stage tint；64雪花仍是世界坐标。新增`winter_tracks.gd`单绘制节点/128固定槽，按真实位移17/9单位采样，8秒寿命，瞬移不连线；静止/暂停/关闭天气/回主页/新局均处理。没有走路粒子或逐痕迹节点。
+- Debug首项“冬季雪景 · 脚印 / 冲刺雪痕”，23入口分页；普通游戏天气仍随机。六项原生、三项实际最终PCK通过；真实键盘/冲刺、横竖和灰度可读性已检查。见[winter-snow.md](winter-snow.md)和`validation/winter-snow-20261116.json`。
+- 已验证源码`3a5aacb`保存于[PR #18](https://github.com/wyb969/Rogge/pull/18)，后续仅文档。[既有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新到20261116-091750，所有者私有权限不变。Site source`95d1e2ccfb6be147c343cb9f52e00dd887538e02`，deployment`appgdep_6afa5ad31c508191b7df926b87952fb0`于北京时间2026-11-16 09:22发布succeeded；原PCK/解压WASM字节校验一致，发布记录见`validation/winter-playtest-20261116.json`。
+- 未做本轮托管浏览器/Safari真机或群怪帧率；退出资源警告仍记录。后续重点雪天真机流畅度和白地长期舒适性，不自动合入master或更新正式itch。
+
+## 2026-11-15 星轨连锁（当前开发）
+
+- 分支`feature/star-chain-20261115`基于`aac803f`，版本**20261116-003018**（北京时间）；保留28卡、天气光影与平衡。增加可选目标：18普通怪击杀蓄能→8秒按序触碰3星→5秒附近金币磁吸+基础经验8+2×关卡；35秒间隔，不加伤害/无敌/移速。
+- `star_chain.gd`为固定3点世界路径、扫掠有序拾取、3音符队列和HUD；吸金0.12秒最多查48/启动12枚。死亡信号已移出EnemyGroup，所以以类型/死亡标记过滤，18 ID有界去重。暂停冻结，Boss/休息/试炼清暂态；原难度与生机组合XP流程复用。
+- Debug首页“星轨连锁 · 追光 / 吸金狂欢”，+500练习生命/18枚金币、可按“重放星轨”；22入口分页。六项原生、三项实际最终Web PCK通过，原生横/竖/灰度截图已检查；详见[star-chain.md](star-chain.md)和`validation/star-chain-20261115.json`。
+- 已验证源码`76e5296`保存于[PR #17](https://github.com/wyb969/Rogge/pull/17)，后续仅文档。[既有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新到20261116-003018，所有者私有权限不变。Site source`ff137e57c442b709bca08d967a43618b1d6dcb5b`，deployment`appgdep_6af9df6623808191aade04a10eff3652`于北京时间2026-11-16 00:36发布succeeded；原PCK/解压WASM字节校验一致，发布记录见`validation/star-chain-playtest-20261115.json`。
+- 未做本轮托管浏览器/Safari/密集金币FPS或全流程平衡；既有退出资源警告保留。后续收集星轨频率/风险回报/手机可读性反馈，不自动合入master或正式itch。
+
+## 2026-11-15 天气光影（当前开发）
+
+- 分支`feature/weather-lighting-20261115`基于`7c4eb72`，版本**20261115-230137**，保留28卡和平衡。新增晴天世界坐标丁达尔光束/定向轮廓影；雨天单盏玩家灯及附近向外投影。游戏数值与天气选择/雪粒子坐标不改。
+- 新控制器`weather_lighting.gd`与shader共用太阳方向和天气权重；一个64×64纹理PointLight、32草丛影子预算，怪物投影复用64缓存槽/每0.1秒最多192检查；无实时阴影贴图。光影同天气设置渐变，0关闭，暂停/结束清理。
+- Debug首页第一项“天气光影 · 阳光 / 雨灯”，默认晴天日间，下个天气两次为雨天；21项继续分页。五项原生、三项最终实际Web PCK检查通过；原生横/竖/灰度图已检查。详见[weather-lighting.md](weather-lighting.md)和`validation/weather-lighting-20261115.json`。
+- 已验证源码`4b061d0`保存于[PR #16](https://github.com/wyb969/Rogge/pull/16)，后续仅文档。既有[试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新到20261115-230137，所有者私有权限不变。Site source`e739bcf23ffa58b62d02a7c86fafe853fa783177`，deployment`appgdep_6af9ca1ca47481919a2942cfa9236978`于2026-11-15 23:05北京时间succeeded。原PCK与解压WASM字节一致；发布记录见`validation/weather-lighting-playtest-20261115.json`。
+- 2D近似光束/轮廓影，不是真实遮挡；没有本轮托管浏览器/Safari/密集怪FPS结论，既有CLI与渲染器退出资源警告仍在。不自动合入master或发布正式itch。后续重点真机雨天负载和亮度舒适性。
+
+## 2026-11-15 武器扩展二期（当前开发）
+
+- 分支`feature/weapon-expansion-20261115`基于上一轮`a84adca`，保留数值平衡和三武器功能；版本**20261115-161616**。飞刀改独立自动瞄准；圣水伤害节拍加入青白亮环、喷涌和青色数字，原伤害/重叠机制不变。
+- 新增荆棘鞭、符文飞弹、脉冲法阵，各5级；28卡派发/预览/HUD/满级过滤/实际宝藏奖励接通。Debug首页首项新武器二期，20入口继续分页。固定8符文/12闪光/24圣水命中槽；暂停/试炼/清理沿现有API。设计/数值/命令/横竖截图见[weapon-expansion.md](weapon-expansion.md)。
+- 七项原生专项通过；实际Web PCK专项及发布记录在`validation/weapon-expansion-20261115.json`。当前可用自建Xorg dummy显示，原生横屏/竖屏截图已检查；上一节“无显示服务”只描述上一轮。托管浏览器工具仍不可用，未做本轮浏览器/Safari真机测试。CLI退出资源警告和渲染器关闭的Texture/RID警告未解决，不要误报无内存问题。
+- 源码`bb5378c`已保存到[PR #15](https://github.com/wyb969/Rogge/pull/15)，以PR #14分支为base；后续仅文档。既有[试玩地址](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新为20261115-161616，保持所有者私有权限。Site source`2589678a337ae94c53b4cfe1a9e551b91f3172a8`，deployment`appgdep_6af96b32c0e08191a5132ed367f50c7b`于2026-11-15 16:20北京时间succeeded；托管PCK/解压WASM与原导出字节一致，正常main入口未启用截图夹具。主页→Debug第一项可练习。
+- 不自动合入master、不上传itch。后续优先试玩三新卡强度、圣水攻击可读性和真机密集怪负载；勿将公式/专项断言视为通关平衡结论。
+
+## 2026-11-15 三种新武器（最新开发）
+
+- 分支`feature/three-weapons-20261115`基于平衡分支`11f2351`，保留上一轮平衡；版本**20261115-132754**。新增银翼飞刀、回旋十字刃、净化圣水（各5级），25卡完整派发/图标/数值预览/满级过滤和通用宝藏奖励。Debug首页新增三武器1级练习，19入口分页。
+- 共享控制器固定32弹体/8区域，扫掠命中、折返分段、圣水重叠不叠伤/from_status，转场清暂态新局清装备。设计/数值/命令见[relic-weapons.md](relic-weapons.md)，验证见`validation/relic-weapons-20261115.json`。6项原生专项、3项最终实际Web PCK专项通过；已通过[PR #14](https://github.com/wyb969/Rogge/pull/14)保存源码`81fac8f`，后续仅文档。未合并master或更新itch，用户本次要求的是试玩链接。
+- 试玩已更新：<https://rogge-palette-playtest-20261109.whiteber.chatgpt.site>，沿用所有者私有权限，登录当前账号。版本20261115-132754，主页→Debug第一项“三武器”。Site source`5b246033130c16c62fb48c017fe0e8b6f51a7178`、deployment`appgdep_6af943835e6481919f84dbeb5d5946a5`发布succeeded；详细版本/部署和验证边界见`validation/relic-playtest-20261115.json`。托管资源压缩解压后字节一致；线上浏览器未复测。
+- 当前没有可用显示服务/托管浏览器工具，未完成渲染截图或Safari真机试玩。不要把布局断言写成视觉检查。
+
+## 2026-11-15 战斗数值第一版（开发分支）
+
+- 基于最新master `204f7d8`，分支`balance/combat-20261115`。斧头改加法成长并提高初始伤害，枪械改线性伤害与较温和射速；普通/壮硕追击怪42/52血，坦克90血/25%减伤。怪物等级二次项降低、攻击卡与时间贡献封顶，六关独立血量系数。Boss/敌人攻击/刷怪/难度/试炼机制未调整。
+- 设计依据、具体公式、六关估算和验证命令见[combat-balance.md](combat-balance.md)，结果见`validation/combat-balance-20261115.json`。估算不等于实测通关；还需弱构筑与真机六关试玩。当前正式itch仍为20261112-230737，本轮不自动发布。
+
 ## 2026-11-12 主分支整合与 itch 发布（已完成，当前正式版）
 
 - 用户授权将最新版合入主分支并更新itch。仓库默认分支实际为`master`，没有`main`；不创建第二个主分支。远端最新开发源码为`c6171513c438842ed4eade5a7bd5595aa51b6c79`，11月10日后没有新的开发提交。通过[PR #11](https://github.com/wyb969/Rogge/pull/11)保留两边历史合入master `1367c24`，包括Cursor配色、22卡数值对比、移动/相机、脚下HUD、残影/投弹和命中反馈。原工作树与未跟踪文件保留。

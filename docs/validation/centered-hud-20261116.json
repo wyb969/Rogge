@@ -1,0 +1,38 @@
+{
+  "version": "20261116-195315",
+  "base_commit": "69d9994",
+  "final_packed_checks": [
+    {
+      "name": "smoke_codex_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 25.84,
+      "errors": [],
+      "markers": [
+        "CODEX MENU OK: 636 checks; 53 entries, bilingual content, exact card sizing, pause ownership, Esc/settings/details, no rerolls, rest/trial lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_boss_control_guard",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.44,
+      "errors": [],
+      "markers": [
+        "BOSS CONTROL GUARD OK: 476 checks; seven boss actors, visible HUD, control 3s/immunity 3s, damage retained, pause and teardown"
+      ],
+      "shutdown_warnings": []
+    }
+  ],
+  "import_export": "passed; no script errors",
+  "pck_sha256": "299b5be811235cf34476ca2ec605b93b35f4312c60fdfed1c250923952e4be08",
+  "native_capture": "English/Chinese at320x568,390x844,844x390,900x600; centered icons and restored200x30XP reviewed",
+  "limitations": [
+    "No real browser/Safari playtest",
+    "Existing resource/GL shutdown warnings remain"
+  ]
+}

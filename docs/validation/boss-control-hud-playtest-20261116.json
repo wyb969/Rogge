@@ -1,0 +1,46 @@
+{
+  "game_pr": "https://github.com/wyb969/Rogge/pull/29",
+  "game_source_commit": "f9f417a09a301a901a65a2b1bf7a95fd199b5ee4",
+  "version": "20261116-192020",
+  "exact_export_bytes": {
+    "index.apple-touch-icon.png": true,
+    "index.audio.position.worklet.js": true,
+    "index.audio.worklet.js": true,
+    "index.html": true,
+    "index.icon.png": true,
+    "index.js": true,
+    "index.pck": true,
+    "index.png": true,
+    "index.wasm": true
+  },
+  "asset_bytes": {
+    "index.pck.gz": 23175524,
+    "build-info.json": 1788,
+    "preview-loader.js": 2553,
+    "index.wasm.gz": 10052173,
+    "index.png": 21443,
+    "index.js": 279815,
+    "index.icon.png": 3209,
+    "index.html": 5479,
+    "index.audio.worklet.js": 7298,
+    "index.audio.position.worklet.js": 2973,
+    "index.apple-touch-icon.png": 11441
+  },
+  "javascript_syntax": "preview-loader.js and dist/index.js checked with node --check",
+  "loader_checks": {
+    "passed": true,
+    "checks": 26,
+    "coverage": "WASM/PCK gzip and host-decoded responses; exact bytes, MIME, query strings, unrelated requests, truncated and invalid resources"
+  },
+  "native_checks": 10,
+  "packed_checks": 8,
+  "screenshots": "Native English/Chinese compact horizontal cards and seven Boss HUD actors, landscape and portrait",
+  "hosted_browser": "not tested",
+  "safari": "not tested",
+  "audience": "existing owner-private unchanged",
+  "site_source_commit": "9fc3c00f0df31449cfb304b4821bcc32aa8a0c25",
+  "deployment_id": "appgdep_6afae8983a948191954f9becb6a25e76",
+  "status": "succeeded",
+  "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+  "published_at": "2026-11-16T11:27:38.078935+00:00"
+}

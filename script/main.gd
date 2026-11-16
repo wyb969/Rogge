@@ -20,6 +20,7 @@ var _test_mode: StringName = &""
 var _starting_run: bool = false
 var _returning_home := false
 var _fitting_render_budget: = false
+var session_menu: CanvasLayer
 
 func _ready() -> void :
 	get_viewport().size_changed.connect(_configure_render_budget)
@@ -31,12 +32,24 @@ func _ready() -> void :
 	UiFonts.ui()
 	UiFonts.ui_bold()
 	build_version_label.text = "v" + str(ProjectSettings.get_setting("application/config/version", "dev"))
-	build_version_label.tooltip_text = "打包时间 · 北京时间 UTC+8"
+	build_version_label.tooltip_text = L10n.text("打包时间 · 北京时间 UTC+8")
 	get_viewport().size_changed.connect(_layout_build_version)
 	_layout_build_version()
 	AudioManager.game_track_changed.connect(_on_game_track_changed)
 	_ensure_mobile_controls()
 	_ensure_fullscreen_toggle()
+	session_menu = preload("res://script/session_menu.gd").new()
+	session_menu.name = "SessionMenu"
+	add_child(session_menu)
+	fullscreen_toggle.menu_requested.connect(session_menu.open_menu)
+	var codex_button := Button.new()
+	codex_button.name = "CodexButton"
+	codex_button.text = "游戏词典"
+	UiFonts.apply_to_button(codex_button,20)
+	codex_button.pressed.connect(func():session_menu.open_codex("","home"))
+	var menu_box := $mainUI/Control/MenuCenter/VBoxContainer
+	menu_box.add_child(codex_button)
+	menu_box.move_child(codex_button,4)
 
 	game_end_ui.hide_result()
 
@@ -103,6 +116,7 @@ func _ensure_fullscreen_toggle() -> void:
 
 
 func show_main_menu() -> void :
+	if session_menu: session_menu.dismiss()
 	fullscreen_toggle.set_home_available(false)
 	_test_mode = &""
 	debug_page.hide()
@@ -153,6 +167,8 @@ func _on_start_button_pressed() -> void :
 func _on_setting_button_pressed() -> void :
 	_ensure_settings_page()
 	_ensure_mobile_controls()
+	settings_page.layer = 70
+	settings_page.hint_label.text=L10n.text("拖动摇杆和冲刺键   Drag stick and DASH")
 	settings_page.open_page()
 	if mobile_controls:
 		mobile_controls.begin_layout_edit()
@@ -181,6 +197,7 @@ func _dismiss_settings() -> void :
 
 func on_game_over(stat: Dictionary) -> void :
 	if _returning_home: return
+	if session_menu: session_menu.dismiss()
 	fullscreen_toggle.set_home_available(false)
 	Engine.time_scale = 1.0
 
@@ -222,6 +239,7 @@ func _on_game_end_ui_main_menu_pressed() -> void :
 
 
 func load_new_game() -> void :
+	if session_menu: session_menu.dismiss()
 	if is_instance_valid(game):
 		game.end_game()
 	for child in game_root.get_children():
@@ -262,7 +280,7 @@ func _on_game_track_changed(title: String) -> void :
 	if button == null or not debug_page.visible or not AudioManager.adventure_music.preview_mode:
 		return
 	var index: int = AudioManager.adventure_music.track_index + 1
-	button.text = "试听：%s（%d/8）· 下一首" % [title, index]
+	button.text = L10n.text("试听：%s（%d/8）· 下一首") % [L10n.text(title), index]
 
 func _on_debug_knight_pressed() -> void :
 	await _launch_run(&"knight")
@@ -283,6 +301,10 @@ func _launch_run(mode: StringName) -> void :
 	game.diagnostic_mode = str(mode) if mode != &"" else "normal"
 	start_game()
 	match mode:
+		&"arcane_weapons":
+			game.prepare_arcane_debug()
+		&"relic_weapons":
+			game.prepare_relic_debug()
 		&"hitstop":
 			game.prepare_hitstop_debug()
 		&"motion_vfx":
@@ -307,6 +329,25 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_treasure_debug_run()
 		&"lightning":
 			game.prepare_lightning_debug_run()
+		&"star_chain":
+			game.prepare_star_chain_debug()
+		&"minefield":
+			game.prepare_weather_debug()
+			game.weather.set_preview(1,0)
+			game.weather.set_hazard(0)
+			game.variety.notify(L10n.text("九宫格地雷：红灯闪烁表示危险\n踩中后爆炸击退，触发3秒后恢复\n玩家24 / 怪物72起；冲刺可避伤害"))
+		&"electric_grid":
+			game.prepare_weather_debug()
+			game.weather.set_hazard(1)
+			game.variety.notify(L10n.text("电网：每0.5秒放电，探索刷新4处圆形 / 方形区域\n麻痹1秒；恢复后0.5秒电网保护\n引怪入网，近距离传导每次脉冲只命中一次"))
+		&"wind_scene":
+			game.prepare_surface_debug(4)
+		&"ice_scene":
+			game.prepare_surface_debug(5)
+			game.weather.set_hazard(2)
+		&"winter":
+			game.prepare_weather_debug()
+			game.weather.set_preview(3, 0)
 		&"weather":
 			game.prepare_weather_debug()
 		&"variety":

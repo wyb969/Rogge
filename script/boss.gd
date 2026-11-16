@@ -42,6 +42,13 @@ var _last_charge_direction: = Vector2.RIGHT
 var charges_started: = 0
 var _hurt_area: Area2D
 var rush_feedback: Node2D
+@onready var _terrain_base_position: Vector2 = $Sprite2D.position
+var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
+var electric_stun_left := 0.0
+const CONTROL_LIMIT := 3.0
+const CONTROL_IMMUNITY := 3.0
+var control_time := 0.0
+var control_immunity_left := 0.0
 var warning_locked: = false
 var _combo_left: = 0
 var _attack_round: = 0
@@ -49,7 +56,7 @@ var _chain_warning: = false
 const LOCK_SECONDS: = 0.34
 
 func set_poison_exposure(active: bool, slow: float, tint: Color) -> void :
-	poison_slow = slow if active else 1.0
+	poison_slow = slow if active and not is_control_immune() else 1.0
 	if sprite_2d: sprite_2d.self_modulate = tint if active else Color.WHITE
 
 func apply_difficulty_health(multiplier: float) -> void :
@@ -135,20 +142,23 @@ func _setup_health_bar() -> void :
 	health_bar.scale = Vector2.ONE
 	health_bar.modulate = Color.WHITE
 
-func _process(_delta: float) -> void :
+func _process(delta: float) -> void :
 	if is_dying:
 		return
 	_sync_outline_frame_uv()
+	_tick_terrain_visual(delta,_terrain_base_position)
 
 func deals_own_contact() -> bool:
 	return true
 
 func suspend_feedback() -> void :
+	_reset_control_guard()
 	if is_instance_valid(line): line.hide()
 	if is_instance_valid(rush_feedback): rush_feedback.reset()
 
 func _physics_process(delta: float) -> void :
 	if is_dying or not is_instance_valid(player) or player.player_health <= 0 or get_tree().paused: return
+	if _tick_environment_control(delta): return
 	_contact_left = maxf(0, _contact_left - delta)
 	match charge_state:
 		ChargeState.WAIT:
@@ -157,6 +167,7 @@ func _physics_process(delta: float) -> void :
 			if not rush_timer.is_stopped():
 				var offset: = player.global_position - global_position
 				velocity = offset.normalized() * (72 if enraged() else 58) * poison_slow if offset.length() > 135 else offset.normalized().orthogonal() * 22 * poison_slow
+				if is_instance_valid(player.environment): velocity += player.environment.surface.wind_velocity(0.3)
 				move_and_collide(velocity * delta)
 			var animation: StringName = &"walk" if velocity.length_squared() > 1.0 else &"idle"
 			if animation_player.current_animation != animation or not animation_player.is_playing():
@@ -210,6 +221,7 @@ func _try_charge_sweep(before: Vector2, after: Vector2) -> void :
 		_contact_left = CONTACT_INTERVAL
 
 func start_charge_attack(chained: bool = false) -> void :
+	if electric_stun_left>0: return
 	if is_dying or not is_instance_valid(player) or player.player_health <= 0 or charge_state != ChargeState.WAIT:
 		return
 	rush_timer.stop()
@@ -436,6 +448,7 @@ func start_defeat_sequence() -> void :
 	if is_dying:
 		return
 	is_dying = true
+	_reset_control_guard()
 	if rush_feedback != null: rush_feedback.reset()
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null: feedback.reward(global_position, true)
@@ -512,3 +525,75 @@ func _add_to_effect_container(node: Node) -> void :
 		container.add_child(node)
 	else:
 		get_tree().current_scene.add_child(node)
+
+func apply_electric_stun(seconds: float) -> void:
+	if is_dying or is_control_immune() or seconds<=0: return
+	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
+	clear_terrain_impulse()
+	_cancel_controlled_attack()
+
+func _cancel_controlled_attack() -> void:
+	velocity = Vector2.ZERO
+	is_charging = false
+	_combo_left = 0
+	charge_state = ChargeState.RECOVER
+	_state_left = 0.35
+	rush_timer.stop()
+	if line != null: line.hide()
+	if rush_feedback != null: rush_feedback.clear_warning()
+	if animation_player.active: animation_player.play("idle")
+
+func _tick_electric_stun(delta: float) -> bool:
+	if electric_stun_left<=0: return false
+	electric_stun_left = maxf(0,electric_stun_left-delta)
+	velocity = Vector2.ZERO
+	return true
+
+func apply_terrain_impulse(push: Vector2) -> void:
+	if is_dying or is_control_immune(): return
+	_cancel_controlled_attack()
+	terrain_impulse.start(push*0.28,0.28,34)
+
+func is_control_immune() -> bool:
+	return control_immunity_left>0
+
+func _reset_control_guard() -> void:
+	control_time=0
+	control_immunity_left=0
+	electric_stun_left=0
+	poison_slow=1
+	clear_terrain_impulse()
+
+func _tick_environment_control(delta: float) -> bool:
+	if get_tree().paused: return true
+	var step := maxf(0,delta)
+	if is_control_immune():
+		control_immunity_left=maxf(0,control_immunity_left-step)
+		return false
+	var duration := maxf(electric_stun_left,terrain_impulse.left)
+	if duration>0 or poison_slow<1:
+		control_time+=step if poison_slow<1 else minf(step,duration)
+		if control_time>=CONTROL_LIMIT-0.000001:
+			control_time=0
+			control_immunity_left=CONTROL_IMMUNITY
+			electric_stun_left=0
+			poison_slow=1
+			clear_terrain_impulse()
+			return false
+	else:
+		control_time=0
+	var stunned := _tick_electric_stun(delta)
+	if terrain_impulse.tick(self,delta): return true
+	return stunned
+
+func _tick_terrain_visual(delta: float, base: Vector2) -> void:
+	terrain_impulse.advance_visual(delta)
+	sprite_2d.position = base+Vector2.UP*terrain_impulse.height()
+	_sync_airborne_attachments(terrain_impulse.height())
+
+func _sync_airborne_attachments(_height: float) -> void: pass
+
+func clear_terrain_impulse() -> void:
+	terrain_impulse.clear()
+	if is_instance_valid(sprite_2d): sprite_2d.position = _terrain_base_position
+	_sync_airborne_attachments(0)

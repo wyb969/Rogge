@@ -2,10 +2,12 @@ extends CanvasLayer
 
 
 signal home_requested
+signal menu_requested
 
 @onready var button: Button = %FullscreenButton
 @onready var home_button: Button = %HomeButton
 var _home_available := false
+var menu_button: Button
 
 func _ready() -> void :
 	layer = 160
@@ -13,6 +15,14 @@ func _ready() -> void :
 	visible = true
 	add_to_group("session_toolbar")
 	UiFonts.apply_to_button(home_button, 15)
+	menu_button = Button.new()
+	menu_button.name = "MenuButton"
+	menu_button.text = "菜单"
+	menu_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	$Root.add_child(menu_button)
+	UiFonts.apply_to_button(menu_button,15)
+	GamePalette.apply_neutral_button(menu_button)
+	menu_button.pressed.connect(func():menu_requested.emit())
 	home_button.pressed.connect(_request_home)
 	set_home_available(false)
 	if button == null:
@@ -23,6 +33,9 @@ func _ready() -> void :
 		if not button.pressed.is_connected(_on_pressed):
 			button.pressed.connect(_on_pressed)
 	GamePalette.apply_neutral_button(home_button)
+	button.icon=preload("res://assest/ui/toolbar_fullscreen.svg")
+	home_button.icon=preload("res://assest/ui/toolbar_home.svg")
+	menu_button.icon=preload("res://assest/ui/toolbar_menu.svg")
 	get_viewport().size_changed.connect(_refresh_label)
 	_refresh_label()
 
@@ -30,6 +43,10 @@ func set_home_available(available: bool) -> void:
 	_home_available = available
 	home_button.visible = available
 	home_button.disabled = not available
+	if menu_button:
+		menu_button.visible=available
+		menu_button.disabled=not available
+		_refresh_label()
 
 func _request_home() -> void:
 	if not _home_available: return
@@ -38,7 +55,7 @@ func _request_home() -> void:
 
 func owns_pointer(point: Vector2) -> bool:
 	if not visible: return false
-	for control in [button, home_button]:
+	for control in [button, home_button, menu_button]:
 		if control.visible and control.get_global_rect().has_point(point): return true
 	return false
 
@@ -62,20 +79,24 @@ func _is_fullscreen() -> bool:
 func _refresh_label() -> void :
 	if button == null:
 		return
-	button.text = "退出全屏" if _is_fullscreen() else "全屏"
-	var vp: = get_viewport().get_visible_rect().size
-	if vp.x < 8.0 or vp.y < 8.0:
-		return
-	var h: = clampf(vp.y * 0.055, 40.0, 52.0)
-	var w: = clampf(vp.x * 0.28, 96.0, 168.0)
-	button.offset_top = 8.0
-	button.offset_right = -10.0
-	button.offset_bottom = 8.0 + h
-	button.offset_left = -10.0 - w
-
-	# Same height, style and fixed gap: the two controls form one compact toolbar.
-	var home_width := clampf(vp.x * 0.22, 100.0, 138.0)
-	home_button.offset_top = button.offset_top
-	home_button.offset_bottom = button.offset_bottom
-	home_button.offset_right = button.offset_left - 8.0
-	home_button.offset_left = home_button.offset_right - home_width
+	button.tooltip_text = L10n.text("退出全屏") if _is_fullscreen() else L10n.text("全屏")
+	home_button.tooltip_text = L10n.text("结束当前局并返回主页")
+	menu_button.tooltip_text = L10n.text("菜单")
+	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var controls: Array=[button,home_button,menu_button]
+	var group_width: float=(128 if _home_available else 40)*ui
+	for i in controls.size():
+		var control: Button=controls[i]
+		control.text=""
+		control.expand_icon=true
+		control.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		control.vertical_icon_alignment=VERTICAL_ALIGNMENT_CENTER
+		control.add_theme_constant_override("icon_max_width",int(20*ui))
+		control.offset_top=8*ui
+		control.offset_bottom=48*ui
+		control.set_anchors_preset(Control.PRESET_CENTER_TOP)
+		control.offset_right=group_width*0.5-44*i*ui
+		control.offset_left=control.offset_right-40*ui
+		for state in ["normal","hover","pressed","disabled","focus"]:
+			var style: StyleBox=control.get_theme_stylebox(state)
+			for side in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]: style.set_content_margin(side,4*ui)

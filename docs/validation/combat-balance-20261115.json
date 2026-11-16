@@ -1,0 +1,225 @@
+{
+  "date": "2026-11-15",
+  "base": "204f7d80378b725f16b9a8b7834251273fd90c24",
+  "native_checks": [
+    {
+      "name": "smoke_combat_balance",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.5,
+      "errors": [],
+      "markers": [
+        "COMBAT BALANCE OK: six stage budgets, real card dispatch, boss estimates and extreme progression bounds"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_axe",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.09,
+      "errors": [],
+      "markers": [
+        "AXE OK: real level-five/later cards, nearest live aim, swept hits/return, no idle damage and no unowned burn/spread from either starting weapon"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.95,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 347 checks; all22 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_difficulty",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.73,
+      "errors": [],
+      "markers": [
+        "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_survival_growth",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.38,
+      "errors": [],
+      "markers": [
+        "SURVIVAL GROWTH OK: real XP/multi-level growth, HP HUD/shields, rest stacking, no duplicate/card/revive growth, fresh runs, bounded stage-three elite hits and multi-source escape window"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_archetypes",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.27,
+      "errors": [],
+      "markers": [
+        "SMOKE OK"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_arsenal_combo",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "ARSENAL COMBO OK: 25 checks; real three-card ownership, exact 3s/1s cadence, damage/shield isolation, dash coexistence, pause/lag/rest/death/reset and Debug retry"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 32 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_hitstop",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.68,
+      "errors": [],
+      "markers": [
+        "HITSTOP OK: 78 checks; real damage/white-red frames, anti-chain bounds, status/immunity/shields, death clock ownership, pause/trials, crowd pool and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "model": "medium; character levels0/4/8/12/16/20, gun ranks1..6, axe one upgrade each later stage, 60s stage time, offense cards equal character level; no crit/fist/status/combo; single gun 60% target uptime for boss estimate",
+  "stage_samples": [
+    {
+      "axe_damage": 14.0,
+      "boss_gun_only_seconds_at_60pct_uptime": 47.6190476190476,
+      "chaser_gun_hits": 2.0,
+      "chaser_hp": 44.52,
+      "gun_damage_mean": 35.0,
+      "gun_interval": 0.5,
+      "hp_multiplier": 1.06,
+      "level": 0,
+      "stage": 1
+    },
+    {
+      "axe_damage": 24.4,
+      "boss_gun_only_seconds_at_60pct_uptime": 52.1481481481482,
+      "chaser_gun_hits": 2.0,
+      "chaser_hp": 84.000478464,
+      "gun_damage_mean": 45.0,
+      "gun_interval": 0.44,
+      "hp_multiplier": 2.000011392,
+      "level": 4,
+      "stage": 2
+    },
+    {
+      "axe_damage": 37.2,
+      "boss_gun_only_seconds_at_60pct_uptime": 41.4545454545455,
+      "chaser_gun_hits": 3.0,
+      "chaser_hp": 131.429878272,
+      "gun_damage_mean": 55.0,
+      "gun_interval": 0.38,
+      "hp_multiplier": 3.129282816,
+      "level": 8,
+      "stage": 3
+    },
+    {
+      "axe_damage": 52.4,
+      "boss_gun_only_seconds_at_60pct_uptime": 34.4615384615385,
+      "chaser_gun_hits": 4.0,
+      "chaser_hp": 195.036350208,
+      "gun_damage_mean": 65.0,
+      "gun_interval": 0.32,
+      "hp_multiplier": 4.643722624,
+      "level": 12,
+      "stage": 4
+    },
+    {
+      "axe_damage": 70.0,
+      "boss_gun_only_seconds_at_60pct_uptime": 27.7333333333333,
+      "chaser_gun_hits": 4.0,
+      "chaser_hp": 277.979175936,
+      "gun_damage_mean": 75.0,
+      "gun_interval": 0.26,
+      "hp_multiplier": 6.618551808,
+      "level": 16,
+      "stage": 5
+    },
+    {
+      "axe_damage": 90.0,
+      "boss_gun_only_seconds_at_60pct_uptime": 24.156862745098,
+      "chaser_gun_hits": 5.0,
+      "chaser_hp": 383.691168,
+      "gun_damage_mean": 85.0,
+      "gun_interval": 0.22,
+      "hp_multiplier": 9.135504,
+      "level": 20,
+      "stage": 6
+    }
+  ],
+  "limitations": [
+    "Analytic hits/TTK, not measured player clear times.",
+    "No full six-stage player run or physical mobile testing.",
+    "Boss HP and timed trial balance unchanged; extreme builds can still kill rapidly."
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_combat_balance",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 0.81,
+      "errors": [],
+      "markers": [
+        "COMBAT BALANCE OK: six stage budgets, real card dispatch, boss estimates and extreme progression bounds"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.87,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 347 checks; all22 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_difficulty",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.47,
+      "errors": [],
+      "markers": [
+        "DIFFICULTY OK: real settings, all archetypes/elites/guardian/bosses/trials, scaled phases/HUD, XP collection, healing sources/previews, capped healing and frozen run snapshot"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 25 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "version": "20261115-130923",
+  "final_import_and_web_export": "passed without runtime/parse/resource errors",
+  "pck_sha256": "daa989a899987257fb4c507dc5704ec28ffe57cab665a5cae0a485bd995205db",
+  "initial_test_adjustment": "Tank archetype test previously required at least 100 HP and 40% defense; updated to new110..140 effective HP budget and 75 damage from raw100. Re-run passed."
+}

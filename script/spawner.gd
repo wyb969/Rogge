@@ -46,15 +46,15 @@ const STAGE2_BOSS_DELAY: float = 42.0
 
 
 
-const LEVEL_LINEAR: = 0.08
-const LEVEL_QUAD: = 0.008
+const LEVEL_LINEAR: = 0.10
+const LEVEL_QUAD: = 0.002
 const TIME_PER_MIN: = 0.06
-const CARD_STEP: = 0.07
+const CARD_STEP: = 0.02
 const DAMAGE_PER_LEVEL: = 0.04
 const DAMAGE_PER_MINUTE: = 0.035
 const DAMAGE_PER_CARD: = 0.015
 const DAMAGE_MULTIPLIER_CAP: = 2.4
-const STAGE_HP: Array[float] = [1.0, 1.38]
+const STAGE_HP: Array[float] = [1.0, 1.22, 1.32, 1.42, 1.52, 1.62]
 const STAGE_DMG: Array[float] = [1.0, 1.18]
 const SPAWN_INTERVAL: Array[float] = [1.05, 0.82]
 const SPAWN_INTERVAL_MIN: Array[float] = [0.7, 0.55]
@@ -186,11 +186,11 @@ func threat_damage_multiplier_for(level: int, stage_seconds: float, cards: int, 
 	return minf(growth * _stage_row(STAGE_DMG, stage_num), DAMAGE_MULTIPLIER_CAP)
 
 func _pressure(level: int, stage_seconds: float, cards: int) -> float:
-	var lv: = float(maxi(level, 0))
-	var mins: = maxf(stage_seconds, 0.0) / 60.0
+	var lv: = float(clampi(level, 0, 40))
+	var mins: = clampf(stage_seconds / 60.0, 0.0, 5.0)
 	var from_level: = 1.0 + LEVEL_LINEAR * lv + LEVEL_QUAD * lv * lv
 	var from_time: = 1.0 + TIME_PER_MIN * mins
-	var from_cards: = 1.0 + CARD_STEP * float(maxi(cards, 0))
+	var from_cards: = 1.0 + CARD_STEP * float(clampi(cards, 0, 20))
 	return from_level * from_time * from_cards
 
 func _stage_row(row: Array[float], stage_num: int) -> float:
@@ -314,6 +314,7 @@ func on_enemy_killed(dead_enemy: Node2D = null) -> void :
 	_grant_kill_shield()
 	_drop_necklace_orb(dead_enemy)
 	get_parent().variety.note_kill(dead_enemy)
+	if get_parent().star_chain != null: get_parent().star_chain.note_kill(dead_enemy)
 
 func _on_timer_timeout() -> void :
 	if _run_closed:
@@ -527,7 +528,7 @@ func _show_stage_banner(next_stage: int) -> void :
 	if boss_warning_scene == null:
 		return
 	var banner = boss_warning_scene.instantiate()
-	banner.banner_text = "STAGE %d" % next_stage
+	banner.banner_text = L10n.text("STAGE %d") % next_stage
 	banner.banner_color = Color(0.55, 0.95, 1.0, 1.0)
 	banner.flash_tint = Color(0.12, 0.34, 0.85, 1.0)
 	banner.outline_color = Color(0.04, 0.1, 0.28, 1.0)
@@ -569,12 +570,31 @@ func _ensure_stage_label() -> void :
 	label.add_theme_color_override("font_outline_color", Color(0.04, 0.04, 0.06, 1))
 	label.add_theme_constant_override("outline_size", 6)
 	_stage_label = label
+	get_viewport().size_changed.connect(_fit_stage_label)
+	_fit_stage_label()
 	_refresh_stage_label()
+
+func _fit_stage_label() -> void:
+	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var vp:=get_viewport().get_visible_rect().size
+	_stage_label.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	var top: float=preload("res://script/boss_hud_layout.gd").header_top(self)
+	_stage_label.position=Vector2(12*ui,top*ui)
+	_stage_label.size=Vector2(180*ui,30*ui)
+	_stage_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
+	_stage_label.clip_text=true
+	UiFonts.apply_to_label(_stage_label,int(16*ui),true)
+	var clock: HBoxContainer=$UI/HBoxContainer
+	clock.position=Vector2(vp.x-108*ui,(top if vp.x/ui<600 else top+40)*ui)
+	clock.size=Vector2(96*ui,30*ui)
+	clock.add_theme_constant_override("separation",0)
+	for child in clock.get_children():
+		if child is Label: UiFonts.apply_to_label(child,int(16*ui),true)
 
 func _refresh_stage_label() -> void :
 	if _stage_label == null or not is_instance_valid(_stage_label):
 		return
-	_stage_label.text = "STAGE %d" % stage
+	_stage_label.text = L10n.text("STAGE %d") % stage
 	if stage >= 2:
 		_stage_label.add_theme_color_override("font_color", Color(1.0, 0.55, 0.35, 1))
 	else:
@@ -622,7 +642,7 @@ func spawn_treasure_guardian() -> Node2D:
 	_world_root().add_child(guardian)
 	guardian.global_position = player.global_position + Vector2(-110, -35)
 	var banner = boss_warning_scene.instantiate()
-	banner.banner_text = "TREASURE GUARDIAN"
+	banner.banner_text = L10n.text("TREASURE GUARDIAN")
 	banner.banner_color = Color(1.0, 0.84, 0.3)
 	banner.flash_tint = Color(0.28, 0.18, 0.04, 1.0)
 	banner.play_alarm = false

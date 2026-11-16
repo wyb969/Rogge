@@ -89,6 +89,7 @@ func _reposition(_delta: float, weight: float = 1.0) -> void :
 	var heading: = dir * radial + dir.orthogonal() * side * (0.9 if absf(radial) < 0.65 else 0.3)
 	var speed: float = ROAM_SPEEDS[element] * (1.22 if phase == 2 else 1.0)
 	velocity = heading.normalized() * speed * poison_slow * weight
+	if is_instance_valid(player.environment): velocity += player.environment.surface.wind_velocity(0.3)
 	move_and_slide()
 	if absf(offset.x) > 2: sprite_2d.flip_h = offset.x < 0
 
@@ -98,7 +99,7 @@ func _process(delta: float) -> void :
 	if _action_label != null and (_caption_state != state or _caption_move != _move_name):
 		_caption_state = state
 		_caption_move = _move_name
-		var caption: String = ["走位", "预警 · " + _move_name, "释放 · " + _move_name, "硬直 · 反击", "二阶段"][state]
+		var caption: String = [L10n.text("走位"), L10n.text("预警 · ") + _move_name, L10n.text("释放 · ") + _move_name, L10n.text("硬直 · 反击"), L10n.text("二阶段")][state]
 		_action_label.text = caption
 	if not is_dying:
 		sprite_2d.position.y = sin(_elapsed * 2.5) * (5.0 if element == 2 else 2.0)
@@ -108,11 +109,16 @@ func _process(delta: float) -> void :
 			elif element == 1: sprite_2d.position.y -= sin(progress * PI) * 14
 			elif element == 0: sprite_2d.rotation = sin(progress * PI) * signf(dive_end.x - dive_start.x) * 0.14
 		else: sprite_2d.rotation = lerp_angle(sprite_2d.rotation, 0, minf(1, delta * 14))
+		_tick_terrain_visual(delta,sprite_2d.position)
 	queue_redraw()
 
 func _physics_process(delta: float) -> void :
 	if is_dying or not is_instance_valid(player) or player.player_health <= 0.0 or get_tree().paused:
 		return
+	if _tick_environment_control(delta): return
+	_advance_battle(delta)
+
+func _advance_battle(delta: float) -> void:
 	state_left -= delta
 	match state:
 		State.APPROACH:
@@ -170,7 +176,7 @@ func begin_attack() -> void :
 	if element != 2 and pattern_index % 3 == 1:
 		_prepare_dive(target)
 		_extra_dives = 1 if element == 1 and phase == 2 else 0
-		_move_name = ["潮涌冲锋", "雷跃突袭", "俯冲", "熔壳滚动"][element]
+		_move_name = [L10n.text("潮涌冲锋"), L10n.text("雷跃突袭"), L10n.text("俯冲"), L10n.text("熔壳滚动")][element]
 		pattern_index += 1
 		state = State.WARN
 		state_left = warning_seconds()
@@ -178,7 +184,7 @@ func begin_attack() -> void :
 		_update_attack_visual(true)
 		queue_redraw()
 		return
-	_move_name = ["水泡落点" if not alternate else "潮汐水道", "交叉落雷" if not alternate else "雷印追击", "风刃", "熔岩环" if not alternate else "火种坠落"][element]
+	_move_name = [L10n.text("水泡落点") if not alternate else L10n.text("潮汐水道"), L10n.text("交叉落雷") if not alternate else L10n.text("雷印追击"), L10n.text("风刃"), L10n.text("熔岩环") if not alternate else L10n.text("火种坠落")][element]
 	match element:
 		0:
 			if alternate:
@@ -276,7 +282,7 @@ func apply_hit(data: Dictionary) -> void :
 		_extra_dives = 0
 		state = State.PHASE
 		state_left = 1.1
-		_title.text = NAMES[element] + " / II"
+		_title.text = L10n.text(NAMES[element]) + " / II"
 		_title.add_theme_color_override("font_color", COLORS[element])
 	_update_attack_visual()
 	queue_redraw()
@@ -297,7 +303,7 @@ func _draw() -> void :
 		draw_arc(Vector2.ZERO, 62.0 + sin(_elapsed * 5) * 3, 0, TAU, 48, Color(COLORS[element], 0.6), 2.0, true)
 func _build_hud() -> void :
 	var layer: = CanvasLayer.new()
-	layer.layer = 35
+	layer.layer = 90
 	add_child(layer)
 	_hud = Control.new()
 	_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -305,7 +311,7 @@ func _build_hud() -> void :
 	health_bar.reparent(_hud, false)
 	health_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_title = Label.new()
-	_title.text = NAMES[element] + " / I"
+	_title.text = L10n.text(NAMES[element]) + " / I"
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	UiFonts.apply_to_label(_title, 18, true)
 	_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.03))
@@ -322,11 +328,20 @@ func _build_hud() -> void :
 	_layout_hud()
 
 func _layout_hud() -> void :
-	var vp: = get_viewport().get_visible_rect().size
-	var width: = minf(480, vp.x - 48)
-	_hud.position = Vector2((vp.x - width) * 0.5, vp.y - (220 if vp.y > vp.x else 92))
-	_title.size = Vector2(width, 30)
-	health_bar.position = Vector2(0, 34)
-	health_bar.size = Vector2(width, 26)
-	_action_label.position = Vector2(0, 63)
-	_action_label.size = Vector2(width, 20)
+	preload("res://script/boss_hud_layout.gd").fit(_hud,health_bar,_title,_action_label)
+
+func _cancel_controlled_attack() -> void:
+	super._cancel_controlled_attack()
+	state = State.RECOVER
+	state_left = 0.5
+	shapes.clear()
+	dive = false
+	_extra_dives = 0
+	_attack_hit = true
+	_visual_state = -1
+	if attack_visual != null: attack_visual.clear()
+	queue_redraw()
+
+func refresh_language() -> void:
+	_title.text=L10n.text(NAMES[element])+(" / II" if phase==2 else " / I")
+	_move_name=L10n.text(_move_name)

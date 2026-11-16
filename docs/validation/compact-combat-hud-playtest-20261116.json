@@ -1,0 +1,45 @@
+{
+  "game_pr": "https://github.com/wyb969/Rogge/pull/30",
+  "game_source_commit": "de24cb7d3ec724044e3f6c1497a7fd170b4c35c0",
+  "version": "20261116-194322",
+  "exact_export_bytes": {
+    "index.apple-touch-icon.png": true,
+    "index.audio.position.worklet.js": true,
+    "index.audio.worklet.js": true,
+    "index.html": true,
+    "index.icon.png": true,
+    "index.js": true,
+    "index.pck": true,
+    "index.png": true,
+    "index.wasm": true
+  },
+  "asset_bytes": {
+    "index.pck.gz": 23178718,
+    "build-info.json": 1810,
+    "preview-loader.js": 2553,
+    "index.wasm.gz": 10052173,
+    "index.png": 21443,
+    "index.js": 279815,
+    "index.icon.png": 3209,
+    "index.html": 5479,
+    "index.audio.worklet.js": 7298,
+    "index.audio.position.worklet.js": 2973,
+    "index.apple-touch-icon.png": 11441
+  },
+  "javascript_syntax": "preview-loader.js and dist/index.js checked with node --check",
+  "loader_checks": {
+    "passed": true,
+    "checks": 26,
+    "coverage": "WASM/PCK gzip and host-decoded responses; exact bytes, MIME, query strings, unrelated requests, truncated and invalid resources"
+  },
+  "packed_checks": 6,
+  "screenshots": "Native bilingual compact combat HUD,320/390px portrait and900/844px landscape; health-only wind twins",
+  "hosted_browser": "not tested",
+  "safari": "not tested",
+  "audience": "existing owner-private unchanged",
+  "site_source_commit": "4255b44ec9b8fdd3e6f4715842c69c5e27130607",
+  "deployment_id": "appgdep_6afaed5af95481918bd356613d339eeb",
+  "status": "succeeded",
+  "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+  "published_at": "2026-11-16T11:47:56.738698+00:00"
+}

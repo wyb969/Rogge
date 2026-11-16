@@ -1,0 +1,25 @@
+{
+  "game_source": "12fb119be0238518461956300850f8d1343c2310",
+  "pr": "https://github.com/wyb969/Rogge/pull/22",
+  "version": "20261116-122338",
+  "site_source": "e07fc66c93f5ca4ef9f32f90412cc0f5c2d72d86",
+  "deployment": {
+    "id": "appgdep_6afa861f22508191b478571f8e85645f",
+    "project_id": "appgprj_6af1e5b586688191b2677024b2e27023",
+    "title": "ROGGE · Color & Card Readability Playtest",
+    "version_id": "appgprj_6af1e5b586688191b2677024b2e27023~appgver_c0a72e28a1bc819192df97b848d93ddf",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://rogge-palette-playtest-20261109.whiteber.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6af1e5b586688191b2677024b2e27023",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-11-16T04:27:29.392670+00:00"
+  },
+  "audience": "owner-private unchanged",
+  "export_integrity": "All nine export files match; WASM decoded from gzip and HTML hosting loader excluded before byte comparison.",
+  "browser_verified": false,
+  "official_itch_updated": false
+}

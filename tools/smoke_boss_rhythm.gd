@@ -7,6 +7,7 @@ func expect(ok: bool, message: String) -> void :
 	if not ok: failures.append(message)
 func freeze_run() -> void :
 	game.spawner.set_process(false)
+	game.weather.stop() # Baseline attack/poison motion excludes environmental drift.
 	game.spawner.timer.stop()
 	game.spawner.get_node("Elite").stop()
 	game.player.set_physics_process(false)

@@ -20,6 +20,7 @@ var ring_tween: Tween
 var max_speed: float = 100.0
 var acceleration: float = 1000.0
 var friction: float = 600.0
+var environment: Node
 var player_health = 500.0
 var max_player_health = 500.0
 const HEALTH_PER_LEVEL: = 25.0
@@ -62,6 +63,8 @@ var left_fist_level: int = 0
 var right_fist_level: int = 0
 var hurt_lock: float = 0.0
 var arsenal_shield_active := false
+var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
+var electric_stun_left := 0.0
 var movement_locked := false
 var _movement_lock_position := Vector2.ZERO
 
@@ -106,6 +109,8 @@ const FEEDBACK_BUDGET: = preload("res://script/feedback_budget.gd")
 var _last_heal_spark_msec: = -10000
 const JUICE: = preload("res://script/combat_feedback.gd")
 var _visual_base_scale: = Vector2.ONE
+var _visual_base_position := Vector2.ZERO
+var _health_base_position := Vector2.ZERO
 var _hurt_tween: Tween
 var _hurt_punch: = 0.0
 
@@ -117,6 +122,8 @@ func _ready() -> void :
 	_stop_locomotion()
 	_critical_rng.randomize()
 	_visual_base_scale = animated_sprite_2d.scale
+	_visual_base_position = animated_sprite_2d.position
+	_health_base_position = health_bar.position
 	health_bar.init_health(player_health)
 	max_player_health = player_health
 	play_ring_tween()
@@ -434,6 +441,8 @@ func _cancel_dash() -> void :
 	_sync_dash_hurt_area()
 
 func reset_dash() -> void :
+	clear_terrain_impulse()
+	electric_stun_left = 0
 	_cancel_dash()
 	can_dasing_timer.stop()
 	can_dash = true
@@ -457,13 +466,22 @@ func _process(delta: float) -> void :
 	_tick_shield(delta)
 
 func _tick_visuals(delta: float) -> void :
+	if terrain_impulse.advance_visual(delta):
+		var feedback := JUICE.find(self)
+		if feedback != null: feedback.terrain_landing()
+	var lift := terrain_impulse.height()
+	animated_sprite_2d.position = _visual_base_position+Vector2.UP*lift
+	health_bar.position = _health_base_position+Vector2.UP*lift
+	player_ring.queue_redraw()
 	_hurt_punch = move_toward(_hurt_punch, 0, delta * 8)
 	# Constant scale and axis alignment while walking avoid crawling pixel edges.
 	# Deformation is reserved for brief dash/hit feedback, never the collider.
 	var stretch: = Vector2(1.10, 0.92) if dashing else Vector2.ONE
 	stretch += Vector2(0.1, -0.08) * _hurt_punch
+	stretch += Vector2(-0.05,0.08)*terrain_impulse.height_ratio()
+	stretch += Vector2(0.18,-0.15)*terrain_impulse.landing_strength()
 	animated_sprite_2d.scale = animated_sprite_2d.scale.lerp(_visual_base_scale * stretch, 1.0 - exp( - delta * 25))
-	animated_sprite_2d.rotation = 0.0
+	animated_sprite_2d.rotation = signf(terrain_impulse.push.x)*0.12*terrain_impulse.height_ratio()
 
 func speed_up(val: float):
 	SPEED += val
@@ -484,11 +502,22 @@ func _physics_process(delta: float) -> void :
 			_sync_dash_hurt_area()
 	if hurt_lock > 0.0:
 		hurt_lock = maxf(0.0, hurt_lock - delta)
+	var electrically_stunned := electric_stun_left > 0
+	electric_stun_left = maxf(0,electric_stun_left-delta)
 	if movement_locked:
 		global_position = _movement_lock_position
 		velocity = Vector2.ZERO
 		_stop_locomotion()
 		MobileInput.clear_move()
+		MobileInput.clear_dash()
+		return
+	if terrain_impulse.tick(self,delta):
+		_stop_locomotion()
+		MobileInput.clear_dash()
+		return
+	if electrically_stunned:
+		velocity = Vector2.ZERO
+		_stop_locomotion()
 		MobileInput.clear_dash()
 		return
 	var keys: = Input.get_vector("left", "right", "up", "down")
@@ -518,11 +547,13 @@ func _physics_process(delta: float) -> void :
 		velocity = dash_direction * DASH_SPEED
 	else:
 		max_speed = effective_move_speed()
-		acceleration = 900.0
+		var ice: float = environment.surface.ice_amount() if is_instance_valid(environment) else 0.0
+		var drift: Vector2 = environment.surface.wind_velocity() if is_instance_valid(environment) else Vector2.ZERO
+		acceleration = lerpf(900.0,260.0,ice)
 		if input_direction != Vector2.ZERO:
-			velocity = velocity.move_toward(input_direction.normalized() * max_speed, acceleration * delta)
+			velocity = velocity.move_toward(input_direction.normalized() * max_speed + drift, acceleration * delta)
 		else:
-			velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+			velocity = velocity.move_toward(drift, lerpf(friction,100.0,ice) * delta)
 
 	var before_move := global_position
 	move_and_slide()
@@ -547,7 +578,7 @@ func _emit_dash_ghosts(before: Vector2, after: Vector2) -> void:
 	_dash_ghost_distance = fposmod(_dash_ghost_distance + distance, DASH_GHOST_SPACING)
 
 func _start_dash(input_direction: Vector2) -> void :
-	if movement_locked or not can_dash or player_health <= 0: return
+	if movement_locked or electric_stun_left>0 or terrain_impulse.left>0 or not can_dash or player_health <= 0: return
 	can_dash = false
 	dashing = true
 	dash_grace_left = 0
@@ -700,3 +731,27 @@ func rest_defense_for(amount: float) -> float:
 
 func rest_cooldown_for(scale: float) -> float:
 	return clampf(cooldown_scale*scale,0.45,1.0)
+
+func apply_electric_stun(seconds: float) -> void:
+	clear_terrain_impulse()
+	if player_health<=0 or movement_locked: return
+	_cancel_dash()
+	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
+	hurt_lock = maxf(hurt_lock,electric_stun_left+0.25)
+	velocity = Vector2.ZERO
+
+func apply_terrain_impulse(push: Vector2) -> void:
+	if player_health<=0 or movement_locked or is_dash_invulnerable() or arsenal_shield_active: return
+	_cancel_dash()
+	terrain_impulse.start(push.limit_length(260),0.28,42)
+	var feedback := JUICE.find(self)
+	if feedback != null: feedback.terrain_launch(push.normalized())
+
+func clear_terrain_impulse() -> void:
+	terrain_impulse.clear()
+	if is_instance_valid(animated_sprite_2d):
+		animated_sprite_2d.position = _visual_base_position
+		animated_sprite_2d.scale = _visual_base_scale
+		animated_sprite_2d.rotation = 0
+	if is_instance_valid(health_bar): health_bar.position = _health_base_position
+	if is_instance_valid(player_ring): player_ring.queue_redraw()

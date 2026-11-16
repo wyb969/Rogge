@@ -398,3 +398,8 @@ func _play_new_slot_juice(upgrade_id: String) -> void :
 	tween.tween_property(label, "scale", Vector2.ONE, 0.24)\
 	.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(label, "modulate", Color.WHITE, 0.2)
+
+func refresh_language() -> void:
+	for id in _slots:
+		var hint:=COMBOS.hint_for(id)
+		_slots[id].icon_wrap.tooltip_text=L10n.text(EQUIP_DEFS[id].title)+("\n"+hint if not hint.is_empty() else "")

@@ -203,6 +203,7 @@ func _display_options(excluded: Array) -> void :
 		h_box_container.add_child(card)
 		card.setup(_build_card_data(data))
 		card.selected.connect(on_card_selected)
+		card.details_requested.connect(_open_card_details)
 	_refresh_reroll()
 	_fit_cards()
 
@@ -315,10 +316,27 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 	var game := _get_game()
 	var id: String = result.get("id", "")
 	result.merge(PREVIEW.build(game, id), true)
+	result.short_desc = CodexData.summary(id)
+	result.compact_stats = CodexData.compact_stats(result.rows)
 	if game != null:
 		var rank: int = PREVIEW.rank_for(game,id)
 		result.title = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title)) + L10n.text(" · %d → %d级") % [rank, rank + 1]
 	return result
+
+func _open_card_details(id: String) -> void:
+	var session := get_tree().root.find_child("SessionMenu",true,false)
+	if session: session.open_codex(id,"card")
+
+func refresh_language() -> void:
+	_refresh_reroll()
+	var game := _get_game()
+	if game == null: return
+	growth_hint.text = L10n.text("人物每升一级：生命上限 +%d，同时补充 %d") % [game.player.HEALTH_PER_LEVEL,game.player.HEALTH_PER_LEVEL]
+	# Refresh offered cards in place: do not reroll or consume draft RNG.
+	for card in h_box_container.get_children():
+		for entry in upgrade_pool:
+			if entry.id==card.upgrade_id: card.setup(_build_card_data(entry));break
+	_fit_cards()
 
 
 func _get_game() -> Node:

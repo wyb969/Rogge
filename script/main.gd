@@ -20,6 +20,7 @@ var _test_mode: StringName = &""
 var _starting_run: bool = false
 var _returning_home := false
 var _fitting_render_budget: = false
+var session_menu: CanvasLayer
 
 func _ready() -> void :
 	get_viewport().size_changed.connect(_configure_render_budget)
@@ -37,6 +38,18 @@ func _ready() -> void :
 	AudioManager.game_track_changed.connect(_on_game_track_changed)
 	_ensure_mobile_controls()
 	_ensure_fullscreen_toggle()
+	session_menu = preload("res://script/session_menu.gd").new()
+	session_menu.name = "SessionMenu"
+	add_child(session_menu)
+	fullscreen_toggle.menu_requested.connect(session_menu.open_menu)
+	var codex_button := Button.new()
+	codex_button.name = "CodexButton"
+	codex_button.text = "游戏词典"
+	UiFonts.apply_to_button(codex_button,20)
+	codex_button.pressed.connect(func():session_menu.open_codex("","home"))
+	var menu_box := $mainUI/Control/MenuCenter/VBoxContainer
+	menu_box.add_child(codex_button)
+	menu_box.move_child(codex_button,4)
 
 	game_end_ui.hide_result()
 
@@ -103,6 +116,7 @@ func _ensure_fullscreen_toggle() -> void:
 
 
 func show_main_menu() -> void :
+	if session_menu: session_menu.dismiss()
 	fullscreen_toggle.set_home_available(false)
 	_test_mode = &""
 	debug_page.hide()
@@ -153,6 +167,8 @@ func _on_start_button_pressed() -> void :
 func _on_setting_button_pressed() -> void :
 	_ensure_settings_page()
 	_ensure_mobile_controls()
+	settings_page.layer = 70
+	settings_page.hint_label.text=L10n.text("拖动摇杆和冲刺键   Drag stick and DASH")
 	settings_page.open_page()
 	if mobile_controls:
 		mobile_controls.begin_layout_edit()
@@ -181,6 +197,7 @@ func _dismiss_settings() -> void :
 
 func on_game_over(stat: Dictionary) -> void :
 	if _returning_home: return
+	if session_menu: session_menu.dismiss()
 	fullscreen_toggle.set_home_available(false)
 	Engine.time_scale = 1.0
 
@@ -222,6 +239,7 @@ func _on_game_end_ui_main_menu_pressed() -> void :
 
 
 func load_new_game() -> void :
+	if session_menu: session_menu.dismiss()
 	if is_instance_valid(game):
 		game.end_game()
 	for child in game_root.get_children():

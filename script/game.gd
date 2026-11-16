@@ -1070,3 +1070,20 @@ func prepare_surface_debug(kind: int) -> void:
 		_on_upgrade_selected("banana_fan")
 		_on_upgrade_selected("black_hole")
 	variety.notify(L10n.text("阵风会推偏普通移动") if kind==4 else L10n.text("冰面有惯性：松开后滑行，反向输入刹车\n位移 +30%；红尖刺伤玩家12 / 怪物36，每秒一次"))
+
+func refresh_language() -> void:
+	# Presentation-only refresh, including currently paused reward screens.
+	pause_menu.refresh_language()
+	level_manager.label.text=L10n.text("Level: ")+str(level_manager.level)
+	spawner._stage_label.text=L10n.text("STAGE %d")%spawner.stage
+	weather._caption_stamp=-1
+	weather._caption.text=L10n.text(weather.NAMES[weather.current_weather])+" · "+weather.time_name()+" · "+L10n.text(weather.HAZARD_NAMES[weather.hazard_kind])
+	beast_powers.refresh_language()
+	equipment_panel.refresh_language()
+	if is_instance_valid(rest_hub) and rest_hub.visible:
+		rest_hub._refresh_reward_numbers()
+		rest_hub._refresh_selection()
+	trials.refresh_language()
+	if is_instance_valid(treasure_lottery):treasure_lottery.refresh_language()
+	for boss in spawner._active_bosses:
+		if is_instance_valid(boss) and boss.has_method("refresh_language"):boss.refresh_language()

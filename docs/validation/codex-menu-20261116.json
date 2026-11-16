@@ -1,0 +1,243 @@
+{
+  "version": "20261116-182759",
+  "branch": "feature/codex-pause-menu-20261116",
+  "base": "cf109d9",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "scope": "Codex, standardized cards, nested pause/settings and language refresh; unchanged combat values",
+  "source_suites": [
+    {
+      "name": "smoke_codex_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 26.97,
+      "errors": [],
+      "markers": [
+        "CODEX MENU OK: 636 checks; 53 entries, bilingual content, exact card sizing, pause ownership, Esc/settings/details, no rerolls, rest/trial lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_localization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 12.76,
+      "errors": [],
+      "markers": [
+        "LOCALIZATION OK: 382 checks; default, live switch, persistence, migration, stats parity, all cards, four powers and three layouts"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.88,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 464 checks; all28 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_menu_layout",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.49,
+      "errors": [],
+      "markers": [
+        "MENU LAYOUT OK"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_session_toolbar",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.34,
+      "errors": [],
+      "markers": [
+        "SESSION TOOLBAR OK: 50 checks; actual GUI click, compact equipment, adjacent buttons, touch ownership, paused/active trial teardown, double-tap and result navigation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_rest_selection",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.2,
+      "errors": [],
+      "markers": [
+        "REST SELECTION OK: real boss rest, freely changing filled selections, deferred exact reward, one confirmation/advance, hidden and invalid guards, reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 6.22,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_suites": [
+    {
+      "name": "smoke_codex_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 23.7,
+      "errors": [],
+      "markers": [
+        "CODEX MENU OK: 636 checks; 53 entries, bilingual content, exact card sizing, pause ownership, Esc/settings/details, no rerolls, rest/trial lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_localization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.04,
+      "errors": [],
+      "markers": [
+        "LOCALIZATION OK: 382 checks; default, live switch, persistence, migration, stats parity, all cards, four powers and three layouts"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_palette_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.51,
+      "errors": [],
+      "markers": [
+        "PALETTE CARDS OK: 464 checks; all28 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_trials",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.12,
+      "errors": [],
+      "markers": [
+        "TRIALS OK: intro/viewport, real laser/audio, 60s deadline, retry/death/skip, 0.5s teleport slash, dash-only opening, retained powers, real progression and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 25 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 12 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "catalog_audit": {
+    "passed": true,
+    "catalog_rows": 1036,
+    "locales": [
+      "en",
+      "zh_CN"
+    ],
+    "checks": [
+      "unique keys",
+      "nonempty translations",
+      "printf placeholder parity",
+      "English has no Chinese",
+      "source Chinese display-string coverage"
+    ]
+  },
+  "import_export": {
+    "headless_import_passed": true,
+    "web_export_passed": true,
+    "script_errors": []
+  },
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "ebacdb39e49114ea89dc1b01dd26b75b68aebc7840ca631fb1c9fdfd5e7ca05d"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 28802012,
+      "sha256": "a2230e04abf659a94108a9652175a9231c10dbc4893b7351344fce00b665780b"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "screenshots": [
+    "cards-en-900.png",
+    "cards-zh_CN-390.png",
+    "codex-equipment-en-390.png",
+    "codex-equipment-en-900.png",
+    "codex-equipment-zh_CN-390.png",
+    "pause-en-390.png",
+    "trial-intro-en-390.png"
+  ],
+  "capture": "Native Godot Compatibility / llvmpipe, 900x600 and 390x844; trial also 900x500. Not browser captures.",
+  "capture_shutdown_warnings": [
+    "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+    "ERROR: Texture with GL ID of 19: leaked 1364 bytes.",
+    "ERROR: Parameter \"RenderingServer::get_singleton()\" is null.",
+    "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+    "ERROR: 1 resources still in use at exit (run with --verbose for details).",
+    "ERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit."
+  ],
+  "limitations": [
+    "No current browser, Safari or mobile hardware playtest.",
+    "Existing exit ObjectDB/resource and native renderer cleanup warnings are retained, not claimed fixed.",
+    "Catalog descriptions were checked against modules; translation audit proves coverage/format, not stylistic quality."
+  ]
+}

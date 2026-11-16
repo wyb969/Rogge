@@ -35,7 +35,7 @@ func _run() -> void :
 		for button in hub._buttons:
 			_expect( not button.disabled, "all options remain available before confirmation")
 			_expect(button.get_theme_stylebox("normal") == (hub._selected_style if button == last else hub._idle_style), "only the selected option has a solid filled button")
-	_expect(last.text.begins_with("已选") and not hub.next_button.disabled, "selection is named explicitly and enables confirmation")
+	_expect(last.text.begins_with(L10n.text("已选  /  ")) and not hub.next_button.disabled, "selection is named explicitly and enables confirmation")
 	for size in [Vector2i(390, 844), Vector2i(1000, 700)]:
 		root.size = size
 		await process_frame

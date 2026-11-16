@@ -2,10 +2,12 @@ extends CanvasLayer
 
 
 signal home_requested
+signal menu_requested
 
 @onready var button: Button = %FullscreenButton
 @onready var home_button: Button = %HomeButton
 var _home_available := false
+var menu_button: Button
 
 func _ready() -> void :
 	layer = 160
@@ -13,6 +15,14 @@ func _ready() -> void :
 	visible = true
 	add_to_group("session_toolbar")
 	UiFonts.apply_to_button(home_button, 15)
+	menu_button = Button.new()
+	menu_button.name = "MenuButton"
+	menu_button.text = "菜单"
+	menu_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	$Root.add_child(menu_button)
+	UiFonts.apply_to_button(menu_button,15)
+	GamePalette.apply_neutral_button(menu_button)
+	menu_button.pressed.connect(func():menu_requested.emit())
 	home_button.pressed.connect(_request_home)
 	set_home_available(false)
 	if button == null:
@@ -30,6 +40,9 @@ func set_home_available(available: bool) -> void:
 	_home_available = available
 	home_button.visible = available
 	home_button.disabled = not available
+	if menu_button:
+		menu_button.visible=available
+		menu_button.disabled=not available
 
 func _request_home() -> void:
 	if not _home_available: return
@@ -38,7 +51,7 @@ func _request_home() -> void:
 
 func owns_pointer(point: Vector2) -> bool:
 	if not visible: return false
-	for control in [button, home_button]:
+	for control in [button, home_button, menu_button]:
 		if control.visible and control.get_global_rect().has_point(point): return true
 	return false
 
@@ -79,3 +92,8 @@ func _refresh_label() -> void :
 	home_button.offset_bottom = button.offset_bottom
 	home_button.offset_right = button.offset_left - 8.0
 	home_button.offset_left = home_button.offset_right - home_width
+	if menu_button:
+		menu_button.offset_top=button.offset_top
+		menu_button.offset_bottom=button.offset_bottom
+		menu_button.offset_right=home_button.offset_left-8
+		menu_button.offset_left=menu_button.offset_right-clampf(vp.x*0.16,72,110)

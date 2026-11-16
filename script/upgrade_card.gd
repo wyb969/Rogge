@@ -1,13 +1,16 @@
 extends PanelContainer
 
 signal selected(upgrade_id: String)
+signal details_requested(upgrade_id: String)
 var upgrade_id: String = ""
 var hover_tween: Tween
 var _press_at := Vector2.ZERO
 var _tracking_press := false
 var _dragged := false
 
-const CARD_SIZE: = Vector2(240, 230)
+const CARD_SIZE: = Vector2(280, 330)
+var stats_label: RichTextLabel
+var details_button: Button
 
 @onready var title_label: Label = $VBoxContainer / TitleLabel
 @onready var desc_label: RichTextLabel = $VBoxContainer / DescLabel
@@ -28,6 +31,19 @@ func _ready() -> void :
 	mouse_exited.connect(_on_mouse_exited)
 
 	_configure_labels()
+	stats_label = RichTextLabel.new()
+	stats_label.bbcode_enabled = true
+	stats_label.fit_content = false
+	stats_label.scroll_active = false
+	stats_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stats_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stats_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	$VBoxContainer.add_child(stats_label)
+	details_button = Button.new()
+	details_button.text = L10n.text("查看详情")
+	details_button.pressed.connect(func():details_requested.emit(upgrade_id))
+	GamePalette.apply_neutral_button(details_button)
+	$VBoxContainer.add_child(details_button)
 
 func _configure_labels() -> void :
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -41,6 +57,7 @@ func _configure_labels() -> void :
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	desc_label.custom_minimum_size = Vector2(CARD_SIZE.x - 24.0, 0.0)
+	desc_label.fit_content = false
 	_style_description(14)
 
 	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -51,20 +68,29 @@ func setup(data: Dictionary):
 	title_label.tooltip_text = L10n.text(str(data.get("title", "")))
 	# Keep the rank comparison visible instead of truncating it after a long name.
 	title_label.text = title_label.tooltip_text.replace(" · ", "\n")
-	desc_label.text = str(data.get("rich_desc", data.get("desc", "")))
+	desc_label.text = str(data.get("short_desc",CodexData.summary(upgrade_id)))
+	stats_label.text = str(data.get("compact_stats",CodexData.compact_stats(data.get("rows",[]))))
 	icon.texture = load(data["icon"])
 	preload("res://script/visual_style.gd").style_icon(icon, upgrade_id)
-	custom_minimum_size = CARD_SIZE
-	size = CARD_SIZE
+	details_button.text = L10n.text("查看详情")
+	set_display_width(CARD_SIZE.x)
 
 func set_display_width(width: float, ui_scale: float = 1.0, compact: bool = false) -> void :
 	desc_label.custom_minimum_size.x = width - 24.0 * ui_scale
-	UiFonts.apply_to_label(title_label, int(16 * ui_scale))
-	title_label.custom_minimum_size.y = (UiFonts.ui().get_height(int(16 * ui_scale)) + title_label.get_theme_constant("line_spacing")) * 2
-	_style_description(int(14 * ui_scale))
-	icon.custom_minimum_size = Vector2.ONE * (24 if compact else 48) * ui_scale
+	UiFonts.apply_to_label(title_label, int(14 * ui_scale))
+	title_label.custom_minimum_size.y = 44*ui_scale
+	_style_description(int(12 * ui_scale))
+	desc_label.custom_minimum_size.y = 54*ui_scale
+	stats_label.custom_minimum_size = Vector2(width-24*ui_scale,64*ui_scale)
+	stats_label.add_theme_font_override("normal_font",UiFonts.ui())
+	stats_label.add_theme_font_override("bold_font",UiFonts.ui_bold())
+	stats_label.add_theme_font_size_override("normal_font_size",int(11*ui_scale))
+	stats_label.add_theme_font_size_override("bold_font_size",int(12*ui_scale))
+	details_button.custom_minimum_size.y = 32*ui_scale
+	UiFonts.apply_to_button(details_button,int(12*ui_scale))
+	icon.custom_minimum_size = Vector2.ONE * 72 * ui_scale
 	$VBoxContainer.add_theme_constant_override("separation", int(5 * ui_scale))
-	custom_minimum_size = Vector2(width, (120 if compact else CARD_SIZE.y) * ui_scale)
+	custom_minimum_size = Vector2(width, CARD_SIZE.y * ui_scale)
 	size = custom_minimum_size
 	pivot_offset = size * 0.5
 

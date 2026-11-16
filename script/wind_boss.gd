@@ -159,3 +159,7 @@ func _layout_hud() -> void :
 		_action_label.position = Vector2(0, 54 * scale_ui)
 		_action_label.size = Vector2(width, 16 * scale_ui)
 		UiFonts.apply_to_label(_action_label, int(11 * scale_ui), true)
+
+func refresh_language() -> void:
+	super.refresh_language()
+	_update_title()

@@ -345,3 +345,14 @@ func reset_effects() -> void :
 	if is_instance_valid(_reward):
 		_reward.hide()
 	_canvas.hide()
+
+func refresh_language() -> void:
+	for index in unlocked:
+		_buttons[index].tooltip_text=L10n.text(TITLES[index])+"\n"+description_for(index)+L10n.text("\n点击直接释放 / E 释放当前 / Q 键切换")
+	if is_instance_valid(_reward_box) and _pending_reward>=3:
+		var i:=_pending_reward-3
+		var labels: Array=[]
+		for child in _reward_box.get_children():
+			if child is Label: labels.append(child)
+		var values: Array=[L10n.text("神兽已击败 · 新的祝福"),L10n.text(TITLES[i]),description_for(i),L10n.text("点击左侧图标直接释放 · 图标显示冷却\n键盘：E 释放当前 · Q 切换")]
+		for n in mini(labels.size(),values.size()): labels[n].text=values[n]

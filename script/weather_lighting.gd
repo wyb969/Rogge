@@ -88,7 +88,7 @@ func projection_at(at: Vector2, allow_lamp: bool = true) -> Vector3:
 	if radial > 0.001 and offset.length_squared() > 1.0: direction = offset.normalized()
 	return Vector3(direction.x, direction.y, maxf(sun_amount, radial))
 
-func project_sprite(canvas: Node2D, sprite: Node2D, feet: Vector2, allow_lamp: bool = true) -> void:
+func project_sprite(canvas: Node2D, sprite: Node2D, feet: Vector2, allow_lamp: bool = true, art_rotation: float = 0.0) -> void:
 	if not is_instance_valid(sprite) or not sprite.is_visible_in_tree(): return
 	var projection := projection_at(feet, allow_lamp)
 	if projection.z <= 0.001: return
@@ -113,14 +113,15 @@ func project_sprite(canvas: Node2D, sprite: Node2D, feet: Vector2, allow_lamp: b
 	if flip: side *= -1.0
 	# Clamp tall bosses; contact shadow stays separately anchored beneath each actor.
 	var length := clampf(size.y * 0.95, 12.0, 70.0)
-	canvas.draw_set_transform_matrix(Transform2D(side, -direction * length / maxf(size.y, 1.0), feet))
-	canvas.draw_texture_rect_region(texture, Rect2(Vector2(-size.x * 0.5, -size.y), size), region, GamePalette.shadow(0.34 * projection.z))
+	var projection_transform := Transform2D(side, -direction * length / maxf(size.y, 1.0), feet)
+	canvas.draw_set_transform_matrix(projection_transform * Transform2D(art_rotation,Vector2(0,-size.y*0.5)))
+	canvas.draw_texture_rect_region(texture, Rect2(-size*0.5, size), region, GamePalette.shadow(0.34 * projection.z))
 	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
 
 func draw_scenery(canvas: Node2D) -> void:
 	decor_shadows_last = 0
 	for sprite in weather._background._decor_sprites:
 		if not sprite.visible: continue
-		project_sprite(canvas, sprite, sprite.global_position + Vector2(0, 9) * sprite.global_scale)
+		project_sprite(canvas, sprite, sprite.global_position + Vector2(0,16 if not is_zero_approx(sprite.rotation) else 9) * sprite.scale, true, sprite.rotation)
 		decor_shadows_last += 1
 		if decor_shadows_last >= MAX_DECOR_SHADOWS: break

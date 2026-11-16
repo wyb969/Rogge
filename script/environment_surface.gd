@@ -2,22 +2,32 @@ extends Node2D
 # Shared weather forces: one lookup per actor, no target scans or physics bodies.
 const WIND_MAX := 16.0
 const REFLECTION_LIMIT := 16
-const WIND_STREAK_LIMIT := 48
+const WIND_STREAK_LIMIT := 18
+const GUST_POINTS := 25
 var wind := Vector2.ZERO
 var ice_visual := 0.0
-var _travel := Vector2.ZERO
 var _last_clock := 0.0
+var _gusts: Array[Dictionary] = []
+var _gust_rng := RandomNumberGenerator.new()
+var _gust_live := false
+var _ice_tilt := Vector2.ZERO
 @onready var weather: Node = get_parent()
 @onready var game: Node = weather.get_parent()
 
 func _ready() -> void:
 	z_index = -35
+	_gust_rng.randomize()
+	for i in WIND_STREAK_LIMIT:
+		var points := PackedVector2Array()
+		points.resize(GUST_POINTS)
+		_gusts.append({"at":Vector2.ZERO,"angle":0.0,"phase":0.0,"age":0.0,"life":1.0,"opacity":0.0,"points":points})
 	stop()
 
 func stop() -> void:
 	wind = Vector2.ZERO
+	_gust_live = false
+	_ice_tilt = Vector2.ZERO
 	ice_visual = 0
-	_travel = Vector2.ZERO
 	_last_clock = weather.elapsed
 	hide()
 	set_process(false)
@@ -40,8 +50,11 @@ func sync() -> void:
 	var direction := Vector2.RIGHT.rotated(weather.stage * 2.399 + sin(weather.elapsed*0.04)*0.15)
 	var gust := 0.45 + 0.55 * (0.5 + 0.5*sin(weather.elapsed*0.9))
 	wind = direction * WIND_MAX * gust * weather._weights[4]
-	if weather.elapsed < _last_clock: _travel = Vector2.ZERO
-	else: _travel += wind * 5.3 * (weather.elapsed - _last_clock)
+	if weather.elapsed < _last_clock:
+		_gust_live = false
+	var dt: float = maxf(0,weather.elapsed-_last_clock)
+	_advance_gusts(dt)
+	if weather._weights[5]>0.001: _update_ice_view(dt)
 	_last_clock = weather.elapsed
 	visible = weather._weights[4] > 0.001 or ice_visual > 0.001
 	set_process(visible)
@@ -49,6 +62,50 @@ func sync() -> void:
 
 func _process(_delta: float) -> void:
 	queue_redraw()
+
+func _update_ice_view(delta: float) -> void:
+	var camera := get_viewport().get_camera_2d()
+	var center: Vector2 = camera.get_screen_center_position() if camera != null else game.player.global_position
+	var movement: Vector2 = game.player.get_real_velocity()/maxf(100,game.player.effective_move_speed())
+	_ice_tilt = _ice_tilt.lerp(movement.limit_length(1),1.0-exp(-7.0*delta))
+	weather._background.set_ice_view(center,_ice_tilt,SettingsStore.weather_intensity)
+
+func _spawn_gust(gust: Dictionary, bounds: Rect2, initial: bool = false) -> void:
+	gust.at = bounds.position+Vector2(_gust_rng.randf(),_gust_rng.randf())*bounds.size
+	gust.angle = wind.angle()+_gust_rng.randf_range(-0.18,0.18)
+	gust.phase = _gust_rng.randf_range(0,TAU)
+	gust.life = _gust_rng.randf_range(2.4,4.2)
+	gust.age = _gust_rng.randf()*gust.life if initial else 0.0
+	gust.opacity = _gust_rng.randf_range(0.22,0.42)
+	var length := _gust_rng.randf_range(46,88)
+	var radius := _gust_rng.randf_range(8,18)
+	var hand := 1.0 if _gust_rng.randf()>0.5 else -1.0
+	var bend := hand*_gust_rng.randf_range(5,16)
+	var turns := _gust_rng.randf_range(0.72,1.10)
+	var points: PackedVector2Array = gust.points
+	for i in 10:
+		var t := float(i)/9.0
+		points[i] = Vector2(t*length,pow(sin(t*PI),2)*bend)
+	for i in 15:
+		var t := float(i+1)/15.0
+		var angle := -PI*0.5+t*TAU*turns
+		var r := radius*lerpf(1.0,0.36,t)
+		points[i+10] = Vector2(length+cos(angle)*r,hand*(radius+sin(angle)*r))
+	gust.points = points
+
+func _advance_gusts(delta: float) -> void:
+	if weather._weights[4]*SettingsStore.weather_intensity <= 0.001:
+		_gust_live = false
+		return
+	var bounds: Rect2 = get_viewport().get_canvas_transform().affine_inverse()*get_viewport().get_visible_rect()
+	bounds = bounds.grow(80)
+	for gust in _gusts:
+		if not _gust_live: _spawn_gust(gust,bounds,true)
+		else:
+			gust.age += delta
+			gust.at += wind*5.3*delta
+			if gust.age >= gust.life or not bounds.grow(160).has_point(gust.at): _spawn_gust(gust,bounds)
+	_gust_live = true
 
 func _reflection(canvas: Node2D, sprite: Node2D, feet: Vector2, alpha: float) -> void:
 	if not is_instance_valid(sprite) or not sprite.is_visible_in_tree(): return
@@ -83,20 +140,10 @@ func _draw() -> void:
 			_reflection(self,lights._shadow_sprites[i],actor.global_position+Vector2(0,lights._shadow_feet[i]),0.2*ice_visual)
 	var strength: float = weather._weights[4] * SettingsStore.weather_intensity
 	if strength <= 0.001: return
-	var bounds: Rect2 = get_viewport().get_canvas_transform().affine_inverse()*get_viewport().get_visible_rect()
-	bounds = bounds.grow(40)
-	var direction := wind.normalized()
-	# Fixed world cells: camera translation never drags a gust across the ground.
-	var travel: Vector2 = _travel
-	var cell := Vector2(210,170)
-	var origin := ((bounds.position-travel)/cell).floor()
-	var columns := clampi(ceili(bounds.size.x / cell.x)+1,1,8)
-	var rows := mini(ceili(bounds.size.y / cell.y)+1,WIND_STREAK_LIMIT/columns)
-	for y in rows:
-		for x in columns:
-			var grid := origin+Vector2(x,y)
-			var seed := Vector2(fposmod(grid.x*0.618+grid.y*0.313,1),fposmod(grid.y*0.381+grid.x*0.217,1))
-			var p: Vector2 = (grid+seed)*cell+travel
-			var length := 16.0+seed.x*30
-			draw_line(p,p+direction*length,Color(GamePalette.UI_GREY_ACTIVE,0.23*strength),1.2)
-			draw_line(p+direction*length,p+direction*(length+6)+direction.orthogonal()*3,Color(GamePalette.UI_GREY_ACTIVE,0.35*strength),1)
+	for gust in _gusts:
+		var t: float = clampf(gust.age/gust.life,0,1)
+		var fade: float = smoothstep(0.0,0.18,t)*(1.0-smoothstep(0.68,1.0,t))
+		var angle: float = gust.angle+sin(gust.phase+gust.age*1.7)*0.12
+		draw_set_transform(gust.at,angle)
+		draw_polyline(gust.points,Color(GamePalette.UI_GREY_ACTIVE,gust.opacity*fade*strength),1.2,true)
+	draw_set_transform(Vector2.ZERO)

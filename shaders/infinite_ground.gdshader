@@ -25,7 +25,11 @@ uniform float environment_time = 0.0;
 uniform float vignette = 0.0;
 uniform float snow_cover = 0.0;
 uniform float ice_cover = 0.0;
+uniform vec2 ice_view_position = vec2(0.0);
+uniform vec2 ice_view_tilt = vec2(0.0);
+uniform float ice_gloss_strength = 1.0;
 uniform vec4 ice_tint : source_color;
+uniform vec4 ice_reflection_tint : source_color;
 uniform vec4 snow_tint : source_color;
 
 varying vec2 v_world;
@@ -70,9 +74,16 @@ void fragment() {
 	}
 	if (ice_cover > 0.0) {
 		float grain = hash21(floor(v_world / 4.0));
-		float seam = pow(abs(sin(v_world.x * 0.021 + sin(v_world.y*0.015)*1.2)), 48.0);
-		float shine = pow(max(0.0,sin(dot(v_world,vec2(0.014,0.009))+environment_time*0.09)),16.0);
-		vec3 ice = ice_tint.rgb * (0.8 + grain*0.035 + shine*0.12) + vec3(seam*0.08);
+		// A planar mirror's highlight depends on the observer, never a scrolling wave texture.
+		vec3 view = normalize(vec3((ice_view_position-v_world)*0.0035+ice_view_tilt*0.30,1.0));
+		vec3 light_dir = normalize(vec3(-0.48,-0.65,1.0));
+		vec3 half_vector = normalize(view+light_dir);
+		float specular = pow(max(half_vector.z,0.0),56.0);
+		// One broad sky reflection in angular space; no tiled bands or animated UV distortion.
+		vec2 sky = (view.xy-vec2(0.20,-0.12))*vec2(2.0,4.5);
+		float sky_glint = 1.0-smoothstep(0.1,1.2,dot(sky,sky));
+		vec3 ice = ice_tint.rgb*(0.76+grain*0.018);
+		ice += ice_reflection_tint.rgb*0.28*(specular+sky_glint*0.28)*ice_gloss_strength;
 		graded = mix(graded, ice, ice_cover*0.94);
 	}
 	vec3 light = clamp(ambient_light, vec3(0.0), vec3(1.0));

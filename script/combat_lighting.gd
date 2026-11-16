@@ -207,14 +207,16 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 		var offset := Vector2.ZERO
 		var weather_light: Node = game.weather.lighting
 		weather_light.project_sprite(canvas, game.player.animated_sprite_2d, game.player.global_position + Vector2(0, 17), false)
-		_halo(canvas, game.player.global_position + Vector2(0, 17) + offset, Vector2(14, 5), GamePalette.shadow(_shadow_alpha))
+		var player_lift: float = game.player.terrain_impulse.height_ratio()
+		_halo(canvas, game.player.global_position + Vector2(0, 17) + offset, Vector2(14, 5)*lerpf(1,0.65,player_lift), GamePalette.shadow(_shadow_alpha*lerpf(1,0.55,player_lift)))
 		shadows_last += 1
 		for i in _shadow_count:
 			var actor: = _shadows[i]
 			if not _visible(actor): continue
 			if actor.get_script() == ENEMY and actor.archetype == EnemyData.Archetype.DASHER and (actor.is_dashing or actor.dash_windup > 0): continue
 			weather_light.project_sprite(canvas, _shadow_sprites[i], actor.global_position + Vector2(0, _shadow_feet[i]))
-			_halo(canvas, actor.global_position + Vector2(0, _shadow_feet[i]) + offset, _shadow_sizes[i], GamePalette.shadow(_shadow_alpha))
+			var lift: float = actor.terrain_impulse.height_ratio() if "terrain_impulse" in actor else 0.0
+			_halo(canvas, actor.global_position + Vector2(0, _shadow_feet[i]) + offset, _shadow_sizes[i]*lerpf(1,0.65,lift), GamePalette.shadow(_shadow_alpha*lerpf(1,0.55,lift)))
 			shadows_last += 1
 		var flying: = 0
 		for drone in _drones:

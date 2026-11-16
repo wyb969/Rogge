@@ -46,7 +46,7 @@ func reset_run() -> void:
 func stop() -> void:
 	for reference in _pushed.values():
 		var actor = reference.get_ref()
-		if is_instance_valid(actor): actor.terrain_impulse.clear()
+		if is_instance_valid(actor): actor.clear_terrain_impulse()
 	_pushed.clear()
 	_running = false
 	_clock = 0
@@ -173,7 +173,7 @@ func _physics_process(delta: float) -> void:
 		if not due.is_empty(): _blast_batch(due)
 	for id in _pushed.keys():
 		var actor = _pushed[id].get_ref()
-		if not is_instance_valid(actor) or actor.terrain_impulse.left<=0: _pushed.erase(id)
+		if not is_instance_valid(actor) or not actor.terrain_impulse.is_active(): _pushed.erase(id)
 	queue_redraw()
 
 func _draw() -> void:

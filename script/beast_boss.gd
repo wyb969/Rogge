@@ -109,6 +109,7 @@ func _process(delta: float) -> void :
 			elif element == 1: sprite_2d.position.y -= sin(progress * PI) * 14
 			elif element == 0: sprite_2d.rotation = sin(progress * PI) * signf(dive_end.x - dive_start.x) * 0.14
 		else: sprite_2d.rotation = lerp_angle(sprite_2d.rotation, 0, minf(1, delta * 14))
+		_tick_terrain_visual(delta,sprite_2d.position)
 	queue_redraw()
 
 func _physics_process(delta: float) -> void :

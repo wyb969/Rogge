@@ -241,7 +241,8 @@ func _player_owner() -> Node:
 func _process(delta: float) -> void :
 	_hit_flash_left = maxf(0, _hit_flash_left - delta)
 	sprite_2d.self_modulate = _poison_tint * Color.WHITE.lerp(preload("res://script/visual_style.gd").HIT_FLASH, clampf(_hit_flash_left / 0.065, 0, 1))
-	if _hit_flash_left == 0: set_process(false)
+	if terrain_impulse.is_active(): _tick_airborne_visual(delta)
+	if _hit_flash_left == 0 and not terrain_impulse.is_active(): set_process(false)
 
 func is_frozen() -> bool:
 	return freeze_time > 0.0
@@ -892,7 +893,7 @@ func _apply_environment_motion(delta: float, previous_velocity: Vector2) -> void
 func apply_electric_stun(seconds: float) -> void:
 	if _death_started: return
 	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
-	terrain_impulse.clear()
+	clear_terrain_impulse()
 	_cancel_controlled_attack()
 
 func _cancel_controlled_attack() -> void:
@@ -923,9 +924,28 @@ func _tick_electric_stun(delta: float) -> bool:
 func apply_terrain_impulse(push: Vector2) -> void:
 	if _death_started: return
 	_cancel_controlled_attack()
-	terrain_impulse.start(push*crowd_control_scale()*(1.0+0.3*_surface_ice()))
+	terrain_impulse.start(push*crowd_control_scale()*(1.0+0.3*_surface_ice()),0.28,lerpf(34,24,clampf(body_scale-1,0,1)))
+	set_process(true)
 
 func _tick_environment_control(delta: float) -> bool:
 	var stunned := _tick_electric_stun(delta)
 	if terrain_impulse.tick(self,delta): return true
 	return stunned
+
+func _tick_airborne_visual(delta: float) -> void:
+	if _death_started:
+		terrain_impulse.clear()
+		set_process(false)
+		return
+	terrain_impulse.advance_visual(delta)
+	_apply_move_juice(0)
+	sprite_2d.position.y -= terrain_impulse.height()/maxf(body_scale,0.4)
+	var landing := terrain_impulse.landing_strength()
+	sprite_2d.scale *= Vector2(1+0.16*landing,1-0.14*landing)
+	sprite_2d.rotation += signf(terrain_impulse.push.x)*0.16*terrain_impulse.height_ratio()
+	queue_redraw()
+
+func clear_terrain_impulse() -> void:
+	terrain_impulse.clear()
+	if is_instance_valid(sprite_2d) and not _death_started: _apply_move_juice(0)
+	set_process(_hit_flash_left>0)

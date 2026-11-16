@@ -262,3 +262,9 @@ func _draw() -> void :
 		var color: Color = shard.color
 		color.a *= clampf(shard.left / shard.life * 1.5, 0, 1)
 		draw_line(shard.p, shard.p - shard.v.normalized() * shard.size * 2.2, color, shard.size, false)
+
+func terrain_launch(direction: Vector2) -> void:
+	camera_impulse(5.0,direction)
+
+func terrain_landing() -> void:
+	camera_impulse(2.7,Vector2.DOWN*0.45)

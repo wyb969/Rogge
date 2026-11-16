@@ -1,0 +1,246 @@
+{
+  "version": "20261116-143125",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "import_errors": [],
+  "export_errors": [],
+  "native_checks": [
+    {
+      "name": "smoke_minefield",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.15,
+      "errors": [],
+      "markers": [
+        "MINEFIELD OK: 252 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 28 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 14 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_electric_grid",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.96,
+      "errors": [],
+      "markers": [
+        "smoke_electric_grid OK 1034 assertions"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 17 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_dash_grace",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.77,
+      "errors": [],
+      "markers": [
+        "DASH GRACE OK: exact post-dash 0.5s at 30/60 FPS/slow steps, all attack routes, shields/contact, actual pause/timers, trial dodge/retry, gray rising fill, fixed touch bounds, single ready punch and run ownership"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_player_motion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.27,
+      "errors": [],
+      "markers": [
+        "PLAYER MOTION OK: 32 checks; real30/60Hz input, travel/acceleration, actual-distance gait, speed card, stop/wall/vertical/mouse, last-direction dash, lock/reset, no walking particles, clipped frames and stable collider"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_environment_surface",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.13,
+      "errors": [],
+      "markers": [
+        "ENVIRONMENT SURFACE OK: 36 checks; wind/quality isolation, actual input/coast/brake/dash, resisted 30% crowd impulses, 30/60Hz locked ice leaps, lifecycle and real Debug"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_boss_rhythm",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.33,
+      "errors": [],
+      "markers": [
+        "BOSS RHYTHM OK: tracking/visible lock/swept real hurt geometry/safe anticipation and opening, bounded two-rush phase/HUD, all guardian close-range movement/slow, frozen warnings, finite elemental travel, wind roles and phase cancellation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 11 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_knight_boss",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.8,
+      "errors": [],
+      "markers": [
+        "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.81,
+      "errors": [],
+      "markers": [
+        "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 27 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_tactical_enemies",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.68,
+      "errors": [],
+      "markers": [
+        "TACTICAL ENEMIES OK: 72 checks; real roster/AI, locked warning geometry, slash/mortar/blade damage, dash/interruptions, return-path sweep/once-only hits, fixed budgets, ranged caps, pause/cleanup and Debug isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.05,
+      "errors": [],
+      "markers": [
+        "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.97,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 7773 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_bomb_card",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.81,
+      "errors": [],
+      "markers": [
+        "BOMB CARD OK: 63 checks; real draft/upgrade/caps, area/fuse/unique hit, blast hop/force, rewards/crit, trial/Boss rules, fixed pools, pause/cleanup and Debug lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_minefield",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.31,
+      "errors": [],
+      "markers": [
+        "MINEFIELD OK: 252 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 33 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 15 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_electric_grid",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.5,
+      "errors": [],
+      "markers": [
+        "smoke_electric_grid OK 1034 assertions"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_boss_rhythm",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.15,
+      "errors": [],
+      "markers": [
+        "BOSS RHYTHM OK: tracking/visible lock/swept real hurt geometry/safe anticipation and opening, bounded two-rush phase/HUD, all guardian close-range movement/slow, frozen warnings, finite elemental travel, wind roles and phase cancellation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.05,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 7773 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "pck_sha256": "372a11076ea7628edf715cfb75a8514d97472125c26907f963fbf342fcb6eef3",
+  "screenshots": [
+    "docs/screenshots/minefields-20261116/mine-armed-900x600-gray.jpg",
+    "docs/screenshots/minefields-20261116/mine-armed-900x600.jpg",
+    "docs/screenshots/minefields-20261116/mine-armed-390x844-gray.jpg",
+    "docs/screenshots/minefields-20261116/mine-armed-390x844.jpg",
+    "docs/screenshots/minefields-20261116/mine-blast-900x600-gray.jpg",
+    "docs/screenshots/minefields-20261116/mine-blast-900x600.jpg"
+  ],
+  "native_capture_log": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org\nWARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.\n     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)\nOpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)\n\nERROR: Texture with GL ID of 19: leaked 1364 bytes.\n   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)\nERROR: Parameter \"RenderingServer::get_singleton()\" is null.\n   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)\nWARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2535)\nERROR: 4 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)\nERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit.\n",
+  "browser_verification": "Not run. No Safari or real-device FPS claim.",
+  "resolved_harness_issues": [
+    "Dynamic call used untyped Array instead of Array[int].",
+    "Radius-negative target initially stepped on the neighboring mine; moved to the safe interstice."
+  ]
+}

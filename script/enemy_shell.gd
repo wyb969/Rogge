@@ -80,6 +80,7 @@ const MAX_BURN_STACKS: = 10
 const BURN_SPREAD_RADIUS: = 78.0
 
 
+var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
 var electric_stun_left := 0.0
 var freeze_time: float = 0.0
 var freeze_slow: float = 0.5
@@ -338,7 +339,7 @@ func _physics_process(delta: float) -> void :
 	_update_statuses(delta)
 	if _death_started:
 		return
-	if _tick_electric_stun(delta): return
+	if _tick_environment_control(delta): return
 	contact_timer = maxf(0.0, contact_timer - delta)
 	var recovering: = archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0
 
@@ -891,6 +892,10 @@ func _apply_environment_motion(delta: float, previous_velocity: Vector2) -> void
 func apply_electric_stun(seconds: float) -> void:
 	if _death_started: return
 	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
+	terrain_impulse.clear()
+	_cancel_controlled_attack()
+
+func _cancel_controlled_attack() -> void:
 	_finish_dash()
 	shot_windup = 0
 	slam_windup = 0
@@ -914,3 +919,13 @@ func _tick_electric_stun(delta: float) -> bool:
 	electric_stun_left = maxf(0,electric_stun_left-delta)
 	velocity = Vector2.ZERO
 	return true
+
+func apply_terrain_impulse(push: Vector2) -> void:
+	if _death_started: return
+	_cancel_controlled_attack()
+	terrain_impulse.start(push*crowd_control_scale()*(1.0+0.3*_surface_ice()))
+
+func _tick_environment_control(delta: float) -> bool:
+	var stunned := _tick_electric_stun(delta)
+	if terrain_impulse.tick(self,delta): return true
+	return stunned

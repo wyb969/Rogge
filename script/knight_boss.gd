@@ -87,7 +87,7 @@ func _process(delta: float) -> void :
 func _physics_process(delta: float) -> void :
 	if is_dying or not is_instance_valid(player) or player.player_health <= 0:
 		return
-	if _tick_electric_stun(delta): return
+	if _tick_environment_control(delta): return
 	state_left -= delta
 	match attack_state:
 		AttackState.APPROACH:
@@ -268,8 +268,8 @@ func _layout_boss_hud() -> void :
 	health_bar.position = Vector2(0, 32)
 	health_bar.size = Vector2(width, 26)
 
-func apply_electric_stun(seconds: float) -> void:
-	super.apply_electric_stun(seconds)
+func _cancel_controlled_attack() -> void:
+	super._cancel_controlled_attack()
 	attack_state = AttackState.RECOVER
 	state_left = 0.4
 	state_duration = 0.4

@@ -313,6 +313,10 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_lightning_debug_run()
 		&"star_chain":
 			game.prepare_star_chain_debug()
+		&"minefield":
+			game.prepare_weather_debug()
+			game.weather.set_preview(1,0)
+			game.variety.notify("九宫格地雷：红灯闪烁表示危险\n踩中后爆炸击退，触发3秒后恢复\n玩家24 / 怪物72起；冲刺可避伤害")
 		&"electric_grid":
 			game.prepare_weather_debug()
 			game.variety.notify("晴天电网：探索刷新4处圆形 / 方形区域\n麻痹1秒；恢复后0.5秒电网保护\n引怪入网，近距离传导每周期只命中一次")

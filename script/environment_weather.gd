@@ -22,6 +22,7 @@ var winter: Node2D
 var surface: Node2D
 var spikes: Node2D
 var electric_grid: Node2D
+var minefield: Node2D
 var cloud_strength: = 0.0
 var rain_count: = 0
 var snow_count: = 0
@@ -109,11 +110,15 @@ func _ready() -> void :
 	electric_grid = preload("res://script/electric_grid.gd").new()
 	electric_grid.name = "ElectricGrid"
 	add_child(electric_grid)
+	minefield = preload("res://script/minefield.gd").new()
+	minefield.name = "Minefield"
+	add_child(minefield)
 	stop()
 
 func begin_run() -> void :
 	spikes.reset_run()
 	electric_grid.reset_run()
+	minefield.reset_run()
 	winter.clear()
 	winter.stamped = 0
 	_stage_profiles.clear()
@@ -174,6 +179,7 @@ func stop() -> void :
 	if surface != null: surface.stop()
 	if spikes != null: spikes.stop()
 	if electric_grid != null: electric_grid.stop()
+	if minefield != null: minefield.stop()
 	_background.set_ice_cover(0)
 	_background.set_snow_cover(0)
 	rain_count = 0

@@ -42,6 +42,7 @@ var _last_charge_direction: = Vector2.RIGHT
 var charges_started: = 0
 var _hurt_area: Area2D
 var rush_feedback: Node2D
+var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
 var electric_stun_left := 0.0
 var warning_locked: = false
 var _combo_left: = 0
@@ -150,7 +151,7 @@ func suspend_feedback() -> void :
 
 func _physics_process(delta: float) -> void :
 	if is_dying or not is_instance_valid(player) or player.player_health <= 0 or get_tree().paused: return
-	if _tick_electric_stun(delta): return
+	if _tick_environment_control(delta): return
 	_contact_left = maxf(0, _contact_left - delta)
 	match charge_state:
 		ChargeState.WAIT:
@@ -520,6 +521,10 @@ func _add_to_effect_container(node: Node) -> void :
 func apply_electric_stun(seconds: float) -> void:
 	if is_dying: return
 	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
+	terrain_impulse.clear()
+	_cancel_controlled_attack()
+
+func _cancel_controlled_attack() -> void:
 	velocity = Vector2.ZERO
 	is_charging = false
 	_combo_left = 0
@@ -535,3 +540,13 @@ func _tick_electric_stun(delta: float) -> bool:
 	electric_stun_left = maxf(0,electric_stun_left-delta)
 	velocity = Vector2.ZERO
 	return true
+
+func apply_terrain_impulse(push: Vector2) -> void:
+	if is_dying: return
+	_cancel_controlled_attack()
+	terrain_impulse.start(push*0.28)
+
+func _tick_environment_control(delta: float) -> bool:
+	var stunned := _tick_electric_stun(delta)
+	if terrain_impulse.tick(self,delta): return true
+	return stunned

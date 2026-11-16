@@ -5,7 +5,7 @@
 - 分支`fix/surface-art-20261116`基于`06f625f`（PR #20），版本**20261116-111619**。仅视觉：草图块`Rect2(0,32,32,32)`顺时针90°并同步投影，复用槽恢复其他图块方向；18×25点世界曲线阵风随机卷尾/弧度/寿命/淡出；冰面改相机位置+真实移动方向驱动的平面高光，删除重复扭曲/流动条纹。
 - 高光倾斜平滑且封顶，停下回稳；风用独立RNG与固定曲线池，形状只重生时改。原人物/怪倒影保留，无反射相机/新灯/屏幕复制。原风力、摩擦、冲刺与尖刺机制均不改。
 - 6项原生专项和3项实际最终Web PCK通过；新表现70断言涵盖真实四向输入、图块复用、世界锚定/RNG/节点预算、暂停/画质。横/竖/灰度与晴雨投影渲染检查详见[surface-art.md](surface-art.md)及`validation/surface-art-20261116.json`。没有本轮浏览器/Safari/FPS实测；既有退出警告保留。
-- 工作树/导入缓存/构建在内存临时目录，经`/workspace/Rogge-surface-art-20261116`链接访问；源代码必须以GitHub提交为准。源码PR及私有试玩发布待最终记录；不自动合入master或正式itch。后续测试移动中高光强度与手机卷风密度。
+- 工作树/导入缓存/构建在内存临时目录，经`/workspace/Rogge-surface-art-20261116`链接访问；源代码必须以GitHub提交为准。已验证源码`fad044e`保存于[PR #21](https://github.com/wyb969/Rogge/pull/21)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-111619，权限不变。Site source`17898f0ba4b7d3c71641ddf7284eecf2f381bfc2`，deployment`appgdep_6afa76a302488191b486c75016f19399`于北京时间2026-11-16 11:21发布succeeded；原PCK/解压WASM字节一致，详见`validation/surface-art-playtest-20261116.json`；不自动合入master或正式itch。后续测试移动中高光强度与手机卷风密度。
 
 ## 2026-11-16 冰面尖刺（当前开发）
 

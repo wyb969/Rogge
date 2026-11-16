@@ -141,10 +141,10 @@ func _run() -> void:
 	spikes._physics_process(1)
 	expect(not spikes._running and spikes._contacts.is_empty(),"rest clears terrain contact state")
 	g.spawner._rest_open = false
-	g.weather.set_preview(0,0)
+	g.weather.set_hazard(0)
 	spikes._physics_process(1)
-	expect(not spikes.visible,"other weather removes harmful spikes")
-	g.weather.set_preview(5,0)
+	expect(not spikes.visible,"other hazard removes harmful spikes")
+	g.weather.set_hazard(2)
 	spikes._physics_process(0.016)
 	expect(spikes.point_for(first)==at,"switching back preserves the stage layout")
 	g.spawner._transitioning = true

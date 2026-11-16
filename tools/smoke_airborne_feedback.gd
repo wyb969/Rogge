@@ -102,7 +102,7 @@ func run() -> void:
 		boss.global_position = ground+Vector2(-300,0)
 		boss.apply_terrain_impulse(Vector2.RIGHT*360)
 		boss._process(0.22)
-		expect(is_equal_approx(boss.terrain_impulse.height(),22) and boss.sprite_2d.position.y<-19,"boss body visibly rises: "+path)
+		expect(is_equal_approx(boss.terrain_impulse.height(),34) and boss.sprite_2d.position.y<-19,"boss body visibly rises: "+path)
 		if path=="knight_boss":
 			expect(is_equal_approx(boss._sword.position.y-boss.sprite_2d.position.y,16),"knight sword stays attached while airborne")
 		boss.clear_terrain_impulse()

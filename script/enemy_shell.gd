@@ -638,6 +638,11 @@ func _apply_move_juice(delta: float) -> void :
 			sprite_2d.rotation = 0
 
 	sprite_2d.position.y -= blast_jump_height() / maxf(body_scale, 0.4)
+	# Compose in both physics and render poses; physics must not erase airborne Z.
+	sprite_2d.position.y -= terrain_impulse.height()/maxf(body_scale,0.4)
+	var landing := terrain_impulse.landing_strength()
+	sprite_2d.scale *= Vector2(1+0.16*landing,1-0.14*landing)
+	sprite_2d.rotation += signf(terrain_impulse.push.x)*0.16*terrain_impulse.height_ratio()
 
 func _face(dir: Vector2, prefer_velocity: bool = true) -> void :
 	if sprite_2d == null:
@@ -924,7 +929,7 @@ func _tick_electric_stun(delta: float) -> bool:
 func apply_terrain_impulse(push: Vector2) -> void:
 	if _death_started: return
 	_cancel_controlled_attack()
-	terrain_impulse.start(push*crowd_control_scale()*(1.0+0.3*_surface_ice()),0.28,lerpf(34,24,clampf(body_scale-1,0,1)))
+	terrain_impulse.start(push*crowd_control_scale()*(1.0+0.3*_surface_ice()),0.28,lerpf(42,32,clampf(body_scale-1,0,1)))
 	set_process(true)
 
 func _tick_environment_control(delta: float) -> bool:
@@ -939,10 +944,7 @@ func _tick_airborne_visual(delta: float) -> void:
 		return
 	terrain_impulse.advance_visual(delta)
 	_apply_move_juice(0)
-	sprite_2d.position.y -= terrain_impulse.height()/maxf(body_scale,0.4)
-	var landing := terrain_impulse.landing_strength()
-	sprite_2d.scale *= Vector2(1+0.16*landing,1-0.14*landing)
-	sprite_2d.rotation += signf(terrain_impulse.push.x)*0.16*terrain_impulse.height_ratio()
+
 	queue_redraw()
 
 func clear_terrain_impulse() -> void:

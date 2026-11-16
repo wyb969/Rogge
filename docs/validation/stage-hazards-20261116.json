@@ -1,0 +1,264 @@
+{
+  "version": "20261116-164203",
+  "source_checks": [
+    {
+      "name": "smoke_electric_grid",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.24,
+      "errors": [],
+      "markers": [
+        "smoke_electric_grid OK 1034 assertions"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_minefield",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.77,
+      "errors": [],
+      "markers": [
+        "MINEFIELD OK: 252 checks"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_ice_spikes",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.68,
+      "errors": [],
+      "markers": [
+        "ICE SPIKES OK: 41 checks; density/stable regeneration/safe spawn/pools, actual damage/cooldown/dash/shield, swept player and enemy contacts, death pruning, FX and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_airborne_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.58,
+      "errors": [],
+      "markers": [
+        "AIRBORNE FEEDBACK OK: 41 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_stage_hazards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.68,
+      "errors": [],
+      "markers": [
+        "STAGE HAZARDS OK: 293 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 15 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.86,
+      "errors": [],
+      "markers": [
+        "WEATHER OK: legacy preset/settings/touch/Back, per-stage cached nonrepeating weather, independent RNG, continuous paused-safe solar cycle, bounded rain/snow crossfades, protected combat colors/layers, shared atlases and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_environment_surface",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.03,
+      "errors": [],
+      "markers": [
+        "ENVIRONMENT SURFACE OK: 36 checks; wind/quality isolation, actual input/coast/brake/dash, resisted 30% crowd impulses, 30/60Hz locked ice leaps, lifecycle and real Debug"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_knight_boss",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.89,
+      "errors": [],
+      "markers": [
+        "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.64,
+      "errors": [],
+      "markers": [
+        "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.14,
+      "errors": [],
+      "markers": [
+        "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_debug_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.89,
+      "errors": [],
+      "markers": [
+        "DEBUG MENU OK: 7773 assertions; seven viewport sizes plus DPR 2/3 portrait/landscape, all pages, touch targets, fixed footer, diagnostics, launch/retry/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_stage_hazards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "STAGE HAZARDS OK: 293 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 102 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 14 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_electric_grid",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.5,
+      "errors": [],
+      "markers": [
+        "smoke_electric_grid OK 1034 assertions"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_minefield",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "MINEFIELD OK: 252 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ice_spikes",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "ICE SPIKES OK: 41 checks; density/stable regeneration/safe spawn/pools, actual damage/cooldown/dash/shield, swept player and enemy contacts, death pruning, FX and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_airborne_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "AIRBORNE FEEDBACK OK: 41 checks"
+      ],
+      "shutdown_warnings": []
+    }
+  ],
+  "build": {
+    "final-import": "passed; no errors/warnings",
+    "export": "passed; no errors/warnings"
+  },
+  "pck_sha256": "a160077e821e53591af5468b2188886d31096b4be48d422a939b01d5064e1ae3",
+  "audio": {
+    "electric": {
+      "seconds": 0.18,
+      "channels": 1,
+      "sample_rate": 22050,
+      "peak": 0.52978515625,
+      "sha256": "353fd370450ab56575c795f8fc5a37cd4190776fb1844154fece090cf9e7cbf4"
+    },
+    "mine": {
+      "seconds": 0.3,
+      "channels": 1,
+      "sample_rate": 22050,
+      "peak": 0.73822021484375,
+      "sha256": "440fdfdad4d816c57e0f7cf1350a95dd7845886193a92b5480ef86420a8ba8c8"
+    }
+  },
+  "captures": [
+    "zones-900x600-gray.png",
+    "zones-900x600.png",
+    "zones-390x844-gray.png",
+    "zones-390x844.png",
+    "boss-skeletons-900x600.png",
+    "airborne-ground-900x600.png",
+    "airborne-ground-390x844.png",
+    "airborne-apex-900x600.png",
+    "airborne-apex-390x844.png",
+    "airborne-landing-900x600.png",
+    "airborne-boss-apex-900x600-gray.png",
+    "airborne-boss-apex-900x600.png"
+  ],
+  "native_capture_logs": {
+    "capture-electric.log": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org\nWARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.\n     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)\nOpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)\n\nERROR: Texture with GL ID of 19: leaked 1364 bytes.\n   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)\nERROR: Parameter \"RenderingServer::get_singleton()\" is null.\n   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)\nERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit.\n",
+    "capture-mine.log": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org\nWARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.\n     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)\nOpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)\n\nERROR: Texture with GL ID of 19: leaked 1364 bytes.\n   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)\nERROR: Parameter \"RenderingServer::get_singleton()\" is null.\n   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)\nWARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2535)\nERROR: 2 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)\nERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit.\n"
+  },
+  "browser_safari_phone_fps": "not tested this turn",
+  "sound_listening": "not tested on real speakers; Dummy driver routing + offline waveform validation",
+  "harness_corrections": [
+    "New fixture missed EnemyGroup membership; corrected; 293 checks pass.",
+    "Mistyped smoke_debug_ui corrected to existing smoke_debug_menu; 7773 assertions pass."
+  ]
+}

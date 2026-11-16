@@ -15,6 +15,7 @@ func _ready() -> void:
 	g.variety.set_process(false)
 	g.meteors.set_process(false)
 	g.weather._preview.hide()
+	g.weather._update_environment()
 	g.variety._notice.hide()
 	g.variety._notice_left = 0
 	g.combat_feedback.set_process(false)
@@ -58,6 +59,34 @@ func _ready() -> void:
 	actor.set_process(false)
 	field._clock += 0.28
 	await capture("landing",Vector2i(900,600))
+	# Real mine detonation under surviving Bosses, captured at the airborne apex.
+	actor.queue_free()
+	var bosses: Array[Node] = []
+	for i in 2:
+		var boss = load("res://scenes/"+(["knight_boss","beast_boss"][i])+".tscn").instantiate()
+		boss.set_player(g.player)
+		boss.add_to_group("EnemyGroup")
+		g.add_child(boss)
+		boss.boss_current_health = 10000
+		boss.global_position = field.mines[i*2].at-field.FOOT
+		boss.set_process(false)
+		boss.set_physics_process(false)
+		boss.rush_timer.stop()
+		boss.suspend_feedback()
+		bosses.append(boss)
+	field._snapshot()
+	selected.assign([0,2])
+	field._blast_batch(selected)
+	for boss in bosses:
+		boss._physics_process(0.14)
+		boss._process(0.22)
+		if boss.hurt_tween!=null: boss.hurt_tween.kill()
+		boss.sprite_2d.modulate = boss.sprite_tint
+	field._clock += 0.22
+	camera.zoom = Vector2.ONE*1.25
+	camera.global_position = at+Vector2(0,-60)
+	camera.force_update_scroll()
+	await capture("boss-apex",Vector2i(900,600))
 	main.queue_free()
 	await get_tree().process_frame
 	get_tree().quit()

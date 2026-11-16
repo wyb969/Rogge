@@ -6,7 +6,7 @@ static func fit(panel: Control, bar: ProgressBar, title: Label, action: Label=nu
 	var vp:=viewport.get_visible_rect().size
 	var width:=minf(420*ui,vp.x-32*ui)
 	panel.size=Vector2(width,12*ui)
-	panel.position=Vector2((vp.x-width)*0.5,(116+20*slot)*ui)
+	panel.position=Vector2((vp.x-width)*0.5,(header_top(panel)+112+20*slot)*ui)
 	title.position=Vector2.ZERO
 	title.custom_minimum_size=Vector2.ZERO
 	title.size=Vector2(width,18*ui)
@@ -35,3 +35,6 @@ static func display_scale(owner: Node) -> float:
 	# Tiny/minimized and headless windows must still fit the logical viewport.
 	var vp:=viewport.get_visible_rect().size
 	return minf(ui,minf(vp.x/320.0,vp.y/240.0))
+
+static func header_top(owner: Node) -> float:
+	return 54.0 if owner.get_viewport().get_visible_rect().size.x/display_scale(owner)<600 else 14.0

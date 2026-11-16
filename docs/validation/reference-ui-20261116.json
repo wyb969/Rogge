@@ -1,0 +1,78 @@
+{
+  "version": "20261116-200630",
+  "base_commit": "f6c89ae",
+  "final_packed_checks": [
+    {
+      "name": "smoke_three_cards",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 6.15,
+      "errors": [],
+      "markers": [
+        "THREE CARDS OK: 3008 checks; all 28 cards, both languages, five viewports, no scrolling, CJK DASH"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_codex_menu",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 24.92,
+      "errors": [],
+      "markers": [
+        "CODEX MENU OK: 636 checks; 53 entries, bilingual content, exact card sizing, pause ownership, Esc/settings/details, no rerolls, rest/trial lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 1 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_localization",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.62,
+      "errors": [],
+      "markers": [
+        "LOCALIZATION OK: 382 checks; default, live switch, persistence, migration, stats parity, all cards, four powers and three layouts"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "translation_audit": {
+    "passed": true,
+    "catalog_rows": 1100,
+    "locales": [
+      "en",
+      "zh_CN"
+    ],
+    "checks": [
+      "unique keys",
+      "nonempty translations",
+      "printf placeholder parity",
+      "English has no Chinese",
+      "source Chinese display-string coverage"
+    ]
+  },
+  "import_export": "passed; no script errors",
+  "pck_sha256": "6ef3ff0de124bccacaf615a25b2416351aed0414674cb2f2db0904af4e832276",
+  "native_screenshots": [
+    "docs/images/reference-ui/combat-zh_CN-900.png",
+    "docs/images/reference-ui/cards-zh_CN-390.png",
+    "docs/images/reference-ui/cards-en-320.png",
+    "docs/images/reference-ui/cards-en-844.png",
+    "docs/images/reference-ui/cards-zh_CN-900.png"
+  ],
+  "native_hud_assertions": "passed: icon bounds/tooltips, stage non-overlap, health-only twin bars",
+  "layout": "16px aligned header; centered button icons; golden-ratio portrait cards where space permits; narrow-phone200px height exception; real stats plus shared Codex sentence; reroll20px below",
+  "limitations": [
+    "No real browser or mobile Safari test",
+    "Existing resource/GL shutdown warnings remain"
+  ]
+}

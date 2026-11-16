@@ -39,7 +39,7 @@ func run() -> void:
 					expect(bounds.grow(1).encloses(card.get_global_rect()),"whole card visible "+context)
 					expect(card.get_global_rect().end.y < menu.reroll_button.position.y,"card above reroll "+context)
 					expect(card.find_children("*","Button").is_empty(),"no Details button "+context)
-					for label_node in [card.desc_label]:
+					for label_node in [card.desc_label,card.stats_label]:
 						expect(label_node.get_content_width()<=label_node.size.x+1,"line width fits "+context+str(label_node.get_content_width())+"/"+str(label_node.size.x))
 						expect(label_node.get_content_height()<=label_node.size.y+1,"text fits "+context+str(label_node.get_content_height())+"/"+str(label_node.size.y))
 						expect(card.get_global_rect().grow(1).encloses(label_node.get_global_rect()),"text bounds "+context)

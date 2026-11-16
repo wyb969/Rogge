@@ -578,17 +578,18 @@ func _fit_stage_label() -> void:
 	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
 	var vp:=get_viewport().get_visible_rect().size
 	_stage_label.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	_stage_label.position=Vector2(12*ui,8*ui)
-	_stage_label.size=Vector2(minf(180*ui,vp.x*0.5-84*ui),40*ui)
+	var top: float=preload("res://script/boss_hud_layout.gd").header_top(self)
+	_stage_label.position=Vector2(12*ui,top*ui)
+	_stage_label.size=Vector2(180*ui,30*ui)
 	_stage_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
 	_stage_label.clip_text=true
-	UiFonts.apply_to_label(_stage_label,int((10 if vp.x/ui<400 else 14)*ui),true)
+	UiFonts.apply_to_label(_stage_label,int(16*ui),true)
 	var clock: HBoxContainer=$UI/HBoxContainer
-	clock.position=Vector2(vp.x-80*ui,20*ui)
-	clock.size=Vector2(68*ui,16*ui)
+	clock.position=Vector2(vp.x-108*ui,(top if vp.x/ui<600 else top+40)*ui)
+	clock.size=Vector2(96*ui,30*ui)
 	clock.add_theme_constant_override("separation",0)
 	for child in clock.get_children():
-		if child is Label: UiFonts.apply_to_label(child,int(12*ui),true)
+		if child is Label: UiFonts.apply_to_label(child,int(16*ui),true)
 
 func _refresh_stage_label() -> void :
 	if _stage_label == null or not is_instance_valid(_stage_label):

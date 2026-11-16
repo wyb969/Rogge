@@ -78,7 +78,7 @@ func _fit() -> void:
 	var vp := get_viewport().get_visible_rect().size
 	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
 	UiFonts.apply_to_label(_label, int(12 * ui), true)
-	_label.position = Vector2(vp.x-64*ui,94*ui)
+	_label.position = Vector2(vp.x-64*ui,(preload("res://script/boss_hud_layout.gd").header_top(self)+80)*ui)
 	_label.size = Vector2(48*ui,20*ui)
 	_label.pivot_offset = _label.size * 0.5
 	var width := minf(vp.x * 0.4, 200 * ui)

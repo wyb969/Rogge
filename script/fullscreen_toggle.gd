@@ -89,6 +89,8 @@ func _refresh_label() -> void :
 		var control: Button=controls[i]
 		control.text=""
 		control.expand_icon=true
+		control.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		control.vertical_icon_alignment=VERTICAL_ALIGNMENT_CENTER
 		control.add_theme_constant_override("icon_max_width",int(20*ui))
 		control.offset_top=8*ui
 		control.offset_bottom=48*ui

@@ -23,6 +23,8 @@ uniform float cloud_strength = 0.0;
 uniform float environment_time = 0.0;
 // Stage 1 uses a stronger edge darkening. 0 leaves the menu/test look unchanged.
 uniform float vignette = 0.0;
+uniform float snow_cover = 0.0;
+uniform vec4 snow_tint : source_color;
 
 varying vec2 v_world;
 
@@ -58,6 +60,12 @@ void fragment() {
 	// Narrow value range: scenery keeps texture without competing with actors.
 	vec3 placed = tint.rgb * (ground_values.x + luma * ground_values.y);
 	vec3 graded = mix(multiplied, placed, clamp(grade, 0.0, 1.0));
+	if (snow_cover > 0.0) {
+		float grain = hash21(floor(v_world / 3.0));
+		float drift = 0.5 + 0.5 * sin(v_world.x * 0.013 + sin(v_world.y * 0.017));
+		vec3 snow = snow_tint.rgb * (0.93 + grain * 0.04 + luma * 0.03);
+		graded = mix(graded, snow, snow_cover * (0.85 + drift * 0.12));
+	}
 	vec3 light = clamp(ambient_light, vec3(0.0), vec3(1.0));
 	if (sun_strength > 0.0) {
 		float coordinate = dot(v_world, sun_direction) * 0.028 + environment_time * 0.035;

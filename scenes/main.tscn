@@ -108,6 +108,10 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugWinterButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "冬季雪景 · 脚印 / 冲刺雪痕"
+
 [node name="DebugStarChainButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "星轨连锁 · 追光 / 吸金狂欢"
@@ -245,3 +249,5 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugWeatherLightButton" to="." method="_launch_run" binds= [&"weather"]]
 
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugStarChainButton" to="." method="_launch_run" binds= [&"star_chain"]]
+
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugWinterButton" to="." method="_launch_run" binds= [&"winter"]]

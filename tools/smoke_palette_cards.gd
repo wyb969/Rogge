@@ -122,17 +122,15 @@ func _run() -> void:
 		await settle()
 		var screen := Rect2(Vector2.ZERO,root.get_visible_rect().size)
 		expect(screen.encloses(menu.reroll_button.get_global_rect()),"reroll fits "+str(dimensions))
-		expect(screen.encloses(menu._card_scroll.get_global_rect()),"scroll viewport fits "+str(dimensions))
+		expect(screen.encloses(menu._card_area.get_global_rect()),"card area fits "+str(dimensions))
 		for card in menu.h_box_container.get_children():
 			# Translated explanations can be taller than a phone in landscape.
 			# They must fit horizontally and remain reachable in the outer scroll.
 			expect(card.get_global_rect().position.x >= 0 and card.get_global_rect().end.x <= screen.end.x,"card width fits "+str(dimensions))
 			expect(card.get_global_rect().encloses(card.desc_label.get_global_rect()),"comparison text stays inside card "+str(dimensions))
 			expect(card.desc_label.get_content_height() <= card.desc_label.size.y+1,"all rich text visible "+str(dimensions))
-		menu._card_scroll.scroll_vertical = 100000
-		await settle()
 		for card in menu.h_box_container.get_children():
-			expect(card.get_global_rect().end.y <= menu._card_scroll.get_global_rect().end.y+1,"card bottom reachable by scrolling "+str(dimensions))
+			expect(card.get_global_rect().end.y <= menu._card_area.get_global_rect().end.y+1,"all card bottoms fit without scrolling "+str(dimensions))
 		menu.hide()
 		paused = false
 

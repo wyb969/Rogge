@@ -1,5 +1,7 @@
 # Game Codex / 游戏词典与暂停菜单
 
+> 后续修正：选卡已改为一屏三卡、无详情按钮/滚动；DASH 中文字体已修复。当前规则见 [three-cards.md](three-cards.md)。下文保留首版实现记录。
+
 版本 **20261116-182759**，分支 `feature/codex-pause-menu-20261116`，基于 `cf109d9` 的中英文版本。
 
 ## 使用

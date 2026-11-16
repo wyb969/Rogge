@@ -1,16 +1,14 @@
 extends PanelContainer
 
 signal selected(upgrade_id: String)
-signal details_requested(upgrade_id: String)
 var upgrade_id: String = ""
 var hover_tween: Tween
 var _press_at := Vector2.ZERO
 var _tracking_press := false
 var _dragged := false
 
-const CARD_SIZE: = Vector2(280, 330)
+const CARD_SIZE: = Vector2(280, 270)
 var stats_label: RichTextLabel
-var details_button: Button
 
 @onready var title_label: Label = $VBoxContainer / TitleLabel
 @onready var desc_label: RichTextLabel = $VBoxContainer / DescLabel
@@ -18,7 +16,9 @@ var details_button: Button
 
 func _ready() -> void :
 	# Keep readable card panels after removing the old global recoloring theme.
-	add_theme_stylebox_override("panel", GamePalette.neutral_surface(GamePalette.UI_SLOT, GamePalette.UI_GREY_BORDER))
+	var style := GamePalette.neutral_surface(GamePalette.UI_SLOT, GamePalette.UI_GREY_BORDER)
+	for side in ["left","right","top","bottom"]: style.set("content_margin_"+side,0)
+	add_theme_stylebox_override("panel", style)
 	custom_minimum_size = CARD_SIZE
 	size = CARD_SIZE
 	size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -39,11 +39,6 @@ func _ready() -> void :
 	stats_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stats_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	$VBoxContainer.add_child(stats_label)
-	details_button = Button.new()
-	details_button.text = L10n.text("查看详情")
-	details_button.pressed.connect(func():details_requested.emit(upgrade_id))
-	GamePalette.apply_neutral_button(details_button)
-	$VBoxContainer.add_child(details_button)
 
 func _configure_labels() -> void :
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -61,6 +56,9 @@ func _configure_labels() -> void :
 	_style_description(14)
 
 	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	$VBoxContainer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func setup(data: Dictionary):
 	upgrade_id = data["id"]
@@ -72,27 +70,43 @@ func setup(data: Dictionary):
 	stats_label.text = str(data.get("compact_stats",CodexData.compact_stats(data.get("rows",[]))))
 	icon.texture = load(data["icon"])
 	preload("res://script/visual_style.gd").style_icon(icon, upgrade_id)
-	details_button.text = L10n.text("查看详情")
 	set_display_width(CARD_SIZE.x)
 
-func set_display_width(width: float, ui_scale: float = 1.0, compact: bool = false) -> void :
-	desc_label.custom_minimum_size.x = width - 24.0 * ui_scale
-	UiFonts.apply_to_label(title_label, int(14 * ui_scale))
-	title_label.custom_minimum_size.y = 44*ui_scale
-	_style_description(int(12 * ui_scale))
-	desc_label.custom_minimum_size.y = 54*ui_scale
-	stats_label.custom_minimum_size = Vector2(width-24*ui_scale,64*ui_scale)
+func set_display_width(width: float, ui_scale: float = 1.0, compact: bool = false) -> void:
+	set_display_size(Vector2(width,CARD_SIZE.y*ui_scale),ui_scale,compact)
+
+func set_display_size(dimensions: Vector2, ui: float, row_layout: bool) -> void:
+	custom_minimum_size = dimensions
+	size = dimensions
+	pivot_offset = size*0.5
+	var small := dimensions.y/ui < 160 if row_layout else dimensions.y/ui < 235
+	var font_size := 11 if small else 12
+	var icon_size := (60.0 if small else 72.0)*ui
+	var text_x := (82.0 if small else 94.0)*ui if row_layout else 12*ui
+	var text_width := dimensions.x-text_x-12*ui
+	var title_y := 10*ui if row_layout else icon_size+16*ui
+	var title_height := 32*ui if small else 40*ui
+	var stats_height := (32.0 if small else 40.0)*ui
+	var stats_y := dimensions.y-10*ui-stats_height
+	var desc_y := title_y+title_height+3*ui
+	UiFonts.apply_to_label(title_label,int((11 if small else 14)*ui))
+	_style_description(int(font_size*ui))
 	stats_label.add_theme_font_override("normal_font",UiFonts.ui())
 	stats_label.add_theme_font_override("bold_font",UiFonts.ui_bold())
-	stats_label.add_theme_font_size_override("normal_font_size",int(11*ui_scale))
-	stats_label.add_theme_font_size_override("bold_font_size",int(12*ui_scale))
-	details_button.custom_minimum_size.y = 32*ui_scale
-	UiFonts.apply_to_button(details_button,int(12*ui_scale))
-	icon.custom_minimum_size = Vector2.ONE * 72 * ui_scale
-	$VBoxContainer.add_theme_constant_override("separation", int(5 * ui_scale))
-	custom_minimum_size = Vector2(width, CARD_SIZE.y * ui_scale)
-	size = custom_minimum_size
-	pivot_offset = size * 0.5
+	stats_label.add_theme_font_size_override("normal_font_size",int(font_size*ui))
+	stats_label.add_theme_font_size_override("bold_font_size",int(font_size*ui))
+	for label in [title_label,desc_label,stats_label]:
+		label.custom_minimum_size=Vector2.ZERO
+		label.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT if row_layout else HORIZONTAL_ALIGNMENT_CENTER
+	title_label.position=Vector2(text_x,title_y)
+	title_label.size=Vector2(text_width,title_height)
+	desc_label.position=Vector2(text_x,desc_y)
+	desc_label.size=Vector2(text_width,maxf(1,stats_y-desc_y-4*ui))
+	stats_label.position=Vector2(text_x,stats_y)
+	stats_label.size=Vector2(text_width,stats_height)
+	icon.custom_minimum_size=Vector2.ZERO
+	icon.size=Vector2.ONE*icon_size
+	icon.position=Vector2(10*ui,(dimensions.y-icon_size)*0.5) if row_layout else Vector2((dimensions.x-icon_size)*0.5,10*ui)
 
 func _on_selected_pressed():
 	selected.emit(upgrade_id)

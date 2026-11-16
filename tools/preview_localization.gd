@@ -32,7 +32,6 @@ func _ready() -> void:
 			game.pause_menu.show_upgrade_options()
 			await settle()
 			await capture("cards-%s-%d.png"%[lang,size.x])
-			game.pause_menu._card_scroll.scroll_vertical = 10000
 			await capture("cards-scrolled-%s-%d.png"%[lang,size.x])
 		game.pause_menu.hide()
 		main.show_main_menu()

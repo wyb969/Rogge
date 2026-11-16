@@ -354,12 +354,8 @@ static func summary(id: String) -> String:
 
 static func compact_stats(rows: Array) -> String:
 	var lines := PackedStringArray()
-	var selected: Array = rows.slice(0,mini(2,rows.size()))
-	# Preserve a cooldown comparison when a weapon also has several secondary stats.
-	for row in rows:
-		if row.unit == "s" and row.label in ["触发间隔","射击间隔","投掷间隔"] and selected.size()==2:
-			selected[1] = row
-			break
+	# Draft cards show the primary damage/utility stat; full comparisons remain in the Codex.
+	var selected: Array = rows.slice(0,mini(1,rows.size()))
 	for row in selected:
 		lines.append(L10n.text(row.label)+"\n[b]"+CardNumbers.value_pair(row.before,row.after,row.unit)+"[/b]")
 	return "\n".join(lines)

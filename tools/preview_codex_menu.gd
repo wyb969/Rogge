@@ -35,8 +35,6 @@ func _ready() -> void:
 			get_window().size=size
 			game.pause_menu.show_upgrade_options()
 			await capture("cards-%s-%d.png"%[lang,size.x])
-			game.pause_menu._card_scroll.scroll_vertical=100000
-			await capture("cards-scrolled-%s-%d.png"%[lang,size.x])
 		game.pause_menu.hide()
 		game.trials.begin("power")
 		for size in [Vector2i(900,500),Vector2i(390,844)]:

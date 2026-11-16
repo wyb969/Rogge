@@ -28,3 +28,7 @@ GODOT --headless --rendering-method gl_compatibility --audio-driver Dummy --path
 ![Chinese portrait](screenshots/three-cards-20261116/cards-zh_CN-390.png)
 ![English landscape](screenshots/three-cards-20261116/cards-en-844.png)
 ![Chinese DASH](screenshots/three-cards-20261116/dash-zh_CN-390.png)
+
+## 试玩
+
+[打开最新版](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)，版本 **20261116-184844**。源码 `16f2f32` / [PR #28](https://github.com/wyb969/Rogge/pull/28)。2026-11-16 北京时间18:52发布成功，保持 owner-private 权限；9个原始导出文件字节核对、26项loader验证通过。见 [发布证据](validation/three-cards-playtest-20261116.json)。

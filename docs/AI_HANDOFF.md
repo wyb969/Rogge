@@ -5,7 +5,7 @@
 - 继续 `feature/codex-pause-menu-20261116` / PR #28，基于 `356c5e0`，版本 **20261116-184844**。DASH 场景标签此前使用缺少中文的默认字体；现在由 `dash_button.gd` 使用 UiFonts 中英复合字体，保留“冲刺”翻译、冷却/灰白风格/保存的尺寸位置透明度。
 - 根据最新反馈删除选卡页的“查看详情”和 ScrollContainer；竖屏三张横向卡片上下排列，横屏三列，按可用视口尺寸统一分配高度。卡片仅保留大图标、名称/等级、一句功能简介和主要伤害或功能数值对比，完整说明仍从 Esc / Menu 的游戏词典进入。卡片点击、重抽、战斗数值不变。
 - 新测试 `tools/smoke_three_cards.gd` 覆盖28卡、两语言、320×568 / 390×844 / 844×390 / 900×600 / 667×375、所有卡片及文案不溢出、真实点击第三张生效、DASH中文字形。既有词典/多语言/卡值测试同步新布局；最终 Web PCK 验证和截图见 `docs/validation/three-cards-20261116.json` 与 [three-cards.md](three-cards.md)。未作浏览器/Safari实测，既有退出资源/GL警告保留。
-- 本轮原始日志/导出 `../cards-fit`，仍为临时内存路径；不合并 master，不发布正式 itch。此条取代下方旧版“330高/详情按钮/选卡滚动”布局规则。
+- 本轮原始日志/导出 `../cards-fit`，仍为临时内存路径；不合并 master，不发布正式 itch。此条取代下方旧版“330高/详情按钮/选卡滚动”布局规则。源码 `16f2f32` 已推送 [PR #28](https://github.com/wyb969/Rogge/pull/28)；[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site) 已更新 20261116-184844，Site `eade81849038239f6cfb54f10cd674e5329ede24`、deployment `appgdep_6afae075ae70819194c1b58240d5b927` 于北京时间18:52发布成功。9文件字节核对/26 loader检查通过，证据 `validation/three-cards-playtest-20261116.json`。根分区已满，后续构建临时目录使用 `TMPDIR=/dev/shm`，不要删除历史工作文件。
 
 ## 2026-11-16 游戏词典、统一卡牌与局内暂停（当前开发）
 

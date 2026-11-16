@@ -40,3 +40,5 @@ DISPLAY=:105 ROGGE_CAPTURE_DIR=/ABSOLUTE/CAPTURES "$GODOT" --rendering-method gl
 ![Landing](screenshots/airborne-feedback-20261116/airborne-landing-900x600.png)
 ![Portrait](screenshots/airborne-feedback-20261116/airborne-apex-390x844.png)
 ![Grayscale](screenshots/airborne-feedback-20261116/airborne-apex-900x600-gray.png)
+
+Published private playtest: https://rogge-palette-playtest-20261109.whiteber.chatgpt.site — version 20261116-160724, deployment succeeded at 2026-11-16 16:11 Beijing. Source is saved in PR #24; formal master/itch remain unchanged. Hosting transforms only the existing WASM gzip loader; all nine original exported files match after decoding/removing the loader injection. See `validation/airborne-playtest-20261116.json`.

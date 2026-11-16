@@ -38,3 +38,5 @@ DISPLAY=:105 ROGGE_CAPTURE_DIR=/ABSOLUTE/CAPTURES "$GODOT" --rendering-method gl
 ![Landscape](screenshots/wind-trails-20261116/wind-900x600.png)
 ![Portrait](screenshots/wind-trails-20261116/wind-390x844.png)
 ![Grayscale](screenshots/wind-trails-20261116/wind-900x600-gray.png)
+
+Private playtest published: https://rogge-palette-playtest-20261109.whiteber.chatgpt.site — version 20261116-170330, deployment succeeded at 2026-11-16 17:08 Beijing. PR #26 preserves the source; master/itch remain unchanged. All nine original exported files match after decoding the existing gzip WASM and removing the loader injection. Publication evidence: `validation/wind-trails-playtest-20261116.json`.

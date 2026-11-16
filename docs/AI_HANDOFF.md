@@ -6,7 +6,7 @@
 - 改4个圆/方区域；按真实移动每64距离检查，仅回收距离420且屏外90余量的槽，在前方随机补充，保持世界锚定/避开玩家/完整0.75秒预警，不在脚下刷新。圆形扫掠按圆计算，非外接框。
 - `electric_zap_visual.gd`绘制4种体型小怪、恐龙/骑士/四神兽独立骨架和不规则闭合电环；几何每次触电缓存，25点环缓冲复用；64骨架/128连线/两个CanvasItem预算保持。
 - 本轮5源码专项、3最终Web PCK专项；电网1034断言，横/竖/灰度及六Boss骨架原生画廊；见[electric-grid.md](electric-grid.md)、`validation/electric-grid-v2-20261116.json`。没有浏览器/Safari/FPS实测，既有退出资源/GL警告仍保留。旧版2区域/2.5秒说明仅作历史。
-- 同一源工作树，构建/日志在`/workspace/Rogge-electric-grid-20261116/v2`（内存临时目录）；源码以GitHub为准，不清理旧文件。继续调节探索区域密度与Boss电环大小；正式master/itch未更新。
+- 同一源工作树，构建/日志在`/workspace/Rogge-electric-grid-20261116/v2`（内存临时目录）；源码以GitHub为准，不清理旧文件。继续调节探索区域密度与Boss电环大小；正式master/itch未更新。 已验证源码`12fb119`已推送PR #22；[私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)更新至20261116-122338，权限不变。Site source`e07fc66c93f5ca4ef9f32f90412cc0f5c2d72d86`、deployment`appgdep_6afa861f22508191b478571f8e85645f`于北京时间2026-11-16 12:27发布succeeded。发布证据见`validation/electric-grid-v2-playtest-20261116.json`。
 
 ## 2026-11-16 晴天电网（当前开发）
 

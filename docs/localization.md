@@ -51,3 +51,7 @@ Web 包因包含多语言 ICU 数据超过试玩站单文件限制；试玩 Site
 ## 后续维护
 
 新增文案进 CSV，并使用 `L10n.text(template) % values`；内部 ID 不翻译。中英模板占位符必须一致，保留英文静态控件的反向别名。不要把已经格式化的整段动态内容交给 tr 查找。增加语言或战斗中设置入口时，需要让现存动态 HUD/卡牌在 locale_changed 后重新生成；本版没有暴露这一操作。
+
+## 试玩发布
+
+[打开私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)，版本 **20261116-173723**。设置路径 **Settings → Language → 简体中文**。源码 [PR #27](https://github.com/wyb969/Rogge/pull/27)，发布于北京时间 2026-11-16 17:46；保留 owner-private 权限。发布成功不代表完成浏览器/Safari 实机测试。见 [发布证据](validation/localization-playtest-20261116.json)。

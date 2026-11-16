@@ -313,6 +313,9 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_lightning_debug_run()
 		&"star_chain":
 			game.prepare_star_chain_debug()
+		&"electric_grid":
+			game.prepare_weather_debug()
+			game.variety.notify("晴天电网：红边预警 → 通电 → 断电\n触电麻痹1秒；恢复后2.5秒电网保护\n引怪入网，近距离传导每周期只命中一次")
 		&"wind_scene":
 			game.prepare_surface_debug(4)
 		&"ice_scene":

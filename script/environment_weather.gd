@@ -21,6 +21,7 @@ var lighting: Node2D
 var winter: Node2D
 var surface: Node2D
 var spikes: Node2D
+var electric_grid: Node2D
 var cloud_strength: = 0.0
 var rain_count: = 0
 var snow_count: = 0
@@ -105,10 +106,14 @@ func _ready() -> void :
 	spikes = preload("res://script/ice_spikes.gd").new()
 	spikes.name = "IceSpikes"
 	add_child(spikes)
+	electric_grid = preload("res://script/electric_grid.gd").new()
+	electric_grid.name = "ElectricGrid"
+	add_child(electric_grid)
 	stop()
 
 func begin_run() -> void :
 	spikes.reset_run()
+	electric_grid.reset_run()
 	winter.clear()
 	winter.stamped = 0
 	_stage_profiles.clear()
@@ -168,6 +173,7 @@ func stop() -> void :
 	if winter != null: winter.sync(0)
 	if surface != null: surface.stop()
 	if spikes != null: spikes.stop()
+	if electric_grid != null: electric_grid.stop()
 	_background.set_ice_cover(0)
 	_background.set_snow_cover(0)
 	rain_count = 0

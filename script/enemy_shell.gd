@@ -80,6 +80,7 @@ const MAX_BURN_STACKS: = 10
 const BURN_SPREAD_RADIUS: = 78.0
 
 
+var electric_stun_left := 0.0
 var freeze_time: float = 0.0
 var freeze_slow: float = 0.5
 var poison_slow: = 1.0
@@ -337,6 +338,7 @@ func _physics_process(delta: float) -> void :
 	_update_statuses(delta)
 	if _death_started:
 		return
+	if _tick_electric_stun(delta): return
 	contact_timer = maxf(0.0, contact_timer - delta)
 	var recovering: = archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0
 
@@ -543,6 +545,7 @@ func _fire_projectile(dir: Vector2) -> void :
 	shots_fired += 1
 
 func _try_contact(dist: float) -> void :
+	if electric_stun_left>0: return
 	if tactical_ai!=null and (tactical_ai.committed or tactical_ai.recovery>0): return
 	if _death_started or _blast_left > 0.0 or is_queued_for_deletion() or (archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or contact_recovery_left > 0.0)):
 		return
@@ -884,3 +887,30 @@ func _apply_environment_motion(delta: float, previous_velocity: Vector2) -> void
 		velocity = previous_velocity.move_toward(desired,lerpf(900.0,180.0,ice)*delta)
 	else:
 		velocity = desired
+
+func apply_electric_stun(seconds: float) -> void:
+	if _death_started: return
+	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
+	_finish_dash()
+	shot_windup = 0
+	slam_windup = 0
+	slam_time_left = 0
+	clear_airflow()
+	clear_gravity_pull()
+	_blast_left = 0
+	knockback = Vector2.ZERO
+	velocity = Vector2.ZERO
+	attack_timer = maxf(attack_timer,0.5)
+	if tactical_ai != null:
+		var owner := _game_owner()
+		if tactical_ai.slot != null and owner != null: owner.enemy_attacks.cancel(tactical_ai.slot,self)
+		tactical_ai.slot = null
+		tactical_ai.committed = false
+		tactical_ai.recovery = 0.5
+	queue_redraw()
+
+func _tick_electric_stun(delta: float) -> bool:
+	if electric_stun_left<=0: return false
+	electric_stun_left = maxf(0,electric_stun_left-delta)
+	velocity = Vector2.ZERO
+	return true

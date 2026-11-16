@@ -1,0 +1,198 @@
+{
+  "version": "20261116-111619",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "base": "06f625f",
+  "branch": "fix/surface-art-20261116",
+  "native_checks": [
+    {
+      "name": "smoke_environment_surface",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.52,
+      "errors": [],
+      "markers": [
+        "ENVIRONMENT SURFACE OK: 36 checks; wind/quality isolation, actual input/coast/brake/dash, resisted 30% crowd impulses, 30/60Hz locked ice leaps, lifecycle and real Debug"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ice_spikes",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.49,
+      "errors": [],
+      "markers": [
+        "ICE SPIKES OK: 41 checks; density/stable regeneration/safe spawn/pools, actual damage/cooldown/dash/shield, swept player and enemy contacts, death pruning, FX and lifecycle"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 9 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather_lighting",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.39,
+      "errors": [],
+      "markers": [
+        "WEATHER LIGHTING OK: 21 checks; real Debug, shared lamp/bounds, solar/radial shadows, movement, pause, crossfade, zero intensity, stop and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 87 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_world_snow",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.77,
+      "errors": [],
+      "markers": [
+        "WORLD SNOW OK: camera/subframe independence, exact wind/fall, only offscreen recycling, portrait/Retina reuse, pause and return"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 10 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 5 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_camera_motion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.37,
+      "errors": [],
+      "markers": [
+        "CAMERA MOTION OK: actual-position lag/stop/reversal, wall/teleport, pause, single-layer bounded dash catch-up, zero setting, unchanged collider/FOV and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_surface_art",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.42,
+      "errors": [],
+      "markers": [
+        "SURFACE ART OK: 70 assertions; upright/reused decor, varied pooled curls, world anchoring/RNG/budget, actual four-direction optical input, idle/pause/FX/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_surface_art",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.55,
+      "errors": [],
+      "markers": [
+        "SURFACE ART OK: 70 assertions; upright/reused decor, varied pooled curls, world anchoring/RNG/budget, actual four-direction optical input, idle/pause/FX/reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_environment_surface",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.84,
+      "errors": [],
+      "markers": [
+        "ENVIRONMENT SURFACE OK: 36 checks; wind/quality isolation, actual input/coast/brake/dash, resisted 30% crowd impulses, 30/60Hz locked ice leaps, lifecycle and real Debug"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 14 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_ice_spikes",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.49,
+      "errors": [],
+      "markers": [
+        "ICE SPIKES OK: 41 checks; density/stable regeneration/safe spawn/pools, actual damage/cooldown/dash/shield, swept player and enemy contacts, death pruning, FX and lifecycle"
+      ],
+      "shutdown_warnings": []
+    }
+  ],
+  "export_files": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11441,
+      "sha256": "94f958a0940a6a56c17acd946c440fea7dcb4ff14de8a60d7cefb7c51584c036"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5437,
+      "sha256": "07b4161f043e293cbd638bd0ae22979b6b96035652b0470b7ec4901f633ef5eb"
+    },
+    "index.icon.png": {
+      "bytes": 3209,
+      "sha256": "39cf8356982e979767681615fd2bf7904d7edacbe5e20dc14e48cc0e75ab75f7"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+    },
+    "index.pck": {
+      "bytes": 23705120,
+      "sha256": "c156d3b52ba520d7ba7cc5e04f09aa30fec20f5d95a244747678f914b89b9fa9"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39509339,
+      "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+    }
+  },
+  "import": "final import has no errors",
+  "export": "complete Web release / normal main entry / no errors",
+  "screenshots": [
+    "docs/screenshots/surface-art-20261116/ice-left-390x844.png",
+    "docs/screenshots/surface-art-20261116/ice-left-900x600-gray.png",
+    "docs/screenshots/surface-art-20261116/ice-left-900x600.png",
+    "docs/screenshots/surface-art-20261116/ice-right-390x844.png",
+    "docs/screenshots/surface-art-20261116/ice-right-900x600-gray.png",
+    "docs/screenshots/surface-art-20261116/ice-right-900x600.png",
+    "docs/screenshots/surface-art-20261116/wind-390x844.png",
+    "docs/screenshots/surface-art-20261116/wind-900x600-gray.png",
+    "docs/screenshots/surface-art-20261116/wind-900x600.png"
+  ],
+  "native_visual": "Compatibility llvmpipe landscape, portrait, grayscale and native sunny/rain shadow passes; grass source region independently inspected",
+  "optical_capture": "fixed camera with left/right optical tilts for visual comparison; actual four-direction input connected to shader verified separately by smoke_surface_art",
+  "renderer_shutdown_warnings": [
+    "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+    "ERROR: Texture with GL ID of 19: leaked 1364 bytes.",
+    "ERROR: Parameter \"RenderingServer::get_singleton()\" is null.",
+    "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+    "ERROR: 6 resources still in use at exit (run with --verbose for details).",
+    "ERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit."
+  ],
+  "browser_tested": false,
+  "mobile_safari_tested": false,
+  "device_fps_tested": false,
+  "workspace": "new isolated worktree/build in /dev/shm via /workspace/Rogge-surface-art-20261116 symlink due low disk; Git commits pushed for durability"
+}

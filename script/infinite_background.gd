@@ -59,6 +59,7 @@ func _setup_ground() -> void :
 	_shader_mat.set_shader_parameter("world_tile_size", tile_size)
 	_shader_mat.set_shader_parameter("tint", Vector4(tint.r, tint.g, tint.b, tint.a))
 	_shader_mat.set_shader_parameter("snow_tint", GamePalette.SNOW_GROUND)
+	_shader_mat.set_shader_parameter("ice_reflection_tint",GamePalette.ICE_REFLECTION)
 	ground.material = _shader_mat
 	ground.z_index = -30
 	ground.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -148,7 +149,9 @@ func _update_decorations(center: Vector2, half: Vector2) -> void :
 				continue
 			var spr: = _decor_sprites[idx]
 			idx += 1
-			spr.texture = _decor_atlases[h % _decor_atlases.size()]
+			var variant: int = h % _decor_atlases.size()
+			spr.texture = _decor_atlases[variant]
+			spr.rotation = PI*0.5 if variant == 5 else 0.0 # Side-facing foliage tip becomes upright; reset reused slots.
 			var jitter: = Vector2(
 				float((h >> 3) % 40) - 20.0, 
 				float((h >> 7) % 40) - 20.0
@@ -214,3 +217,8 @@ func set_snow_cover(amount: float) -> void:
 func set_ice_cover(amount: float) -> void:
 	_shader_mat.set_shader_parameter("ice_cover", clampf(amount,0,1))
 	_shader_mat.set_shader_parameter("ice_tint", GamePalette.ICE_GROUND)
+
+func set_ice_view(center: Vector2, tilt: Vector2, gloss: float) -> void:
+	_shader_mat.set_shader_parameter("ice_view_position",center)
+	_shader_mat.set_shader_parameter("ice_view_tilt",tilt)
+	_shader_mat.set_shader_parameter("ice_gloss_strength",clampf(gloss,0,1))

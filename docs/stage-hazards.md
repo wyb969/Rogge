@@ -37,3 +37,5 @@ DISPLAY=:105 ROGGE_CAPTURE_DIR=/ABSOLUTE/CAPTURES "$GODOT" --rendering-method gl
 ![Portrait](screenshots/stage-hazards-20261116/zones-390x844.png)
 ![All Boss skeletons](screenshots/stage-hazards-20261116/boss-skeletons-900x600.png)
 ![Surviving mine-hit Bosses](screenshots/stage-hazards-20261116/airborne-boss-apex-900x600.png)
+
+Private playtest published: https://rogge-palette-playtest-20261109.whiteber.chatgpt.site — version 20261116-164203, deployment succeeded at 2026-11-16 16:48 Beijing. Source is saved in PR #25; master/itch remain unchanged. All nine original export files match after decoding the existing gzip WASM and removing the loader injection. Publication evidence: `validation/stage-hazards-playtest-20261116.json`.

@@ -7,7 +7,7 @@
 - 骨架期间隐藏原本体与骑士剑，结束/死亡/换环境恢复原可见性，不覆盖染色材质；64骨架/128连线预算，重复命中刷新原槽。新增短电击0.18秒/地雷0.30秒原创SFX，单通道限流无逐怪叠音。
 - 普通怪位姿合成统一保留腾空高度，避免物理位姿覆盖渲染；怪32–42/Boss34高度。真实地雷存活伤害→腾空覆盖普通怪、恐龙、骑士、四神兽；物理击退/伤害/三秒恢复不变。
 - 11源码专项与5最终Web PCK专项，新293检查；横/竖/灰度/六Boss骨架/地雷Boss截图及命令见[stage-hazards.md](stage-hazards.md)、`validation/stage-hazards-20261116.json`。没有本轮浏览器/Safari/手机FPS或实机听音结论；既有退出资源/GL警告保留。
-- 源路径`/workspace/Rogge-electric-grid-20261116/project`、本轮原始构建日志`../hazards`仍在临时内存目录，持久依据为GitHub提交。后续试玩快速电击的区域压制、0.5秒脱离手感与音量。正式master/itch不在本轮发布范围。
+- 源路径`/workspace/Rogge-electric-grid-20261116/project`、本轮原始构建日志`../hazards`仍在临时内存目录，持久依据为GitHub提交。后续试玩快速电击的区域压制、0.5秒脱离手感与音量。正式master/itch不在本轮发布范围。 源码`b57c36c`保存于[PR #25](https://github.com/wyb969/Rogge/pull/25)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-164203，权限不变；Site source `3137ecd77a2834f438e5285a02e37f1b349227db`，deployment `appgdep_6afac35b4d108191b368cb982806caae`于北京时间2026-11-16 16:48发布succeeded。证据见`validation/stage-hazards-playtest-20261116.json`。
 
 ## 2026-11-16 脚底渐变与地雷腾空（当前开发）
 

@@ -1,5 +1,13 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-16 脚底渐变与地雷腾空（当前开发）
+
+- `feature/airborne-feedback-20261116`基于`ede5163`（PR #23），版本**20261116-160724**。常驻金色定位菱形改为青蓝渐变地面圆环（非实际护盾），脚底固定、身体后层、单缓存径向纹理。
+- 地雷存活者增加0.44秒视觉腾空与0.12秒落地回弹：玩家高度42、普通怪24–34、Boss22。物理击退仍0.28秒，伤害/碰撞/保护/复活时间不变。血条跟随身体，骑士剑不分离，地面阴影随高度缩淡。
+- 起跳/落地震屏5/2.7走既有单相机mixer并遵守设置。电击、试炼锁位、结束清理还原姿态；地雷跟踪延长至视觉落地尾段。无新增粒子/灯或每怪节点。
+- 13源码专项、4最终Web PCK专项；新41检查。原生横/竖/灰度截图、机制边界和复现命令见[airborne-feedback.md](airborne-feedback.md)与`validation/airborne-feedback-20261116.json`。未做本轮浏览器/Safari/手机FPS实测，既有退出资源警告未修复。
+- 工作树`/workspace/Rogge-electric-grid-20261116/project`，构建/原始日志`../airborne`在临时内存目录；以GitHub提交为持久依据，不清理旧源码。后续试玩腾空高度与震屏手感。正式master/itch不在本轮发布范围。 源码`e9cc359`已保存至[PR #24](https://github.com/wyb969/Rogge/pull/24)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-160724，权限不变；Site source `dece4c033e10c102bf6afff882db5823d1769131`，deployment `appgdep_6afabab22f348191b8d91a49d63edbbb`于北京时间2026-11-16 16:11发布succeeded。证据见`validation/airborne-playtest-20261116.json`。
+
 ## 2026-11-16 九宫格地雷（当前开发）
 
 - `feature/minefields-20261116`基于`a52e920`（PR #22），版本**20261116-143125**。所有天气可出现3×3固定世界阵列：间距96、触发16、爆炸44、起始预警1秒、踩中0.16秒后爆炸、从踩中起3秒恢复。第一关玩家24/怪物72，逐关+3/+9；初次避脚下，远离整片后重新在视野附近布置9枚。

@@ -1,0 +1,250 @@
+{
+  "version": "20261116-160724",
+  "branch": "feature/airborne-feedback-20261116",
+  "source_checks": [
+    {
+      "name": "smoke_airborne_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.29,
+      "errors": [],
+      "markers": [
+        "AIRBORNE FEEDBACK OK: 41 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 11 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_minefield",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.87,
+      "errors": [],
+      "markers": [
+        "MINEFIELD OK: 252 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 29 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 14 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_player_motion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 8.18,
+      "errors": [],
+      "markers": [
+        "PLAYER MOTION OK: 32 checks; real30/60Hz input, travel/acceleration, actual-distance gait, speed card, stop/wall/vertical/mouse, last-direction dash, lock/reset, no walking particles, clipped frames and stable collider"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_camera_motion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.18,
+      "errors": [],
+      "markers": [
+        "CAMERA MOTION OK: actual-position lag/stop/reversal, wall/teleport, pause, single-layer bounded dash catch-up, zero setting, unchanged collider/FOV and teardown"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_visual_style",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.59,
+      "errors": [],
+      "markers": [
+        "VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/direct damage without implicit burn, fixed footprint, shared non-additive pickups and exact healing"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_boss_rhythm",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.62,
+      "errors": [],
+      "markers": [
+        "BOSS RHYTHM OK: tracking/visible lock/swept real hurt geometry/safe anticipation and opening, bounded two-rush phase/HUD, all guardian close-range movement/slow, frozen warnings, finite elemental travel, wind roles and phase cancellation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_knight_boss",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.88,
+      "errors": [],
+      "markers": [
+        "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_beasts",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.52,
+      "errors": [],
+      "markers": [
+        "BEASTS OK: unique stage bosses, locked warning/damage geometry, two phases, dash immunity, real defeat rewards, left HUD, earned powers, cooldowns, progression and run reset"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_electric_grid",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.49,
+      "errors": [],
+      "markers": [
+        "smoke_electric_grid OK 1034 assertions"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_wooden_trial",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.42,
+      "errors": [],
+      "markers": [
+        "WOODEN TRIAL OK: 49 checks; actual Debug, real horde/rewards, lock/input/dash, timer, pause, skills, density caps, result/retry/reset and mobile modals"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_motion_vfx",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.71,
+      "errors": [],
+      "markers": [
+        "MOTION VFX OK: 170 checks; player-bound HUD, distance ghosts, 30/60/120Hz arcs, render-only clocks, fixed pools and actual Debug/retry/Home isolation"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_combat_lighting",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.33,
+      "errors": [],
+      "markers": [
+        "COMBAT LIGHTING OK: fixed batches/shared texture/layers, real drone/gun behavior, stable beam points, bounded projectile/orb/muzzle storms, exact audible-pitch XP glow/no-op/gap/pause/progress, deletion/Debug/return"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 8 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_weather_lighting",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.68,
+      "errors": [],
+      "markers": [
+        "WEATHER LIGHTING OK: 21 checks; real Debug, shared lamp/bounds, solar/radial shadows, movement, pause, crossfade, zero intensity, stop and reset"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 87 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 13 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "packed_checks": [
+    {
+      "name": "smoke_airborne_feedback",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.61,
+      "errors": [],
+      "markers": [
+        "AIRBORNE FEEDBACK OK: 41 checks"
+      ],
+      "shutdown_warnings": []
+    },
+    {
+      "name": "smoke_minefield",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "MINEFIELD OK: 252 checks"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 28 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 14 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_visual_style",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.4,
+      "errors": [],
+      "markers": [
+        "VISUAL STYLE OK: shared world/card/equipment/reel palette, safe icon reuse, unchanged book collision/direct damage without implicit burn, fixed footprint, shared non-additive pickups and exact healing"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    {
+      "name": "smoke_knight_boss",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.05,
+      "errors": [],
+      "markers": [
+        "KNIGHT BOSS OK: debug entry, music, warned dash/slash, geometry, two phases, invulnerability and third-stage rest gate"
+      ],
+      "shutdown_warnings": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  ],
+  "headless_import": "passed; no errors or warnings",
+  "web_export": "passed; no errors or warnings",
+  "pck_sha256": "3acd2ef2d49887df060a346c5666c11e9eb5d508929e727b0f9389b9b3c5ccdf",
+  "captures": [
+    "airborne-ground-900x600.png",
+    "airborne-ground-390x844.png",
+    "airborne-apex-900x600-gray.png",
+    "airborne-apex-900x600.png",
+    "airborne-apex-390x844-gray.png",
+    "airborne-apex-390x844.png",
+    "airborne-landing-900x600.png"
+  ],
+  "native_capture_log": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org\nWARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.\n     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)\nOpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)\n\nERROR: Texture with GL ID of 19: leaked 1364 bytes.\n   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)\nERROR: Parameter \"RenderingServer::get_singleton()\" is null.\n   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)\nWARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2535)\nERROR: 4 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)\nERROR: 1 RID allocations of type 'N5GLES37TextureE' were leaked at exit.\n",
+  "initial_fixture_failure": "Wrong fixture collider node path, corrected to Area2D/CollisionShape2D; 41 checks pass after correction.",
+  "browser_verification": "Not run; managed browser helper unavailable",
+  "phone_fps_verification": "not run"
+}

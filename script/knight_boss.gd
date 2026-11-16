@@ -73,6 +73,7 @@ func recovery_seconds() -> float:
 func _process(delta: float) -> void :
 	if is_dying:
 		return
+	_tick_terrain_visual(delta,_terrain_base_position)
 	_anim_time += delta
 	var running: = attack_state == AttackState.DASH or attack_state == AttackState.APPROACH
 	var frames: = 8 if running else 4
@@ -220,7 +221,7 @@ func _draw() -> void :
 
 func draw_ellipse_shadow() -> void :
 	draw_set_transform(Vector2(0, 44), 0, Vector2(1.0, 0.35))
-	draw_circle(Vector2.ZERO, 42.0, GamePalette.shadow(0.82))
+	draw_circle(Vector2.ZERO, lerpf(42,30,terrain_impulse.height_ratio()), GamePalette.shadow(lerpf(0.82,0.5,terrain_impulse.height_ratio())))
 	draw_set_transform(Vector2.ZERO)
 
 func _build_sword() -> void :
@@ -276,3 +277,6 @@ func _cancel_controlled_attack() -> void:
 	dash_distance_left = 0
 	attack_hit = true
 	queue_redraw()
+
+func _sync_airborne_attachments(height: float) -> void:
+	if is_instance_valid(_sword): _sword.position = Vector2(0,8-height)

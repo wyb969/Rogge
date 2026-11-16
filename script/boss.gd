@@ -42,6 +42,7 @@ var _last_charge_direction: = Vector2.RIGHT
 var charges_started: = 0
 var _hurt_area: Area2D
 var rush_feedback: Node2D
+@onready var _terrain_base_position: Vector2 = $Sprite2D.position
 var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
 var electric_stun_left := 0.0
 var warning_locked: = false
@@ -137,10 +138,11 @@ func _setup_health_bar() -> void :
 	health_bar.scale = Vector2.ONE
 	health_bar.modulate = Color.WHITE
 
-func _process(_delta: float) -> void :
+func _process(delta: float) -> void :
 	if is_dying:
 		return
 	_sync_outline_frame_uv()
+	_tick_terrain_visual(delta,_terrain_base_position)
 
 func deals_own_contact() -> bool:
 	return true
@@ -521,7 +523,7 @@ func _add_to_effect_container(node: Node) -> void :
 func apply_electric_stun(seconds: float) -> void:
 	if is_dying: return
 	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
-	terrain_impulse.clear()
+	clear_terrain_impulse()
 	_cancel_controlled_attack()
 
 func _cancel_controlled_attack() -> void:
@@ -544,9 +546,21 @@ func _tick_electric_stun(delta: float) -> bool:
 func apply_terrain_impulse(push: Vector2) -> void:
 	if is_dying: return
 	_cancel_controlled_attack()
-	terrain_impulse.start(push*0.28)
+	terrain_impulse.start(push*0.28,0.28,22)
 
 func _tick_environment_control(delta: float) -> bool:
 	var stunned := _tick_electric_stun(delta)
 	if terrain_impulse.tick(self,delta): return true
 	return stunned
+
+func _tick_terrain_visual(delta: float, base: Vector2) -> void:
+	terrain_impulse.advance_visual(delta)
+	sprite_2d.position = base+Vector2.UP*terrain_impulse.height()
+	_sync_airborne_attachments(terrain_impulse.height())
+
+func _sync_airborne_attachments(_height: float) -> void: pass
+
+func clear_terrain_impulse() -> void:
+	terrain_impulse.clear()
+	if is_instance_valid(sprite_2d): sprite_2d.position = _terrain_base_position
+	_sync_airborne_attachments(0)

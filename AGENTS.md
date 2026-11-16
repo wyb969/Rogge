@@ -28,3 +28,5 @@
 - Sunny electric terrain owns a separate actor stun timer; do not reuse trial movement locks or global hitstop. Snapshot conduction before damage, deduplicate across all terrain zones per cycle, cancel stale attack geometry, and preserve the player's electrical escape grace.
 
 - Terrain knockback has its own collision-aware impulse state. Cancel stale attack geometry before displacement, preserve trial lock priority and dash immunity, and clear only terrain-owned impulses on lifecycle exits. Mine respawn is timed from contact, not from visual completion.
+
+- Terrain airborne feedback is cosmetic Z, separate from ground collision/control duration. Keep foot locators and contact shadows on the ground, move attached weapon art with the body, and retain cleanup ownership until landing finishes. Route launch/landing shake through the existing camera mixer.

@@ -6,7 +6,7 @@
 - 第一关玩家12/敌人36伤害，逐关+2/+6，目标级1秒冷却；玩家原护盾/Dash无敌保留，敌方用最终环境伤害/from_status防止被动递归和玩家暴击增幅。路径扫掠检测快速穿越，>300瞬移只验落点。
 - `ice_spikes.gd`单绘制节点，128地形槽/12复用几何/512目标记录；每批一次注册表查询，按经过网格判断，非逐尖刺遍历所有怪。暂停/试炼/休息/转场/天气切换/结束处理；0天气FX仍可见。
 - Debug现有“冰面场景 · 滑行 / 尖刺”入口，仍25项分页。6项原生专项和3项最终Web PCK通过；尖刺41断言、原生横/竖/灰度见[ice-spikes.md](ice-spikes.md)及`validation/ice-spikes-20261116.json`。没有本轮浏览器/Safari/FPS结论，既有退出警告未解决。
-- 工作盘打包时用满，本次Web输出迁至内存临时目录并重新导出验证；不要清理源码/历史工作树/备份。源码PR和私有试玩发布待本轮最终记录；不自动合入master或正式itch。后续收集密度与滑行难度反馈。
+- 工作盘打包时用满，本次Web输出迁至内存临时目录并重新导出验证；不要清理源码/历史工作树/备份。源码`0e80537`已保存到[PR #20](https://github.com/wyb969/Rogge/pull/20)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-102807，权限不变。Site source`0100a17a581881348eb113c97518ae98d87556ed`，deployment`appgdep_6afa6baf014c8191bd8eed6af19878d4`于北京时间2026-11-16 10:34发布succeeded；原PCK/解压WASM字节一致，记录见`validation/ice-spikes-playtest-20261116.json`；不自动合入master或正式itch。后续收集密度与滑行难度反馈。
 
 ## 2026-11-16 刮风与冰面（当前开发）
 

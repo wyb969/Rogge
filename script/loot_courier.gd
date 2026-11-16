@@ -42,6 +42,7 @@ func _physics_process(delta: float) -> void :
 		return
 	_update_statuses(delta)
 	if _death_started: return
+	if _tick_electric_stun(delta): return
 	age += delta
 	if age >= LIFETIME:
 		queue_free()

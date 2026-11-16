@@ -1,5 +1,20 @@
 # ROGGE · AI 开发交接
 
+## 2026-11-16 电网第二版（当前开发）
+
+- 继续`feature/electric-grid-20261116` / PR #22，基于`3f503cb`，版本**20261116-122338**。玩家麻痹后电网保护从2.5改为0.5秒，麻痹仍1秒；4.5秒周期/原伤害/同周期去重不变。
+- 改4个圆/方区域；按真实移动每64距离检查，仅回收距离420且屏外90余量的槽，在前方随机补充，保持世界锚定/避开玩家/完整0.75秒预警，不在脚下刷新。圆形扫掠按圆计算，非外接框。
+- `electric_zap_visual.gd`绘制4种体型小怪、恐龙/骑士/四神兽独立骨架和不规则闭合电环；几何每次触电缓存，25点环缓冲复用；64骨架/128连线/两个CanvasItem预算保持。
+- 本轮5源码专项、3最终Web PCK专项；电网1034断言，横/竖/灰度及六Boss骨架原生画廊；见[electric-grid.md](electric-grid.md)、`validation/electric-grid-v2-20261116.json`。没有浏览器/Safari/FPS实测，既有退出资源/GL警告仍保留。旧版2区域/2.5秒说明仅作历史。
+- 同一源工作树，构建/日志在`/workspace/Rogge-electric-grid-20261116/v2`（内存临时目录）；源码以GitHub为准，不清理旧文件。继续调节探索区域密度与Boss电环大小；正式master/itch未更新。 已验证源码`12fb119`已推送PR #22；[私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)更新至20261116-122338，权限不变。Site source`e07fc66c93f5ca4ef9f32f90412cc0f5c2d72d86`、deployment`appgdep_6afa861f22508191b478571f8e85645f`于北京时间2026-11-16 12:27发布succeeded。发布证据见`validation/electric-grid-v2-playtest-20261116.json`。
+
+## 2026-11-16 晴天电网（当前开发）
+
+- 分支`feature/electric-grid-20261116`基于`c07a63b`（PR #21），版本**20261116-114909**。晴天每关两条世界固定随机长矩形，4.5秒周期（预警0.75/通电1.2/断电2.55）；玩家18、怪物54起，每关+3/+9。
+- 麻痹1秒、玩家恢复后2.5秒电网保护；原Dash/护盾规则保留。42距离怪物传导采用位置快照、格桶、非递归队列、统一结算和每周期ID去重。怪物不反传玩家；取消旧蓄力后重新预警。骨架64/连线128/单批512目标，两个绘制节点。
+- 新Debug首项晴天电网，26项分页；原正常天气与其他卡牌保留。仅晴天启用，FX=0仍显示，暂停/结束/天气退出清理。详见[electric-grid.md](electric-grid.md)与验证JSON。12源码专项、最终Web PCK四项，原生横/竖/灰度；新700断言通过。无本轮浏览器/Safari/FPS实测，保留既有退出警告。
+- 由于工作盘接近满，源工作树/导入/构建经`/workspace/Rogge-electric-grid-20261116`链接放在内存目录；须以GitHub提交为持久依据，不清理历史源码或备份。后续重点试玩电网布局/危险可读性、手机密集传导流畅度与玩家脱离余量。正式master/itch未更新。 已验证源码`10463eb`保存于[PR #22](https://github.com/wyb969/Rogge/pull/22)。[原私有试玩](https://rogge-palette-playtest-20261109.whiteber.chatgpt.site)已更新至20261116-114909，权限不变；Site source`9cc3ae63f5badd421cae69eb7bd52bb4cf25218c`、deployment`appgdep_6afa7e1d52788191b2968a9536f6a05b`于北京时间2026-11-16 11:53发布succeeded。原PCK/解压WASM一致，记录见`validation/electric-grid-playtest-20261116.json`。
+
 ## 2026-11-16 草、卷风与冰面高光（当前开发）
 
 - 分支`fix/surface-art-20261116`基于`06f625f`（PR #20），版本**20261116-111619**。仅视觉：草图块`Rect2(0,32,32,32)`顺时针90°并同步投影，复用槽恢复其他图块方向；18×25点世界曲线阵风随机卷尾/弧度/寿命/淡出；冰面改相机位置+真实移动方向驱动的平面高光，删除重复扭曲/流动条纹。

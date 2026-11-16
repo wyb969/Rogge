@@ -63,6 +63,7 @@ var left_fist_level: int = 0
 var right_fist_level: int = 0
 var hurt_lock: float = 0.0
 var arsenal_shield_active := false
+var electric_stun_left := 0.0
 var movement_locked := false
 var _movement_lock_position := Vector2.ZERO
 
@@ -435,6 +436,7 @@ func _cancel_dash() -> void :
 	_sync_dash_hurt_area()
 
 func reset_dash() -> void :
+	electric_stun_left = 0
 	_cancel_dash()
 	can_dasing_timer.stop()
 	can_dash = true
@@ -485,11 +487,18 @@ func _physics_process(delta: float) -> void :
 			_sync_dash_hurt_area()
 	if hurt_lock > 0.0:
 		hurt_lock = maxf(0.0, hurt_lock - delta)
+	var electrically_stunned := electric_stun_left > 0
+	electric_stun_left = maxf(0,electric_stun_left-delta)
 	if movement_locked:
 		global_position = _movement_lock_position
 		velocity = Vector2.ZERO
 		_stop_locomotion()
 		MobileInput.clear_move()
+		MobileInput.clear_dash()
+		return
+	if electrically_stunned:
+		velocity = Vector2.ZERO
+		_stop_locomotion()
 		MobileInput.clear_dash()
 		return
 	var keys: = Input.get_vector("left", "right", "up", "down")
@@ -550,7 +559,7 @@ func _emit_dash_ghosts(before: Vector2, after: Vector2) -> void:
 	_dash_ghost_distance = fposmod(_dash_ghost_distance + distance, DASH_GHOST_SPACING)
 
 func _start_dash(input_direction: Vector2) -> void :
-	if movement_locked or not can_dash or player_health <= 0: return
+	if movement_locked or electric_stun_left>0 or not can_dash or player_health <= 0: return
 	can_dash = false
 	dashing = true
 	dash_grace_left = 0
@@ -703,3 +712,10 @@ func rest_defense_for(amount: float) -> float:
 
 func rest_cooldown_for(scale: float) -> float:
 	return clampf(cooldown_scale*scale,0.45,1.0)
+
+func apply_electric_stun(seconds: float) -> void:
+	if player_health<=0 or movement_locked: return
+	_cancel_dash()
+	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
+	hurt_lock = maxf(hurt_lock,electric_stun_left+0.25)
+	velocity = Vector2.ZERO

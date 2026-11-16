@@ -108,6 +108,10 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugElectricGridButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "晴天电网 · 麻痹 / 群怪传导"
+
 [node name="DebugWindSceneButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "阵风场景 · 风向 / 偏移"
@@ -262,3 +266,5 @@ autowrap_mode = 3
 
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugWindSceneButton" to="." method="_launch_run" binds= [&"wind_scene"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugIceSceneButton" to="." method="_launch_run" binds= [&"ice_scene"]]
+
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugElectricGridButton" to="." method="_launch_run" binds= [&"electric_grid"]]

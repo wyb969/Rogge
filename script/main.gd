@@ -315,7 +315,7 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_star_chain_debug()
 		&"electric_grid":
 			game.prepare_weather_debug()
-			game.variety.notify("晴天电网：红边预警 → 通电 → 断电\n触电麻痹1秒；恢复后2.5秒电网保护\n引怪入网，近距离传导每周期只命中一次")
+			game.variety.notify("晴天电网：探索刷新4处圆形 / 方形区域\n麻痹1秒；恢复后0.5秒电网保护\n引怪入网，近距离传导每周期只命中一次")
 		&"wind_scene":
 			game.prepare_surface_debug(4)
 		&"ice_scene":

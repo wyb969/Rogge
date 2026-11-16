@@ -25,4 +25,4 @@
 
 - Wind and ice are gameplay environments independent of cosmetic weather intensity. Keep ice terrain identifiable with FX off, use bounded target velocities, and snapshot any attack distance modifier together with its warning; never add untelegraphed landing drift. Preserve pause/trial/movement-lock priority.
 
-- Sunny electric terrain owns a separate actor stun timer; do not reuse trial movement locks or global hitstop. Snapshot conduction before damage, deduplicate across both strips per cycle, cancel stale attack geometry, and preserve the player's electrical escape grace.
+- Sunny electric terrain owns a separate actor stun timer; do not reuse trial movement locks or global hitstop. Snapshot conduction before damage, deduplicate across all terrain zones per cycle, cancel stale attack geometry, and preserve the player's electrical escape grace.

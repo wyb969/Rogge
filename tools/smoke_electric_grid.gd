@@ -36,17 +36,56 @@ func run() -> void:
 	grid = g.weather.electric_grid
 	grid.set_physics_process(false)
 	grid._physics_process(0.016)
-	expect(grid._running and grid.strips.size()==2,"real sunny Debug activates two strips")
+	expect(grid._running and grid.zones.size()==4,"real sunny Debug activates four zones")
+	var shapes: Dictionary = {}
 	for i in 100:
 		grid._layout(Vector2(200,-100))
-		for rect in grid.strips:
-			expect(not rect.grow(60).has_point(Vector2(200,-100)),"random layout retains safe entry")
-		expect(not grid.strips[0].intersects(grid.strips[1]),"random strips do not overlap")
-	var fixed: Array = grid.strips.duplicate()
+		for zone in grid.zones:
+			shapes[zone.circle] = true
+			expect(not zone.bounds.grow(60).has_point(Vector2(200,-100)),"random layout retains safe entry")
+		expect(not grid.zones[0].bounds.intersects(grid.zones[1].bounds),"random strips do not overlap")
+	expect(shapes.size()==2,"random layouts include circles and rectangles")
+	var fixed: Array = grid.zones.duplicate(true)
 	g.player.global_position += Vector2(300,0)
 	grid._physics_process(0.016)
-	expect(grid.strips==fixed,"world layout cannot follow camera/player")
-	grid.strips.assign([Rect2(-20,-100,40,200),Rect2(-20,-100,40,200)])
+	expect(grid.zones==fixed,"world layout cannot follow camera/player")
+	# Exploration only replaces offscreen/distant slots and always arms new geometry safely.
+	var camera: Camera2D = g.player.get_node("Camera2D")
+	var old_camera: Vector2 = camera.global_position
+	g.player.global_position = Vector2(1800,0)
+	camera.global_position = g.player.global_position
+	camera.force_update_scroll()
+	grid._refresh_exploration()
+	expect(grid.zones.size()==4 and grid.zones!=fixed,"exploration replaces old slots with exactly four zones")
+	for zone in grid.zones:
+		expect(not zone.bounds.grow(60).has_point(g.player.global_position),"replacement never appears under player")
+		expect(zone.armed_at>=grid._clock+grid.WARNING,"replacement grants a full fresh warning")
+	var replaced: Array = grid.zones.duplicate(true)
+	grid._refresh_exploration()
+	expect(grid.zones==replaced,"standing still cannot respawn hazards")
+	for step in 20:
+		g.player.global_position += Vector2(128,32)
+		camera.global_position = g.player.global_position
+		camera.force_update_scroll()
+		grid._refresh_exploration()
+		expect(grid.zones.size()==4,"long exploration keeps exactly four fixed slots")
+		for zone in grid.zones:
+			expect(zone.bounds.get_center().distance_to(g.player.global_position)<850,"old remote slots are recycled near exploration")
+	grid._clock = 0.8
+	grid.zones.assign([grid.make_zone(Rect2(-40,-40,80,80),true)])
+	expect(not grid._crosses(Vector2(39,39),Vector2(39,39)),"circle bounding-box corners are harmless")
+	expect(grid._crosses(Vector2(-70,0),Vector2(70,0)),"swept path across circular zone hits")
+	grid.zones[0].armed_at = 2.0
+	expect(not grid._crosses(Vector2.ZERO,Vector2.ZERO),"fresh circular zone harmless during local warning")
+	grid.zones[0].circle = false
+	grid.zones[0].armed_at = 0
+	expect(grid._crosses(Vector2(39,39),Vector2(39,39)),"square corner uses square damage geometry")
+	camera.global_position = old_camera
+	camera.force_update_scroll()
+	g.player.global_position = Vector2(300,300)
+	grid._explore_at = g.player.global_position
+	grid.zones.clear()
+	for i in 4: grid.zones.append(grid.make_zone(Rect2(-20,-100,40,200),false))
 	var a := enemy(Vector2.ZERO)
 	var b := enemy(Vector2(38,0))
 	var c := enemy(Vector2(76,0))
@@ -79,7 +118,7 @@ func run() -> void:
 	var hp: float = p.player_health
 	grid._touch_player()
 	expect(p.player_health==hp-18 and p.electric_stun_left==1,"player contact damage and paralysis")
-	expect(is_equal_approx(grid._player_ready,5.4),"1 second stun plus 2.5 second electric grace")
+	expect(is_equal_approx(grid._player_ready,3.4),"1 second stun plus exactly 0.5 second electric grace")
 	var pos: Vector2 = p.global_position
 	Input.action_press("right")
 	p._start_dash(Vector2.RIGHT)
@@ -95,7 +134,7 @@ func run() -> void:
 	p.global_position = -grid.FOOT
 	grid._player_at = Vector2.ZERO
 	p.hurt_lock = 0
-	grid._clock = 5.3
+	grid._clock = 1.93
 	grid._player_hit = false
 	grid._touch_player()
 	expect(p.player_health==hp-18,"escape grace is respected")
@@ -147,6 +186,9 @@ func run() -> void:
 		if path=="boss": boss.start_charge_attack()
 		elif path=="knight_boss": boss._begin_slash()
 		else: boss.state = boss.State.ACTIVE
+		var profile: Dictionary = grid._zap_visual.profile(boss)
+		expect(profile.boss and profile.size.x>=60 and profile.bones.size()>20,"dedicated large "+path+" skeleton")
+		expect(profile.kind==({"boss":&"dinosaur","knight_boss":&"knight","beast_boss":&"elephant"}[path]),"boss-specific anatomy")
 		boss.apply_electric_stun(1)
 		boss._physics_process(0.5)
 		expect(boss.global_position==Vector2(300,300) and is_equal_approx(boss.electric_stun_left,0.5),path+" stops attacks/movement")
@@ -156,7 +198,29 @@ func run() -> void:
 		boss._physics_process(0.5)
 		boss._physics_process(0.05)
 		expect(boss.electric_stun_left<=0,path+" recovers")
+		if path=="beast_boss":
+			var anatomies: Dictionary = {}
+			for element in 4:
+				boss.element = element
+				var shape: Dictionary = grid._zap_visual.profile(boss)
+				anatomies[shape.kind] = true
+				expect(shape.bones.size()>24,"beast has a complete skeleton")
+			expect(anatomies.size()==4,"four beasts have four distinct skeletons")
 		boss.queue_free()
+	var kinds: Dictionary = {}
+	for resource in ["Enemy_1","Enemy_3","Enemy_4","Enemy_5"]:
+		var actor := enemy(Vector2(1000,1000))
+		actor.set_enemy_data(load("res://resource/"+resource+".tres"))
+		var profile: Dictionary = grid._zap_visual.profile(actor)
+		kinds[profile.kind] = true
+		expect(profile.bones.size()>0,"cached skeletal geometry "+resource)
+		if actor.archetype==EnemyData.Archetype.TANK: expect(profile.size.x>30,"tank skeleton follows actual body scale")
+		if actor.archetype==EnemyData.Archetype.DASHER: expect(profile.size.x<20,"runner skeleton follows smaller body scale")
+		actor.queue_free()
+	expect(kinds.size()==4,"four monster archetypes have distinct anatomy")
+	var ring_a: PackedVector2Array = grid._zap_visual.ring_points(Vector2(40,40),0.1,5).duplicate()
+	var ring_b: PackedVector2Array = grid._zap_visual.ring_points(Vector2(40,40),0.3,5).duplicate()
+	expect(ring_a.size()==25 and ring_a[0]==ring_a[24] and ring_a!=ring_b,"closed irregular current ring changes over time")
 	# Dense ring: iterative flood fill terminates and each actual actor is hit once.
 	for actor in [a,b,c,d]: actor.queue_free()
 	await process_frame

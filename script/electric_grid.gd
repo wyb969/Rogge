@@ -1,5 +1,5 @@
 extends Node2D
-# Two world-fixed strips, one snapshot query and iterative spatial flood fill per scan.
+# Four world-fixed zones; recycle only distant offscreen slots while exploring.
 const PERIOD := 4.5
 const WARNING := 0.75
 const LIVE := 1.2
@@ -8,7 +8,13 @@ const MAX_ACTORS := 512
 const MAX_ZAPS := 64
 const MAX_LINKS := 128
 const FOOT := Vector2(0,12)
-var strips: Array[Rect2] = []
+const ZONE_COUNT := 4
+const ESCAPE_GRACE := 0.5
+const STUN_SECONDS := 1.0
+const ZAP_VISUAL := preload("res://script/electric_zap_visual.gd")
+var zones: Array[Dictionary] = []
+var _explore_at := Vector2.ZERO
+var _zap_visual := ZAP_VISUAL.new()
 var _rng := RandomNumberGenerator.new()
 var _stage := -1
 var _running := false
@@ -47,7 +53,7 @@ func _ready() -> void:
 
 func reset_run() -> void:
 	stop()
-	strips.clear()
+	zones.clear()
 	_stage = -1
 
 func stop() -> void:
@@ -70,29 +76,64 @@ func stop() -> void:
 	queue_redraw()
 	if _overlay != null: _overlay.queue_redraw()
 
+func make_zone(bounds: Rect2, circle: bool, armed_at: float = 0) -> Dictionary:
+	return {"bounds":bounds,"circle":circle,"armed_at":armed_at}
+
+func _new_zone(origin: Vector2, index: int, heading: Vector2 = Vector2.ZERO) -> Dictionary:
+	var circle := _rng.randf()<0.5
+	var width := _rng.randf_range(76,108)
+	var size := Vector2(width,width if circle else _rng.randf_range(70,108))
+	var angle := TAU*float(index)/ZONE_COUNT+_rng.randf_range(-0.28,0.28)
+	if not heading.is_zero_approx(): angle = heading.angle()+_rng.randf_range(-1.3,1.3)
+	var direction := Vector2.from_angle(angle)
+	var center := origin+direction*_rng.randf_range(150,220)
+	var rect := Rect2(center-size*0.5,size)
+	for attempt in 24:
+		var blocked := rect.grow(65).has_point(origin)
+		for j in zones.size():
+			if j!=index and rect.grow(16).intersects(zones[j].bounds): blocked = true
+		if not blocked: return make_zone(rect,circle,_clock+WARNING)
+		direction = direction.rotated(0.65)
+		center = origin+direction*(170+float(attempt/8)*55)
+		rect.position = center-size*0.5
+	# Keep the original offscreen slot if no safe placement is available.
+	return zones[index] if index<zones.size() else make_zone(Rect2(origin+Vector2(350+index*150,0),size),circle,_clock+WARNING)
+
 func _layout(origin: Vector2) -> void:
-	strips.clear()
-	for i in 2:
-		var horizontal := _rng.randf()<0.5
-		var size := Vector2(_rng.randf_range(200,280),42)
-		if not horizontal: size = Vector2(size.y,size.x)
-		var side := -1.0 if i==0 else 1.0
-		var offset := Vector2(_rng.randf_range(-40,40),side*_rng.randf_range(120,175)) if horizontal else Vector2(side*_rng.randf_range(120,175),_rng.randf_range(-40,40))
-		var rect := Rect2(origin+offset-size*0.5,size)
-		# A second strip must not intersect the first, or the safe starting disk.
-		for attempt in 8:
-			if (i==0 or not rect.grow(25).intersects(strips[0])) and not rect.grow(65).has_point(origin): break
-			rect.position += offset.normalized()*45
-		strips.append(rect)
+	zones.clear()
+	for i in ZONE_COUNT: zones.append(_new_zone(origin,i))
+	_explore_at = origin
+
+func _refresh_exploration() -> void:
+	var at: Vector2 = game.player.global_position
+	if at.distance_squared_to(_explore_at)<64.0*64.0: return
+	var heading := (at-_explore_at).normalized()
+	_explore_at = at
+	var view: Rect2 = get_viewport().get_canvas_transform().affine_inverse()*get_viewport().get_visible_rect()
+	view = view.grow(90)
+	for i in zones.size():
+		var bounds: Rect2 = zones[i].bounds
+		# Existing visible terrain never slides with the player or disappears under actors.
+		if bounds.get_center().distance_squared_to(at)<420.0*420.0 or view.intersects(bounds): continue
+		zones[i] = _new_zone(at,i,heading)
+
+func zone_live(zone: Dictionary) -> bool:
+	return energized() and _clock>=float(zone.armed_at)
 
 func player_damage() -> float: return 18.0+3.0*maxi(0,weather.stage-1)
 func enemy_damage() -> float: return player_damage()*3.0
 func phase() -> float: return fposmod(_clock,PERIOD)
 func energized() -> bool: return phase()>=WARNING and phase()<WARNING+LIVE
 
-func _crosses(before: Vector2, after: Vector2) -> bool:
+func _crosses(before: Vector2, after: Vector2, live_only: bool = true) -> bool:
 	if before.distance_squared_to(after)>300.0*300.0: before = after
-	for rect in strips:
+	for zone in zones:
+		if live_only and not zone_live(zone): continue
+		var rect: Rect2 = zone.bounds
+		if zone.circle:
+			var near := Geometry2D.get_closest_point_to_segment(rect.get_center(),before,after)
+			if near.distance_squared_to(rect.get_center())<=pow(rect.size.x*0.5+5,2): return true
+			continue
 		var bounds := rect.grow(5)
 		if bounds.has_point(before) or bounds.has_point(after): return true
 		var a := bounds.position
@@ -104,10 +145,10 @@ func _crosses(before: Vector2, after: Vector2) -> bool:
 
 func _zap(actor: Node2D) -> void:
 	if actor.has_method("apply_electric_stun"):
-		actor.apply_electric_stun(1.0)
+		actor.apply_electric_stun(STUN_SECONDS)
 		_stunned[actor.get_instance_id()] = weakref(actor)
 	if _zaps.size()<MAX_ZAPS:
-		_zaps.append({"actor":weakref(actor),"until":_clock+1.0})
+		_zaps.append({"actor":weakref(actor),"until":_clock+STUN_SECONDS,"profile":_zap_visual.profile(actor)})
 
 func _touch_player() -> void:
 	var p: Node = game.player
@@ -118,7 +159,7 @@ func _touch_player() -> void:
 	if p.is_dash_invulnerable() or p.hurt_lock>0 or p.arsenal_shield_active: return
 	if not _crosses(before,at): return
 	_player_hit = true
-	_player_ready = _clock+3.5 # 1s paralysis + 2.5s electrical escape grace.
+	_player_ready = _clock+STUN_SECONDS+ESCAPE_GRACE # One second paralysis, then half a second escape grace.
 	p.receive_attack(player_damage())
 	if p.player_health>0: _zap(p)
 
@@ -196,7 +237,10 @@ func _physics_process(delta: float) -> void:
 		return
 	if not _running or _stage!=weather.stage:
 		stop()
-		if strips.is_empty() or _stage!=weather.stage: _layout(game.player.global_position)
+		if zones.is_empty() or _stage!=weather.stage: _layout(game.player.global_position)
+		else:
+			for zone in zones: zone.armed_at = WARNING
+			_explore_at = game.player.global_position
 		_stage = weather.stage
 		_running = true
 		_player_at = game.player.global_position+FOOT
@@ -207,6 +251,7 @@ func _physics_process(delta: float) -> void:
 		_cycle = cycle
 		_hit_ids.clear()
 		_player_hit = false
+	_refresh_exploration()
 	_touch_player()
 	if not _running: return
 	for i in range(_zaps.size()-1,-1,-1):
@@ -226,31 +271,38 @@ func _physics_process(delta: float) -> void:
 
 func _draw() -> void:
 	if not _running: return
-	var active := energized()
-	var warning := phase()<WARNING
-	var edge := GamePalette.ENEMY_ORANGE if active or warning else GamePalette.UI_GREY_BORDER
-	for rect in strips:
-		draw_rect(rect,Color(GamePalette.INK,0.65))
-		if warning: draw_rect(rect,Color(GamePalette.ENEMY_RED,0.12+0.12*sin(phase()*20)))
-		draw_rect(rect,Color(edge,0.95 if active else 0.5),false,2)
-		# Electrode pairs and crossbars distinguish these strips from flat attack warnings.
-		var horizontal := rect.size.x>rect.size.y
-		var length := rect.size.x if horizontal else rect.size.y
-		var width := rect.size.y if horizontal else rect.size.x
-		for j in 7:
-			var along := length*float(j)/6.0
-			var a := rect.position+(Vector2(along,0) if horizontal else Vector2(0,along))
-			var b := a+(Vector2(0,width) if horizontal else Vector2(width,0))
-			draw_line(a,b,Color(edge,0.22),1)
-			draw_circle(a,2,edge)
-			draw_circle(b,2,edge)
+	for zone in zones:
+		var rect: Rect2 = zone.bounds
+		var center := rect.get_center()
+		var active := zone_live(zone)
+		var warning := phase()<WARNING or _clock<float(zone.armed_at)
+		var edge := GamePalette.ENEMY_ORANGE if active or warning else GamePalette.UI_GREY_BORDER
+		var alpha := 0.95 if active else 0.5
+		var fill := Color(GamePalette.ENEMY_RED,0.16+0.08*sin(_clock*20)) if warning else Color(GamePalette.INK,0.65)
+		if zone.circle:
+			var radius := rect.size.x*0.5
+			draw_circle(center,radius,fill)
+			draw_arc(center,radius,0,TAU,32,Color(edge,alpha),2)
+			for j in 8: draw_circle(center+Vector2.from_angle(TAU*j/8)*radius,2,edge)
+		else:
+			draw_rect(rect,fill)
+			draw_rect(rect,Color(edge,alpha),false,2)
+			for j in 5:
+				var a := rect.position+Vector2(rect.size.x*j/4,0)
+				var b := a+Vector2(0,rect.size.y)
+				draw_line(a,b,Color(edge,0.16),1)
+				draw_circle(a,2,edge)
+				draw_circle(b,2,edge)
 		if not active: continue
-		for lane in 3:
+		for lane in 4:
+			var y := rect.size.y*(lane+1)/5.0
+			var half_width := rect.size.x*0.5-2
+			if zone.circle: half_width = sqrt(maxf(0,pow(rect.size.x*0.5-3,2)-pow(y-rect.size.y*0.5,2)))-3
 			for j in 13:
 				var t := float(j)/12
-				var offset := width*(lane+1)/4.0+sin(t*27+floor(_clock*24)*1.7+lane*4)*4
-				_arc[j] = rect.position+(Vector2(length*t,offset) if horizontal else Vector2(offset,length*t))
-			draw_polyline(_arc,Color(GamePalette.ENEMY_ORANGE,0.28),5)
+				var wave := sin(t*27+floor(_clock*24)*1.7+lane*4)*3*sin(t*PI)
+				_arc[j] = Vector2(center.x+lerpf(-half_width,half_width,t),rect.position.y+y+wave)
+			draw_polyline(_arc,Color(GamePalette.ENEMY_ORANGE,0.28),4)
 			draw_polyline(_arc,GamePalette.HIT_FLASH_WHITE,1.1)
 
 func draw_zaps(canvas: Node2D) -> void:
@@ -262,15 +314,4 @@ func draw_zaps(canvas: Node2D) -> void:
 	for zap in _zaps:
 		var actor = zap.actor.get_ref()
 		if not is_instance_valid(actor) or actor.electric_stun_left<=0: continue
-		var at: Vector2 = actor.global_position
-		var color := GamePalette.HIT_FLASH_WHITE
-		color.a = 1.0 if int(_clock*18)%2==0 else 0.65
-		canvas.draw_circle(at,14,Color(GamePalette.INK,0.75))
-		canvas.draw_circle(at+Vector2(0,-8),5,color)
-		canvas.draw_circle(at+Vector2(-2,-9),1.1,GamePalette.INK)
-		canvas.draw_circle(at+Vector2(2,-9),1.1,GamePalette.INK)
-		canvas.draw_line(at+Vector2(0,-3),at+Vector2(0,8),color,2)
-		for y in [0,3,6]: canvas.draw_line(at+Vector2(-4,y),at+Vector2(4,y),color,1.5)
-		for side in [-1,1]:
-			canvas.draw_polyline(PackedVector2Array([at+Vector2(0,-1),at+Vector2(side*7,2),at+Vector2(side*9,-3)]),color,1.5)
-			canvas.draw_line(at+Vector2(0,8),at+Vector2(side*5,13),color,2)
+		_zap_visual.draw(canvas,actor,zap.profile,_clock)

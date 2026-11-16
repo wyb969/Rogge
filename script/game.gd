@@ -100,6 +100,7 @@ func _ready() -> void :
 	weather = ENVIRONMENT_WEATHER.new()
 	weather.name = "EnvironmentWeather"
 	add_child(weather)
+	player.environment = weather
 	combat_feedback = COMBAT_FEEDBACK.new()
 	combat_feedback.name = "CombatFeedback"
 	add_child(combat_feedback)
@@ -1063,3 +1064,12 @@ func prepare_star_chain_debug() -> void:
 		spawn_xp_coin(player.global_position + Vector2.from_angle(TAU*i/18)*110, 2)
 	star_chain.enable_debug()
 	star_chain.start_route()
+
+func prepare_surface_debug(kind: int) -> void:
+	prepare_weather_debug()
+	weather.set_preview(kind,0)
+	for i in 3:
+		_on_upgrade_selected("banana_fan")
+		_on_upgrade_selected("black_hole")
+	variety.notify("阵风会推偏普通移动" if kind==4 else "冰面有惯性：松开后滑行，反向输入刹车
+扇风、黑洞和爆炸的怪物位移 +30%")

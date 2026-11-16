@@ -313,6 +313,10 @@ func _launch_run(mode: StringName) -> void :
 			game.prepare_lightning_debug_run()
 		&"star_chain":
 			game.prepare_star_chain_debug()
+		&"wind_scene":
+			game.prepare_surface_debug(4)
+		&"ice_scene":
+			game.prepare_surface_debug(5)
 		&"winter":
 			game.prepare_weather_debug()
 			game.weather.set_preview(3, 0)

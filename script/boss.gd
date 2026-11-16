@@ -157,6 +157,7 @@ func _physics_process(delta: float) -> void :
 			if not rush_timer.is_stopped():
 				var offset: = player.global_position - global_position
 				velocity = offset.normalized() * (72 if enraged() else 58) * poison_slow if offset.length() > 135 else offset.normalized().orthogonal() * 22 * poison_slow
+				if is_instance_valid(player.environment): velocity += player.environment.surface.wind_velocity(0.3)
 				move_and_collide(velocity * delta)
 			var animation: StringName = &"walk" if velocity.length_squared() > 1.0 else &"idle"
 			if animation_player.current_animation != animation or not animation_player.is_playing():

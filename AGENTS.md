@@ -22,3 +22,5 @@
 - Preserve user edits and untracked files. Do not clean/reset worktrees, overwrite user files or force-push as routine work. Keep completed source and handoff notes in Git; temporary cloud paths and chat history are not durable storage.
 - Keep credentials in environment secrets, never source, documents or logs. Publish only within the user's requested scope. Updating the existing itch build channel, editing its storefront and verifying a live browser session are separate operations; report which actually completed.
 - Update `docs/AI_HANDOFF.md` after material changes with code checkpoints, evidence, remaining issues and next steps. Do not describe an old test report as a fresh run or a suspected cause as a confirmed diagnosis.
+
+- Wind and ice are gameplay environments independent of cosmetic weather intensity. Keep ice terrain identifiable with FX off, use bounded target velocities, and snapshot any attack distance modifier together with its warning; never add untelegraphed landing drift. Preserve pause/trial/movement-lock priority.

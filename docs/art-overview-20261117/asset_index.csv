@@ -1,0 +1,147 @@
+ID,名称,类型,源路径,"总览坐标 x,y,w,h",原图裁切,备注
+A001,玩家 · 朝左,PNG 源图,assest/Small-8-Direction-Characters_by_AxulArt.png,"[191, 546, 336, 168]",,实际左右动画 · 每组 3 帧
+A002,玩家 · 朝右,PNG 源图,assest/Small-8-Direction-Characters_by_AxulArt.png,"[774, 546, 336, 168]",,实际左右动画 · 每组 3 帧
+A003,追击怪,PNG 源图,assest/sprites/1 v1.png,"[1448, 552, 155, 155]",,普通敌人 · 原始纹理
+A004,重装追击怪,PNG 源图,assest/sprites/2 v1.png,"[2008, 542, 200, 176]",,普通敌人 · 原始纹理
+A005,重甲箱怪,PNG 源图,assest/sprites/3 v1.png,"[2590, 549, 203, 161]",,普通敌人 · 原始纹理
+A006,远程眼怪,PNG 源图,assest/sprites/4 v1.png,"[3190, 549, 168, 162]",,普通敌人 · 原始纹理
+A007,敏捷突击怪,PNG 源图,assest/sprites/5 v1.png,"[3759, 542, 196, 175]",,普通敌人 · 原始纹理
+A008,刃螳,SVG 源图,assest/sprites/enemies/blade_mantis.svg,"[4360, 552, 160, 155]",,
+A009,回旋镖妖,SVG 源图,assest/sprites/enemies/boomerang_imp.svg,"[289, 939, 140, 150]",,
+A010,孢子炮手,SVG 源图,assest/sprites/enemies/spore_bomber.svg,"[875, 939, 135, 150]",,
+A011,宝囊精,SVG 源图,assest/sprites/loot_courier.svg,"[1438, 933, 174, 162]",,
+A012,宝藏守卫 · 复用箱怪,PNG 源图,assest/sprites/3 v1.png,"[2007, 933, 203, 161]",,复用纹理；体型与描边由运行时处理
+A013,第一关 · 狂奔巨蜥,PNG 源图,assest/DinoSprites - mort.png,"[2616, 929, 150, 170]","[0, 0, 32, 24]",
+A014,第二关 · 钢铁骑士,PNG 源图,assest/sprites/knight.png,"[3216, 928, 117, 171]","[0, 0, 32, 32]",
+A015,潮汐巨象,SVG 源图,assest/sprites/beasts/tide.svg,"[3807, 965, 100, 98]",,
+A016,雷鬃狮王,SVG 源图,assest/sprites/beasts/thunder.svg,"[4386, 957, 108, 114]",,
+A017,苍风双隼 · 远程,SVG 源图,assest/sprites/beasts/gale_ranged.svg,"[301, 1352, 116, 92]",,
+A018,苍风双隼 · 近战,SVG 源图,assest/sprites/beasts/gale_melee.svg,"[884, 1352, 116, 92]",,
+A019,熔岩玄龟,SVG 源图,assest/sprites/beasts/aegis.svg,"[1477, 1347, 96, 102]",,
+A020,苍风神兽 · 词典图标,SVG 源图,assest/sprites/beasts/gale.svg,"[2050, 1352, 116, 92]",,
+A021,力量试炼 · 机械章鱼,SVG 源图,assest/sprites/trials/clockwork_octopus.svg,"[2631, 1342, 120, 112]",,
+A022,速度试炼 · 瞬移巫师,SVG 源图,assest/sprites/trials/blink_wizard.svg,"[3224, 1340, 100, 116]",,
+A023,木头人挑战 · 页面图标,SVG 源图,assest/sprites/trials/wooden_dummy.svg,"[3767, 1314, 180, 168]",,
+A024,巨蜥 · 动画实际引用帧,PNG 源图,assest/DinoSprites - mort.png,"[722, 1911, 1024, 192]",,"原始帧编号：0,2,3,4,5,7,8,9,10,17,18,19,20,21,22,23"
+A025,骑士 · 待机 4 帧 + 移动 8 帧,PNG 源图,assest/sprites/knight.png,"[3278, 1911, 576, 192]",,"原始帧编号：0,1,2,3,16,17,18,19,20,21,22,23"
+A026,荆棘鞭,SVG 源图,assest/sprites/thorn_whip.svg,"[275, 2530, 168, 162]",,thorn_whip
+A027,符文飞弹,SVG 源图,assest/sprites/rune_bolt.svg,"[870, 2536, 145, 150]",,rune_bolt
+A028,脉冲法阵,SVG 源图,assest/sprites/pulse_aura.svg,"[1450, 2536, 150, 150]",,pulse_aura
+A029,银翼飞刀,SVG 源图,assest/sprites/silver_knife.svg,"[2048, 2538, 120, 145]",,silver_knife
+A030,回旋十字刃,SVG 源图,assest/sprites/cross_blade.svg,"[2621, 2541, 140, 140]",,cross_blade
+A031,净化圣水,SVG 源图,assest/sprites/holy_water.svg,"[3214, 2530, 120, 162]",,holy_water
+A032,炸弹,SVG 源图,assest/sprites/bomb.svg,"[3790, 2536, 135, 150]",,bomb
+A033,暴击眼镜,SVG 源图,assest/sprites/critical_glasses.svg,"[4305, 2528, 270, 165]",,critical_glasses
+A034,芭蕉扇,SVG 源图,assest/sprites/banana_fan.svg,"[275, 2905, 168, 159]",,banana_fan
+A035,黑洞,SVG 源图,assest/sprites/black_hole.svg,"[855, 2902, 174, 165]",,black_hole
+A036,剧毒踪迹,SVG 源图,assest/sprites/poison_trail.svg,"[1451, 2903, 148, 164]",,poison_trail
+A037,踏风徽记,SVG 源图,assest/sprites/wind_emblem.svg,"[2032, 2905, 152, 160]",,wind_emblem
+A038,回响火种,SVG 源图,assest/sprites/echo_ember.svg,"[2609, 2907, 164, 156]",,echo_ember
+A039,闪电戒指,SVG 源图,assest/sprites/lightning_ring.svg,"[3188, 2913, 172, 144]",,lightning_ring
+A040,怪物项链,PNG 源图,assest/sprites/monster_necklace.png,"[3777, 2902, 161, 166]",,monster_necklace
+A041,斧头,PNG 源图,assest/sprites/axe.png,"[4370, 2905, 140, 160]",,axe_up
+A042,书本,PNG 源图,assest/sprites/book.png,"[289, 3286, 140, 145]",,circle_up
+A043,枪支,PNG 源图,assest/weaponR1.png,"[773, 3276, 339, 166]",,gun_up
+A044,拾取,PNG 源图,assest/bullet.png,"[1442, 3276, 166, 166]",,pickup_up
+A045,移速,PNG 源图,assest/sprites/Speedup.png,"[2046, 3276, 125, 165]",,speed_up
+A046,左拳,SVG 源图,assest/sprites/fist_left.svg,"[2619, 3278, 144, 162]",,left_fist
+A047,右拳,SVG 源图,assest/sprites/fist_right.svg,"[3202, 3278, 144, 162]",,right_fist
+A048,无人机,SVG 源图,assest/sprites/drone.svg,"[3737, 3279, 240, 160]",,drone_up
+A049,汽油瓶,SVG 源图,assest/sprites/molotov.svg,"[4413, 3285, 54, 147]",,molotov_up
+A050,寒冰,SVG 源图,assest/sprites/freeze.svg,"[287, 3661, 144, 144]",,freeze_up
+A051,回复,SVG 源图,assest/sprites/regen_sprout.svg,"[870, 3655, 144, 156]",,regen_up
+A052,吸血,SVG 源图,assest/sprites/crimson_fang.svg,"[1451, 3657, 148, 152]",,lifesteal_up
+A053,玉佩,SVG 源图,assest/sprites/jade_guard.svg,"[2032, 3655, 152, 156]",,shield_up
+A054,神兽技能 · 潮汐复苏,SVG 源图,assest/sprites/beasts/skill_tide.svg,"[2641, 3673, 100, 120]",,左侧技能栏图标
+A055,神兽技能 · 雷霆裁决,SVG 源图,assest/sprites/beasts/skill_thunder.svg,"[3224, 3673, 100, 120]",,左侧技能栏图标
+A056,神兽技能 · 苍风牵引,SVG 源图,assest/sprites/beasts/skill_gale.svg,"[3807, 3673, 100, 120]",,左侧技能栏图标
+A057,神兽技能 · 玄岩壁垒,SVG 源图,assest/sprites/beasts/skill_aegis.svg,"[4390, 3673, 100, 120]",,左侧技能栏图标
+A058,实战投掷斧 · 图集裁切,PNG 源图,assest/#2 - Transparent Icons & Drop Shadow.png,"[278, 4221, 162, 162]","[352, 160, 32, 32]",hand_weapon.tscn
+A059,实战环绕书 · 图集裁切,PNG 源图,assest/#2 - Transparent Icons & Drop Shadow.png,"[875, 4232, 135, 140]","[32, 416, 32, 32]",circle_unit.tscn；运行时羊皮纸着色
+A060,枪械本体 · 场景裁切,PNG 源图,assest/weaponR1.png,"[1356, 4219, 339, 166]","[431, 1105, 1329, 729]",weapon.tscn；区域取整展示
+A061,枪口火焰,PNG 源图,assest/muzzle.png,"[1995, 4219, 226, 166]",,粒子使用原始纹理
+A062,玩家子弹 · 光束裁切,PNG 源图,assest/beams.png,"[2659, 4227, 64, 150]","[219, 316, 32, 75]",bullet.tscn
+A063,金币 / 经验 · 12 帧,PNG 源图,assest/coin.png,"[3034, 4222, 480, 160]",,金色金币承担经验奖励
+A064,工具栏 · 菜单,SVG 源图,assest/ui/toolbar_menu.svg,"[3758, 4225, 198, 154]",,
+A065,工具栏 · 返回主页,SVG 源图,assest/ui/toolbar_home.svg,"[4363, 4228, 154, 147]",,
+A066,工具栏 · 全屏,SVG 源图,assest/ui/toolbar_fullscreen.svg,"[279, 4596, 160, 160]",,
+A067,鼠标指针,PNG 源图,assest/tile_0056.png,"[862, 4596, 160, 160]",,
+A068,工程应用图标,SVG 源图,icon.svg,"[1480, 4628, 90, 95]",,project.godot 图标，非战斗角色
+A069,地面图块 1,PNG 源图,assest/sprites/Tiles/Tileset.png,"[271, 5164, 112, 112]","[16, 16, 16, 16]",infinite_ground.gdshader
+A070,地面图块 2,PNG 源图,assest/sprites/Tiles/Tileset.png,"[789, 5164, 112, 112]","[80, 0, 16, 16]",infinite_ground.gdshader
+A071,地面图块 3,PNG 源图,assest/sprites/Tiles/Tileset.png,"[1307, 5164, 112, 112]","[80, 16, 16, 16]",infinite_ground.gdshader
+A072,草木装饰 1,PNG 源图,assest/sprites/Decorations/Decorations.png,"[1827, 5166, 108, 108]","[160, 32, 32, 32]",原始区域；地面染色另见下方
+A073,装饰池 2 · 空白取样区,PNG 源图,assest/sprites/Decorations/Decorations.png,"[2351, 5172, 96, 96]","[128, 64, 32, 32]",代码仍引用此透明区域，无实际像素
+A074,草木装饰 3,PNG 源图,assest/sprites/Decorations/Decorations.png,"[2869, 5166, 96, 108]","[64, 64, 32, 32]",原始区域；地面染色另见下方
+A075,草木装饰 4,PNG 源图,assest/sprites/Decorations/Decorations.png,"[3387, 5170, 96, 100]","[96, 96, 32, 32]",原始区域；地面染色另见下方
+A076,草木装饰 5,PNG 源图,assest/sprites/Decorations/Decorations.png,"[3888, 5165, 130, 110]","[160, 128, 32, 32]",原始区域；地面染色另见下方
+A077,草木装饰 6,PNG 源图,assest/sprites/Decorations/Decorations.png,"[4399, 5169, 144, 102]","[0, 32, 32, 32]",第 6 块按当前代码顺时针旋转 90°
+A078,地面配色样本 1,当前代码渲染,script/infinite_background.gd + shaders/infinite_ground.gdshader,"[308, 5681, 296, 296]",,按 palette_id 0 渲染；不是关卡序号
+A079,地面配色样本 2,当前代码渲染,script/infinite_background.gd + shaders/infinite_ground.gdshader,"[1085, 5681, 296, 296]",,按 palette_id 1 渲染；不是关卡序号
+A080,地面配色样本 3,当前代码渲染,script/infinite_background.gd + shaders/infinite_ground.gdshader,"[1862, 5681, 296, 296]",,按 palette_id 2 渲染；不是关卡序号
+A081,地面配色样本 4,当前代码渲染,script/infinite_background.gd + shaders/infinite_ground.gdshader,"[2639, 5681, 296, 296]",,按 palette_id 3 渲染；不是关卡序号
+A082,地面配色样本 5,当前代码渲染,script/infinite_background.gd + shaders/infinite_ground.gdshader,"[3416, 5681, 296, 296]",,按 palette_id 4 渲染；不是关卡序号
+A083,地面配色样本 6,当前代码渲染,script/infinite_background.gd + shaders/infinite_ground.gdshader,"[4193, 5681, 296, 296]",,按 palette_id 5 渲染；不是关卡序号
+A084,玩家脚底渐变与阴影,当前代码渲染,script/player_marker.gd,"[226, 6380, 350, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A085,护盾菱形,当前代码渲染,script/shield_gem.gd,"[998, 6380, 137, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A086,回血球与白色加号,当前代码渲染,script/healing_orb.gd,"[1642, 6380, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A087,敌方子弹,当前代码渲染,script/enemy_projectile.gd,"[2205, 6380, 388, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A088,风神兽风刃,当前代码渲染,script/wind_blade.gd,"[2930, 6380, 269, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A089,骑士实体长剑,当前代码渲染,script/knight_boss.gd::_build_sword,"[3447, 6380, 567, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A090,剧毒尾迹,当前代码渲染,script/poison_trail.gd,"[4141, 6380, 511, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A091,黑洞聚怪涡流,当前代码渲染,script/black_hole.gd,"[310, 6769, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A092,芭蕉扇气流,当前代码渲染,script/banana_fan.gd,"[983, 6769, 167, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A093,炸弹冲击环,当前代码渲染,script/bomb_controller.gd,"[1642, 6769, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A094,银翼飞刀 · 实战,当前代码渲染,script/relic_weapons.gd,"[2243, 6769, 312, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A095,回旋十字刃 · 实战,当前代码渲染,script/relic_weapons.gd,"[2974, 6769, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A096,圣水伤害法阵,当前代码渲染,script/relic_weapons.gd,"[3640, 6769, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A097,荆棘鞭扇形打击,当前代码渲染,script/arcane_weapons.gd,"[4364, 6769, 66, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A098,符文飞弹 · 实战,当前代码渲染,script/arcane_weapons.gd,"[310, 7158, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A099,脉冲法阵,当前代码渲染,script/arcane_weapons.gd,"[976, 7158, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A100,全屏神兽闪电,当前代码渲染,script/lightning_strike.gd,"[1702, 7158, 62, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A101,戒指闪电,当前代码渲染,script/lightning_strike.gd,"[2335, 7158, 128, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A102,水属性范围攻击,当前代码渲染,script/elemental_attack_visual.gd,"[2974, 7158, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A103,雷属性范围攻击,当前代码渲染,script/elemental_attack_visual.gd,"[3640, 7158, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A104,风属性通道攻击,当前代码渲染,script/elemental_attack_visual.gd,"[4148, 7158, 497, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A105,火属性范围攻击,当前代码渲染,script/elemental_attack_visual.gd,"[310, 7547, 181, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A106,治疗技能释放光环,当前代码渲染,script/blessing_effect.gd,"[956, 7547, 221, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A107,闪电技能释放光环,当前代码渲染,script/blessing_effect.gd,"[1622, 7547, 221, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A108,牵引技能释放光环,当前代码渲染,script/blessing_effect.gd,"[2288, 7547, 221, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A109,防御技能释放光环,当前代码渲染,script/blessing_effect.gd,"[2954, 7547, 221, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A110,流星与落点预警,当前代码渲染,script/meteor_shower.gd,"[3665, 7547, 132, 181]",,单个时刻的透明快照；动态效果仍由代码生成
+A111,死亡泼溅 · 56 个形状,程序生成纹理,script/death_stains.gd::_shared_atlas,"[4289, 7547, 215, 181]",,48 个主形状 + 8 个飞溅液滴；运行时按物种着色
+A112,追击怪 · 泼溅,当前代码渲染,script/death_stains.gd,"[248, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A113,重装追击怪 · 泼溅,当前代码渲染,script/death_stains.gd,"[714, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A114,敏捷突击怪 · 泼溅,当前代码渲染,script/death_stains.gd,"[1180, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A115,重甲箱怪 · 泼溅,当前代码渲染,script/death_stains.gd,"[1646, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A116,远程眼怪 · 泼溅,当前代码渲染,script/death_stains.gd,"[2112, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A117,刃螳 · 泼溅,当前代码渲染,script/death_stains.gd,"[2578, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A118,回旋镖妖 · 泼溅,当前代码渲染,script/death_stains.gd,"[3044, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A119,孢子炮手 · 泼溅,当前代码渲染,script/death_stains.gd,"[3510, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A120,宝囊精 · 泼溅,当前代码渲染,script/death_stains.gd,"[3976, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A121,宝藏守卫 · 泼溅,当前代码渲染,script/death_stains.gd,"[4442, 8131, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A122,狂奔巨蜥 · 泼溅,当前代码渲染,script/death_stains.gd,"[248, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A123,钢铁骑士 · 泼溅,当前代码渲染,script/death_stains.gd,"[714, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A124,潮汐巨象 · 泼溅,当前代码渲染,script/death_stains.gd,"[1180, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A125,雷鬃狮王 · 泼溅,当前代码渲染,script/death_stains.gd,"[1646, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A126,苍风神兽 · 泼溅,当前代码渲染,script/death_stains.gd,"[2112, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A127,远程双隼 · 泼溅,当前代码渲染,script/death_stains.gd,"[2578, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A128,近战双隼 · 泼溅,当前代码渲染,script/death_stains.gd,"[3044, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A129,熔岩玄龟 · 泼溅,当前代码渲染,script/death_stains.gd,"[3510, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A130,力量试炼 · 泼溅,当前代码渲染,script/death_stains.gd,"[3976, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A131,速度试炼 · 泼溅,当前代码渲染,script/death_stains.gd,"[4442, 8445, 106, 106]",,当前物种颜色；固定方向与随机种子作对照
+A132,玩家主体调色板材质样本,当前代码渲染,shaders/body_tint.gdshader,"[754, 8954, 182, 206]",,
+A133,敌人主体调色板材质样本,当前代码渲染,shaders/body_tint.gdshader,"[2296, 8954, 206, 206]",,
+A134,书本羊皮纸材质样本,当前代码渲染,shaders/book_palette.gdshader,"[3853, 8954, 199, 206]",,
+A135,晴天 · 阳光与投影,运行截图,script/weather_lighting.gd,"[563, 9563, 564, 376]",,当前主分支 · 原生渲染截图（含场景上下文）
+A136,雨夜 · 玩家周围灯光,运行截图,script/weather_lighting.gd,"[2117, 9563, 564, 376]",,当前主分支 · 原生渲染截图（含场景上下文）
+A137,冬季 · 雪花、积雪与脚印,运行截图,script/environment_weather.gd,"[3671, 9563, 564, 376]",,当前主分支 · 原生渲染截图（含场景上下文）
+A138,刮风 · 世界空间卷曲风线,运行截图,script/wind_trails.gd,"[563, 10147, 564, 376]",,当前主分支 · 原生渲染截图（含场景上下文）
+A139,冰面 · 镜面高光,运行截图,shaders/infinite_ground.gdshader,"[2117, 10147, 564, 376]",,当前主分支 · 原生渲染截图（含场景上下文）
+A140,电网 · 区域电流与触电,运行截图,script/electric_grid.gd,"[3671, 10147, 564, 376]",,当前主分支 · 原生渲染截图（含场景上下文）
+A141,Boss 触电骨架 · 六种体型,运行截图,script/electric_zap_visual.gd,"[563, 10731, 564, 376]",,当前主分支 · 原生渲染截图（含场景上下文）
+A142,地雷 · 金属外壳与爆炸,运行截图,script/minefield.gd,"[2117, 10731, 564, 376]",,当前主分支 · 原生渲染截图（含场景上下文）
+A143,三颗星 · 金币狂热,运行截图,script/star_chain.gd,"[3671, 10731, 564, 376]",,当前主分支 · 原生渲染截图（含场景上下文）
+A144,主菜单 · 程序背景,当前运行截图,script/menu_background.gd,"[518, 11510, 654, 436]",,当前主分支新采集
+A145,升级选卡 · 中文,仓库验证截图,docs/images/reference-ui/cards-zh_CN-900.png,"[2072, 11510, 654, 436]",,沿用当前提交内保存的 UI 截图
+A146,升级选卡 · 手机英文,仓库验证截图,docs/images/reference-ui/cards-en-320.png,"[3830, 11510, 246, 436]",,沿用当前提交内保存的 UI 截图

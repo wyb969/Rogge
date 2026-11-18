@@ -1,7 +1,10 @@
 extends "res://script/enemy_shell.gd"
 
 const BODY_SCALE := 1.85
-const SLAM_RADIUS: = 70.0
+const SLAM_RADIUS: = 70.0 * Dimensions.BOSS
+
+func model_multiplier() -> float:
+	return Dimensions.BOSS
 var max_health: = 300.0
 var slam_damage: = 60.0
 var attack_left: = 2.0
@@ -12,6 +15,7 @@ var poses := preload("res://script/boss_pose.gd").new()
 
 func _ready() -> void:
 	super._ready()
+	Dimensions.add_warning_layer(self, _draw_warning)
 	poses.setup(self, sprite_2d, "guardian", 10)
 	_sprite_base_scale = sprite_2d.scale
 	death_signal.connect(_show_open_lid)
@@ -70,7 +74,7 @@ func _physics_process(delta: float) -> void :
 					player_reference.receive_attack(slam_damage, self)
 		else:
 			attack_left -= delta
-			if attack_left <= 0.0 and is_instance_valid(player_reference) and global_position.distance_to(player_reference.global_position) < 130.0:
+			if attack_left <= 0.0 and is_instance_valid(player_reference) and global_position.distance_to(player_reference.global_position) < 130.0 + added_body_reach():
 				warning_left = 0.85
 	super._physics_process(delta)
 	queue_redraw()
@@ -82,18 +86,18 @@ func _try_contact(dist: float) -> void :
 	if warning_left <= 0.0 and impact_left <= 0.0:
 		super._try_contact(dist)
 
-func _draw() -> void :
+func _draw_warning(canvas: Node2D) -> void:
 	var radius: = SLAM_RADIUS / body_scale
 	if warning_left > 0.0 or impact_left > 0.0:
 		var active: = impact_left > 0.0
-		draw_circle(Vector2.ZERO, radius, Color(1.0, 0.12, 0.08, 0.4 if active else 0.2))
-		draw_arc(Vector2.ZERO, radius, 0, TAU, 64, Color(0.02, 0.015, 0.02), 3.0, true)
-		draw_arc(Vector2.ZERO, radius, 0, TAU, 64, Color(1.0, 0.3, 0.18), 1.5, true)
-		draw_arc(Vector2.ZERO, radius * (1.0 - warning_left / 0.85), 0, TAU, 64, Color(1.0, 0.8, 0.6, 0.7), 1.0, true)
+		canvas.draw_circle(Vector2.ZERO, radius, Color(1.0, 0.12, 0.08, 0.4 if active else 0.2))
+		canvas.draw_arc(Vector2.ZERO, radius, 0, TAU, 64, Color(0.02, 0.015, 0.02), 3.0, true)
+		canvas.draw_arc(Vector2.ZERO, radius, 0, TAU, 64, Color(1.0, 0.3, 0.18), 1.5, true)
+		canvas.draw_arc(Vector2.ZERO, radius * (1.0 - warning_left / 0.85), 0, TAU, 64, Color(1.0, 0.8, 0.6, 0.7), 1.0, true)
 
-	draw_arc(Vector2.ZERO, 15.0, 0, TAU, 48, Color(1.0, 0.78, 0.2, 0.8), 1.0, true)
-	draw_rect(Rect2(-22, -34, 44, 5), Color(0.03, 0.025, 0.035))
-	draw_rect(Rect2(-21, -33, 42.0 * clampf(health / max_health, 0, 1), 3), Color(1.0, 0.76, 0.18))
+	canvas.draw_arc(Vector2.ZERO, 15.0, 0, TAU, 48, Color(1.0, 0.78, 0.2, 0.8), 1.0, true)
+	canvas.draw_rect(Rect2(-22, -54, 44, 5), Color(0.03, 0.025, 0.035))
+	canvas.draw_rect(Rect2(-21, -53, 42.0 * clampf(health / max_health, 0, 1), 3), Color(1.0, 0.76, 0.18))
 
 func _cancel_controlled_attack() -> void:
 	super._cancel_controlled_attack()

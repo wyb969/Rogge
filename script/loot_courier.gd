@@ -14,7 +14,7 @@ func _ready() -> void :
 	_caption = Label.new()
 	_caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_caption.position = Vector2(-65, -32)
+	_caption.position = Vector2(-65, -62)
 	_caption.size = Vector2(130, 22)
 	_caption.add_theme_color_override("font_color", Color(0.65, 1, 0.92))
 	_caption.add_theme_color_override("font_outline_color", Color(0.02, 0.025, 0.04))
@@ -25,8 +25,8 @@ func _ready() -> void :
 
 func _draw() -> void :
 	super._draw()
-	draw_rect(Rect2(-15, -18, 30, 3), Color(0.015, 0.03, 0.05, 0.95))
-	draw_rect(Rect2(-14, -17, 28 * clampf(health / maxf(_maximum_health, 1), 0, 1), 1), Color(0.55, 1, 0.85))
+	draw_rect(Rect2(-15, -41, 30, 3), Color(0.015, 0.03, 0.05, 0.95))
+	draw_rect(Rect2(-14, -40, 28 * clampf(health / maxf(_maximum_health, 1), 0, 1), 1), Color(0.55, 1, 0.85))
 
 func _sync_caption() -> void :
 	var left: = maxi(0, int(ceil(LIFETIME - age)))

@@ -148,7 +148,7 @@ func _select_specimen() -> void:
 		specimen.texture = tile.atlas
 		specimen.hframes = 4
 		specimen.vframes = 4
-		_body_scale = Poses.ART_SCALE[id] * (Guardian.BODY_SCALE if id == "guardian" else 1.0)
+		_body_scale = Poses.ART_SCALE[id] * Poses.Dimensions.BOSS * (Guardian.BODY_SCALE if id == "guardian" else 1.0)
 		_facing = 1
 	else:
 		var index := family.selected

@@ -2,6 +2,7 @@ extends "res://script/boss.gd"
 
 const NAMES: = ["潮汐巨象 / TIDE", "雷鬃狮王 / THUNDER", "苍穹灵隼 / GALE", "熔岩玄龟 / AEGIS"]
 const IDS: = ["tide", "thunder", "gale", "aegis"]
+const DIVE_RADIUS := 30.0 * Dimensions.BOSS
 const HP: = [3600.0, 4200.0, 4800.0, 5600.0]
 const COLORS: = [GamePalette.SKILL_TIDE, GamePalette.SKILL_THUNDER, GamePalette.SKILL_GALE, GamePalette.SKILL_AEGIS]
 const ROAM_SPEEDS: = [65.0, 96.0, 80.0, 43.0]
@@ -141,7 +142,7 @@ func _advance_battle(delta: float) -> void:
 				var before: = global_position
 				global_position = global_position.move_toward(dive_end, dive_speed() * delta)
 				attack_visual.set_dive_segment(before, global_position)
-				if not _attack_hit and Geometry2D.get_closest_point_to_segment(player.global_position, before, global_position).distance_to(player.global_position) <= 30.0:
+				if not _attack_hit and Geometry2D.get_closest_point_to_segment(player.global_position, before, global_position).distance_to(player.global_position) <= DIVE_RADIUS:
 					_hit()
 			elif not _attack_hit and attack_contains(player.global_position):
 				_hit()
@@ -253,7 +254,7 @@ func _prepare_dive(target: Vector2) -> void :
 		aim = Vector2.DOWN
 	dive_start = global_position
 	dive_end = global_position + aim * clampf(global_position.distance_to(target) + 65.0, 120.0, 300.0)
-	shapes.append({"kind": "lane", "a": dive_start, "b": dive_end, "width": 30.0})
+	shapes.append({"kind": "lane", "a": dive_start, "b": dive_end, "width": DIVE_RADIUS})
 
 func _lanes(origin: Vector2, dir: Vector2, count: int, gap: float, width: float) -> void :
 	for i in count:
@@ -307,11 +308,11 @@ func _on_rush_timer_timeout() -> void :
 func _draw() -> void :
 	if is_dying:
 		return
-	draw_set_transform(Vector2(0, 44), 0, Vector2(1, 0.3))
-	draw_circle(Vector2.ZERO, 46, Color(0, 0, 0, 0.45))
+	draw_set_transform(Vector2(0, 44) * Dimensions.BOSS, 0, Vector2(1, 0.3))
+	draw_circle(Vector2.ZERO, 46 * Dimensions.BOSS, Color(0, 0, 0, 0.45))
 	draw_set_transform(Vector2.ZERO)
 	if phase == 2:
-		draw_arc(Vector2.ZERO, 62.0 + sin(_elapsed * 5) * 3, 0, TAU, 48, Color(COLORS[element], 0.6), 2.0, true)
+		draw_arc(Vector2.ZERO, 62.0 * Dimensions.BOSS + sin(_elapsed * 5) * 3, 0, TAU, 48, Color(COLORS[element], 0.6), 2.0, true)
 func _build_hud() -> void :
 	var layer: = CanvasLayer.new()
 	layer.layer = 90

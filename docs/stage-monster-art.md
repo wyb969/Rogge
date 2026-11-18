@@ -21,3 +21,9 @@ Godot 4.7 专项覆盖十只恐龙左右追击、两只右朝向动物、近竖�
 Open Debug and select **Monster & Boss scale test** on the first page. The dinosaur family appears first. Each family offers ten species, and the Boss tab offers the eight authored boss sheets. Each tab has its own 0.50×–4.00× slider and a reset to 1.00×. Pause holds the current frame while resizing. Dragging the preview pans enlarged details.
 
 At 1.00× the menu uses the current combat camera zoom, the species' roster body scale and the same source cell, nearest sampler and sprite scale as combat. The floor is a static backdrop and the walk plays in place for comparison. Leaving the test discards the sliders and returns to Debug. Run `tools/smoke_sprite_scale.gd` to exercise the actual menu, drag, resizing, pauses and normal run entry.
+
+### 实战体型与攻击边界
+
+试玩版本 `20261118-213628`。普通和精英怪使用原显示尺寸的 3 倍，关底 Boss、试炼 Boss 和宝箱守卫使用 2 倍。碰撞体保留各自形状和偏移比例。缩放测试页的 1.00× 对应调整后的尺寸。普通怪保持原有移动速度，完整步态周期按放大后的步幅和实际位移计算。
+
+冲撞、挥砍、俯冲与试炼光束的预警使用对应攻击的宽度和端点。扩大身体发出的投射物从身前开始，固定落点法术沿用自身半径。玩家的圆形范围伤害可以擦到敌人受击框边缘。用 `tools/smoke_combat_size.gd` 检查实际物理边界、爆炸及冲锋预警，配合试炼、骑士、冲刺群和元素技能专项检验可躲避性。

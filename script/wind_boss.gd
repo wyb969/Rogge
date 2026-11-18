@@ -111,7 +111,7 @@ func begin_attack() -> void :
 		var count: = 5 if phase == 2 else 3
 		for i in count:
 			var dir: = aim.rotated((float(i) - float(count - 1) * 0.5) * 0.19)
-			shapes.append({"kind": "lane", "a": global_position + dir * 20, "b": global_position + dir * 365, "width": 18.0})
+			shapes.append({"kind": "lane", "a": global_position + dir * (20 * Dimensions.BOSS), "b": global_position + dir * 365, "width": 18.0})
 	else:
 		_extra_dives = 1 if phase == 2 else 0
 		_prepare_dive(player.global_position)

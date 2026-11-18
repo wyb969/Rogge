@@ -19,7 +19,7 @@ var _title_stamp: = -1
 func _ready() -> void :
 	top_level = true
 	global_transform = Transform2D.IDENTITY
-	z_index = 6
+	z_index = preload("res://script/combat_size.gd").WARNING_Z
 	_corners.resize(8)
 	var hurt: CollisionShape2D = boss._hurt_area.get_node("CollisionShape2D")
 	half_size = boss.collision_shape_2d.shape.get_rect().size * boss.collision_shape_2d.global_scale.abs() * 0.5 + hurt.shape.get_rect().size * hurt.global_scale.abs() * 0.5

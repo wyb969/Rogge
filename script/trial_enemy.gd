@@ -16,8 +16,8 @@ var attacks: = 0
 var _lock_audio: AudioStreamPlayer
 var _attack_audio: AudioStreamPlayer
 const LASER_LENGTH: = 680.0
-const LASER_HALF_WIDTH: = 14.0
-const SLASH_RADIUS: = 112.0
+const LASER_HALF_WIDTH: = 14.0 * Dimensions.BOSS
+const SLASH_RADIUS: = 112.0 * Dimensions.BOSS
 const SLASH_HALF_ANGLE: = 1.08
 
 func _death_stain_kind() -> StringName:
@@ -36,11 +36,12 @@ func _setup_body_art() -> void:
 	sprite_2d.frame = 0
 	sprite_2d.offset = Vector2.ZERO
 	sprite_2d.texture = preload("res://assest/sprites/trials/clockwork_octopus.svg") if kind == "power" else preload("res://assest/sprites/trials/blink_wizard.svg")
-	sprite_2d.scale = Vector2.ONE * (0.86 if kind == "power" else 0.7)
+	sprite_2d.scale = Vector2.ONE * Dimensions.BOSS * (0.86 if kind == "power" else 0.7)
 	base_sprite_scale = sprite_2d.scale
 
 func _ready() -> void :
 	super._ready()
+	Dimensions.add_warning_layer(self, _draw_warning)
 	health_max_value = 5000.0 if kind == "power" else 2600.0
 	boss_current_health = health_max_value
 	health_bar.init_health(health_max_value)
@@ -88,7 +89,7 @@ func _step_power(delta: float) -> void :
 				_beep_left = 0
 		TrialState.TRACK:
 			aim_angle = (player.global_position - global_position).angle()
-			_beam_origin = global_position
+			_beam_origin = global_position + Vector2.from_angle(aim_angle) * minf(42.0 * Dimensions.BOSS, global_position.distance_to(player.global_position) * 0.5)
 			_beep_left -= delta
 			if _beep_left <= 0:
 				_lock_audio.pitch_scale = 1.0 + (1.25 - left) * 0.45
@@ -150,7 +151,19 @@ func _step_speed() -> void :
 
 func teleport_near_player() -> void :
 	var angle: = float(randi() % 8) * PI / 4.0
-	global_position = player.global_position + Vector2.from_angle(angle) * 90.0
+	var view: Rect2 = player.get_canvas_transform().affine_inverse() * get_viewport_rect()
+	var margin := (sprite_2d.get_rect().size * sprite_2d.global_scale.abs() * 0.5).min(view.size * 0.45)
+	var safe := Rect2(view.position + margin, view.size - 2 * margin)
+	var best: Vector2 = player.global_position
+	for i in 8:
+		var point := player.global_position + Vector2.from_angle(angle + i * PI / 4.0) * (90.0 * Dimensions.BOSS)
+		var candidate := point.clamp(safe.position, safe.end)
+		if safe.has_point(point):
+			best = point
+			break
+		if candidate.distance_squared_to(player.global_position) > best.distance_squared_to(player.global_position):
+			best = candidate
+	global_position = best
 	reset_physics_interpolation()
 	aim_angle = (player.global_position - global_position).angle()
 	_dashed = player.is_dash_invulnerable()
@@ -218,41 +231,43 @@ func _update_title() -> void :
 func _draw() -> void :
 	if is_dying:
 		return
-	draw_set_transform(Vector2(0, 42), 0, Vector2(1, 0.3))
-	draw_circle(Vector2.ZERO, 42, Color(0, 0, 0, 0.4))
+	draw_set_transform(Vector2(0, 42) * Dimensions.BOSS, 0, Vector2(1, 0.3))
+	draw_circle(Vector2.ZERO, 42 * Dimensions.BOSS, Color(0, 0, 0, 0.4))
 	draw_set_transform(Vector2.ZERO)
+
+func _draw_warning(canvas: Node2D) -> void:
+	if is_dying: return
 	if kind == "power":
 		if trial_state == TrialState.TRACK:
 			var target: = player.global_position - global_position
-			draw_line(Vector2.ZERO, target, Color(1.0, 0.12, 0.12, 0.8), 1.5, true)
-			draw_arc(target, 18, 0, TAU, 32, Color(1, 0.2, 0.15), 2, true)
-			draw_line(target - Vector2(24, 0), target + Vector2(24, 0), Color.WHITE, 1, true)
-			draw_line(target - Vector2(0, 24), target + Vector2(0, 24), Color.WHITE, 1, true)
+			canvas.draw_line(Vector2.ZERO, target, Color(1.0, 0.12, 0.12, 0.8), 1.5, true)
+			canvas.draw_arc(target, 18, 0, TAU, 32, Color(1, 0.2, 0.15), 2, true)
+			canvas.draw_line(target - Vector2(24, 0), target + Vector2(24, 0), Color.WHITE, 1, true)
+			canvas.draw_line(target - Vector2(0, 24), target + Vector2(0, 24), Color.WHITE, 1, true)
 		elif trial_state == TrialState.LOCK or trial_state == TrialState.ACTIVE:
 			var origin: = _beam_origin - global_position
 			var end: = origin + Vector2.from_angle(aim_angle) * LASER_LENGTH
-			var side: = Vector2.from_angle(aim_angle).orthogonal() * LASER_HALF_WIDTH
-			var points: = PackedVector2Array([origin - side, end - side, end + side, origin + side])
-			draw_colored_polygon(points, Color(1, 0.1, 0.1, 0.23 if trial_state == TrialState.LOCK else 0.7))
+			var points := Dimensions.capsule(origin, end, LASER_HALF_WIDTH)
+			canvas.draw_colored_polygon(points, Color(1, 0.1, 0.1, 0.23 if trial_state == TrialState.LOCK else 0.7))
 			points.append(points[0])
-			draw_polyline(points, Color(0.02, 0.02, 0.03), 5, true)
-			draw_polyline(points, Color(1, 0.3, 0.2), 2, true)
+			canvas.draw_polyline(points, Color(0.02, 0.02, 0.03), 5, true)
+			canvas.draw_polyline(points, Color(1, 0.3, 0.2), 2, true)
 			if trial_state == TrialState.ACTIVE:
-				draw_line(origin, end, Color(0.85, 1.0, 1.0), 8, true)
+				canvas.draw_line(origin, end, Color(0.85, 1.0, 1.0), 8, true)
 	else:
 		if not vulnerable():
-			draw_arc(Vector2.ZERO, 42, 0, TAU, 32, Color(0.66, 0.4, 0.95, 0.65), 2, true)
+			canvas.draw_arc(Vector2.ZERO, 42 * Dimensions.BOSS, 0, TAU, 32, Color(0.66, 0.4, 0.95, 0.65), 2, true)
 		if trial_state == TrialState.LOCK or trial_state == TrialState.ACTIVE:
 			var points: = PackedVector2Array([Vector2.ZERO])
 			for i in 33:
 				points.append(Vector2.from_angle(aim_angle - SLASH_HALF_ANGLE + 2 * SLASH_HALF_ANGLE * i / 32.0) * SLASH_RADIUS)
-			draw_colored_polygon(points, Color(1, 0.1, 0.13, 0.28 if trial_state == TrialState.LOCK else 0.55))
+			canvas.draw_colored_polygon(points, Color(1, 0.1, 0.13, 0.28 if trial_state == TrialState.LOCK else 0.55))
 			points.append(points[0])
-			draw_polyline(points, Color(0.02, 0.02, 0.03), 6, true)
-			draw_polyline(points, Color(1.0, 0.35, 0.25), 2.5, true)
+			canvas.draw_polyline(points, Color(0.02, 0.02, 0.03), 6, true)
+			canvas.draw_polyline(points, Color(1.0, 0.35, 0.25), 2.5, true)
 			if trial_state == TrialState.ACTIVE:
 				var angle: = aim_angle - SLASH_HALF_ANGLE + 2 * SLASH_HALF_ANGLE * clampf(1 - left / 0.16, 0, 1)
-				draw_line(Vector2.from_angle(angle) * 15, Vector2.from_angle(angle) * SLASH_RADIUS, Color(1.0, 0.94, 0.76), 5, true)
+				canvas.draw_line(Vector2.from_angle(angle) * 15, Vector2.from_angle(angle) * SLASH_RADIUS, Color(1.0, 0.94, 0.76), 5, true)
 
 func _request_hitstop(_scale: float, _duration_real: float) -> void :
 	pass

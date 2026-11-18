@@ -24,7 +24,7 @@ var _blast_height := 0.0
 
 const DASHER_MAX_HEALTH: = 20.0
 const DASH_AIM_SECONDS: = 0.4
-const DASH_LOCK_SECONDS: = 0.2
+const DASH_LOCK_SECONDS: = 0.4
 const DASH_WINDUP_SECONDS: = DASH_AIM_SECONDS + DASH_LOCK_SECONDS
 const DASH_SECONDS: = 0.22
 const DASH_JUMP_HEIGHT: = 14.0
@@ -53,6 +53,10 @@ var contact_cooldown: float = 0.8
 var contact_radius: float = 26.0
 var contact_timer: float = 0.15
 var dash_speed: float = 260.0
+static var _next_dash_ticket := 0
+var _dash_ticket := 0
+var _dash_check_frame := -1
+var _admission_retry := 0.0
 var _dash_surface_scale := 1.0
 var dash_cooldown: float = 2.0
 var dash_timer: float = 0.4
@@ -104,13 +108,18 @@ func _ready() -> void :
 	set_process(false)
 	queue_redraw()
 	_apply_body_scale()
+	_ensure_attack_warning()
 	if sprite_2d:
 		_sprite_base_scale = sprite_2d.scale
 		sprite_2d.modulate = Color.WHITE
 
+func _ensure_attack_warning() -> void:
+	if archetype in [EnemyData.Archetype.DASHER, EnemyData.Archetype.TANK] and not has_node("AttackWarning"):
+		Dimensions.add_warning_layer(self, _draw_attack_warning)
+
 func _draw() -> void :
 	if _blast_left > 0.0:
-		var unit := 1.0 / maxf(body_scale, 0.4)
+		var unit := model_multiplier() / maxf(body_scale, 0.4)
 		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
 		draw_circle(Vector2.ZERO, 7.5, GamePalette.shadow(0.78))
 		draw_set_transform(Vector2.ZERO)
@@ -118,31 +127,26 @@ func _draw() -> void :
 		var unit: = 1.0 / maxf(body_scale, 0.4)
 		draw_arc(Vector2(0, 11) * unit, 8 * unit, - PI * 0.5, - PI * 0.5 + TAU * contact_recovery_left / DASHER_CONTACT_RECOVERY, 16, Color(0.85, 0.92, 1, 0.65), 1.2 * unit, false)
 	if archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or is_dashing):
-		var unit: = 1.0 / maxf(body_scale, 0.4)
+		var unit: = model_multiplier() / maxf(body_scale, 0.4)
 		var lift: = dash_jump_height() / DASH_JUMP_HEIGHT
 		draw_set_transform(Vector2(0, 7) * unit, 0.0, Vector2(unit, unit * 0.38))
 		draw_circle(Vector2.ZERO, lerpf(9.0, 6.0, lift), GamePalette.shadow(0.82))
 		draw_set_transform(Vector2.ZERO)
-	draw_circle(Vector2(0, 14), 3.4, GamePalette.ENEMY_RED)
-	if archetype == EnemyData.Archetype.DASHER and dash_windup > 0.0:
+	draw_circle(Vector2(0, 14) * model_multiplier(), 3.4, GamePalette.ENEMY_RED)
 
-
-		var unit: = 1.0 / maxf(body_scale, 0.4)
-		var progress: = clampf((DASH_WINDUP_SECONDS - dash_windup) / DASH_AIM_SECONDS, 0.0, 1.0)
-		var eased: = smoothstep(0.0, 1.0, progress)
-		var length: = dash_speed * _dash_surface_scale * DASH_SECONDS * lerpf(0.82, 1.0, eased)
-		var arrow: = PackedVector2Array([
-			Vector2(7, -3.5), Vector2(length - 15, -3.5), Vector2(length - 15, -9), 
-			Vector2(length, 0), Vector2(length - 15, 9), Vector2(length - 15, 3.5), Vector2(7, 3.5), 
-		])
-		draw_set_transform(Vector2.ZERO, dash_dir.angle(), Vector2.ONE * unit)
-		draw_colored_polygon(arrow, Color(0.78, 0.035, 0.07, 0.65).lerp(Color(1.0, 0.24, 0.3, 0.95), eased))
-		var border: = arrow.duplicate()
-		border.append(arrow[0])
-		draw_polyline(border, Color(0.13, 0.01, 0.025, 0.9), 2.0, true)
-		var tip: = lerpf(10.0, length - 17.0, eased)
-		draw_line(Vector2(maxf(8.0, tip - 10.0), 0), Vector2(tip, 0), Color(1.0, 0.7, 0.72, 0.8), 2.0, true)
-		draw_set_transform(Vector2.ZERO)
+func _draw_attack_warning(canvas: Node2D) -> void:
+	if dash_windup <= 0 and slam_windup <= 0: return
+	var tank := slam_windup > 0
+	var heading := slam_dir if tank else dash_dir
+	var travel := speed * 3.4 * 0.22 if tank else dash_speed * _dash_surface_scale * DASH_SECONDS
+	var end := heading * travel * status_move_scale() / body_scale
+	var points := Dimensions.capsule(Vector2.ZERO, end, _impact_radius(tank, not tank) / body_scale)
+	canvas.draw_colored_polygon(points, Color(GamePalette.TELEGRAPH_FILL, 0.22))
+	points.append(points[0])
+	canvas.draw_polyline(points, GamePalette.TELEGRAPH_EDGE, 1.7 / body_scale)
+	canvas.draw_line(Vector2.ZERO, end, GamePalette.TELEGRAPH_EDGE, 2.2 / body_scale)
+	var tip := heading * minf(9.0 / body_scale, end.length() * 0.4)
+	canvas.draw_polyline(PackedVector2Array([end - tip.rotated(0.55), end, end - tip.rotated(-0.55)]), GamePalette.TELEGRAPH_EDGE, 2.2 / body_scale)
 
 func dash_warning_locked() -> bool:
 	return dash_windup > 0.0 and dash_windup <= DASH_LOCK_SECONDS + 1e-05
@@ -159,7 +163,7 @@ func deals_own_contact() -> bool:
 func set_enemy_data(data: EnemyData) -> void :
 	if data == null:
 		return
-	var desired_size: = Vector2(20, 20)
+	var desired_size: = Vector2(20, 20) * model_multiplier()
 	if data.sprite:
 		$Sprite2D.texture = data.sprite
 		var tex_size = data.sprite.get_size()
@@ -200,8 +204,11 @@ func set_enemy_data(data: EnemyData) -> void :
 	dash_timer = randf_range(0.6, 1.4) if archetype == EnemyData.Archetype.DASHER else 0.35
 	_sprite_base_scale = ($Sprite2D as Sprite2D).scale
 	_apply_body_scale()
+	if is_node_ready():
+		_ensure_attack_warning()
 
-const WALK_ART_SCALE := 24.0 / 32.0
+const Dimensions := preload("res://script/combat_size.gd")
+const WALK_ART_SCALE := 24.0 / 32.0 * Dimensions.MONSTER
 
 func set_walk_sheet(sheet: Texture2D, row: int, source_facing: int, phase: float) -> void:
 	var sprite: Sprite2D = $Sprite2D
@@ -416,7 +423,10 @@ func _physics_process(delta: float) -> void :
 			knockback = away * 10.0
 
 	if is_instance_valid(player_reference):
-		_try_contact(global_position.distance_to(player_reference.global_position))
+		var closest := global_position
+		if (is_dashing or slam_time_left > 0) and travel.length_squared() > 0.000001:
+			closest = Geometry2D.get_closest_point_to_segment(player_reference.global_position, start, global_position)
+		_try_contact(closest.distance_to(player_reference.global_position))
 	if tactical_ai != null and tactical_ai.committed:
 		_face(tactical_ai.facing, false)
 	elif dash_windup > 0.0 or is_dashing:
@@ -438,7 +448,7 @@ func _steer_chaser(dir: Vector2, move_speed: float) -> void :
 	velocity = dir * move_speed
 
 func _steer_dasher(delta: float, dir: Vector2, dist: float, move_speed: float) -> void :
-	queue_redraw()
+	if dash_windup > 0 or is_dashing or contact_recovery_left > 0: queue_redraw()
 	if contact_recovery_left > 0.0:
 		contact_recovery_left = maxf(0.0, contact_recovery_left - delta)
 		velocity = Vector2.ZERO
@@ -478,20 +488,34 @@ func _steer_dasher(delta: float, dir: Vector2, dist: float, move_speed: float) -
 	dash_timer -= delta
 	velocity = dir * move_speed
 	if dash_timer <= 0.0 and dist < 180.0 and dist > 46.0 and not is_frozen():
+		_dash_check_frame = Engine.get_physics_frames()
+		if _dash_ticket == 0:
+			_next_dash_ticket += 1
+			_dash_ticket = _next_dash_ticket
+		_admission_retry -= delta
+		if _admission_retry > 0: return
 		if _dash_slot_available():
+			_dash_ticket = 0
 			_dash_surface_scale = 1.0 + 0.25 * _surface_ice()
+			queue_redraw()
 			dash_windup = DASH_WINDUP_SECONDS
 			dash_dir = dir
 			velocity = Vector2.ZERO
 		else:
-			dash_timer = randf_range(0.15, 0.35)
+			_admission_retry = 0.15
+	else:
+		_dash_ticket = 0
+		_admission_retry = 0
 
 func _dash_slot_available() -> bool:
 	var committed: = 0
 	for enemy in get_tree().get_nodes_in_group("dash_enemies"):
 		if enemy == self or enemy._death_started or enemy.is_queued_for_deletion() or enemy.player_reference != player_reference:
 			continue
-		if enemy.is_dashing or enemy.dash_windup > 0.0:
+		# Ready actors get an earlier slot in arrival order. Stunned or
+		# out-of-range actors stop renewing their request.
+		var earlier: bool = _dash_ticket > 0 and enemy._dash_ticket > 0 and enemy._dash_ticket < _dash_ticket and enemy._dash_check_frame >= _dash_check_frame - 1
+		if enemy.is_dashing or enemy.dash_windup > 0.0 or earlier:
 			committed += 1
 			if committed >= DASH_MAX_CONCURRENT:
 				return false
@@ -520,6 +544,7 @@ func _begin_contact_recovery() -> void :
 	queue_redraw()
 
 func _steer_tank(delta: float, dir: Vector2, dist: float, move_speed: float) -> void :
+	if slam_windup > 0: queue_redraw()
 	if slam_time_left > 0.0:
 		slam_time_left -= delta
 		if slam_time_left <= 0:
@@ -538,14 +563,15 @@ func _steer_tank(delta: float, dir: Vector2, dist: float, move_speed: float) -> 
 			sprite_2d.modulate = Color(0.45, 0.6, 1.35, 1)
 		if slam_windup <= 0.0 and not is_frozen():
 			slam_time_left = 0.22
-			slam_dir = dir if dir.length_squared() > 0.001 else Vector2.RIGHT
 		elif slam_windup <= 0.0 and sprite_2d:
 			sprite_2d.modulate = Color.WHITE
 		return
 
 	attack_timer -= delta
 	velocity = dir * move_speed
-	if attack_timer <= 0.0 and dist < 120.0 and not is_frozen():
+	if attack_timer <= 0.0 and dist < 120.0 + added_body_reach() and not is_frozen():
+		slam_dir = dir if not dir.is_zero_approx() else Vector2.RIGHT
+		queue_redraw()
 		slam_windup = 0.36
 		attack_timer = maxf(attack_cooldown, 1.35)
 
@@ -589,7 +615,7 @@ func _fire_projectile(dir: Vector2) -> void :
 	if container == null:
 		container = get_tree().current_scene if get_tree().current_scene != null else get_parent()
 	container.add_child(shot)
-	shot.launch(global_position + aim * 16.0, aim, projectile_speed, projectile_damage, marker_color)
+	shot.launch(global_position + aim * (16.0 + added_body_reach()), aim, projectile_speed, projectile_damage, marker_color)
 	shots_fired += 1
 	_show_strike(aim)
 
@@ -602,14 +628,12 @@ func _try_contact(dist: float) -> void :
 		return
 	if contact_timer > 0.0 or not is_instance_valid(player_reference):
 		return
-	var radius: = contact_radius
+	var radius := _impact_radius(archetype == EnemyData.Archetype.TANK and slam_time_left > 0, archetype == EnemyData.Archetype.DASHER and is_dashing)
 	var dmg: = contact_damage
 	var cd: = contact_cooldown
 	if archetype == EnemyData.Archetype.DASHER and is_dashing:
-		radius += 8.0
 		dmg *= DASH_DAMAGE_MULTIPLIER
 	if archetype == EnemyData.Archetype.TANK and slam_time_left > 0.0:
-		radius = maxf(radius, 48.0)
 		dmg *= 1.8
 		cd = 0.4
 	if dist > radius:
@@ -649,6 +673,17 @@ func _action_column(delta: float, travel: float) -> int:
 
 func _apply_body_scale() -> void :
 	scale = Vector2(body_scale, body_scale)
+	$CollisionShape2D.scale = Vector2.ONE * model_multiplier()
+
+func model_multiplier() -> float:
+	return Dimensions.MONSTER
+
+func added_body_reach() -> float:
+	# Original EnemyShell is a 20-world-pixel square before species scaling.
+	return 10.0 * body_scale * (model_multiplier() - 1.0)
+
+func _impact_radius(tank: bool, dash: bool) -> float:
+	return added_body_reach() + (maxf(48, contact_radius) if tank else (contact_radius + 8.0 if dash else contact_radius))
 
 
 
@@ -685,7 +720,7 @@ func _apply_move_juice(delta: float, ground_travel: float = 0.0) -> void :
 		if delta > 0.0:
 			# World pixels per full left/right cycle. Fast runners have a longer
 			# stride. Slows and collisions shorten the measured travel itself.
-			var stride := maxf(14.0 * body_scale, speed / 5.5)
+			var stride := maxf(14.0 * body_scale, speed / 5.5) * model_multiplier()
 			_wobble = fposmod(_wobble + TAU * ground_travel / stride, TAU)
 			var pose := _action_column(delta, ground_travel)
 			if sprite_2d.frame_coords.x != pose:

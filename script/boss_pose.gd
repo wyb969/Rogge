@@ -1,5 +1,6 @@
 extends Node
 
+const Dimensions := preload("res://script/combat_size.gd")
 const ART_SCALE := {"lizard": 3.55, "knight": 3.05, "tide": 3.05, "thunder": 3.05,
 	"wind-ranged": 2.3, "wind-melee": 2.3, "aegis": 3.05, "guardian": 0.85}
 
@@ -14,7 +15,7 @@ var sampled := false
 var hurt_left := 0.0
 
 func setup(host: CharacterBody2D, body: Sprite2D, art: String, foot_y: float) -> void:
-	var zoom: float = ART_SCALE[art]
+	var zoom: float = ART_SCALE[art] * Dimensions.BOSS
 	actor = host
 	sprite = body
 	sprite.material = null
@@ -27,7 +28,7 @@ func setup(host: CharacterBody2D, body: Sprite2D, art: String, foot_y: float) ->
 	sprite.vframes = 4
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	sprite.scale = Vector2.ONE * zoom
-	sprite.offset.y = foot_y / zoom - 21.0
+	sprite.offset.y = foot_y * Dimensions.BOSS / zoom - 21.0
 	stride = 12.0 * zoom * host.scale.x
 	host.add_child(self)
 

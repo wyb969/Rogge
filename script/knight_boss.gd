@@ -3,9 +3,9 @@ extends "res://script/boss.gd"
 enum AttackState{APPROACH, DASH_WINDUP, DASH, SLASH_WINDUP, SLASH, RECOVER, PHASE_SHIFT}
 const MAX_HEALTH: = 3200.0
 const PHASE_TWO_HEALTH: = 0.5
-const SLASH_RADIUS: = 112.0
+const SLASH_RADIUS: = 112.0 * Dimensions.BOSS
 const SLASH_HALF_ANGLE: = PI * 0.36
-const DASH_HALF_WIDTH: = 34.0
+const DASH_HALF_WIDTH: = 34.0 * Dimensions.BOSS
 const DASH_MAX_DISTANCE: = 320.0
 const PLAYER_RADIUS: = 14.0
 
@@ -34,6 +34,7 @@ func configure_stage(_stage: int) -> void :
 	fight_stage = 2
 
 func _ready() -> void :
+	Dimensions.add_warning_layer(self, _draw_warning)
 	bind_poses("knight", 62)
 	fight_stage = 2
 	health_max_value = MAX_HEALTH
@@ -90,13 +91,13 @@ func _physics_process(delta: float) -> void :
 			var offset: = player.global_position - global_position
 			attack_angle = offset.angle()
 			update_facing_direction(player.global_position)
-			if offset.length() > 90.0:
+			if offset.length() > 90.0 * Dimensions.BOSS:
 				velocity = offset.normalized() * (82.0 if phase == 2 else 64.0) * poison_slow
 				move_and_slide()
 			else:
 				velocity = Vector2.ZERO
 			if state_left <= 0.0:
-				if offset.length() > 155.0:
+				if offset.length() > SLASH_RADIUS:
 					_begin_dash()
 				else:
 					_begin_slash()
@@ -189,6 +190,9 @@ func _draw() -> void :
 	if is_dying:
 		return
 	draw_ellipse_shadow()
+
+func _draw_warning(canvas: Node2D) -> void:
+	if is_dying: return
 	var warning: = attack_state == AttackState.DASH_WINDUP or attack_state == AttackState.SLASH_WINDUP
 	var active: = attack_state == AttackState.SLASH
 	if not warning and not active:
@@ -201,21 +205,20 @@ func _draw() -> void :
 	var points: = PackedVector2Array()
 	if attack_state == AttackState.DASH_WINDUP:
 		var dir: = Vector2.RIGHT.rotated(attack_angle)
-		var side: = dir.orthogonal() * (DASH_HALF_WIDTH + PLAYER_RADIUS)
-		points = PackedVector2Array([ - side, dir * dash_distance - side, dir * dash_distance + side, side])
+		points = Dimensions.capsule(Vector2.ZERO, dir * dash_distance, DASH_HALF_WIDTH + PLAYER_RADIUS)
 	else:
 		points.append(Vector2.ZERO)
 		for i in range(33):
 			var angle: = attack_angle + lerpf( - SLASH_HALF_ANGLE, SLASH_HALF_ANGLE, float(i) / 32.0)
 			points.append(Vector2.RIGHT.rotated(angle) * SLASH_RADIUS)
-	draw_colored_polygon(points, fill)
+	canvas.draw_colored_polygon(points, fill)
 	points.append(points[0])
-	draw_polyline(points, Color(0.08, 0.01, 0.03, 0.95), 6.0, true)
-	draw_polyline(points, edge, 2.5, true)
+	canvas.draw_polyline(points, Color(0.08, 0.01, 0.03, 0.95), 6.0, true)
+	canvas.draw_polyline(points, edge, 2.5, true)
 
 func draw_ellipse_shadow() -> void :
-	draw_set_transform(Vector2(0, 44), 0, Vector2(1.0, 0.35))
-	draw_circle(Vector2.ZERO, lerpf(42,30,terrain_impulse.height_ratio()), GamePalette.shadow(lerpf(0.82,0.5,terrain_impulse.height_ratio())))
+	draw_set_transform(Vector2(0, 44) * Dimensions.BOSS, 0, Vector2(1.0, 0.35))
+	draw_circle(Vector2.ZERO, lerpf(42,30,terrain_impulse.height_ratio()) * Dimensions.BOSS, GamePalette.shadow(lerpf(0.82,0.5,terrain_impulse.height_ratio())))
 	draw_set_transform(Vector2.ZERO)
 
 func _build_boss_hud() -> void :

@@ -26,6 +26,8 @@ class Slot:
 	var duration := 1.0
 	var leg := 1.2
 	var damage := 0.0
+	var cast_at := Vector2.ZERO
+	var cleave_scale := 1.0
 	var hit := false
 	var released := false
 var slots: Array[Slot] = []
@@ -43,7 +45,7 @@ var _last_warning := -1000
 @onready var game: Node = get_parent()
 
 func _ready() -> void:
-	z_index = 7
+	z_index = preload("res://script/combat_size.gd").WARNING_Z
 	for _i in MAX_ATTACKS: slots.append(Slot.new())
 	_sector.append(Vector2.ZERO)
 	for i in 19: _sector.append(Vector2.from_angle(lerpf(-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,float(i)/18.0))*SLASH_RADIUS)
@@ -100,6 +102,9 @@ func cast(actor: Node2D, kind: StringName) -> Slot:
 	free.kind = kind
 	free.origin = actor.global_position
 	free.heading = direction.normalized()
+	free.cast_at = actor.global_position
+	free.cleave_scale = 1.0 + actor.added_body_reach()/SLASH_RADIUS
+	if kind != &"cleave": free.origin += free.heading * actor.added_body_reach()
 	free.target = game.player.global_position
 	if kind==&"boomerang": free.target = free.origin+free.heading*clampf(direction.length()+45.0,140.0,210.0)
 	free.leg = free.origin.distance_to(free.target)/BLADE_SPEED
@@ -142,7 +147,7 @@ static func hits_point(slot: Slot, point: Vector2, before: float, after: float) 
 	if slot.kind==&"cleave":
 		var offset := point-slot.origin
 		var d := offset.length()
-		return d<=SLASH_RADIUS and (d<0.001 or offset.dot(slot.heading)>=d*cos(SLASH_HALF_ANGLE))
+		return d<=SLASH_RADIUS*slot.cleave_scale and (d<0.001 or offset.dot(slot.heading)>=d*cos(SLASH_HALF_ANGLE))
 	if slot.kind==&"mortar": return point.distance_squared_to(slot.target)<=MORTAR_RADIUS*MORTAR_RADIUS
 	var a := blade_position(slot,before)
 	var b := blade_position(slot,after)
@@ -157,7 +162,7 @@ func _physics_process(delta: float) -> void:
 	for slot in slots:
 		if not slot.active: continue
 		var actor: Node2D = slot.source.get_ref() if slot.source!=null else null
-		if not _source_ready(actor) or actor.global_position.distance_squared_to(slot.origin)>18.0*18.0:
+		if not _source_ready(actor) or actor.global_position.distance_squared_to(slot.cast_at)>18.0*18.0:
 			slot.active = false
 			slot.source = null
 			cancelled += 1
@@ -193,7 +198,7 @@ func _draw() -> void:
 		var warning := slot.age<slot.windup
 		var progress := clampf(age/slot.windup,0,1)
 		if slot.kind==&"cleave":
-			draw_set_transform(to_local(slot.origin),slot.heading.angle())
+			draw_set_transform(to_local(slot.origin),slot.heading.angle(),Vector2.ONE*slot.cleave_scale)
 			var fill_alpha := 0.36+0.14*progress if warning else 0.52
 			draw_colored_polygon(_sector,Color(GamePalette.TELEGRAPH_FILL,fill_alpha))
 			draw_polyline(_border,INK,4.0,false)

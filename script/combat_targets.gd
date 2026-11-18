@@ -4,6 +4,7 @@ extends Node
 class Entry:
 	extends RefCounted
 	var actor: Node2D
+	var collider: CollisionShape2D
 	var health_field: StringName
 	var death_field: StringName
 var _entries: Array[Entry] = []
@@ -19,6 +20,7 @@ func _added(node: Node) -> void :
 	if not node is Node2D or not (node.has_method("apply_hit") or node.has_method("get_hit")): return
 	var entry: = Entry.new()
 	entry.actor = node
+	entry.collider = node.get_node_or_null("CollisionShape2D") as CollisionShape2D
 	entry.health_field = &"boss_current_health" if "boss_current_health" in node else (&"health" if "health" in node else &"")
 	for flag in [&"_death_started", &"is_dying", &"is_dead", &"is_death"]:
 		if flag in node:
@@ -80,12 +82,23 @@ func nearest_visible(origin: Vector2, radius_squared: float, limit: int, owner: 
 func tracked_count() -> int:
 	return _entries.size()
 
+# Damage fields touch a rectangular hurtbox at its near edge. Aim selection
+# still uses the actor's center; actors without a rectangle keep point hits.
+func _overlaps_disk(entry: Entry, origin: Vector2, radius_squared: float) -> bool:
+	if radius_squared == INF: return true
+	var body := entry.collider
+	if not is_instance_valid(body) or body.disabled or not body.shape is RectangleShape2D:
+		return origin.distance_squared_to(entry.actor.global_position) <= radius_squared
+	var half := (body.shape as RectangleShape2D).size * 0.5
+	var nearest := body.to_local(origin).clamp(-half, half)
+	return origin.distance_squared_to(body.to_global(nearest)) <= radius_squared
+
 func in_radius(origin: Vector2, radius_squared: float, owner: Node) -> Array[Node2D]:
 	queries += 1
 	candidates_examined += _entries.size()
 	var result: Array[Node2D] = []
 	for entry in _entries:
-		if _live(entry, &"EnemyGroup") and owner.is_ancestor_of(entry.actor) and entry.actor.has_method("apply_hit") and origin.distance_squared_to(entry.actor.global_position) <= radius_squared:
+		if _live(entry, &"EnemyGroup") and owner.is_ancestor_of(entry.actor) and entry.actor.has_method("apply_hit") and _overlaps_disk(entry, origin, radius_squared):
 			result.append(entry.actor)
 	return result
 
@@ -102,4 +115,4 @@ func fill_in_radius(origin: Vector2, radius_squared: float, owner: Node, result:
 		if not _live(entry, &"EnemyGroup"): continue
 		var actor: = entry.actor
 		if owner != null and not owner.is_ancestor_of(actor): continue
-		if origin.distance_squared_to(actor.global_position) <= radius_squared: result.append(actor)
+		if _overlaps_disk(entry, origin, radius_squared): result.append(actor)

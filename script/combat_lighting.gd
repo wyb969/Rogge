@@ -176,6 +176,9 @@ func _refresh_sources() -> void :
 			size = Vector2(24, 7)
 			foot = 22
 		else: continue
+		var multiplier: float = preload("res://script/combat_size.gd").MONSTER if actor.get_script() == ENEMY else preload("res://script/combat_size.gd").BOSS
+		size *= multiplier
+		foot *= multiplier
 		_shadow_sprites[_shadow_count] = actor.get_node_or_null("Sprite2D")
 		_shadows[_shadow_count] = actor
 		_shadow_sizes[_shadow_count] = size

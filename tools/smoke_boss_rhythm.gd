@@ -54,7 +54,7 @@ func _run() -> void :
 	boss._distance_left = 400
 	boss.rush_feedback.path_changed()
 	var inside: = Vector2(0, 40)
-	var outside: = Vector2(0, 100)
+	var outside: Vector2 = Vector2(0, boss.rush_feedback.center_offset.y + boss.rush_feedback.half_size.y + 1.0)
 	expect(boss.rush_feedback.sweep_hits(boss.global_position, boss.target_position, inside) and Geometry2D.is_point_in_polygon(inside, boss.rush_feedback._polygon), "swept hurt boxes and the visible corridor include the same side hit")
 	expect( not boss.rush_feedback.sweep_hits(boss.global_position, boss.target_position, outside) and not Geometry2D.is_point_in_polygon(outside, boss.rush_feedback._polygon), "a point outside the footprint is genuinely outside the swept attack")
 	player.hurt_lock = 0
@@ -74,7 +74,7 @@ func _run() -> void :
 	var attacks: int = boss.charges_started
 	boss.start_charge_attack()
 	expect(boss._combo_left == 1 and boss.warning_duration() >= 0.7, "phase two alternates a bounded double rush while retaining readable anticipation")
-	boss._physics_process(0.73)
+	boss._physics_process(boss.warning_duration() + 0.01)
 	boss._physics_process(0.6)
 	expect(boss.charge_state == boss.ChargeState.RECOVER and boss._combo_left == 1, "double rush has a distinct inter-rush breathing beat")
 	boss._physics_process(0.35)

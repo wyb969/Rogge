@@ -432,7 +432,11 @@ func spawn_boss() -> void :
 			var camera: = get_viewport().get_camera_2d()
 			var zoom_x: = camera.zoom.x if camera != null else 1.0
 			var half_width: = get_viewport().get_visible_rect().size.x / maxf(zoom_x, 0.01) * 0.5
-			var side_distance: = clampf(half_width - 64.0, 48.0, 145.0)
+			var collider: CollisionShape2D = boss_instance.get_node("CollisionShape2D")
+			var body_bounds := collider.global_transform * collider.shape.get_rect()
+			var half_body := body_bounds.size.x * 0.5
+			var clearance := half_body + 18.0
+			var side_distance := clampf(half_width - half_body - 8.0, clearance, maxf(clearance, 145.0))
 			if stage == 5:
 				offset = Vector2(side_distance * (-1.0 if role == 0 else 1.0), -45.0 if role == 0 else 45.0)
 			else:

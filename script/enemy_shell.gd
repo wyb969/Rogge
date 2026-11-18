@@ -355,7 +355,7 @@ func _physics_process(delta: float) -> void :
 	if _death_started:
 		return
 	if _tick_environment_control(delta):
-		if sprite_2d.hframes == 4:
+		if sprite_2d.hframes == 4 and sprite_2d.vframes == 10:
 			_apply_move_juice(delta)
 		return
 	contact_timer = maxf(0.0, contact_timer - delta)
@@ -410,7 +410,7 @@ func _physics_process(delta: float) -> void :
 		_face(tactical_ai.facing, false)
 	elif dash_windup > 0.0 or is_dashing:
 		_face(dash_dir, false)
-	elif sprite_2d.hframes == 4:
+	elif sprite_2d.hframes == 4 and sprite_2d.vframes == 10:
 		if walking and travel.length_squared() > 0.000001:
 			_face(travel, false)
 		elif shot_windup > 0.0 or slam_windup > 0.0:
@@ -630,7 +630,7 @@ func _apply_move_juice(delta: float, ground_travel: float = 0.0) -> void :
 		return
 	var cruise: = maxf(speed, 8.0)
 
-	var walk_sheet := sprite_2d.hframes == 4
+	var walk_sheet := sprite_2d.hframes == 4 and sprite_2d.vframes == 10
 	var target := clampf(velocity.length() / cruise, 0.0, 1.0)
 	if walk_sheet and delta > 0.0:
 		target = clampf(ground_travel / (delta * cruise), 0.0, 1.0)
@@ -694,7 +694,7 @@ func _face(dir: Vector2, prefer_velocity: bool = true) -> void :
 	if sprite_2d == null:
 		return
 	var face: = velocity if prefer_velocity and absf(velocity.x) > 2.0 else dir
-	if sprite_2d.hframes == 4:
+	if sprite_2d.hframes == 4 and sprite_2d.vframes == 10:
 		if _source_facing != 0 and absf(face.x) > maxf(0.001, absf(face.y) * 0.12):
 			sprite_2d.flip_h = signf(face.x) != _source_facing
 	elif absf(face.x) > 0.01:

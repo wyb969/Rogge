@@ -87,10 +87,8 @@ func run() -> void:
 		actor.clear_terrain_impulse()
 		w.electric_grid._zap(actor)
 		expect(not actor.sprite_2d.visible,"survivor source art hidden for shock: "+str(specimen))
-		if path=="knight_boss": expect(not actor._sword.visible,"sword also hidden during skeleton replacement")
 		w.electric_grid.stop()
 		expect(actor.sprite_2d.visible,"source art restored without changing status tint: "+str(specimen))
-		if path=="knight_boss": expect(actor._sword.visible,"knight sword restored after shock")
 		actor.queue_free()
 	await process_frame
 	w.set_hazard(1)

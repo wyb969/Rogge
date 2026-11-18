@@ -1,0 +1,96 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://rogge_art/bosses/thunder/poses.png" id="T0"]
+
+[sub_resource type="AtlasTexture" id="f0_0"]
+atlas = ExtResource("T0")
+region = Rect2(0, 0, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_1"]
+atlas = ExtResource("T0")
+region = Rect2(48, 0, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_2"]
+atlas = ExtResource("T0")
+region = Rect2(96, 0, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_3"]
+atlas = ExtResource("T0")
+region = Rect2(144, 0, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_4"]
+atlas = ExtResource("T0")
+region = Rect2(0, 48, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_5"]
+atlas = ExtResource("T0")
+region = Rect2(48, 48, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_6"]
+atlas = ExtResource("T0")
+region = Rect2(96, 48, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_7"]
+atlas = ExtResource("T0")
+region = Rect2(144, 48, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_8"]
+atlas = ExtResource("T0")
+region = Rect2(0, 96, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_9"]
+atlas = ExtResource("T0")
+region = Rect2(48, 96, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_10"]
+atlas = ExtResource("T0")
+region = Rect2(96, 96, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_11"]
+atlas = ExtResource("T0")
+region = Rect2(144, 96, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_12"]
+atlas = ExtResource("T0")
+region = Rect2(0, 144, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_13"]
+atlas = ExtResource("T0")
+region = Rect2(48, 144, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_14"]
+atlas = ExtResource("T0")
+region = Rect2(96, 144, 48, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_15"]
+atlas = ExtResource("T0")
+region = Rect2(144, 144, 48, 48)
+filter_clip = true
+
+[resource]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("f0_0")}, {"duration": 1.0, "texture": SubResource("f0_12")}], "loop": true, "name": &"idle", "speed": 3.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_0")}, {"duration": 1.0, "texture": SubResource("f0_1")}, {"duration": 1.0, "texture": SubResource("f0_0")}, {"duration": 1.0, "texture": SubResource("f0_2")}], "loop": true, "name": &"approach", "speed": 8.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_7")}, {"duration": 1.0, "texture": SubResource("f0_15")}, {"duration": 1.0, "texture": SubResource("f0_0")}], "loop": false, "name": &"recover", "speed": 6.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_8")}, {"duration": 1.0, "texture": SubResource("f0_14")}, {"duration": 1.0, "texture": SubResource("f0_8")}, {"duration": 1.0, "texture": SubResource("f0_0")}], "loop": false, "name": &"hurt", "speed": 12.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_9")}, {"duration": 1.0, "texture": SubResource("f0_13")}], "loop": true, "name": &"stun", "speed": 5.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_8")}, {"duration": 1.0, "texture": SubResource("f0_7")}, {"duration": 1.0, "texture": SubResource("f0_11")}], "loop": false, "name": &"defeat", "speed": 6.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_3")}, {"duration": 1.0, "texture": SubResource("f0_10")}, {"duration": 1.0, "texture": SubResource("f0_10")}, {"duration": 1.0, "texture": SubResource("f0_0")}], "loop": false, "name": &"phase_shift", "speed": 6.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_0")}, {"duration": 1.0, "texture": SubResource("f0_3")}], "loop": false, "name": &"warn", "speed": 7.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_3")}, {"duration": 1.0, "texture": SubResource("f0_4")}], "loop": false, "name": &"cross_lightning", "speed": 10.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_3")}, {"duration": 1.0, "texture": SubResource("f0_5")}], "loop": false, "name": &"tracking_mark", "speed": 10.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_3")}, {"duration": 1.0, "texture": SubResource("f0_6")}], "loop": false, "name": &"lightning_pounce", "speed": 10.0}]

@@ -197,57 +197,57 @@ const EXTRA = [
 		"id": "dino",
 		"category": 2,
 		"title": "狂奔巨蜥",
-		"icon": "res://assest/DinoSprites - mort.png",
+		"icon": "res://rogge_art/bosses/lizard/poses.png",
 		"detail": "第一关首领以追踪蓄力和冲锋压迫玩家。预警锁定后横向闪避，在冲锋后的硬直反击；二阶段要注意连续冲锋。",
-		"frames": 24
+		"frames": 4
 	},
 	{
 		"id": "knight",
 		"category": 2,
 		"title": "钢铁骑士",
-		"icon": "res://assest/sprites/knight.png",
+		"icon": "res://rogge_art/bosses/knight/poses.png",
 		"detail": "第二关首领用冲刺接近并挥剑斩击。红色扇形表示剑的危险范围，注意冲刺后的连招；二阶段攻击频率更快。",
-		"frames": 1
+		"frames": 4
 	},
 	{
 		"id": "tide",
 		"category": 2,
 		"title": "潮汐巨象",
-		"icon": "res://assest/sprites/beasts/tide.svg",
+		"icon": "res://rogge_art/bosses/tide/poses.png",
 		"detail": "水属性神兽使用潮涌冲锋、水泡落点和水道攻击。离开红色区域，利用移动后的恢复期输出。击败后获得潮汐复苏。",
-		"frames": 1
+		"frames": 4
 	},
 	{
 		"id": "thunder",
 		"category": 2,
 		"title": "雷鬃狮王",
-		"icon": "res://assest/sprites/beasts/thunder.svg",
+		"icon": "res://rogge_art/bosses/thunder/poses.png",
 		"detail": "雷属性神兽用跳跃突袭和落雷追击。交叉预警会留下安全空隙，避免沿危险路线直跑。击败后获得雷霆裁决，并进入力量试炼。",
-		"frames": 1
+		"frames": 4
 	},
 	{
 		"id": "gale",
 		"category": 2,
 		"title": "苍风双隼",
-		"icon": "res://assest/sprites/beasts/gale.svg",
+		"icon": "res://rogge_art/bosses/wind-ranged/poses.png",
 		"detail": "风之战由远程术隼和近战猎隼共同参与。术隼施放风刃，猎隼俯冲突袭；保持两者都在视野内，注意不同预警。击败后获得苍风牵引。",
-		"frames": 1
+		"frames": 4
 	},
 	{
 		"id": "aegis",
 		"category": 2,
 		"title": "熔岩玄龟",
-		"icon": "res://assest/sprites/beasts/aegis.svg",
+		"icon": "res://rogge_art/bosses/aegis/poses.png",
 		"detail": "防御型神兽使用熔壳滚动、熔岩环和火种坠落。别长时间站在近身危险区；二阶段更紧凑。击败后获得玄岩壁垒，随后进入速度试炼。",
-		"frames": 1
+		"frames": 4
 	},
 	{
 		"id": "treasure",
 		"category": 2,
 		"title": "宝藏守卫",
-		"icon": "resource:Enemy_3",
+		"icon": "res://rogge_art/bosses/guardian/poses.png",
 		"detail": "中途出现的精英奖励敌人，生命较多，会预警后重击周围。击败后获得老虎机奖励：随机一张卡通常升两级，少量情况升三级或一级。",
-		"frames": 1
+		"frames": 4
 	},
 	{
 		"id": "trial_power",
@@ -267,32 +267,32 @@ const EXTRA = [
 		"id": "trial_wooden",
 		"category": 3,
 		"title": "木头人挑战",
-		"icon": "res://assest/sprites/beasts/skill_aegis.svg",
+		"icon": "res://rogge_art/icons/skills-equipment/A057.png",
 		"trial": "wooden"
 	},
 	{
 		"id": "power_tide",
 		"category": 4,
 		"power": 0,
-		"icon": "res://assest/sprites/beasts/skill_tide.svg"
+		"icon": "res://rogge_art/icons/skills-equipment/A054.png"
 	},
 	{
 		"id": "power_thunder",
 		"category": 4,
 		"power": 1,
-		"icon": "res://assest/sprites/beasts/skill_thunder.svg"
+		"icon": "res://rogge_art/icons/skills-equipment/A055.png"
 	},
 	{
 		"id": "power_gale",
 		"category": 4,
 		"power": 2,
-		"icon": "res://assest/sprites/beasts/skill_gale.svg"
+		"icon": "res://rogge_art/icons/skills-equipment/A056.png"
 	},
 	{
 		"id": "power_aegis",
 		"category": 4,
 		"power": 3,
-		"icon": "res://assest/sprites/beasts/skill_aegis.svg"
+		"icon": "res://rogge_art/icons/skills-equipment/A057.png"
 	},
 	{
 		"id": "combo_growth",
@@ -331,7 +331,7 @@ static func texture_for(entry: Dictionary) -> Texture2D:
 	if entry.get("frames",1)>1:
 		var atlas := AtlasTexture.new()
 		atlas.atlas = texture
-		atlas.region = Rect2(0,0,texture.get_width()/float(entry.frames),texture.get_height())
+		atlas.region = Rect2(0,0,texture.get_width()/float(entry.frames),texture.get_height()/float(entry.frames))
 		return atlas
 	return texture
 

@@ -18,14 +18,23 @@ func configure_wind_role(value: int, host: Node) -> void :
 	coordinator = host
 	_orbit_sign = 1.0 if role == Role.RANGED else -1.0
 
+func boss_art_id() -> String:
+	return "wind-ranged" if role == Role.RANGED else "wind-melee"
+
+func pose_action() -> StringName:
+	if is_dying: return &"defeat"
+	if electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
+	if state == State.WARN: return &"fan_warn" if role == Role.RANGED else &"dive_warn"
+	if state == State.ACTIVE:
+		if role == Role.RANGED: return &"wind_blades"
+		return &"second_dive" if phase == 2 and _extra_dives == 0 else &"dive"
+	return super.pose_action()
+
 func _ready() -> void :
 	super._ready()
 	health_max_value = ROLE_HP[role]
 	boss_current_health = health_max_value
 	health_bar.init_health(health_max_value)
-	sprite_2d.scale = Vector2.ONE * 0.72
-	base_sprite_scale = sprite_2d.scale
-	sprite_2d.texture = load("res://assest/sprites/beasts/gale_%s.svg" % ("ranged" if role == Role.RANGED else "melee"))
 	state_left = 0.65 if role == Role.RANGED else 1.2
 	var fill: = StyleBoxFlat.new()
 	fill.bg_color = ROLE_COLORS[role]
@@ -84,12 +93,12 @@ func _move_in_role(_delta: float) -> void :
 		velocity = dir * (100.0 if phase == 1 else 118.0) if distance > 72 else orbit * 74.0 - dir * 12.0
 	velocity *= poison_slow
 	move_and_slide()
-	if absf(offset.x) > 2: sprite_2d.flip_h = offset.x < 0
 
 func roaming_seconds() -> float:
 	return 0.3 if phase == 2 else 0.5
 
 func begin_attack() -> void :
+	update_facing_direction(player.global_position)
 	shapes.clear()
 	dive = false
 	_extra_dives = 0

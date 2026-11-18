@@ -19,8 +19,11 @@ var dash_distance: float = 0.0
 var attack_hit: bool = false
 var slash_count: int = 0
 var dash_count: int = 0
-var _anim_time: float = 0.0
-var _sword: Node2D
+func pose_action() -> StringName:
+	if is_dying: return &"defeat"
+	if electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
+	return [&"approach", &"dash_warn", &"dash", &"slash_warn", &"slash", &"recover", &"phase_shift"][attack_state]
+
 var _title: Label
 var _health_panel: Control
 
@@ -31,6 +34,7 @@ func configure_stage(_stage: int) -> void :
 	fight_stage = 2
 
 func _ready() -> void :
+	bind_poses("knight", 3.05, 62)
 	fight_stage = 2
 	health_max_value = MAX_HEALTH
 	boss_current_health = health_max_value
@@ -51,7 +55,7 @@ func _ready() -> void :
 	_title.add_theme_constant_override("outline_size", 4)
 	_title.text = L10n.text("IRON KNIGHT  /  I")
 	_build_boss_hud()
-	_build_sword()
+
 
 func deals_own_contact() -> bool:
 
@@ -74,15 +78,7 @@ func _process(delta: float) -> void :
 	if is_dying:
 		return
 	_tick_terrain_visual(delta,_terrain_base_position)
-	_anim_time += delta
-	var running: = attack_state == AttackState.DASH or attack_state == AttackState.APPROACH
-	var frames: = 8 if running else 4
-	sprite_2d.frame = (16 if running else 0) + int(_anim_time * (12.0 if running else 5.0)) % frames
 	_sync_outline_frame_uv()
-	var sweep: = clampf(1.0 - state_left / maxf(state_duration, 0.001), 0.0, 1.0)
-	if _sword:
-		_sword.rotation = attack_angle + lerpf( - SLASH_HALF_ANGLE, SLASH_HALF_ANGLE, sweep) if attack_state == AttackState.SLASH else attack_angle - SLASH_HALF_ANGLE
-		_sword.modulate = Color(1.2, 0.92, 0.65) if phase == 2 else Color.WHITE
 	queue_redraw()
 
 func _physics_process(delta: float) -> void :
@@ -172,7 +168,6 @@ func _hit_player(amount: float) -> void :
 func apply_hit(hit_data: Dictionary) -> void :
 	super.apply_hit(hit_data)
 	if is_dying:
-		_sword.visible = false
 		_title.visible = false
 		queue_redraw()
 	if not is_dying and phase == 1 and boss_current_health <= health_max_value * PHASE_TWO_HEALTH:
@@ -224,25 +219,6 @@ func draw_ellipse_shadow() -> void :
 	draw_circle(Vector2.ZERO, lerpf(42,30,terrain_impulse.height_ratio()), GamePalette.shadow(lerpf(0.82,0.5,terrain_impulse.height_ratio())))
 	draw_set_transform(Vector2.ZERO)
 
-func _build_sword() -> void :
-	_sword = Node2D.new()
-	_sword.name = "Sword"
-	_sword.position = Vector2(0, 8)
-	_sword.z_index = 6
-	add_child(_sword)
-
-	for part in [
-		[PackedVector2Array([Vector2(20, -8), Vector2(82, -8), Vector2(92, 0), Vector2(82, 8), Vector2(20, 8)]), Color(0.08, 0.1, 0.17)],
-		[PackedVector2Array([Vector2(24, -5), Vector2(80, -5), Vector2(88, 0), Vector2(80, 5), Vector2(24, 5)]), Color(0.8, 0.89, 1.0)],
-		[PackedVector2Array([Vector2(25, -4), Vector2(78, -4), Vector2(85, 0), Vector2(25, 0)]), Color(1, 1, 1)],
-		[PackedVector2Array([Vector2(18, -14), Vector2(25, -14), Vector2(25, 14), Vector2(18, 14)]), Color(0.95, 0.65, 0.2)],
-		[PackedVector2Array([Vector2(4, -4), Vector2(18, -4), Vector2(18, 4), Vector2(4, 4)]), Color(0.38, 0.2, 0.12)],
-	]:
-		var polygon: = Polygon2D.new()
-		polygon.polygon = part[0]
-		polygon.color = part[1]
-		_sword.add_child(polygon)
-
 func _build_boss_hud() -> void :
 
 	var canvas: = CanvasLayer.new()
@@ -269,6 +245,3 @@ func _cancel_controlled_attack() -> void:
 	dash_distance_left = 0
 	attack_hit = true
 	queue_redraw()
-
-func _sync_airborne_attachments(height: float) -> void:
-	if is_instance_valid(_sword): _sword.position = Vector2(0,8-height)

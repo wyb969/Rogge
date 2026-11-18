@@ -47,7 +47,7 @@ func unlock(index: int) -> void :
 	unlocked.sort()
 	selected = index
 	var button: = SKILL_ICON.new()
-	button.configure(load("res://assest/sprites/beasts/skill_%s.svg" % IDS[index]), COLORS[index])
+	button.configure(load("res://rogge_art/icons/skills-equipment/A%03d.png" % (54 + index)), COLORS[index])
 	button.tooltip_text = L10n.text(TITLES[index]) + "\n" + description_for(index) + L10n.text("\n点击直接释放 / E 释放当前 / Q 键切换")
 	button.pressed.connect(cast.bind(index))
 	_column.add_child(button)
@@ -133,6 +133,7 @@ func cast_selected() -> bool:
 		3:
 			barrier_left = 6.0
 			player.beast_damage_scale = 0.1
+	player.cast_pose()
 	cooldowns[selected] = COOLDOWNS[selected]
 	blessing_fx.play(selected)
 	_notify(L10n.text(TITLES[selected]) + "！")
@@ -282,7 +283,7 @@ func open_reward(stage: int, final: bool) -> void :
 		if text_value == L10n.text(TITLES[i]):
 			var icon: = TextureRect.new()
 			_reward_icon = icon
-			icon.texture = load("res://assest/sprites/beasts/skill_%s.svg" % IDS[i])
+			icon.texture = load("res://rogge_art/icons/skills-equipment/A%03d.png" % (54 + i))
 			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			icon.custom_minimum_size = Vector2(100, 100) * scale_ui

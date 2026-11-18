@@ -14,7 +14,8 @@ func _run() -> void :
 	current_scene = main
 	await process_frame
 	await process_frame
-	await main._on_start_button_pressed()
+	main._on_start_button_pressed()
+	await main._hero_chosen(0)
 	var game: Node = main.game
 	var spawner: Node = game.spawner
 	var player: Node = game.player

@@ -12,6 +12,9 @@ const MOBILE_CONTROLS_SCENE: = preload("res://scenes/mobile_controls.tscn")
 const FULLSCREEN_TOGGLE_SCENE: = preload("res://scenes/fullscreen_toggle.tscn")
 const SETTINGS_PAGE_SCENE: = preload("res://scenes/settings_page.tscn")
 
+const HEROES := preload("res://script/hero_roster.gd")
+var hero_picker := preload("res://script/hero_picker.gd").new()
+var hero_index := 0
 var game: Node = null
 var mobile_controls: CanvasLayer = null
 var fullscreen_toggle: CanvasLayer = null
@@ -51,6 +54,14 @@ func _ready() -> void :
 	menu_box.add_child(codex_button)
 	menu_box.move_child(codex_button,4)
 
+	hero_picker.hide()
+	$mainUI/Control.add_child(hero_picker)
+	hero_picker.chosen.connect(_hero_chosen)
+	hero_picker.cancelled.connect(func():
+		hero_picker.hide()
+		menu_page.show()
+		build_version_label.show()
+		$mainUI/Control/MenuCenter/VBoxContainer/StartButton.grab_focus())
 	game_end_ui.hide_result()
 
 	await load_new_game()
@@ -119,6 +130,7 @@ func show_main_menu() -> void :
 	if session_menu: session_menu.dismiss()
 	fullscreen_toggle.set_home_available(false)
 	_test_mode = &""
+	hero_picker.hide()
 	debug_page.hide()
 	menu_page.show()
 	build_version_label.show()
@@ -161,6 +173,14 @@ func start_game() -> void :
 
 
 func _on_start_button_pressed() -> void :
+	menu_page.hide()
+	build_version_label.hide()
+	hero_picker.open(hero_index)
+
+func _hero_chosen(index: int) -> void:
+	if _starting_run or not hero_picker.visible: return
+	hero_index = index
+	hero_picker.hide()
 	await _launch_run(&"")
 
 
@@ -299,7 +319,10 @@ func _launch_run(mode: StringName) -> void :
 	AudioManager.unlock_web_audio()
 	await load_new_game()
 	game.diagnostic_mode = str(mode) if mode != &"" else "normal"
+	game.player.set_hero(hero_index if mode == &"" else 0)
 	start_game()
+	if mode == &"":
+		game._on_upgrade_selected(HEROES.START_CARDS[hero_index])
 	match mode:
 		&"arcane_weapons":
 			game.prepare_arcane_debug()

@@ -74,7 +74,19 @@ func configure_stage(stage: int) -> void :
 func get_touch_damage() -> float:
 	return 95.0 if fight_stage >= 2 else 60.0
 
+var poses := preload("res://script/boss_pose.gd").new()
+
+func bind_poses(art: String, zoom: float, foot_y: float) -> void:
+	poses.setup(self, sprite_2d, art, zoom, foot_y)
+	base_sprite_scale = sprite_2d.scale
+
+func pose_action() -> StringName:
+	if is_dying: return &"defeat"
+	if electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
+	return [&"approach", &"charge_warn", &"charge", &"recover"][charge_state]
+
 func _ready() -> void :
+	bind_poses("lizard", 3.55, 65)
 	if fight_stage >= 2:
 		health_max_value = 3600.0
 		charge_speed = 760.0
@@ -369,6 +381,7 @@ func _sync_outline_frame_uv() -> void :
 	mat.set_shader_parameter("frame_uv_rect", Vector4(float(col) * fw, float(row) * fh, fw, fh))
 
 func play_hit_feedback(hit_dir: Vector2, impact: bool = true) -> void :
+	if impact: poses.hurt_left = 0.18
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null: feedback.hit(global_position, hit_dir, true)
 	var now: = Time.get_ticks_msec()

@@ -46,7 +46,7 @@ var dash_direction: Vector2 = Vector2.RIGHT
 var last_move_direction: Vector2 = Vector2.RIGHT
 # One neutral pose between the two foot contacts. Distance, not a fixed FPS,
 # advances this cycle; high-speed builds cap the cadence rather than flickering.
-const WALK_POSES := [0, 1, 0, 2]
+const WALK_FRAME_COUNT := 4
 const WALK_CYCLE_DISTANCE := 50.0
 const MAX_WALK_FPS := 18.0
 const WALK_STOP_SPEED := 2.0
@@ -55,6 +55,25 @@ var locomotion_speed := 0.0
 var _walk_phase := 0.0
 var _walking := false
 var _facing_left := false
+var _action_left := 0.0
+var _action := ""
+
+func set_hero(index: int) -> void:
+	animated_sprite_2d.sprite_frames = preload("res://script/hero_roster.gd").FRAMES[index]
+	animated_sprite_2d.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_stop_locomotion()
+
+func _clip(action: String) -> StringName:
+	return StringName(action + ("_left" if _facing_left else "_right"))
+
+func _play_action(action: String, duration: float) -> void:
+	_action = action
+	_action_left = duration
+	animated_sprite_2d.play(_clip(action))
+
+func cast_pose() -> void:
+	if player_health > 0 and not dashing: _play_action("cast", 0.40)
+
 
 var pickup_range: float
 
@@ -495,6 +514,8 @@ func pick_up_upgrade(scale: float):
 	circle_shape.radius = pickup_range
 
 func _physics_process(delta: float) -> void :
+	if player_health <= 0: return
+	_action_left = maxf(0, _action_left - delta)
 	if not dashing and dash_grace_left > 0:
 		dash_grace_left = maxf(0, dash_grace_left - delta)
 		if dash_grace_left < 1e-06:
@@ -601,7 +622,7 @@ func _start_dash(input_direction: Vector2) -> void :
 	shadow_timer.stop() # Compatibility timer remains callable; the trail uses actual distance.
 	_dash_ghost_distance = 0.0
 	playAnimation(dash_direction)
-	animated_sprite_2d.set_frame_and_progress(1, 0)
+	animated_sprite_2d.play(_clip("dash"), 4.0 / (14.0 * DASH_DURATION))
 	var feedback: = JUICE.find(self)
 	if feedback != null:
 		feedback.dash(global_position, dash_direction)
@@ -616,17 +637,17 @@ func playAnimation(direction: Vector2) -> void:
 	# Compatibility entry point: only the horizontal component changes the pose.
 	# Vertical travel and idle keep the last horizontal facing; mouse is irrelevant.
 	if absf(direction.x) > 0.02: _facing_left = direction.x < 0
-	var wanted: StringName = &"left" if _facing_left else &"right"
-	if animated_sprite_2d.animation != wanted: animated_sprite_2d.animation = wanted
-	animated_sprite_2d.pause()
 
 func _stop_locomotion() -> void:
 	locomotion_velocity = Vector2.ZERO
 	locomotion_speed = 0.0
 	_walk_phase = 0.0
 	_walking = false
-	playAnimation(Vector2.ZERO)
-	animated_sprite_2d.set_frame_and_progress(0, 0)
+	if player_health <= 0: return
+	if terrain_impulse.is_active():
+		if animated_sprite_2d.animation != _clip("airborne"): animated_sprite_2d.play(_clip("airborne"))
+	elif _action_left <= 0:
+		animated_sprite_2d.play(_clip("idle"))
 
 func _update_locomotion(displacement: Vector2, delta: float) -> void:
 	if delta <= 0 or movement_locked:
@@ -636,7 +657,7 @@ func _update_locomotion(displacement: Vector2, delta: float) -> void:
 	locomotion_speed = locomotion_velocity.length()
 	if dashing:
 		playAnimation(dash_direction)
-		animated_sprite_2d.set_frame_and_progress(1, 0)
+		animated_sprite_2d.play(_clip("dash"), 4.0 / (14.0 * DASH_DURATION))
 		_walking = false
 		return
 	if locomotion_speed <= WALK_STOP_SPEED:
@@ -645,10 +666,18 @@ func _update_locomotion(displacement: Vector2, delta: float) -> void:
 	playAnimation(locomotion_velocity.normalized())
 	if not _walking: _walk_phase = 0.25 # first foot contact on departure
 	_walking = true
-	var cycles := minf(displacement.length() / WALK_CYCLE_DISTANCE, MAX_WALK_FPS * delta / WALK_POSES.size())
+	var cycles := minf(displacement.length() / WALK_CYCLE_DISTANCE, MAX_WALK_FPS * delta / WALK_FRAME_COUNT)
 	_walk_phase = fposmod(_walk_phase + cycles, 1.0)
-	var pose := _walk_phase * WALK_POSES.size()
-	animated_sprite_2d.set_frame_and_progress(WALK_POSES[int(pose)], fposmod(pose, 1))
+	if terrain_impulse.is_active():
+		if animated_sprite_2d.animation != _clip("airborne"): animated_sprite_2d.play(_clip("airborne"))
+		return
+	if _action_left > 0:
+		if animated_sprite_2d.animation != _clip(_action): animated_sprite_2d.play(_clip(_action))
+		return
+	animated_sprite_2d.animation = _clip("walk")
+	animated_sprite_2d.pause()
+	var pose := _walk_phase * WALK_FRAME_COUNT
+	animated_sprite_2d.set_frame_and_progress(int(pose), fposmod(pose, 1))
 
 func _on_shadow_timer_timeout() -> void :
 	if not dashing or velocity.length_squared() <= 1e-05:
@@ -700,6 +729,7 @@ func receive_attack(amount: float, _source: Node = null) -> void :
 	health_bar.set_health(player_health)
 	_sync_shield_visuals()
 	if hp_loss > 0.0:
+		_play_action("hurt", 0.22)
 		health_damaged.emit(hp_loss)
 	if player_health <= 0.0:
 		die()
@@ -715,6 +745,9 @@ func play_hit_tween() -> void :
 
 func die() -> void :
 	player_died.emit()
+	if player_health <= 0:
+		# The end-of-run beat slows the world, but the four defeat poses fit its real duration.
+		animated_sprite_2d.play(_clip("defeat"), 1.0 / maxf(Engine.time_scale, 0.005))
 
 func play_ring_tween() -> void :
 	if player_ring == null:

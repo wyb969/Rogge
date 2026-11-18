@@ -124,6 +124,7 @@ func _run() -> void:
 	await process_frame
 	_expect(main.menu_page.visible and not page.visible and paused and main._test_mode == &"", "result return restores home and clears debug mode")
 	main.get_node("mainUI/Control/MenuCenter/VBoxContainer/StartButton").pressed.emit()
+	main.hero_picker.cards[0].pressed.emit()
 	await process_frame
 	await process_frame
 	_expect(not main.game.growth_combo_active and main.game.player.growth_move_multiplier == 1 and main.game_root.get_child_count() == 1, "normal Start inherits no debug set or duplicate game")

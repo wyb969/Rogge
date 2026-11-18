@@ -38,20 +38,24 @@ func configure_stage(stage: int) -> void :
 	fight_stage = stage
 	element = clampi(stage - 3, 0, 3)
 
+var active_pose: StringName = &"idle"
+
+func boss_art_id() -> String:
+	return "wind-ranged" if element == 2 else str(IDS[element])
+
+func pose_action() -> StringName:
+	if is_dying: return &"defeat"
+	if electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
+	return [&"approach", &"warn", active_pose, &"recover", &"phase_shift"][state]
+
 func _ready() -> void :
 	animation_player.stop()
 	animation_player.active = false
 	rush_timer.stop()
 	health_max_value = HP[element]
 	boss_current_health = health_max_value
-	sprite_2d.frame = 0
-	sprite_2d.hframes = 1
-	sprite_2d.vframes = 1
-	sprite_2d.texture = load("res://assest/sprites/beasts/%s.svg" % IDS[element])
-	sprite_2d.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	bind_poses(boss_art_id(), 2.3 if element == 2 else 3.05, 45 if element == 2 else 57)
 	GamePalette.paint_actor(sprite_2d, &"enemy")
-	sprite_2d.scale = Vector2.ONE * 0.9
-	base_sprite_scale = sprite_2d.scale
 	sprite_tint = Color.WHITE
 	_setup_health_bar()
 	health_bar.init_health(health_max_value)
@@ -91,7 +95,6 @@ func _reposition(_delta: float, weight: float = 1.0) -> void :
 	velocity = heading.normalized() * speed * poison_slow * weight
 	if is_instance_valid(player.environment): velocity += player.environment.surface.wind_velocity(0.3)
 	move_and_slide()
-	if absf(offset.x) > 2: sprite_2d.flip_h = offset.x < 0
 
 func _process(delta: float) -> void :
 	_elapsed += delta
@@ -173,7 +176,12 @@ func begin_attack() -> void :
 		aim = Vector2.DOWN
 	var count: = 5 if phase == 2 else 3
 	var alternate: = pattern_index % 3 == 2
+	update_facing_direction(target)
+	active_pose = [&"bubble_fall", &"cross_lightning", &"wind_blades", &"lava_ring"][element]
+	if alternate:
+		active_pose = [&"tidal_lane", &"tracking_mark", &"dive", &"falling_ember"][element]
 	if element != 2 and pattern_index % 3 == 1:
+		active_pose = [&"tidal_charge", &"lightning_pounce", &"dive", &"shell_roll"][element]
 		_prepare_dive(target)
 		_extra_dives = 1 if element == 1 and phase == 2 else 0
 		_move_name = [L10n.text("潮涌冲锋"), L10n.text("雷跃突袭"), L10n.text("俯冲"), L10n.text("熔壳滚动")][element]
@@ -236,6 +244,7 @@ func _update_attack_visual(force: bool = false) -> void :
 		attack_visual.clear()
 
 func _prepare_dive(target: Vector2) -> void :
+	update_facing_direction(target)
 	dive = true
 	var aim: = (target - global_position).normalized()
 	if aim.is_zero_approx():

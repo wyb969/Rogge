@@ -19,92 +19,92 @@ var _combo_clock := 0.0
 var _border_tick_left := 0.0
 
 const EQUIP_DEFS: = {
-	"thorn_whip": {"title": "荆棘鞭", "icon": "res://assest/sprites/thorn_whip.svg", "start_level": 0, "max_level": 5},
-	"rune_bolt": {"title": "符文飞弹", "icon": "res://assest/sprites/rune_bolt.svg", "start_level": 0, "max_level": 5},
-	"pulse_aura": {"title": "脉冲法阵", "icon": "res://assest/sprites/pulse_aura.svg", "start_level": 0, "max_level": 5},
-	"silver_knife": {"title": "银翼飞刀", "icon": "res://assest/sprites/silver_knife.svg", "start_level": 0, "max_level": 5},
-	"cross_blade": {"title": "回旋十字刃", "icon": "res://assest/sprites/cross_blade.svg", "start_level": 0, "max_level": 5},
-	"holy_water": {"title": "净化圣水", "icon": "res://assest/sprites/holy_water.svg", "start_level": 0, "max_level": 5},
-	"bomb": {"title": "炸弹", "icon": "res://assest/sprites/bomb.svg", "start_level": 0, "max_level": 5},
-	"critical_glasses": {"title": "暴击眼镜", "icon": "res://assest/sprites/critical_glasses.svg", "start_level": 0, "max_level": 5},
-	"banana_fan": {"title": "芭蕉扇", "icon": "res://assest/sprites/banana_fan.svg", "start_level": 0, "max_level": 5},
-	"black_hole": {"title": "黑洞", "icon": "res://assest/sprites/black_hole.svg", "start_level": 0, "max_level": 5},
-	"poison_trail": {"title": "剧毒踪迹", "icon": "res://assest/sprites/poison_trail.svg", "start_level": 0, "max_level": 5}, 
-	"wind_emblem": {"title": "踏风徽记", "icon": "res://assest/sprites/wind_emblem.svg", "start_level": 0}, 
-	"echo_ember": {"title": "回响火种", "icon": "res://assest/sprites/echo_ember.svg", "start_level": 0}, 
+	"thorn_whip": {"title": "荆棘鞭", "icon": "res://rogge_art/icons/skills-equipment/A026.png", "start_level": 0, "max_level": 5},
+	"rune_bolt": {"title": "符文飞弹", "icon": "res://rogge_art/icons/skills-equipment/A027.png", "start_level": 0, "max_level": 5},
+	"pulse_aura": {"title": "脉冲法阵", "icon": "res://rogge_art/icons/skills-equipment/A028.png", "start_level": 0, "max_level": 5},
+	"silver_knife": {"title": "银翼飞刀", "icon": "res://rogge_art/icons/skills-equipment/A029.png", "start_level": 0, "max_level": 5},
+	"cross_blade": {"title": "回旋十字刃", "icon": "res://rogge_art/icons/skills-equipment/A030.png", "start_level": 0, "max_level": 5},
+	"holy_water": {"title": "净化圣水", "icon": "res://rogge_art/icons/skills-equipment/A031.png", "start_level": 0, "max_level": 5},
+	"bomb": {"title": "炸弹", "icon": "res://rogge_art/icons/skills-equipment/A032.png", "start_level": 0, "max_level": 5},
+	"critical_glasses": {"title": "暴击眼镜", "icon": "res://rogge_art/icons/skills-equipment/A033.png", "start_level": 0, "max_level": 5},
+	"banana_fan": {"title": "芭蕉扇", "icon": "res://rogge_art/icons/skills-equipment/A034.png", "start_level": 0, "max_level": 5},
+	"black_hole": {"title": "黑洞", "icon": "res://rogge_art/icons/skills-equipment/A035.png", "start_level": 0, "max_level": 5},
+	"poison_trail": {"title": "剧毒踪迹", "icon": "res://rogge_art/icons/skills-equipment/A036.png", "start_level": 0, "max_level": 5}, 
+	"wind_emblem": {"title": "踏风徽记", "icon": "res://rogge_art/icons/skills-equipment/A037.png", "start_level": 0}, 
+	"echo_ember": {"title": "回响火种", "icon": "res://rogge_art/icons/skills-equipment/A038.png", "start_level": 0}, 
 	"lightning_ring": {
 		"title": "闪电戒指", 
-		"icon": "res://assest/sprites/lightning_ring.svg", 
+		"icon": "res://rogge_art/icons/skills-equipment/A039.png", 
 		"start_level": 0
 	}, 
 	"monster_necklace": {
 		"title": "怪物项链", 
-		"icon": "res://assest/sprites/monster_necklace.png", 
+		"icon": "res://rogge_art/icons/skills-equipment/A040.png", 
 		"start_level": 0
 	}, 
 	"axe_up": {
 		"title": "斧头", 
-		"icon": "res://assest/sprites/axe.png", 
+		"icon": "res://rogge_art/icons/skills-equipment/A041.png", 
 		"start_level": 1
 	}, 
 	"circle_up": {
 		"title": "书本", 
-		"icon": "res://assest/sprites/book.png", 
+		"icon": "res://rogge_art/icons/skills-equipment/A042.png", 
 		"start_level": 1
 	}, 
 	"gun_up": {
 		"title": "枪支", 
-		"icon": "res://assest/weaponR1.png", 
+		"icon": "res://rogge_art/icons/skills-equipment/A043.png", 
 		"start_level": 0
 	}, 
 	"pickup_up": {
 		"title": "拾取", 
-		"icon": "res://assest/bullet.png", 
+		"icon": "res://rogge_art/icons/skills-equipment/A044.png", 
 		"start_level": 0
 	}, 
 	"speed_up": {
 		"title": "移速", 
-		"icon": "res://assest/sprites/Speedup.png", 
+		"icon": "res://rogge_art/icons/skills-equipment/A045.png", 
 		"start_level": 0
 	}, 
 	"left_fist": {
 		"title": "左拳", 
-		"icon": "res://assest/sprites/fist_left.svg", 
+		"icon": "res://rogge_art/icons/skills-equipment/A046.png", 
 		"start_level": 0
 	}, 
 	"right_fist": {
 		"title": "右拳", 
-		"icon": "res://assest/sprites/fist_right.svg", 
+		"icon": "res://rogge_art/icons/skills-equipment/A047.png", 
 		"start_level": 0
 	}, 
 	"drone_up": {
 		"title": "无人机", 
-		"icon": "res://assest/sprites/drone.svg", 
+		"icon": "res://rogge_art/icons/skills-equipment/A048.png", 
 		"start_level": 0
 	}, 
 	"molotov_up": {
 		"title": "汽油瓶", 
-		"icon": "res://assest/sprites/molotov.svg", 
+		"icon": "res://rogge_art/icons/skills-equipment/A049.png", 
 		"start_level": 0
 	}, 
 	"freeze_up": {
 		"title": "寒冰", 
-		"icon": "res://assest/sprites/freeze.svg", 
+		"icon": "res://rogge_art/icons/skills-equipment/A050.png", 
 		"start_level": 0
 	}, 
 	"regen_up": {
 		"title": "回复", 
-		"icon": "res://assest/sprites/regen_sprout.svg", 
+		"icon": "res://rogge_art/icons/skills-equipment/A051.png", 
 		"start_level": 0
 	}, 
 	"lifesteal_up": {
 		"title": "吸血", 
-		"icon": "res://assest/sprites/crimson_fang.svg", 
+		"icon": "res://rogge_art/icons/skills-equipment/A052.png", 
 		"start_level": 0
 	}, 
 	"shield_up": {
 		"title": "玉佩", 
-		"icon": "res://assest/sprites/jade_guard.svg", 
+		"icon": "res://rogge_art/icons/skills-equipment/A053.png", 
 		"start_level": 0
 	}
 }

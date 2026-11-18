@@ -1603,3 +1603,9 @@ Heal %s/orb,Heal %s/orb,拾取回%s血
 %s%% right,%s%% right,右侧 %s%%
 等级 %d,Lv %d,等级 %d
 Lv %d,Lv %d,等级 %d
+游方客,Wayfarer,游方客
+风信使,Wind Courier,风信使
+机修师,Mechanic,机修师
+星灯学徒,Starlight Apprentice,星灯学徒
+选择角色,Choose a hero,选择角色
+初始能力：%s,Starts with %s,初始能力：%s

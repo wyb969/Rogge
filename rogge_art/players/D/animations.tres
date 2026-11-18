@@ -1,0 +1,183 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://rogge_art/players/D/right.png" id="T0"]
+
+[ext_resource type="Texture2D" path="res://rogge_art/players/D/left.png" id="T1"]
+
+[sub_resource type="AtlasTexture" id="f0_0"]
+atlas = ExtResource("T0")
+region = Rect2(0, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_1"]
+atlas = ExtResource("T0")
+region = Rect2(16, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_2"]
+atlas = ExtResource("T0")
+region = Rect2(32, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_3"]
+atlas = ExtResource("T0")
+region = Rect2(48, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_4"]
+atlas = ExtResource("T0")
+region = Rect2(64, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_5"]
+atlas = ExtResource("T0")
+region = Rect2(80, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_6"]
+atlas = ExtResource("T0")
+region = Rect2(96, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_7"]
+atlas = ExtResource("T0")
+region = Rect2(112, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_8"]
+atlas = ExtResource("T0")
+region = Rect2(128, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_9"]
+atlas = ExtResource("T0")
+region = Rect2(144, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_10"]
+atlas = ExtResource("T0")
+region = Rect2(160, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_11"]
+atlas = ExtResource("T0")
+region = Rect2(176, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_12"]
+atlas = ExtResource("T0")
+region = Rect2(192, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_13"]
+atlas = ExtResource("T0")
+region = Rect2(208, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_14"]
+atlas = ExtResource("T0")
+region = Rect2(224, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f0_15"]
+atlas = ExtResource("T0")
+region = Rect2(240, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_0"]
+atlas = ExtResource("T1")
+region = Rect2(0, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_1"]
+atlas = ExtResource("T1")
+region = Rect2(16, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_2"]
+atlas = ExtResource("T1")
+region = Rect2(32, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_3"]
+atlas = ExtResource("T1")
+region = Rect2(48, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_4"]
+atlas = ExtResource("T1")
+region = Rect2(64, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_5"]
+atlas = ExtResource("T1")
+region = Rect2(80, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_6"]
+atlas = ExtResource("T1")
+region = Rect2(96, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_7"]
+atlas = ExtResource("T1")
+region = Rect2(112, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_8"]
+atlas = ExtResource("T1")
+region = Rect2(128, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_9"]
+atlas = ExtResource("T1")
+region = Rect2(144, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_10"]
+atlas = ExtResource("T1")
+region = Rect2(160, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_11"]
+atlas = ExtResource("T1")
+region = Rect2(176, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_12"]
+atlas = ExtResource("T1")
+region = Rect2(192, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_13"]
+atlas = ExtResource("T1")
+region = Rect2(208, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_14"]
+atlas = ExtResource("T1")
+region = Rect2(224, 0, 16, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="f1_15"]
+atlas = ExtResource("T1")
+region = Rect2(240, 0, 16, 24)
+filter_clip = true
+
+[resource]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("f0_0")}, {"duration": 1.0, "texture": SubResource("f0_1")}, {"duration": 1.0, "texture": SubResource("f0_2")}], "loop": true, "name": &"right", "speed": 6.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_0")}, {"duration": 1.0, "texture": SubResource("f0_3")}, {"duration": 1.0, "texture": SubResource("f0_0")}], "loop": true, "name": &"idle_right", "speed": 3.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_0")}, {"duration": 1.0, "texture": SubResource("f0_1")}, {"duration": 1.0, "texture": SubResource("f0_0")}, {"duration": 1.0, "texture": SubResource("f0_2")}], "loop": true, "name": &"walk_right", "speed": 9.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_4")}, {"duration": 1.0, "texture": SubResource("f0_5")}, {"duration": 1.0, "texture": SubResource("f0_5")}, {"duration": 1.0, "texture": SubResource("f0_6")}], "loop": false, "name": &"dash_right", "speed": 14.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_7")}, {"duration": 1.0, "texture": SubResource("f0_8")}, {"duration": 1.0, "texture": SubResource("f0_0")}], "loop": false, "name": &"hurt_right", "speed": 10.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_8")}, {"duration": 1.0, "texture": SubResource("f0_9")}, {"duration": 1.0, "texture": SubResource("f0_10")}, {"duration": 1.0, "texture": SubResource("f0_11")}], "loop": false, "name": &"defeat_right", "speed": 7.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_12")}, {"duration": 1.0, "texture": SubResource("f0_13")}, {"duration": 1.0, "texture": SubResource("f0_14")}, {"duration": 1.0, "texture": SubResource("f0_0")}], "loop": false, "name": &"cast_right", "speed": 9.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f0_4")}, {"duration": 1.0, "texture": SubResource("f0_15")}, {"duration": 1.0, "texture": SubResource("f0_15")}, {"duration": 1.0, "texture": SubResource("f0_6")}], "loop": false, "name": &"airborne_right", "speed": 10.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f1_0")}, {"duration": 1.0, "texture": SubResource("f1_1")}, {"duration": 1.0, "texture": SubResource("f1_2")}], "loop": true, "name": &"left", "speed": 6.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f1_0")}, {"duration": 1.0, "texture": SubResource("f1_3")}, {"duration": 1.0, "texture": SubResource("f1_0")}], "loop": true, "name": &"idle_left", "speed": 3.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f1_0")}, {"duration": 1.0, "texture": SubResource("f1_1")}, {"duration": 1.0, "texture": SubResource("f1_0")}, {"duration": 1.0, "texture": SubResource("f1_2")}], "loop": true, "name": &"walk_left", "speed": 9.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f1_4")}, {"duration": 1.0, "texture": SubResource("f1_5")}, {"duration": 1.0, "texture": SubResource("f1_5")}, {"duration": 1.0, "texture": SubResource("f1_6")}], "loop": false, "name": &"dash_left", "speed": 14.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f1_7")}, {"duration": 1.0, "texture": SubResource("f1_8")}, {"duration": 1.0, "texture": SubResource("f1_0")}], "loop": false, "name": &"hurt_left", "speed": 10.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f1_8")}, {"duration": 1.0, "texture": SubResource("f1_9")}, {"duration": 1.0, "texture": SubResource("f1_10")}, {"duration": 1.0, "texture": SubResource("f1_11")}], "loop": false, "name": &"defeat_left", "speed": 7.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f1_12")}, {"duration": 1.0, "texture": SubResource("f1_13")}, {"duration": 1.0, "texture": SubResource("f1_14")}, {"duration": 1.0, "texture": SubResource("f1_0")}], "loop": false, "name": &"cast_left", "speed": 9.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("f1_4")}, {"duration": 1.0, "texture": SubResource("f1_15")}, {"duration": 1.0, "texture": SubResource("f1_15")}, {"duration": 1.0, "texture": SubResource("f1_6")}], "loop": false, "name": &"airborne_left", "speed": 10.0}]

@@ -104,7 +104,7 @@ func run() -> void:
 		boss._process(0.22)
 		expect(is_equal_approx(boss.terrain_impulse.height(),34) and boss.sprite_2d.position.y<-19,"boss body visibly rises: "+path)
 		if path=="knight_boss":
-			expect(is_equal_approx(boss._sword.position.y-boss.sprite_2d.position.y,16),"knight sword stays attached while airborne")
+			expect(boss.sprite_2d.texture.resource_path.ends_with("/knight/poses.png") and boss.sprite_2d.position.y < boss._terrain_base_position.y,"knight sword stays attached while airborne")
 		boss.clear_terrain_impulse()
 		expect(boss.sprite_2d.position==boss._terrain_base_position,"boss cleanup restores exact base position")
 		boss.queue_free()

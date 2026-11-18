@@ -186,9 +186,6 @@ func _zap(actor: Node2D) -> void:
 		if is_instance_valid(sprite):
 			hidden.append({"item":weakref(sprite),"visible":sprite.visible})
 			sprite.hide()
-		if "_sword" in actor and is_instance_valid(actor._sword):
-			hidden.append({"item":weakref(actor._sword),"visible":actor._sword.visible})
-			actor._sword.hide()
 		_zaps.append({"actor":weakref(actor),"until":_clock+STUN_SECONDS,"profile":profile,"hidden":hidden})
 
 func _touch_player() -> void:

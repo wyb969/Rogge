@@ -30,11 +30,6 @@ func isolate() -> void:
 	g.spawner.timer.stop()
 	g.spawner.get_node("Elite").stop()
 	g.spawner.set_process(false)
-	g.clear_enemies()
-	# Measure free travel without terrain hits or level-up pauses.
-	g.level_manager.signal_level_up.disconnect(g.on_level_up)
-	for hazard in [w.spikes, w.electric_grid, w.minefield]:
-		hazard.process_mode = Node.PROCESS_MODE_DISABLED
 	g.variety.set_process(false)
 	g.meteors.set_process(false)
 	for path in ["HandWeapon","CircleWeapon","Weapon","DroneController","MolotovController","FreezeController","BananaFan","BlackHole"]:
@@ -124,13 +119,13 @@ func _run() -> void:
 		for dt in [1.0/30,1.0/60,0.5]:
 			w.set_preview(5,0)
 			d._finish_dash()
-			d.global_position = p.global_position+Vector2(160,0)
+			d.global_position = p.global_position+Vector2(110,0)
 			d.dash_timer = 0
 			d._physics_process(0.01)
 			expect(is_equal_approx(d._dash_surface_scale,1.25) and d.dash_windup > 0, "ice leap snapshots a 25% longer warning")
 			if change_weather: w.set_preview(0,0)
-			d._physics_process(d.DASH_AIM_SECONDS)
-			d._physics_process(d.DASH_LOCK_SECONDS + 0.00001)
+			d._physics_process(0.3)
+			d._physics_process(0.3)
 			var start: Vector2 = d.global_position
 			var guard := 0
 			while d.is_dashing and guard < 30:

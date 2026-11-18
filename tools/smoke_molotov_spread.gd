@@ -28,8 +28,8 @@ func _run() -> void :
 	game.player.set_physics_process(false)
 	for name in ["HandWeapon", "CircleWeapon", "Weapon", "DroneController", "MolotovController", "FreezeController"]: game.get_node(name).process_mode = Node.PROCESS_MODE_DISABLED
 	var near: Node = mob(Vector2(20, 0))
-	var edge: Node = mob(Vector2(100, 0))
-	var outside: Node = mob(Vector2(100.1, 0))
+	var edge: Node = mob(Vector2(70, 0))
+	var outside: Node = mob(Vector2(70.1, 0))
 	var foreign: Node = mob(Vector2(20, 0), root)
 	var dead: Node = mob(Vector2(30, 0))
 	dead.health = 0

@@ -41,13 +41,13 @@ func _run() -> void :
 		player.global_position = Vector2(110, 0)
 		dasher.dash_timer = 0.0
 		dasher._physics_process(0.01)
-		_expect(is_equal_approx(dasher.dash_windup, dasher.DASH_WINDUP_SECONDS) and dasher.velocity.is_zero_approx(), "leap starts with a stationary tracking/lock warning")
+		_expect(is_equal_approx(dasher.dash_windup, 0.6) and dasher.velocity.is_zero_approx(), "leap starts with a stationary 0.6-second tracking/lock warning")
 		player.global_position = Vector2(0, 110)
 		dasher._physics_process(0.2)
 		_expect( not dasher.is_dashing and dasher.global_position.is_zero_approx() and dasher.dash_dir.y > 0.9, "red arrow smoothly follows aim while the body stays still")
 		dasher._physics_process(0.2)
 		var locked_dir: Vector2 = dasher.dash_dir
-		_expect(dasher.dash_warning_locked() and not dasher.is_dashing, "arrow stops for the final lock beat")
+		_expect(dasher.dash_warning_locked() and not dasher.is_dashing, "arrow stops for the final 0.2-second lock beat")
 		player.global_position = Vector2(20, 0)
 		player.hurt_lock = 0.0
 		var warning_hp: float = player.player_health
@@ -55,7 +55,7 @@ func _run() -> void :
 		dasher._physics_process(0.1)
 		_expect(dasher.dash_dir.is_equal_approx(locked_dir) and player.player_health == warning_hp and not dasher.is_dashing, "locked arrow cannot retarget or inflict warning contact damage")
 		player.global_position = Vector2(0, -110)
-		dasher._physics_process(dasher.DASH_LOCK_SECONDS - 0.1 + 0.00001)
+		dasher._physics_process(0.1)
 		_expect(dasher.is_dashing and dasher.dash_dir.is_equal_approx(locked_dir), "leap begins only after the fixed arrow's hold ends")
 		var steps: = 0
 		while dasher.is_dashing and steps < 30:

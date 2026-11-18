@@ -10,7 +10,7 @@ var live: bool = false
 
 func _ready() -> void :
 	add_to_group("enemy_projectile")
-	z_index = preload("res://script/combat_size.gd").WARNING_Z
+	z_index = 8
 	queue_redraw()
 
 func launch(origin: Vector2, dir: Vector2, speed: float, dmg: float, tint: Color) -> void :

@@ -76,7 +76,7 @@ func _run() -> void :
 	player.hurt_lock = 0.0
 	knight._physics_process(0.3)
 	_expect(player.player_health == hp, "red sword warning is harmless")
-	_expect(knight.slash_contains(Vector2(knight.SLASH_RADIUS - 1, 0)) and not knight.slash_contains(Vector2(knight.SLASH_RADIUS + 1, 0)), "sword radius matches its warning")
+	_expect(knight.slash_contains(Vector2(110, 0)) and not knight.slash_contains(Vector2(114, 0)), "sword radius matches its warning")
 	_expect( not knight.slash_contains(Vector2(-70, 0)) and not knight.slash_contains(Vector2(0, 90)), "back and sides outside the sector are safe")
 	knight._physics_process(0.5)
 	knight._physics_process(0.01)
@@ -100,7 +100,7 @@ func _run() -> void :
 
 
 
-	var body_origin: Vector2 = knight.base_sprite_position
+	var body_origin: = Vector2(0, -8)
 	var max_body_offset: = 0.0
 	knight.last_hitstop_msec = Time.get_ticks_msec() + 10000
 	for i in range(40):

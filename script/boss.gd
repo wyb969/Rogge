@@ -53,7 +53,7 @@ var warning_locked: = false
 var _combo_left: = 0
 var _attack_round: = 0
 var _chain_warning: = false
-const LOCK_SECONDS: = 0.64
+const LOCK_SECONDS: = 0.34
 
 func set_poison_exposure(active: bool, slow: float, tint: Color) -> void :
 	poison_slow = slow if active and not is_control_immune() else 1.0
@@ -74,13 +74,12 @@ func configure_stage(stage: int) -> void :
 func get_touch_damage() -> float:
 	return 95.0 if fight_stage >= 2 else 60.0
 
-const Dimensions := preload("res://script/combat_size.gd")
 const BossPose := preload("res://script/boss_pose.gd")
 var poses: BossPose
 
-func bind_poses(art: String, foot_y: float) -> void:
+func bind_poses(art: String, zoom: float, foot_y: float) -> void:
 	poses = BossPose.new()
-	poses.setup(self, sprite_2d, art, foot_y)
+	poses.setup(self, sprite_2d, art, zoom, foot_y)
 	base_sprite_scale = sprite_2d.scale
 
 func pose_action() -> StringName:
@@ -89,7 +88,7 @@ func pose_action() -> StringName:
 	return [&"approach", &"charge_warn", &"charge", &"recover"][charge_state]
 
 func _ready() -> void :
-	bind_poses("lizard", 65)
+	bind_poses("lizard", 3.55, 65)
 	if fight_stage >= 2:
 		health_max_value = 3600.0
 		charge_speed = 760.0
@@ -107,7 +106,7 @@ func _ready() -> void :
 	line.width = 1.2
 	line.default_color = Color(1.0, 0.28, 0.24, 0.7)
 	line.top_level = true
-	line.z_index = Dimensions.WARNING_Z
+	line.z_index = 6
 	add_child(line)
 	line.global_transform = Transform2D.IDENTITY
 	line.add_point(Vector2.ZERO)
@@ -122,12 +121,12 @@ func enraged() -> bool:
 	return boss_current_health <= health_max_value * 0.72
 
 func warning_duration() -> float:
-	if _chain_warning: return 2.1
-	return 1.02 if enraged() else 1.16
+	if _chain_warning: return 1.3
+	return 0.72 if enraged() else 0.86
 
 func lock_seconds() -> float:
 
-	return 1.9 if _chain_warning else LOCK_SECONDS
+	return 1.1 if _chain_warning else LOCK_SECONDS
 
 func _aim_charge() -> void :
 	var direction: Vector2 = player.global_position - global_position

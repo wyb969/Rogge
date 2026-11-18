@@ -71,7 +71,7 @@ func _run() -> void:
 	player.hurt_lock=0
 	field._physics_process(0.05)
 	_expect(player.player_health==474, "a slash cannot apply repeated contact damage")
-	_expect(not FIELD.hits_point(slash,Vector2(FIELD.SLASH_RADIUS * slash.cleave_scale + 1,0),0.75,0.8) and not FIELD.hits_point(slash,Vector2(0,65),0.75,0.8), "actual sector boundaries exclude radius/angle misses")
+	_expect(not FIELD.hits_point(slash,Vector2(85,0),0.75,0.8) and not FIELD.hits_point(slash,Vector2(0,65),0.75,0.8), "actual sector boundaries exclude radius/angle misses")
 	_clean()
 	player.global_position=Vector2(65,0)
 	slash=field.cast(mantis,&"cleave")

@@ -123,7 +123,7 @@ func _run() -> void :
 	actor.set_physics_process(false)
 	_expect(actor.poses == null and actor.sprite_2d.get_rect().size == actor.sprite_2d.texture.get_size(), "speed trial also keeps its complete sprite")
 	actor.teleport_near_player()
-	_expect(actor.global_position.distance_to(player.global_position) <= 180.01 and actor.global_position.distance_to(player.global_position) > 70, "wizard really teleports close to the player")
+	_expect(is_equal_approx(actor.global_position.distance_to(player.global_position), 90), "wizard really teleports close to the player")
 	var enemy_hp: float = actor.boss_current_health
 	actor.apply_hit({"damage": 100})
 	_expect(actor.boss_current_health == enemy_hp, "wizard shield blocks premature auto-attacks")

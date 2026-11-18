@@ -24,7 +24,7 @@ func _ready() -> void :
 	add_to_group("elemental_attack_visual")
 	top_level = true
 	global_transform = Transform2D.IDENTITY
-	z_index = preload("res://script/combat_size.gd").WARNING_Z
+	z_index = 4
 	_rng.randomize()
 	clear()
 
@@ -37,7 +37,7 @@ func prepare(kind: int, shapes: Array[Dictionary], attack_mode: String = "area")
 	for shape in geometry:
 		var item: = {"outline": PackedVector2Array(), "fill": PackedVector2Array(), "bolts": []}
 		if shape.kind == "lane":
-			item.fill = preload("res://script/combat_size.gd").capsule(shape.a, shape.b, shape.width)
+			item.fill = _capsule(shape.a, shape.b, shape.width)
 			item.outline = item.fill.duplicate()
 			item.outline.append(item.outline[0])
 
@@ -58,7 +58,7 @@ func prepare(kind: int, shapes: Array[Dictionary], attack_mode: String = "area")
 func activate(seconds: float) -> void :
 	active = true
 
-	z_index = preload("res://script/combat_size.gd").WARNING_Z
+	z_index = 6 if mode == "dive" else 4
 	age = 0
 	duration = maxf(seconds, 0.01)
 	_redraw_left = 0
@@ -72,7 +72,7 @@ func set_dive_segment(before: Vector2, after: Vector2) -> void :
 
 func clear() -> void :
 	active = false
-	z_index = preload("res://script/combat_size.gd").WARNING_Z
+	z_index = 4
 	age = 0
 	geometry.clear()
 	_detail.clear()
@@ -87,6 +87,15 @@ func _process(delta: float) -> void :
 	if _redraw_left <= 0:
 		_redraw_left = 1.0 / 30.0
 		queue_redraw()
+
+func _capsule(a: Vector2, b: Vector2, radius: float) -> PackedVector2Array:
+	var points: = PackedVector2Array()
+	var angle: = (b - a).angle()
+	for i in 13:
+		points.append(b + Vector2.from_angle(angle - PI * 0.5 + PI * i / 12) * radius)
+	for i in 13:
+		points.append(a + Vector2.from_angle(angle + PI * 0.5 + PI * i / 12) * radius)
+	return points
 
 func _draw() -> void :
 	draw_calls_last = 0
@@ -193,14 +202,12 @@ func _wind_lane(shape: Dictionary, tint: Color) -> void :
 		_line(PackedVector2Array([point - side * shape.width * 0.7 - delta.normalized() * 8, point, point + side * shape.width * 0.7 - delta.normalized() * 8]), Color(tint, 0.9), 2.5)
 
 func _draw_dive(tint: Color) -> void :
-	if geometry.is_empty(): return
-	var radius: float = geometry[0].width
-	_circle(_dive_to, radius, Color(tint, 0.07))
+	_circle(_dive_to, 30, Color(tint, 0.07))
 	var direction: = (_dive_to - _dive_from).normalized()
 	_line(PackedVector2Array([_dive_from, _dive_to]), Color(tint, 0.13), 18)
 	for i in 3:
 		var start: = age * 21 + i * TAU / 3
-		_arc(_dive_to, radius * (0.8 + i * 0.1), start, start + PI * 0.8, Color(tint, 0.9), 2.5)
+		_arc(_dive_to, 24 + i * 3, start, start + PI * 0.8, Color(tint, 0.9), 2.5)
 		_line(PackedVector2Array([_dive_to - direction * (12 + i * 7) - direction.orthogonal() * 8, _dive_to + direction * 12 + direction.orthogonal() * (i - 1) * 7]), Color(0.9, 1, 0.95, 0.6), 1.5)
 	if element == 0:
 		_arc(_dive_to, 22, 0, TAU, Color(0.78, 0.98, 1, 0.7), 2)

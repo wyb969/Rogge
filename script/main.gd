@@ -280,16 +280,6 @@ func load_new_game() -> void :
 		game.game_over.connect(on_game_over)
 	_fresh_game = true
 
-func _open_sprite_scale_test() -> void:
-	if not debug_page.visible or not is_instance_valid(game): return
-	debug_page.hide()
-	var inspector := preload("res://script/sprite_scale_test.gd").new()
-	$mainUI/Control.add_child(inspector)
-	inspector.open(game.player.get_node("Camera2D").zoom, game.spawner.enemy_array)
-	inspector.closed.connect(func():
-		inspector.queue_free()
-		debug_page.open_page())
-
 func _on_debug_button_pressed() -> void :
 	menu_page.hide()
 	build_version_label.hide()

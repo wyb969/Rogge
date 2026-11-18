@@ -53,7 +53,7 @@ func _run() -> void :
 						var shots: = get_nodes_in_group("enemy_projectile")
 						_expect(shots.size() == (5 if phase == 2 else 3), "real travelling wind gusts launch in both phases")
 						for shot in shots:
-							_expect(is_equal_approx(shot.life * shot.velocity.length(), boss.shapes[0].a.distance_to(boss.shapes[0].b)), "wind blade travel ends at the warned endpoint")
+							_expect(is_equal_approx(shot.life * shot.velocity.length(), 345), "wind blade travel ends at the warned endpoint")
 							shot.free()
 						_expect(boss.shapes[0].width == 18, "wind lane covers the actual projectile hit radius")
 					elif boss.dive:

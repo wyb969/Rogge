@@ -44,13 +44,13 @@ func _run() -> void :
 	var menu: Node = game.pause_menu
 	var pool: Array = menu.upgrade_pool.duplicate()
 	var near: Node = _enemy(game, Vector2(150, 0))
-	var far: Node = _enemy(game, Vector2(300, 0))
+	var far: Node = _enemy(game, Vector2(251, 0))
 	variety.on_dash_completed(Vector2(150, 0))
 	_expect(near.health == 1000 and variety.pulses_cast == 0, "unowned cards cannot create attacks")
 	menu.upgrade_pool = [_entry(menu, "wind_emblem")]
 	menu.show_upgrade_options()
 	var card: Node = menu.h_box_container.get_child(0)
-	_expect(card.icon.texture != null and card.stats_label.text.contains("32") and card.tooltip_text.contains("100"), "real wind card has original art and next-rank stats")
+	_expect(card.icon.texture != null and card.desc_label.text.contains("32") and card.desc_label.text.contains("100"), "real wind card has original art and next-rank stats")
 	card.selected.emit("wind_emblem")
 	_expect(variety.wind_level == 1 and game.equipment_panel.get_level("wind_emblem") == 1 and game.spawner._offense_cards == 1, "normal selection synchronizes gameplay, HUD and pressure")
 	menu.on_card_selected("wind_emblem")

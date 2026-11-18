@@ -38,7 +38,7 @@ func _run() -> void:
 			var row := sprite.frame_coords.y
 			var frames := {}
 			actor.velocity = Vector2.RIGHT * actor.speed
-			for tick in ceili(60 * 14 * actor.body_scale * actor.model_multiplier() / actor.speed) + 90:
+			for tick in 90:
 				actor._apply_move_juice(1.0 / 60.0, actor.speed / 60.0)
 				frames[sprite.frame_coords.x] = true
 				expect(sprite.frame_coords.x in [4,5,6,7], "walk strip")
@@ -137,7 +137,7 @@ func _check_travel() -> void:
 		distance_per_run.append([actor.position.x, total_phase])
 	expect(is_equal_approx(distance_per_run[0][0], distance_per_run[1][0] * 2), "slow halves measured ground distance")
 	expect(is_equal_approx(distance_per_run[0][1], distance_per_run[1][1] * 2), "slow halves step count over equal time")
-	expect(is_equal_approx(distance_per_run[0][1] / TAU, distance_per_run[0][0] / (14.0 * actor.model_multiplier())), "one complete cycle per stride")
+	expect(is_equal_approx(distance_per_run[0][1] / TAU, distance_per_run[0][0] / 14.0), "one complete cycle per stride")
 
 	var wall := StaticBody2D.new()
 	wall.collision_layer = 8

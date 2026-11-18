@@ -1,5 +1,6 @@
 extends "res://script/enemy_shell.gd"
 
+const BODY_SCALE := 1.85
 const SLAM_RADIUS: = 70.0
 var max_health: = 300.0
 var slam_damage: = 60.0
@@ -11,7 +12,7 @@ var poses := preload("res://script/boss_pose.gd").new()
 
 func _ready() -> void:
 	super._ready()
-	poses.setup(self, sprite_2d, "guardian", 0.85, 10)
+	poses.setup(self, sprite_2d, "guardian", 10)
 	_sprite_base_scale = sprite_2d.scale
 	death_signal.connect(_show_open_lid)
 
@@ -41,7 +42,7 @@ func configure_guardian(hp: float, attack_damage: float) -> void :
 	death_stain_color = DEATH_STAINS.color_for(&"treasure_guardian")
 	max_health = hp
 	health = hp
-	body_scale = 1.85
+	body_scale = BODY_SCALE
 	speed = 42.0
 	defense = 0.08
 	contact_radius = 32.0

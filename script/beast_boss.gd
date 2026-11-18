@@ -65,7 +65,7 @@ func _ready() -> void :
 	add_child(attack_visual)
 
 func _setup_body_art() -> void:
-	bind_poses(boss_art_id(), 2.3 if element == 2 else 3.05, 45 if element == 2 else 57)
+	bind_poses(boss_art_id(), 45 if element == 2 else 57)
 
 func deals_own_contact() -> bool:
 	return true

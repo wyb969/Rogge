@@ -15,3 +15,9 @@ Godot 4.7 专项覆盖十只恐龙左右追击、两只右朝向动物、近竖�
 试玩版本 `20261118-194037`。每局主线六关从八个系列抽取六个，每关共用一个系列，包括新加入的蔬菜。80 张原图逐帧重排为八张 640×320 精灵图，每行一种怪物，从左到右分别是待机、行走、攻击、受击、倒下各四帧。行走按碰撞后地面位移采样。攻击第一格预备，第二格对应实际出手；已锁定的战术攻击跟随预警方向。受击不延迟战斗，死亡立即发奖励并退出目标组，单独的 24 格显示池播放短暂倒地姿势。
 
 奇数关用苔庭地表，偶数关用潮汐神殿。地画固定在世界坐标，边缘过渡到原来的地砖，再叠加冰雪和天气光照。主菜单、角色选择、结算、升级卡和装备框接入原包九宫面板或背景；计时、经验和装备等级使用真实数据。专项入口为 `smoke_stage_monster_art` 和 `smoke_menu_layout`。
+
+### On-device sprite scale test
+
+Open Debug and select **Monster & Boss scale test** on the first page. The dinosaur family appears first. Each family offers ten species, and the Boss tab offers the eight authored boss sheets. Each tab has its own 0.50×–4.00× slider and a reset to 1.00×. Pause holds the current frame while resizing. Dragging the preview pans enlarged details.
+
+At 1.00× the menu uses the current combat camera zoom, the species' roster body scale and the same source cell, nearest sampler and sprite scale as combat. The floor is a static backdrop and the walk plays in place for comparison. Leaving the test discards the sliders and returns to Debug. Run `tools/smoke_sprite_scale.gd` to exercise the actual menu, drag, resizing, pauses and normal run entry.

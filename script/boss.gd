@@ -77,9 +77,9 @@ func get_touch_damage() -> float:
 const BossPose := preload("res://script/boss_pose.gd")
 var poses: BossPose
 
-func bind_poses(art: String, zoom: float, foot_y: float) -> void:
+func bind_poses(art: String, foot_y: float) -> void:
 	poses = BossPose.new()
-	poses.setup(self, sprite_2d, art, zoom, foot_y)
+	poses.setup(self, sprite_2d, art, foot_y)
 	base_sprite_scale = sprite_2d.scale
 
 func pose_action() -> StringName:
@@ -88,7 +88,7 @@ func pose_action() -> StringName:
 	return [&"approach", &"charge_warn", &"charge", &"recover"][charge_state]
 
 func _ready() -> void :
-	bind_poses("lizard", 3.55, 65)
+	bind_poses("lizard", 65)
 	if fight_stage >= 2:
 		health_max_value = 3600.0
 		charge_speed = 760.0

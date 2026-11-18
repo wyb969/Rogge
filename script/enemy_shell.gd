@@ -201,6 +201,8 @@ func set_enemy_data(data: EnemyData) -> void :
 	_sprite_base_scale = ($Sprite2D as Sprite2D).scale
 	_apply_body_scale()
 
+const WALK_ART_SCALE := 24.0 / 32.0
+
 func set_walk_sheet(sheet: Texture2D, row: int, source_facing: int, phase: float) -> void:
 	var sprite: Sprite2D = $Sprite2D
 	sprite.texture = sheet
@@ -209,7 +211,7 @@ func set_walk_sheet(sheet: Texture2D, row: int, source_facing: int, phase: float
 	sprite.hframes = 20
 	sprite.vframes = 10
 	sprite.frame_coords = Vector2i(0, row)
-	sprite.scale = Vector2.ONE * (24.0 / 32.0)
+	sprite.scale = Vector2.ONE * WALK_ART_SCALE
 	_sprite_base_scale = sprite.scale
 	_source_facing = source_facing
 	sprite.flip_h = false

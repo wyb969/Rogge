@@ -1,5 +1,8 @@
 extends Node
 
+const ART_SCALE := {"lizard": 3.55, "knight": 3.05, "tide": 3.05, "thunder": 3.05,
+	"wind-ranged": 2.3, "wind-melee": 2.3, "aegis": 3.05, "guardian": 0.85}
+
 var clips: SpriteFrames
 var sprite: Sprite2D
 var actor: CharacterBody2D
@@ -10,7 +13,8 @@ var previous: Vector2
 var sampled := false
 var hurt_left := 0.0
 
-func setup(host: CharacterBody2D, body: Sprite2D, art: String, zoom: float, foot_y: float) -> void:
+func setup(host: CharacterBody2D, body: Sprite2D, art: String, foot_y: float) -> void:
+	var zoom: float = ART_SCALE[art]
 	actor = host
 	sprite = body
 	sprite.material = null

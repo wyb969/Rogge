@@ -108,6 +108,10 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugSpriteScaleButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "怪物与 Boss 缩放测试"
+
 [node name="DebugMinefieldButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "九宫格地雷 · 爆炸 / 腾空"
@@ -273,4 +277,5 @@ autowrap_mode = 3
 
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugElectricGridButton" to="." method="_launch_run" binds= [&"electric_grid"]]
 
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugSpriteScaleButton" to="." method="_open_sprite_scale_test"]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugMinefieldButton" to="." method="_launch_run" binds= [&"minefield"]]

@@ -34,7 +34,7 @@ func configure_stage(_stage: int) -> void :
 	fight_stage = 2
 
 func _ready() -> void :
-	bind_poses("knight", 3.05, 62)
+	bind_poses("knight", 62)
 	fight_stage = 2
 	health_max_value = MAX_HEALTH
 	boss_current_health = health_max_value

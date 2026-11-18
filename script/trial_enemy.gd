@@ -28,14 +28,22 @@ func configure_trial(value: String, host: Node) -> void :
 	director = host
 	configure_stage(4 if kind == "power" else 6)
 
+func _setup_body_art() -> void:
+	sprite_2d.material = null
+	sprite_2d.modulate = Color.WHITE
+	sprite_2d.hframes = 1
+	sprite_2d.vframes = 1
+	sprite_2d.frame = 0
+	sprite_2d.offset = Vector2.ZERO
+	sprite_2d.texture = preload("res://assest/sprites/trials/clockwork_octopus.svg") if kind == "power" else preload("res://assest/sprites/trials/blink_wizard.svg")
+	sprite_2d.scale = Vector2.ONE * (0.86 if kind == "power" else 0.7)
+	base_sprite_scale = sprite_2d.scale
+
 func _ready() -> void :
 	super._ready()
 	health_max_value = 5000.0 if kind == "power" else 2600.0
 	boss_current_health = health_max_value
 	health_bar.init_health(health_max_value)
-	sprite_2d.texture = load("res://assest/sprites/trials/%s.svg" % ("clockwork_octopus" if kind == "power" else "blink_wizard"))
-	sprite_2d.scale = Vector2.ONE * (0.86 if kind == "power" else 0.7)
-	base_sprite_scale = sprite_2d.scale
 	_lock_audio = AudioStreamPlayer.new()
 	_lock_audio.stream = preload("res://assest/sounds/trial_lock.wav")
 	_lock_audio.volume_db = -8
@@ -189,7 +197,17 @@ func start_defeat_sequence() -> void :
 	boss_defeated.emit()
 	queue_free()
 
+var _title_state := -1
+var _title_exposed := false
+var _title_locale := ""
+
 func _update_title() -> void :
+	var locale := TranslationServer.get_locale()
+	if _title_state == trial_state and _title_exposed == _exposed and _title_locale == locale:
+		return
+	_title_state = trial_state
+	_title_exposed = _exposed
+	_title_locale = locale
 	if kind == "power":
 		var status: = L10n.text("缓慢接近") if trial_state == TrialState.ROAM else (L10n.text("锁定中 · 准备横移") if trial_state == TrialState.TRACK else (L10n.text("瞄准已固定！") if trial_state == TrialState.LOCK else (L10n.text("激光发射") if trial_state == TrialState.ACTIVE else L10n.text("冷却 · 趁机输出"))))
 		_title.text = L10n.text("机械章鱼 / ") + status

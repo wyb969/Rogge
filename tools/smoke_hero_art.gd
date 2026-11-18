@@ -66,6 +66,7 @@ func _run() -> void:
 		if spec[0]=="wind_boss": actor.configure_wind_role(1 if spec[1]=="wind-melee" else 0, game.spawner)
 		game.add_child(actor)
 		var poses: Node = actor.poses
+		check(poses.sprite.material == null and poses.sprite.modulate == Color.WHITE, "native palette " + spec[1])
 		check(poses.sprite.texture.resource_path.ends_with("/%s/poses.png" % spec[1]),"boss skin "+spec[1])
 		poses._physics_process(0.1)
 		actor.position.x += 10

@@ -97,6 +97,7 @@ var _strike_direction := Vector2.ZERO
 var _source_facing := 1
 var _wobble: float = 0.0
 var _move_effort: float = 0.0
+var _art_deformed := false
 var _hit_squash: float = 0.0
 
 func _ready() -> void :
@@ -689,6 +690,15 @@ func _apply_move_juice(delta: float, ground_travel: float = 0.0) -> void :
 				sprite_2d.frame_coords = Vector2i(pose, sprite_2d.frame_coords.y)
 				if is_elite:
 					_sync_elite_frame(sprite_2d)
+		if _hit_squash == 0 and _hit_recoil.length_squared() < 0.01 and not is_dashing and dash_windup <= 0 and shot_windup <= 0 and slam_windup <= 0 and _blast_left <= 0 and contact_recovery_left <= 0 and not terrain_impulse.is_active():
+			if _art_deformed:
+				sprite_2d.position = Vector2.ZERO
+				sprite_2d.rotation = 0
+				sprite_2d.scale = _sprite_base_scale
+				_hit_recoil = Vector2.ZERO
+				_art_deformed = false
+			return
+		_art_deformed = true
 	else:
 		_wobble += delta * TAU * move_wobble_hz() * effort
 	var profile: = _juice_profile()

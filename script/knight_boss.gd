@@ -40,7 +40,6 @@ func _ready() -> void :
 	boss_current_health = health_max_value
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = Color.WHITE
-	GamePalette.paint_actor(sprite_2d, &"enemy")
 	animation_player.stop()
 	animation_player.active = false
 	rush_timer.stop()

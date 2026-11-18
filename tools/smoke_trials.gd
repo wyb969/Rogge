@@ -52,6 +52,7 @@ func _run() -> void :
 	_expect(trials.active_fight() and not paused and get_nodes_in_group("trial_enemy").size() == 1, "start gesture creates only one real trial enemy")
 	var actor: Node = trials.enemy
 	actor.set_physics_process(false)
+	_expect(actor.poses == null and actor.sprite_2d.hframes == 1 and actor.sprite_2d.vframes == 1 and actor.sprite_2d.get_rect().size == actor.sprite_2d.texture.get_size() and actor.sprite_2d.is_visible_in_tree(), "strength trial renders the entire target")
 	_expect(actor.health_max_value == 5000 and actor.get_parent() == game, "thick mechanical target belongs to the current run")
 	_expect(game.beast_powers.unlocked.size() == 2, "strength trial retains both preceding blessings")
 	actor.global_position = Vector2.ZERO
@@ -120,6 +121,7 @@ func _run() -> void :
 	trials.start_button.pressed.emit()
 	actor = trials.enemy
 	actor.set_physics_process(false)
+	_expect(actor.poses == null and actor.sprite_2d.get_rect().size == actor.sprite_2d.texture.get_size(), "speed trial also keeps its complete sprite")
 	actor.teleport_near_player()
 	_expect(is_equal_approx(actor.global_position.distance_to(player.global_position), 90), "wizard really teleports close to the player")
 	var enemy_hp: float = actor.boss_current_health

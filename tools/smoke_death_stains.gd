@@ -148,6 +148,7 @@ func _run() -> void:
 	_expect(stains.active_count==128 and stains.stamps.size()==128 and stains.multimesh.instance_count==128*BLOOD.PARTS_PER_STAIN, "pool reuse remains bounded after wraparound")
 	stains.reset()
 	stains.splat(Vector2(100,80),Color(0.7,0.2,0.4))
+	_expect(stains.multimesh.visible_instance_count == stains.PARTS_PER_STAIN, "a single stain after a reset only submits its own parts")
 	stains.set_process(false)
 	var position: Vector2 = stains.stamps[0].at
 	var camera: Camera2D = game.player.get_node("Camera2D")

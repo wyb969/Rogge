@@ -103,6 +103,8 @@ var second: int:
 
 
 func _ready() -> void :
+	for slot in MAX_WAVE_SIZE_STAGE2:
+		_warm_one_shell()
 	_ensure_stage_theme()
 	var clock: HBoxContainer = $UI/HBoxContainer
 	clock.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -111,14 +113,34 @@ func _ready() -> void :
 	_ensure_stage_label()
 	_apply_spawn_pressure()
 
+# Fresh shells stay outside the tree until their actual spawn. Build replacements
+# one per frame between waves instead of instantiating an entire wave at once.
+var _fresh_shells: Array[Node2D] = []
+var _cull_left := 0.0
+
+func _warm_one_shell() -> void:
+	if enemy != null and _fresh_shells.size() < MAX_WAVE_SIZE_STAGE2:
+		_fresh_shells.append(enemy.instantiate())
+
+func _exit_tree() -> void:
+	for shell in _fresh_shells:
+		shell.free()
+	_fresh_shells.clear()
+
 func _process(delta: float) -> void :
 
 
-	if _run_closed or get_tree().paused or _rest_open or _transitioning:
+	if _run_closed or get_tree().paused:
+		return
+	_warm_one_shell()
+	if _rest_open or _transitioning:
 		return
 	run_seconds += delta
 	_sync_run_clock()
-	remove_far_enemy()
+	_cull_left -= delta
+	if _cull_left <= 0:
+		_cull_left = 0.2
+		remove_far_enemy()
 	if not _boss_fight_active:
 		_stage_seconds += delta
 	if stage == 3 and not _mini_spawned and _mini_countdown > 0.0:
@@ -148,14 +170,14 @@ func _sync_run_clock() -> void :
 func spawn(pos: Vector2, elite: bool):
 	if _run_closed:
 		return
-	if get_tree().get_nodes_in_group("EnemyGroup").size() >= max_enmey_count:
+	if get_tree().get_node_count_in_group("EnemyGroup") >= max_enmey_count:
 		return
 	if enemy == null or enemy_array.is_empty():
 		return
 	var data: = _next_enemy_data()
 	if data == null:
 		return
-	var enemy_instance = enemy.instantiate()
+	var enemy_instance: Node2D = enemy.instantiate() if _fresh_shells.is_empty() else _fresh_shells.pop_back()
 	enemy_instance.set_player_ref(player)
 	enemy_instance.set_enemy_data(data)
 	_monster_art.apply(enemy_instance, stage, data)
@@ -341,7 +363,7 @@ func _on_elite_timeout() -> void :
 		return
 	if stage <= 1 and current_level >= boss_level:
 		return
-	if get_tree().get_nodes_in_group("EnemyGroup").size() >= max_enmey_count:
+	if get_tree().get_node_count_in_group("EnemyGroup") >= max_enmey_count:
 		return
 	spawn(get_random_position(), true)
 
@@ -370,8 +392,8 @@ func remove_far_enemy() -> void :
 			continue
 		if not is_instance_valid(enemy_node):
 			continue
-		var dis = player.global_position.distance_to(enemy_node.global_position)
-		if dis >= max_distance and not enemy_node.is_in_group("treasure_guardian") and not enemy_node.has_signal("boss_defeated"):
+		var distance_sq := player.global_position.distance_squared_to(enemy_node.global_position)
+		if distance_sq >= max_distance * max_distance and not enemy_node.is_in_group("treasure_guardian") and not enemy_node.has_signal("boss_defeated"):
 			enemy_node.queue_free()
 
 func handle_level_up(level: int):
@@ -498,8 +520,6 @@ func _enter_stage(next_stage: int) -> void :
 	_refresh_stage_label()
 	stage_advanced.emit(stage)
 	_show_stage_banner(stage)
-	if AudioManager.has_method("play_game_bgm"):
-		AudioManager.play_game_bgm(stage)
 
 	var transition_generation: = _spawn_generation
 	await get_tree().create_timer(1.15).timeout

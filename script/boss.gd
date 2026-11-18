@@ -74,9 +74,11 @@ func configure_stage(stage: int) -> void :
 func get_touch_damage() -> float:
 	return 95.0 if fight_stage >= 2 else 60.0
 
-var poses := preload("res://script/boss_pose.gd").new()
+const BossPose := preload("res://script/boss_pose.gd")
+var poses: BossPose
 
 func bind_poses(art: String, zoom: float, foot_y: float) -> void:
+	poses = BossPose.new()
 	poses.setup(self, sprite_2d, art, zoom, foot_y)
 	base_sprite_scale = sprite_2d.scale
 
@@ -93,12 +95,9 @@ func _ready() -> void :
 		rush_ready_time = 0.42
 		if rush_timer:
 			rush_timer.wait_time = 0.7
-		sprite_2d.modulate = Color(1.2, 0.75, 1.3, 1.0)
 		sprite_2d.scale *= 1.06
 	base_sprite_scale = sprite_2d.scale
 	sprite_tint = sprite_2d.modulate
-	if fight_stage < 2:
-		GamePalette.paint_actor(sprite_2d, &"enemy")
 	_setup_health_bar()
 	health_bar.init_health(health_max_value)
 	boss_current_health = health_max_value
@@ -381,7 +380,7 @@ func _sync_outline_frame_uv() -> void :
 	mat.set_shader_parameter("frame_uv_rect", Vector4(float(col) * fw, float(row) * fh, fw, fh))
 
 func play_hit_feedback(hit_dir: Vector2, impact: bool = true) -> void :
-	if impact: poses.hurt_left = 0.18
+	if impact and poses: poses.hurt_left = 0.18
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null: feedback.hit(global_position, hit_dir, true)
 	var now: = Time.get_ticks_msec()

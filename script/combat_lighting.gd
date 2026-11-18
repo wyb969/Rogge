@@ -64,7 +64,11 @@ static func glow_texture() -> Texture2D:
 		_texture.gradient = gradient
 	return _texture
 
+var _shadow_budget := MAX_SHADOWS
+
 func _ready() -> void :
+	if OS.has_feature("mobile") or DisplayServer.is_touchscreen_available():
+		_shadow_budget = 16
 	glow_texture()
 	if _additive == null:
 		_additive = CanvasItemMaterial.new()
@@ -177,7 +181,7 @@ func _refresh_sources() -> void :
 		_shadow_sizes[_shadow_count] = size
 		_shadow_feet[_shadow_count] = foot
 		_shadow_count += 1
-		if _shadow_count == MAX_SHADOWS: break
+		if _shadow_count == _shadow_budget: break
 
 func _process(delta: float) -> void :
 	if not _running or get_tree().paused: return
@@ -211,8 +215,8 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 		_halo(canvas, game.player.global_position + Vector2(0, 17) + offset, Vector2(14, 5)*lerpf(1,0.65,player_lift), GamePalette.shadow(_shadow_alpha*lerpf(1,0.55,player_lift)))
 		shadows_last += 1
 		for i in _shadow_count:
+			if not _visible(_shadows[i]): continue
 			var actor: = _shadows[i]
-			if not _visible(actor): continue
 			if actor.get_script() == ENEMY and actor.archetype == EnemyData.Archetype.DASHER and (actor.is_dashing or actor.dash_windup > 0): continue
 			weather_light.project_sprite(canvas, _shadow_sprites[i], actor.global_position + Vector2(0, _shadow_feet[i]))
 			var lift: float = actor.terrain_impulse.height_ratio() if "terrain_impulse" in actor else 0.0
@@ -253,8 +257,9 @@ func draw_field(canvas: Node2D, kind: int) -> void :
 		if beams == BEAM_LIGHTS: break
 	beams_last = beams
 	for i in _orb_count:
+		if not _visible(_orbs[i]): continue
 		var actor: = _orbs[i]
-		if not _visible(actor) or actor.collected: continue
+		if actor.collected: continue
 		_halo(canvas, actor.global_position, Vector2.ONE * (23 if kind == 1 else 12), Color(0.16, 0.95, 0.43, (0.16 * _emission if kind == 1 else 0.2) * actor.modulate.a))
 	for flash in _flashes:
 		if flash.left <= 0: continue

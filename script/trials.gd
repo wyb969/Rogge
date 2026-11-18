@@ -103,7 +103,10 @@ func start_attempt() -> void :
 		enemy.boss_defeated.connect(_on_enemy_defeated.bind(_token))
 		game.add_child(enemy)
 		enemy.apply_difficulty_health(game.run_difficulty.health_scale)
-		enemy.global_position = player.global_position + Vector2(-115, -40)
+		var view: Rect2 = player.get_canvas_transform().affine_inverse() * get_viewport().get_visible_rect()
+		var body: Sprite2D = enemy.sprite_2d
+		var margin: Vector2 = (body.get_rect().size * body.global_scale.abs() * 0.5 + Vector2(8, 8)).min(view.size * 0.49)
+		enemy.global_position = (player.global_position + Vector2(-115, -40)).clamp(view.position + margin, view.end - margin)
 		enemy.reset_physics_interpolation()
 	get_node("/root/AudioManager").play_boss_bgm(4 if kind == "power" else 5)
 	get_tree().paused = false

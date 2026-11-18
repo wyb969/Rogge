@@ -31,10 +31,10 @@ func active() -> bool:
 	return not get_tree().paused and weather.running and game.visible and game.process_mode != Node.PROCESS_MODE_DISABLED and game.player.player_health > 0 and not game.trials.blocks_rewards() and not game.spawner._rest_open and not game.spawner._transitioning
 
 func ice_amount() -> float:
-	return weather._weights[5] if active() else 0.0
+	return weather._weights[5] if weather._weights[5] > 0 and active() else 0.0
 
 func wind_velocity(weight: float = 1.0) -> Vector2:
-	return wind * weight if active() else Vector2.ZERO
+	return wind * weight if wind != Vector2.ZERO and active() else Vector2.ZERO
 
 func sync() -> void:
 	if not weather.running:
@@ -92,6 +92,6 @@ func _draw() -> void:
 		_reflection(self,game.player.animated_sprite_2d,game.player.global_position+Vector2(0,17),0.28*ice_visual)
 		var lights: Node = game.combat_lighting
 		for i in mini(REFLECTION_LIMIT,lights._shadow_count):
+			if not lights._visible(lights._shadows[i]): continue
 			var actor: Node2D = lights._shadows[i]
-			if not lights._visible(actor): continue
 			_reflection(self,lights._shadow_sprites[i],actor.global_position+Vector2(0,lights._shadow_feet[i]),0.2*ice_visual)

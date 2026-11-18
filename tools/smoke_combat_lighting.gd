@@ -93,7 +93,10 @@ func _run() -> void :
 		_expect(glow.peak == previous and audio._pickup_stamp == stamp, "same-frame suppressed pickup sounds cannot artificially pump the XP glow")
 	_expect(glow.pitch == 2 and game.level_manager.coin_number == xp, "the audible octave peak maps to full glow without granting fake XP")
 	paused = true
-	await create_timer(0.65, true, false, true).timeout
+	# Both pickup pitch and HUD fade use the monotonic clock.
+	var until := Time.get_ticks_msec() + 650
+	while Time.get_ticks_msec() < until:
+		await process_frame
 	_expect( not glow.visible and glow.energy == 0, "XP glow fades away through a reward pause and stops processing")
 	paused = false
 	audio.play_pickup()

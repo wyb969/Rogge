@@ -565,7 +565,7 @@ func _on_stage_advanced(next_stage: int) -> void :
 	if bg != null and bg.has_method("apply_stage"):
 		bg.apply_stage(next_stage)
 	weather.apply_stage(next_stage)
-	RunDiagnostics.mark("stage_enter", {"stage": next_stage}, true)
+	RunDiagnostics.mark("stage_enter", {"stage": next_stage})
 	if AudioManager.has_method("play_game_bgm"):
 		AudioManager.play_game_bgm(next_stage)
 

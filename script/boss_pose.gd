@@ -13,6 +13,8 @@ var hurt_left := 0.0
 func setup(host: CharacterBody2D, body: Sprite2D, art: String, zoom: float, foot_y: float) -> void:
 	actor = host
 	sprite = body
+	sprite.material = null
+	sprite.modulate = Color.WHITE
 	clips = load("res://rogge_art/bosses/%s/animations.tres" % art)
 	var neutral := clips.get_frame_texture(&"idle", 0) as AtlasTexture
 	sprite.frame = 0

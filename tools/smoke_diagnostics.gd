@@ -31,7 +31,7 @@ func _run() -> void :
 	await create_timer(1.3, true, false, true).timeout
 	_expect(paused and diag.report.state == "ended" and diag.report.end_reason == "stress_complete", "timed stress run ends with a checkpoint and usable controls")
 	var status: String = diag.export_report()
-	_expect(status.contains("已导出") and FileAccess.file_exists(diag.last_export_path), "actual diagnostic export writes a reviewable JSON report")
+	_expect(status == L10n.text("诊断报告已导出，请保存 JSON 文件") and FileAccess.file_exists(diag.last_export_path), "actual diagnostic export writes a reviewable JSON report")
 	var saved = JSON.parse_string(FileAccess.get_file_as_string(diag.last_export_path))
 	_expect(saved is Dictionary and saved.build == str(ProjectSettings.get_setting("application/config/version")) and saved.peaks.books == 12, "report includes build, peak objects and reproduction loadout")
 	test.stop()

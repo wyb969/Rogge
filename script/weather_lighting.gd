@@ -70,9 +70,9 @@ func sync() -> void:
 	shader_material.set_shader_parameter("strength", sun_amount)
 	shader_material.set_shader_parameter("sun_direction", sun_direction)
 	shafts.visible = sun_amount > 0.001
-	scenery.show()
-	set_process(true)
-	_process(0)
+	scenery.visible = shafts.visible or lamp.enabled
+	set_process(scenery.visible)
+	if scenery.visible: _process(0)
 
 func _process(_delta: float) -> void:
 	# Position follows the real actor every render frame; no 10 Hz lamp stepping.

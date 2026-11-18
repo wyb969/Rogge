@@ -128,9 +128,9 @@ func _ready() -> void:
 
 func reset() -> void:
 	_wall_stamp = Time.get_ticks_usec()
-	for i in MAX_STAINS:
-		stamps[i].age = LIFETIME
-		_hide_stamp(i)
+	if active_count > 0:
+		for stamp in stamps:
+			stamp.age = LIFETIME
 	multimesh.visible_instance_count = 0
 	emitted = 0
 	suppressed = 0
@@ -177,9 +177,9 @@ func splat(at: Vector2, tint: Color, direction: Vector2 = Vector2.ZERO, body_siz
 		drop.variant = VARIANTS+_rng.randi_range(0,DROP_VARIANTS-1)
 		_set_tile(_next*PARTS_PER_STAIN+i+1,drop.variant)
 	_sync_stamp(_next)
+	multimesh.visible_instance_count = maxi(multimesh.visible_instance_count, (_next + 1) * PARTS_PER_STAIN)
 	_next = (_next+1)%MAX_STAINS
 	emitted += 1
-	multimesh.visible_instance_count = MAX_STAINS*PARTS_PER_STAIN
 	if not is_processing(): _wall_stamp = Time.get_ticks_usec()
 	set_process(true)
 	return true
@@ -230,6 +230,7 @@ func consume_along_segment(from: Vector2, to: Vector2, limit: int) -> int:
 		collected += 1
 		if collected>=limit: break
 	if active_count==0:
+		_next = 0
 		multimesh.visible_instance_count = 0
 		set_process(false)
 	return collected
@@ -258,5 +259,6 @@ func advance_real(seconds: float) -> void:
 		elif update and (previous<AIR_SECONDS or stamp.age>HOLD_SECONDS):
 			_sync_stamp(i)
 	if active_count == 0:
+		_next = 0
 		multimesh.visible_instance_count = 0
 		set_process(false)

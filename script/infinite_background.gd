@@ -23,6 +23,8 @@ var _decor_modulate: Color = Color(0.78, 0.84, 0.72, 0.95)
 var stage_grade: float = 0.0
 var _coverage_half: = Vector2(-1, -1)
 var _coverage_center: = Vector2(INF, INF)
+var _decor_min := Vector2i.ZERO
+var _decor_max := Vector2i.ZERO
 var _decor_dirty: = true
 var coverage_rebuilds: = 0
 var decoration_rebuilds: = 0
@@ -115,7 +117,7 @@ func _update_coverage() -> void :
 	var moved: = not snapped_center.is_equal_approx(_coverage_center)
 	var resized: = not half.is_equal_approx(_coverage_half)
 	if moved:
-		global_position = snapped_center
+		ground.global_position = snapped_center
 		_coverage_center = snapped_center
 	if resized:
 		_coverage_half = half
@@ -123,7 +125,6 @@ func _update_coverage() -> void :
 		coverage_rebuilds += 1
 	if moved or resized or _decor_dirty:
 		_update_decorations(snapped_center, half)
-		decoration_rebuilds += 1
 		_decor_dirty = false
 
 func _update_decorations(center: Vector2, half: Vector2) -> void :
@@ -139,6 +140,11 @@ func _update_decorations(center: Vector2, half: Vector2) -> void :
 		int(floor((center.y + half.y) / decor_cell))
 	)
 
+	if not _decor_dirty and min_c == _decor_min and max_c == _decor_max:
+		return
+	_decor_min = min_c
+	_decor_max = max_c
+	decoration_rebuilds += 1
 	var idx: = 0
 	for cy in range(min_c.y, max_c.y + 1):
 		for cx in range(min_c.x, max_c.x + 1):

@@ -54,8 +54,7 @@ func _ready() -> void :
 	rush_timer.stop()
 	health_max_value = HP[element]
 	boss_current_health = health_max_value
-	bind_poses(boss_art_id(), 2.3 if element == 2 else 3.05, 45 if element == 2 else 57)
-	GamePalette.paint_actor(sprite_2d, &"enemy")
+	_setup_body_art()
 	sprite_tint = Color.WHITE
 	_setup_health_bar()
 	health_bar.init_health(health_max_value)
@@ -64,6 +63,9 @@ func _ready() -> void :
 	attack_visual = ATTACK_VISUAL.new()
 	attack_visual.name = "ElementalAttackVisual"
 	add_child(attack_visual)
+
+func _setup_body_art() -> void:
+	bind_poses(boss_art_id(), 2.3 if element == 2 else 3.05, 45 if element == 2 else 57)
 
 func deals_own_contact() -> bool:
 	return true

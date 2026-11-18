@@ -21,6 +21,7 @@ var fullscreen_toggle: CanvasLayer = null
 var settings_page: CanvasLayer = null
 var _test_mode: StringName = &""
 var _starting_run: bool = false
+var _fresh_game := false
 var _returning_home := false
 var _fitting_render_budget: = false
 var session_menu: CanvasLayer
@@ -67,7 +68,6 @@ func _ready() -> void :
 	game_end_ui.hide_result()
 
 	await load_new_game()
-	game.prepare_game()
 
 	show_main_menu()
 
@@ -156,6 +156,7 @@ func _layout_build_version() -> void :
 
 
 func start_game() -> void :
+	_fresh_game = false
 	fullscreen_toggle.set_home_available(true)
 	_dismiss_settings()
 	Engine.time_scale = 1.0
@@ -254,13 +255,13 @@ func _on_game_end_ui_main_menu_pressed() -> void :
 	game_end_ui.hide_result()
 
 	await load_new_game()
-	game.prepare_game()
 
 	show_main_menu()
 	_returning_home = false
 
 
 func load_new_game() -> void :
+	_fresh_game = false
 	if session_menu: session_menu.dismiss()
 	if is_instance_valid(game):
 		game.end_game()
@@ -277,6 +278,7 @@ func load_new_game() -> void :
 
 	if game.has_signal("game_over"):
 		game.game_over.connect(on_game_over)
+	_fresh_game = true
 
 func _on_debug_button_pressed() -> void :
 	menu_page.hide()
@@ -319,7 +321,8 @@ func _launch_run(mode: StringName) -> void :
 	_starting_run = true
 	_test_mode = mode
 	AudioManager.unlock_web_audio()
-	await load_new_game()
+	if not _fresh_game or not is_instance_valid(game):
+		await load_new_game()
 	game.diagnostic_mode = str(mode) if mode != &"" else "normal"
 	game.player.set_hero(hero_index if mode == &"" else 0)
 	start_game()

@@ -33,6 +33,7 @@ func _run() -> void:
 		spawner.spawn(Vector2(510, 450 if elite else 270), elite)
 		var mob: Node2D = get_nodes_in_group("EnemyGroup").back()
 		mob.set_physics_process(false)
+		mob.health = 10000.0 # Keep random stage hazards from killing the physics probe.
 		actors.append(mob)
 		check(is_equal_approx(mob.sprite_2d.scale.x, 2.25), "normal and elite art is exactly three times the old 0.75")
 		var box: CollisionShape2D = mob.get_node("CollisionShape2D")

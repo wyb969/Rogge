@@ -88,6 +88,7 @@ var poison_slow: = 1.0
 var _poison_tint: = Color.WHITE
 var base_modulate: Color = Color.WHITE
 var _sprite_base_scale: Vector2 = Vector2.ONE
+var _source_facing := 1
 var _wobble: float = 0.0
 var _move_effort: float = 0.0
 var _hit_squash: float = 0.0
@@ -193,7 +194,7 @@ func set_enemy_data(data: EnemyData) -> void :
 	_sprite_base_scale = ($Sprite2D as Sprite2D).scale
 	_apply_body_scale()
 
-func set_walk_sheet(sheet: Texture2D, row: int, phase: float) -> void:
+func set_walk_sheet(sheet: Texture2D, row: int, source_facing: int, phase: float) -> void:
 	var sprite: Sprite2D = $Sprite2D
 	sprite.texture = sheet
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -202,6 +203,8 @@ func set_walk_sheet(sheet: Texture2D, row: int, phase: float) -> void:
 	sprite.frame_coords = Vector2i(0, row)
 	sprite.scale = Vector2.ONE * (24.0 / 32.0)
 	_sprite_base_scale = sprite.scale
+	_source_facing = source_facing
+	sprite.flip_h = false
 	_wobble = phase
 
 func _sync_elite_frame(sprite: Sprite2D) -> void:
@@ -351,7 +354,10 @@ func _physics_process(delta: float) -> void :
 	_update_statuses(delta)
 	if _death_started:
 		return
-	if _tick_environment_control(delta): return
+	if _tick_environment_control(delta):
+		if sprite_2d.hframes == 4:
+			_apply_move_juice(delta)
+		return
 	contact_timer = maxf(0.0, contact_timer - delta)
 	var recovering: = archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0
 
@@ -382,12 +388,16 @@ func _physics_process(delta: float) -> void :
 		_apply_move_juice(delta)
 		return
 
+	# Count ground travel only when the actor is providing its own locomotion.
+	var walking := not velocity.is_zero_approx() and not is_dashing and _blast_left <= 0.0 and _airflow_left <= 0.0
 	if not was_committed: _apply_environment_motion(delta, previous_velocity)
 	if knockback.length() > 0.1:
 		velocity += knockback
 		knockback = knockback.move_toward(Vector2.ZERO, knockback_decay * delta)
 	_apply_crowd_motion(delta)
+	var start := global_position
 	var collision = move_and_collide(velocity * delta)
+	var travel := global_position - start
 	if collision:
 		if collision.get_collider() is CharacterBody2D:
 			var other = collision.get_collider()
@@ -396,11 +406,18 @@ func _physics_process(delta: float) -> void :
 
 	if is_instance_valid(player_reference):
 		_try_contact(global_position.distance_to(player_reference.global_position))
-	if tactical_ai!=null and tactical_ai.committed:
-		_face(tactical_ai.facing,false)
+	if tactical_ai != null and tactical_ai.committed:
+		_face(tactical_ai.facing, false)
+	elif dash_windup > 0.0 or is_dashing:
+		_face(dash_dir, false)
+	elif sprite_2d.hframes == 4:
+		if walking and travel.length_squared() > 0.000001:
+			_face(travel, false)
+		elif shot_windup > 0.0 or slam_windup > 0.0:
+			_face(dir, false)
 	else:
-		_face(dash_dir if archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or is_dashing) else dir)
-	_apply_move_juice(delta)
+		_face(dir)
+	_apply_move_juice(delta, travel.length() if walking else 0.0)
 
 func _steer_chaser(dir: Vector2, move_speed: float) -> void :
 	velocity = dir * move_speed
@@ -608,22 +625,31 @@ func _juice_profile() -> Vector3:
 		_:
 			return Vector3(1.0, 1.0, 1.0)
 
-func _apply_move_juice(delta: float) -> void :
+func _apply_move_juice(delta: float, ground_travel: float = 0.0) -> void :
 	if sprite_2d == null:
 		return
 	var cruise: = maxf(speed, 8.0)
 
-	var target: = clampf(velocity.length() / cruise, 0.0, 1.0)
+	var walk_sheet := sprite_2d.hframes == 4
+	var target := clampf(velocity.length() / cruise, 0.0, 1.0)
+	if walk_sheet and delta > 0.0:
+		target = clampf(ground_travel / (delta * cruise), 0.0, 1.0)
 	_move_effort = move_toward(_move_effort, target, delta * 6.0)
 	_hit_squash = maxf(0.0, _hit_squash - delta * 5.0)
 	var effort: = _move_effort
-	_wobble += delta * TAU * move_wobble_hz() * maxf(effort, 0.0)
-	if sprite_2d.hframes == 4:
-		var pose := floori(fposmod(_wobble, TAU) * 4.0 / TAU) if effort > 0.12 else 0
-		if sprite_2d.frame_coords.x != pose:
-			sprite_2d.frame_coords = Vector2i(pose, sprite_2d.frame_coords.y)
-			if is_elite:
-				_sync_elite_frame(sprite_2d)
+	if walk_sheet:
+		if delta > 0.0:
+			# World pixels per full left/right cycle. Fast runners have a longer
+			# stride. Slows and collisions shorten the measured travel itself.
+			var stride := maxf(14.0 * body_scale, speed / 5.5)
+			_wobble = fposmod(_wobble + TAU * ground_travel / stride, TAU)
+			var pose := floori(_wobble * 4.0 / TAU) if ground_travel > 0.001 else 0
+			if sprite_2d.frame_coords.x != pose:
+				sprite_2d.frame_coords = Vector2i(pose, sprite_2d.frame_coords.y)
+				if is_elite:
+					_sync_elite_frame(sprite_2d)
+	else:
+		_wobble += delta * TAU * move_wobble_hz() * effort
 	var profile: = _juice_profile()
 	var size_factor: = clampf(body_scale, 0.55, 2.2)
 	var quickness: = clampf(speed / 56.0, 0.35, 2.6) / size_factor
@@ -644,7 +670,10 @@ func _apply_move_juice(delta: float) -> void :
 	sprite_2d.rotation = step * lean
 	sprite_2d.scale = Vector2(_sprite_base_scale.x * sx, _sprite_base_scale.y * sy)
 	var sway: = (1.2 / size_factor) * effort
-	sprite_2d.position = Vector2(step * sway, - abs(squash) * (1.1 + stretch * 8.0))
+	sprite_2d.position = Vector2(step * sway, -abs(squash) * (1.1 + stretch * 8.0))
+	if walk_sheet:
+		# The pixels in the sheet already show the foot lift and body bob.
+		sprite_2d.position *= 0.35
 	_hit_recoil = _hit_recoil.lerp(Vector2.ZERO, 1.0 - exp( - delta * 22))
 	sprite_2d.position += _hit_recoil
 	if archetype == EnemyData.Archetype.DASHER:
@@ -665,7 +694,10 @@ func _face(dir: Vector2, prefer_velocity: bool = true) -> void :
 	if sprite_2d == null:
 		return
 	var face: = velocity if prefer_velocity and absf(velocity.x) > 2.0 else dir
-	if absf(face.x) > 0.01:
+	if sprite_2d.hframes == 4:
+		if _source_facing != 0 and absf(face.x) > maxf(0.001, absf(face.y) * 0.12):
+			sprite_2d.flip_h = signf(face.x) != _source_facing
+	elif absf(face.x) > 0.01:
 		sprite_2d.flip_h = face.x < 0.0
 
 func _update_statuses(delta: float) -> void :

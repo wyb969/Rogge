@@ -10,6 +10,17 @@ const SHEETS: Array[Texture2D] = [
 	preload("res://assest/stage_monsters/zoo.png"),
 	preload("res://assest/stage_monsters/dino.png"),
 ]
+# Native facing of the ten source drawings, in atlas row order (not role order).
+# Front views keep their original orientation when changing direction.
+const SOURCE_FACING = [
+	[0, 0, 0, 0, 0, 0, -1, -1, -1, -1], # kitchen
+	[1, 0, -1, -1, 0, -1, -1, 0, -1, 0], # stationery
+	[1, 1, 0, -1, 0, 0, 0, 0, -1, -1], # fastfood
+	[-1, 0, 1, 0, 1, -1, 0, 0, -1, -1], # appliances
+	[0, 0, 0, 0, 0, -1, 0, 1, 0, 0], # furniture
+	[1, 1, -1, -1, 0, -1, 1, -1, -1, -1], # zoo
+	[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # dino
+]
 # Original 1-based species IDs in role order, so heavier silhouettes get tank
 # attacks and the quicker silhouettes use the dash tell. Last two are alternates.
 const SPECIES = [
@@ -41,4 +52,4 @@ func apply(actor: Node, stage: int, data: EnemyData) -> void:
 	if slot <= 1 and _rng.randi_range(0, 1) == 1:
 		slot += 8
 	var row: int = SPECIES[series][slot] - 1
-	actor.set_walk_sheet(SHEETS[series], row, _rng.randf_range(0.0, TAU))
+	actor.set_walk_sheet(SHEETS[series], row, SOURCE_FACING[series][row], _rng.randf_range(0.0, TAU))

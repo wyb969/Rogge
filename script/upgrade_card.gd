@@ -16,7 +16,8 @@ var stats_label: RichTextLabel
 
 func _ready() -> void :
 	# Keep readable card panels after removing the old global recoloring theme.
-	var style := GamePalette.neutral_surface(GamePalette.UI_SLOT, GamePalette.UI_GREY_BORDER)
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var style := preload("res://script/painted_ui.gd").TIDE_ACCENT.duplicate()
 	for side in ["left","right","top","bottom"]: style.set("content_margin_"+side,0)
 	add_theme_stylebox_override("panel", style)
 	custom_minimum_size = CARD_SIZE

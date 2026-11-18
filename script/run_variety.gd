@@ -129,6 +129,7 @@ func clear_combat_effects() -> void :
 	if game.get("ink_surf")!=null: game.ink_surf.clear_combat_effects()
 	if game.get("combat_feedback") != null and game.combat_feedback.death_stains != null:
 		game.combat_feedback.death_stains.reset()
+		game.combat_feedback.defeats.reset()
 	if game.get("burn_spread") != null: game.burn_spread.reset()
 	if game.get("combat_lighting") != null: game.combat_lighting.clear_flashes()
 	if game.get("meteors") != null: game.meteors.clear_combat_effects()

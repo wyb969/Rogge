@@ -53,6 +53,8 @@ func _ready() -> void :
 	var menu_box := $mainUI/Control/MenuCenter/VBoxContainer
 	menu_box.add_child(codex_button)
 	menu_box.move_child(codex_button,4)
+	for item in menu_box.get_children():
+		if item is Button: preload("res://script/painted_ui.gd").style_button(item)
 
 	hero_picker.hide()
 	$mainUI/Control.add_child(hero_picker)

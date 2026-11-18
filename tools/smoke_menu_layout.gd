@@ -220,16 +220,10 @@ func _check_background(rect: TextureRect, label: String, failures: Array[String]
 	if rect.size.y < 1.0:
 		failures.append("background %s has no size" % label)
 		return
-	rect._apply_aspect()
-	var mat: = rect.material as ShaderMaterial
-	var aspect: = float(mat.get_shader_parameter("g_aspect"))
-	var expected: = rect.size.x / rect.size.y
-	if absf(aspect - expected) > 0.04:
-		failures.append("background %s aspect %s expected %s" % [label, aspect, expected])
-	if label.contains("portrait") and aspect > 1.0:
-		failures.append("background %s stayed landscape (%s)" % [label, aspect])
-	if label.contains("landscape") and aspect < 1.0:
-		failures.append("background %s stayed portrait (%s) rect=%s window=%s visible=%s" % [label, aspect, rect.size, root.size, root.get_visible_rect().size])
+	var skin := preload("res://script/painted_ui.gd")
+	var expected := skin.TIDE_GROUND if label.begins_with("result") else skin.MOSS_GROUND
+	if rect.texture != expected or rect.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_COVERED:
+		failures.append("painted background must fill the viewport without stretching: " + label)
 
 func _expect_inside(control: Control, vp: Vector2, label: String, failures: Array[String]) -> void :
 	var rect: = control.get_global_rect()

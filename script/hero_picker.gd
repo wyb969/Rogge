@@ -25,6 +25,7 @@ func _ready() -> void:
 	box.add_child(grid)
 	for index in HEROES.TITLES.size():
 		var card := Button.new()
+		preload("res://script/painted_ui.gd").style_button(card, true)
 		cards.append(card)
 		grid.add_child(card)
 		var content := VBoxContainer.new()

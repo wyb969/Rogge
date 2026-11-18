@@ -33,9 +33,9 @@ func _ready() -> void :
 		if not button.pressed.is_connected(_on_pressed):
 			button.pressed.connect(_on_pressed)
 	GamePalette.apply_neutral_button(home_button)
-	button.icon=preload("res://assest/ui/toolbar_fullscreen.svg")
-	home_button.icon=preload("res://assest/ui/toolbar_home.svg")
-	menu_button.icon=preload("res://assest/ui/toolbar_menu.svg")
+	button.icon=preload("res://rogge_art/environment-ui/icons/A066.png")
+	home_button.icon=preload("res://rogge_art/environment-ui/icons/A065.png")
+	menu_button.icon=preload("res://rogge_art/environment-ui/icons/A064.png")
 	get_viewport().size_changed.connect(_refresh_label)
 	_refresh_label()
 
@@ -87,6 +87,7 @@ func _refresh_label() -> void :
 	var group_width: float=(128 if _home_available else 40)*ui
 	for i in controls.size():
 		var control: Button=controls[i]
+		control.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		control.text=""
 		control.expand_icon=true
 		control.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER

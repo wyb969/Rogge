@@ -1,0 +1,14 @@
+[gd_resource type="StyleBoxTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://rogge_art/environment-ui/tide/panel.png" id="tex"]
+
+[resource]
+texture = ExtResource("tex")
+texture_margin_left = 7.0
+content_margin_left = 6.0
+texture_margin_top = 7.0
+content_margin_top = 6.0
+texture_margin_right = 7.0
+content_margin_right = 6.0
+texture_margin_bottom = 7.0
+content_margin_bottom = 6.0

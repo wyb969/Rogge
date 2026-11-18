@@ -10,11 +10,8 @@ var pickup_glow: ColorRect
 func _ready() -> void :
 	label.text=L10n.text("等级 %d") % level
 	progress_bar.modulate = Color.WHITE
-	var back: = StyleBoxFlat.new()
-	back.bg_color = Color(GamePalette.XP_TRACK, 0.95)
-	back.border_color = GamePalette.XP_BAR.darkened(0.25)
-	back.set_border_width_all(1)
-	back.set_corner_radius_all(4)
+	progress_bar.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var back := preload("res://script/painted_ui.gd").MOSS
 	var fill: = StyleBoxFlat.new()
 	fill.bg_color = GamePalette.XP_BAR
 	fill.set_corner_radius_all(4)

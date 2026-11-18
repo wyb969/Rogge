@@ -104,6 +104,10 @@ var second: int:
 
 func _ready() -> void :
 	_ensure_stage_theme()
+	var clock: HBoxContainer = $UI/HBoxContainer
+	clock.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	clock.alignment = BoxContainer.ALIGNMENT_CENTER
+	clock.draw.connect(func(): clock.draw_style_box(preload("res://script/painted_ui.gd").TIDE, Rect2(Vector2.ZERO, clock.size)))
 	_ensure_stage_label()
 	_apply_spawn_pressure()
 

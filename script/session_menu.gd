@@ -26,7 +26,8 @@ func _ready() -> void:
 	add_child(shield)
 	shield.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	panel = PanelContainer.new()
-	panel.add_theme_stylebox_override("panel",GamePalette.neutral_surface(GamePalette.UI_SLOT,GamePalette.UI_GREY_BORDER))
+	panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	panel.add_theme_stylebox_override("panel",preload("res://script/painted_ui.gd").TIDE)
 	add_child(panel)
 	box = VBoxContainer.new()
 	box.add_theme_constant_override("separation",10)

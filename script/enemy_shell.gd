@@ -88,6 +88,12 @@ var poison_slow: = 1.0
 var _poison_tint: = Color.WHITE
 var base_modulate: Color = Color.WHITE
 var _sprite_base_scale: Vector2 = Vector2.ONE
+enum ArtAction { IDLE, MOVE, ATTACK, HURT, DEFEAT }
+var _has_action_art := false
+var _idle_phase := 0.0
+var _hurt_pose_left := 0.0
+var _strike_left := 0.0
+var _strike_direction := Vector2.ZERO
 var _source_facing := 1
 var _wobble: float = 0.0
 var _move_effort: float = 0.0
@@ -198,7 +204,8 @@ func set_walk_sheet(sheet: Texture2D, row: int, source_facing: int, phase: float
 	var sprite: Sprite2D = $Sprite2D
 	sprite.texture = sheet
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	sprite.hframes = 4
+	_has_action_art = true
+	sprite.hframes = 20
 	sprite.vframes = 10
 	sprite.frame_coords = Vector2i(0, row)
 	sprite.scale = Vector2.ONE * (24.0 / 32.0)
@@ -206,6 +213,7 @@ func set_walk_sheet(sheet: Texture2D, row: int, source_facing: int, phase: float
 	_source_facing = source_facing
 	sprite.flip_h = false
 	_wobble = phase
+	_idle_phase = phase / TAU * 4.0
 
 func _sync_elite_frame(sprite: Sprite2D) -> void:
 	var cell := Vector2.ONE / Vector2(sprite.hframes, sprite.vframes)
@@ -355,7 +363,7 @@ func _physics_process(delta: float) -> void :
 	if _death_started:
 		return
 	if _tick_environment_control(delta):
-		if sprite_2d.hframes == 4 and sprite_2d.vframes == 10:
+		if _has_action_art:
 			_apply_move_juice(delta)
 		return
 	contact_timer = maxf(0.0, contact_timer - delta)
@@ -410,11 +418,15 @@ func _physics_process(delta: float) -> void :
 		_face(tactical_ai.facing, false)
 	elif dash_windup > 0.0 or is_dashing:
 		_face(dash_dir, false)
-	elif sprite_2d.hframes == 4 and sprite_2d.vframes == 10:
-		if walking and travel.length_squared() > 0.000001:
-			_face(travel, false)
-		elif shot_windup > 0.0 or slam_windup > 0.0:
+	elif _has_action_art:
+		if slam_time_left > 0:
+			_face(slam_dir, false)
+		elif shot_windup > 0 or slam_windup > 0:
 			_face(dir, false)
+		elif _strike_left > 0:
+			_face(_strike_direction, false)
+		elif walking and travel.length_squared() > 0.000001:
+			_face(travel, false)
 	else:
 		_face(dir)
 	_apply_move_juice(delta, travel.length() if walking else 0.0)
@@ -430,6 +442,7 @@ func _steer_dasher(delta: float, dir: Vector2, dist: float, move_speed: float) -
 		return
 	if is_dashing:
 		if dash_time_left <= 0.0:
+			_show_strike(dash_dir, 2)
 			_finish_dash()
 			velocity = Vector2.ZERO
 			return
@@ -506,6 +519,8 @@ func _begin_contact_recovery() -> void :
 func _steer_tank(delta: float, dir: Vector2, dist: float, move_speed: float) -> void :
 	if slam_time_left > 0.0:
 		slam_time_left -= delta
+		if slam_time_left <= 0:
+			_show_strike(slam_dir, 2)
 		velocity = slam_dir * move_speed * 3.4
 		if sprite_2d:
 			sprite_2d.modulate = Color(0.75, 0.85, 1.5, 1)
@@ -573,6 +588,7 @@ func _fire_projectile(dir: Vector2) -> void :
 	container.add_child(shot)
 	shot.launch(global_position + aim * 16.0, aim, projectile_speed, projectile_damage, marker_color)
 	shots_fired += 1
+	_show_strike(aim)
 
 func _try_contact(dist: float) -> void :
 	if electric_stun_left>0: return
@@ -597,11 +613,36 @@ func _try_contact(dist: float) -> void :
 		return
 	if not player_reference.has_method("receive_attack"):
 		return
+	_show_strike(player_reference.global_position - global_position)
 	player_reference.receive_attack(dmg, self)
 	contact_timer = cd
 	if archetype == EnemyData.Archetype.DASHER:
 
 		_begin_contact_recovery()
+
+func _show_strike(direction: Vector2, frames_left: int = 3) -> void:
+	_strike_left = frames_left / 9.0
+	_strike_direction = direction
+
+func _action_column(delta: float, travel: float) -> int:
+	_strike_left = maxf(0, _strike_left - delta)
+	_hurt_pose_left = maxf(0, _hurt_pose_left - delta)
+	if tactical_ai != null and tactical_ai.committed and tactical_ai.slot != null:
+		var slot = tactical_ai.slot
+		var after: float = slot.age - slot.windup
+		return ArtAction.ATTACK * 4 + (0 if after < 0 else mini(3, 1 + floori(after * 9)))
+	if dash_windup > 0 or shot_windup > 0 or slam_windup > 0:
+		return ArtAction.ATTACK * 4
+	if is_dashing or slam_time_left > 0:
+		return ArtAction.ATTACK * 4 + 1
+	if _strike_left > 0:
+		return ArtAction.ATTACK * 4 + clampi(4 - ceili(_strike_left * 9), 1, 3)
+	if _hurt_pose_left > 0:
+		return ArtAction.HURT * 4 + clampi(4 - ceili(_hurt_pose_left * 12), 0, 3)
+	if travel > 0.001:
+		return ArtAction.MOVE * 4 + floori(_wobble * 4.0 / TAU)
+	_idle_phase = fposmod(_idle_phase + delta * 4, 4)
+	return floori(_idle_phase)
 
 func _apply_body_scale() -> void :
 	scale = Vector2(body_scale, body_scale)
@@ -630,7 +671,7 @@ func _apply_move_juice(delta: float, ground_travel: float = 0.0) -> void :
 		return
 	var cruise: = maxf(speed, 8.0)
 
-	var walk_sheet := sprite_2d.hframes == 4 and sprite_2d.vframes == 10
+	var walk_sheet := _has_action_art
 	var target := clampf(velocity.length() / cruise, 0.0, 1.0)
 	if walk_sheet and delta > 0.0:
 		target = clampf(ground_travel / (delta * cruise), 0.0, 1.0)
@@ -643,7 +684,7 @@ func _apply_move_juice(delta: float, ground_travel: float = 0.0) -> void :
 			# stride. Slows and collisions shorten the measured travel itself.
 			var stride := maxf(14.0 * body_scale, speed / 5.5)
 			_wobble = fposmod(_wobble + TAU * ground_travel / stride, TAU)
-			var pose := floori(_wobble * 4.0 / TAU) if ground_travel > 0.001 else 0
+			var pose := _action_column(delta, ground_travel)
 			if sprite_2d.frame_coords.x != pose:
 				sprite_2d.frame_coords = Vector2i(pose, sprite_2d.frame_coords.y)
 				if is_elite:
@@ -694,7 +735,7 @@ func _face(dir: Vector2, prefer_velocity: bool = true) -> void :
 	if sprite_2d == null:
 		return
 	var face: = velocity if prefer_velocity and absf(velocity.x) > 2.0 else dir
-	if sprite_2d.hframes == 4 and sprite_2d.vframes == 10:
+	if _has_action_art:
 		if _source_facing != 0 and absf(face.x) > maxf(0.001, absf(face.y) * 0.12):
 			sprite_2d.flip_h = signf(face.x) != _source_facing
 	elif absf(face.x) > 0.01:
@@ -748,6 +789,7 @@ func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = 
 	var feedback: = JUICE.find(self)
 	if feedback != null: feedback.hit(global_position, direction, is_elite)
 	if feedback != null and dealt > 0 and impact: feedback.impact_feedback.pulse(self,sprite_2d)
+	if impact and not status_damage: _hurt_pose_left = 4.0 / 12.0
 	play_hit_tween(direction)
 	show_damage_text(dealt, status_damage, critical, visual_effect)
 	AudioManager.play_enemy_hurt()
@@ -904,6 +946,8 @@ func _apply_health_loss(dealt: float, death_direction: Vector2 = Vector2.ZERO) -
 			if force.is_zero_approx():
 				force = _airflow_velocity if _airflow_left>0 else (_blast_velocity if _blast_left>0 else (_gravity_velocity if _gravity_left>0 else Vector2.ZERO))
 			feedback.death_stains.splat(global_position,death_stain_color,force,body_scale)
+			if _has_action_art:
+				feedback.defeats.capture(sprite_2d, ArtAction.DEFEAT * 4)
 			feedback.kill(global_position, base_modulate, is_elite)
 		spaw_icon()
 		remove_from_group("EnemyGroup")
@@ -951,6 +995,7 @@ func apply_electric_stun(seconds: float) -> void:
 	_cancel_controlled_attack()
 
 func _cancel_controlled_attack() -> void:
+	_strike_left = 0.0
 	_finish_dash()
 	shot_windup = 0
 	slam_windup = 0

@@ -13,6 +13,8 @@ signal main_menu_pressed
 
 func _ready() -> void :
 	root_ui.hide()
+	$CanvasLayer/Control/ColorRect/TextureRect.texture = preload("res://script/painted_ui.gd").TIDE_GROUND
+	for button in [retry_button, main_menu_button]: preload("res://script/painted_ui.gd").style_button(button, true)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	UiFonts.apply_to_label(result_title, 28, true)
 	UiFonts.apply_to_label(time_label, 16)

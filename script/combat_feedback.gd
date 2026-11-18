@@ -3,6 +3,7 @@ extends Node2D
 const DEATH_STAINS := preload("res://script/death_stains.gd")
 var death_stains: MultiMeshInstance2D
 var impact_feedback: Node2D
+var defeats := preload("res://script/monster_defeats.gd").new()
 
 const MAX_SHARDS: = 128
 const MAX_RINGS: = 16
@@ -55,6 +56,7 @@ func _ready() -> void :
 	death_stains = DEATH_STAINS.new()
 	death_stains.name = "DeathStains"
 	add_child(death_stains)
+	add_child(defeats)
 	impact_feedback = preload("res://script/hit_feedback.gd").new()
 	impact_feedback.name = "HitFeedback"
 	add_child(impact_feedback)
@@ -88,6 +90,7 @@ func start() -> void :
 func reset() -> void :
 	if impact_feedback != null: impact_feedback.reset()
 	if death_stains != null: death_stains.reset()
+	defeats.reset()
 	while not shards.is_empty(): _free_shards.append(shards.pop_back())
 	while not rings.is_empty(): _free_rings.append(rings.pop_back())
 	while not ghosts.is_empty():

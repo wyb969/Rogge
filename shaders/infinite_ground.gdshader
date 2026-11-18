@@ -1,5 +1,6 @@
 shader_type canvas_item;
 
+uniform sampler2D painted_ground : source_color, filter_nearest, repeat_disable;
 uniform sampler2D ground_tex : source_color, filter_nearest, repeat_disable;
 uniform vec2 atlas_tex_size = vec2(128.0, 240.0);
 uniform vec2 tile_pixel_size = vec2(16.0, 16.0);
@@ -66,6 +67,13 @@ void fragment() {
 	// Narrow value range: scenery keeps texture without competing with actors.
 	vec3 placed = tint.rgb * (ground_values.x + luma * ground_values.y);
 	vec3 graded = mix(multiplied, placed, clamp(grade, 0.0, 1.0));
+	// Crossfade the outer pixels of each single-screen painting into the base tiles.
+	// Coordinates belong to the world so the floor stays still under a moving camera.
+	vec2 room = fract(v_world / vec2(500.0, 333.3333) + 0.5);
+	vec2 room_edge = min(room, 1.0 - room);
+	float ink = smoothstep(0.0, 0.045, min(room_edge.x, room_edge.y));
+	vec3 painted = texture(painted_ground, room).rgb;
+	graded = mix(graded, painted * 0.76 + tint.rgb * 0.24, ink * 0.88);
 	if (snow_cover > 0.0) {
 		float grain = hash21(floor(v_world / 3.0));
 		float drift = 0.5 + 0.5 * sin(v_world.x * 0.013 + sin(v_world.y * 0.017));

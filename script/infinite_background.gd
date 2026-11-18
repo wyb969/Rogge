@@ -40,7 +40,7 @@ func _ready() -> void :
 	z_index = -20
 	_setup_ground()
 
-	_apply_palette(0)
+	_apply_palette(palette_id)
 	_setup_decor_pool()
 	set_process(true)
 	_update_coverage()
@@ -186,6 +186,7 @@ func _apply_palette(idx: int) -> void :
 	_decor_dirty = true
 	set_stage_tint(color)
 	if _shader_mat:
+		_shader_mat.set_shader_parameter("painted_ground", preload("res://script/painted_ui.gd").MOSS_GROUND if idx % 2 == 0 else preload("res://script/painted_ui.gd").TIDE_GROUND)
 		_shader_mat.set_shader_parameter("grade", stage_grade)
 		_shader_mat.set_shader_parameter("vignette", GamePalette.stage_vignette(idx))
 

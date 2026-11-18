@@ -64,6 +64,7 @@ const ALIVE_PER_MIN: = 2
 const WAVE_PER_MIN: = 0.5
 const WAVE_PER_LEVEL: = 0.22
 
+var _monster_art := preload("res://script/stage_monster_art.gd").new()
 var stage: int = 1
 var stage_boss_countdown: float = -1.0
 var _boss_fight_active: bool = false
@@ -153,6 +154,7 @@ func spawn(pos: Vector2, elite: bool):
 	var enemy_instance = enemy.instantiate()
 	enemy_instance.set_player_ref(player)
 	enemy_instance.set_enemy_data(data)
+	_monster_art.apply(enemy_instance, stage, data)
 	enemy_instance.add_to_group("EnemyGroup")
 	var hp_mul: = threat_hp_multiplier()
 	var dmg_mul: = threat_damage_multiplier()

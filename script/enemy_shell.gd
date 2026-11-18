@@ -193,19 +193,30 @@ func set_enemy_data(data: EnemyData) -> void :
 	_sprite_base_scale = ($Sprite2D as Sprite2D).scale
 	_apply_body_scale()
 
+func set_walk_sheet(sheet: Texture2D, row: int, phase: float) -> void:
+	var sprite: Sprite2D = $Sprite2D
+	sprite.texture = sheet
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	sprite.hframes = 4
+	sprite.vframes = 10
+	sprite.frame_coords = Vector2i(0, row)
+	sprite.scale = Vector2.ONE * (24.0 / 32.0)
+	_sprite_base_scale = sprite.scale
+	_wobble = phase
+
+func _sync_elite_frame(sprite: Sprite2D) -> void:
+	var cell := Vector2.ONE / Vector2(sprite.hframes, sprite.vframes)
+	var origin := Vector2(sprite.frame_coords) * cell
+	(sprite.material as ShaderMaterial).set_shader_parameter(
+		"frame_uv_rect", Vector4(origin.x, origin.y, cell.x, cell.y))
+
 func set_elite_status() -> void :
 	is_elite = true
 	var sprite: Sprite2D = $Sprite2D
 	var mat: ShaderMaterial = load("res://shaders/rainbow_outline.tres").duplicate()
 	mat.set_shader_parameter("outline_color", preload("res://script/visual_style.gd").ELITE)
-	var hf: = maxi(1, sprite.hframes)
-	var vf: = maxi(1, sprite.vframes)
-
-	if hf > 1 or vf > 1:
-		var fw: = 1.0 / float(hf)
-		var fh: = 1.0 / float(vf)
-		mat.set_shader_parameter("frame_uv_rect", Vector4(0.0, 0.0, fw, fh))
 	sprite.material = mat
+	_sync_elite_frame(sprite)
 	body_scale *= 1.28
 	_apply_body_scale()
 	setHealth(health * 1.75)
@@ -607,6 +618,12 @@ func _apply_move_juice(delta: float) -> void :
 	_hit_squash = maxf(0.0, _hit_squash - delta * 5.0)
 	var effort: = _move_effort
 	_wobble += delta * TAU * move_wobble_hz() * maxf(effort, 0.0)
+	if sprite_2d.hframes == 4:
+		var pose := floori(fposmod(_wobble, TAU) * 4.0 / TAU) if effort > 0.12 else 0
+		if sprite_2d.frame_coords.x != pose:
+			sprite_2d.frame_coords = Vector2i(pose, sprite_2d.frame_coords.y)
+			if is_elite:
+				_sync_elite_frame(sprite_2d)
 	var profile: = _juice_profile()
 	var size_factor: = clampf(body_scale, 0.55, 2.2)
 	var quickness: = clampf(speed / 56.0, 0.35, 2.6) / size_factor

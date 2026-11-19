@@ -6,6 +6,9 @@ const MOUSE := -2
 const DECK := -1
 const NO_TARGET := -2
 const DEADZONE := 10.0
+const OPEN_HAND := preload("res://rogge_art/environment-ui/forge/hand-open.png")
+const GRIP_HAND := preload("res://rogge_art/environment-ui/forge/hand-grip.png")
+const HAND_HOTSPOT := Vector2(10,8)
 
 var forge: CanvasLayer
 var pointer := IDLE
@@ -18,9 +21,40 @@ var panning := false
 var ghost: Panel
 var outline: Panel
 var target_slot := NO_TARGET
+var owns_cursor := false
+var hand_closed := false
 
 func _ready() -> void:
 	forge = get_parent()
+
+func _menu_visible() -> bool:
+	var host := get_tree().current_scene
+	return is_instance_valid(host) and "session_menu" in host and is_instance_valid(host.session_menu) and host.session_menu.visible
+
+func sync_cursor() -> void:
+	if forge.visible and not _menu_visible():
+		if not owns_cursor:
+			owns_cursor = true
+			_show_hand(false)
+	else:
+		cancel()
+		_restore_cursor()
+
+func _show_hand(closed: bool) -> void:
+	hand_closed = closed
+	if owns_cursor:
+		Input.set_custom_mouse_cursor(GRIP_HAND if closed else OPEN_HAND,Input.CURSOR_ARROW,HAND_HOTSPOT)
+
+func _restore_cursor() -> void:
+	if not owns_cursor: return
+	owns_cursor = false
+	hand_closed = false
+	var path: String = ProjectSettings.get_setting("display/mouse_cursor/custom_image","")
+	var hotspot: Vector2 = ProjectSettings.get_setting("display/mouse_cursor/custom_image_hotspot",Vector2.ZERO)
+	Input.set_custom_mouse_cursor(load(path) if not path.is_empty() else null,Input.CURSOR_ARROW,hotspot)
+
+func _exit_tree() -> void:
+	_restore_cursor()
 
 func cancel() -> void:
 	for control in [ghost, outline]:
@@ -34,9 +68,10 @@ func cancel() -> void:
 	dragging = false
 	panning = false
 	target_slot = NO_TARGET
+	if hand_closed: _show_hand(false)
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and pointer != IDLE:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and (pointer != IDLE or hand_closed):
 		cancel()
 
 func _inside(control: Control, point: Vector2) -> bool:
@@ -60,11 +95,17 @@ func _source_at(point: Vector2) -> bool:
 	return _slot_at(point) >= 0 or not _group_at(point).is_empty()
 
 func _input(event: InputEvent) -> void:
-	if not forge.visible or forge.working: return
-	var host := get_tree().current_scene
-	if is_instance_valid(host) and host.get("session_menu") != null and host.session_menu.active:
+	if not forge.visible: return
+	if _menu_visible():
 		if pointer != IDLE: cancel()
 		return
+	if event is InputEventMouseButton and event.device != InputEvent.DEVICE_ID_EMULATION and event.button_index == MOUSE_BUTTON_LEFT:
+		_show_hand(event.pressed and not event.canceled)
+	if event is InputEventMouseMotion and event.device != InputEvent.DEVICE_ID_EMULATION and hand_closed and not (event.button_mask & MOUSE_BUTTON_MASK_LEFT):
+		# A mouse-up outside the canvas can be missed by Web.
+		if pointer == MOUSE: cancel()
+		else: _show_hand(false)
+	if forge.working: return
 	if event is InputEventKey:
 		if event.keycode == KEY_ESCAPE and event.pressed and pointer != IDLE:
 			cancel()
@@ -104,9 +145,14 @@ func _input(event: InputEvent) -> void:
 
 func _move(point: Vector2) -> void:
 	var delta: Vector2 = (point-origin) / forge.board.scale.x
+	# A horizontal swipe may become a deliberate lift. Keep the original card under the finger.
+	var above_fan: bool = forge.inventory_scroll.make_canvas_position_local(point).y < -DEADZONE
+	if panning and above_fan:
+		panning = false
+		forge.inventory_scroll.scroll_horizontal = initial_scroll
 	if not dragging and not panning:
 		if delta.length() < DEADZONE: return
-		if pointer != MOUSE and origin_slot == DECK and absf(delta.x) > 1.2 * absf(delta.y):
+		if pointer != MOUSE and origin_slot == DECK and not above_fan and absf(delta.x) > 1.2 * absf(delta.y):
 			panning = true
 		else:
 			var uid: int = forge._slot_uid(origin_slot) if origin_slot >= 0 else source_group.uids[0]

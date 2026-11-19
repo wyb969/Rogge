@@ -54,6 +54,7 @@ var result_tween: Tween
 var result_visible := false
 var hearth: TextureRect
 var preview_heading: Label
+var restore_combat_controls := false
 var inputs := preload("res://script/forge_drag.gd").new()
 var feedback := preload("res://script/forge_feedback.gd").new()
 
@@ -79,6 +80,15 @@ func _ready() -> void:
 	visibility_changed.connect(_visibility_changed)
 
 func _visibility_changed() -> void:
+	var host := get_tree().current_scene
+	if is_instance_valid(host) and "mobile_controls" in host and is_instance_valid(host.mobile_controls):
+		if visible:
+			restore_combat_controls = host.mobile_controls.visible
+			host.mobile_controls.hide_controls()
+		elif restore_combat_controls:
+			restore_combat_controls = false
+			if not host._returning_home: host.mobile_controls.show_controls()
+	inputs.sync_cursor()
 	if not visible: _stop_effects()
 
 func _stop_effects() -> void:
@@ -96,6 +106,10 @@ func _exit_tree() -> void:
 func open_for(current_game: Node) -> void:
 	_stop_effects()
 	game = current_game
+	var host := get_tree().current_scene
+	if is_instance_valid(host) and "session_menu" in host and is_instance_valid(host.session_menu):
+		if not host.session_menu.visibility_changed.is_connected(inputs.sync_cursor):
+			host.session_menu.visibility_changed.connect(inputs.sync_cursor)
 	main_uid = -1
 	sub_uids = [-1, -1]
 	active_slot = 0

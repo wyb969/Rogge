@@ -63,8 +63,42 @@ func run() -> void:
 	await frames(25)
 	ui = main.game.forge_screen
 	var forge: Variant = main.game.forge
+	# Web enables the combat joystick even when the user plays with a mouse.
+	ui.hide()
+	main.mobile_controls.visible = true
+	root.get_node("MobileInput").controls_enabled = true
+	main.mobile_controls._layout_controls()
+	var left_card := spot(0)
+	expect(main.mobile_controls._near_stick_zone(left_card),"leftmost card overlaps the combat joystick capture zone")
+	ui.open_for(main.game)
+	await frames(3)
+	expect(not main.mobile_controls.visible and not root.get_node("MobileInput").controls_enabled,"forge owns input above combat controls")
+	var inputs: Node = ui.inputs
+	expect(inputs.owns_cursor and not inputs.hand_closed,"forge opens with an open hand")
 	var first: int = ui.groups[0].uids[0]
 	var second: int = ui.groups[1].uids[0]
+	for i in 3:
+		var source := spot(0)
+		press(source,true)
+		expect(inputs.hand_closed and inputs.pointer == inputs.MOUSE,"leftmost mouse-down closes hand on the card")
+		move(source.lerp(slot(i),0.45),false)
+		press(slot(i),false)
+		expect(ui._slot_uid(i) == first and not inputs.hand_closed,"release assigns leftmost card to any slot and opens hand")
+		ui._remove_slot(i)
+		press(source,true,true)
+		move(source+Vector2(24,-2),true)
+		move(slot(i),true)
+		press(slot(i),false,true)
+		expect(ui._slot_uid(i) == first and not inputs.hand_closed,"shallow swipe then lift still carries the original first card")
+		ui._remove_slot(i)
+	press(spot(0),true)
+	inputs._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	expect(inputs.pointer == inputs.IDLE and not inputs.hand_closed,"focus loss cancels grip")
+	press(spot(0),false)
+	main.session_menu.open_menu()
+	expect(not inputs.owns_cursor,"pause menu releases forge cursor")
+	main.session_menu.close_menu()
+	expect(inputs.owns_cursor and not inputs.hand_closed,"returning to forge restores the open hand")
 	drag(spot(0),slot(0))
 	expect(ui.main_uid == first,"mouse deck to main")
 	drag(spot(1),slot(1),true)
@@ -111,6 +145,7 @@ func run() -> void:
 	expect(ui.sub_uids == [-1,-1] and not ui.action_button.disabled and not ui.quit_button.disabled,"controls restored")
 	ui._attempt()
 	ui.hide()
+	expect(not inputs.owns_cursor,"leaving forge restores project cursor")
 	await create_timer(1.6,true,false,true).timeout
 	expect(forge.wallet == wallet-cost and forge.cards.size() == 8,"hiding cancels outstanding work")
 	ui.show()

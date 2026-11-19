@@ -2,6 +2,7 @@ extends Node2D
 
 @export var player: CharacterBody2D
 
+var forged_dps := -1.0
 var level: int = 0
 var throw_timer: float = 0.0
 const BOTTLE: = preload("res://scenes/molotov_bottle.tscn")
@@ -16,6 +17,7 @@ func upgrade() -> void :
 		throw_timer = minf(throw_timer, get_throw_interval())
 
 func reset() -> void :
+	forged_dps = -1.0
 	level = 0
 	throw_timer = 0.0
 
@@ -66,6 +68,7 @@ func get_burn_stacks(rank: int = -1) -> int:
 	return 2 + int((rank - 1) / 2)
 
 func get_burn_dps(rank: int = -1) -> float:
+	if rank < 0 and forged_dps >= 0.0: return forged_dps
 	if rank < 0: rank = level
 	return 2.5 + float(rank) * 1.8
 

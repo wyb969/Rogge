@@ -91,6 +91,11 @@ var _lottery_pending: = false
 var _rest_pending: = false
 var _level_reward_queue: Array[int] = []
 var rest_hub: CanvasLayer
+var forge := preload("res://script/forge_inventory.gd").new()
+var forge_screen: CanvasLayer
+var _forge_collecting := false
+var _forge_due := false
+var _forge_stage_seen := 0
 signal game_over(stats: Dictionary)
 
 func _ready() -> void :
@@ -217,6 +222,10 @@ func start_game(rolled_start := false) -> void :
 	if equipment_panel and equipment_panel.has_method("reset_equipment"):
 		equipment_panel.reset_equipment(not rolled_start)
 	if rolled_start:
+		forge.begin(self,diagnostic_mode == "forge")
+		level_manager.level = current_level
+		level_manager.level_need_coin_number = level_manager.get_need_exp(current_level)
+		level_manager.label.text = L10n.text("等级 %d") % current_level
 		hand_weapon.start_unequipped()
 		circle_weapon.start_unequipped()
 	_reset_skill_controllers()
@@ -230,6 +239,9 @@ func start_game(rolled_start := false) -> void :
 	pause_menu.reset_draft()
 
 func end_game() -> void :
+	_forge_collecting = false
+	_forge_due = false
+	if forge_screen: forge_screen.hide()
 	player.reset_dash()
 	weather.stop()
 	combat_feedback.reset()
@@ -322,6 +334,7 @@ func _process(_delta: float) -> void :
 func on_level_up(level: int) -> void :
 	current_level = level
 	player.apply_level_growth(level)
+	if forge.enabled: forge.refresh_level_stats()
 	RunDiagnostics.mark("level_up", {"level": level}, true)
 	spawner.handle_level_up(current_level)
 	_level_reward_queue.append(level)
@@ -330,7 +343,14 @@ func on_level_up(level: int) -> void :
 func _on_timer_timeout() -> void :
 	pass
 
-func _on_upgrade_selected(upgrade_id: String):
+func _on_upgrade_selected(upgrade_id: String, tier := -1):
+	if forge.enabled:
+		if tier < 0: tier = int(pause_menu.pending_quality.get(upgrade_id,0))
+		if forge.add_card(upgrade_id,tier) >= 0:
+			if upgrade_id in preload("res://script/starter_lottery.gd").WEAPONS or upgrade_id in forge.OTHER_ATTACKS:
+				spawner.note_offense_card()
+			combat_feedback.reward(player.global_position)
+		return
 	if equipment_panel.EQUIP_DEFS.has(upgrade_id):
 		var max_rank: int = equipment_panel.EQUIP_DEFS[upgrade_id].get("max_level", 2147483647)
 		if equipment_panel.get_level(upgrade_id) >= max_rank: return
@@ -424,6 +444,7 @@ func _award_prepared_experience(base_amount: int) -> int:
 		var bonus: int = tenths / 10
 		earned += bonus
 		_growth_xp_tenths = tenths % 10
+	if forge.enabled: forge.earn(earned)
 	level_manager.add_coin(earned)
 	return earned
 
@@ -504,6 +525,7 @@ func _show_death_veil() -> CanvasLayer:
 	return layer
 
 func on_boss_defeated() -> void :
+	if forge.enabled: forge.award_victory()
 	Engine.time_scale = 1.0
 	clear_enemies()
 	var stats: = _build_run_stats(true)
@@ -512,7 +534,73 @@ func on_boss_defeated() -> void :
 func _on_rest_requested() -> void :
 	Engine.time_scale = 1.0
 	_rest_pending = true
+	if forge.enabled: _start_forge_settlement()
 	call_deferred("_show_next_reward")
+
+func _start_forge_settlement() -> void:
+	if _forge_stage_seen >= spawner.stage: return
+	_forge_stage_seen = spawner.stage
+	_forge_collecting = true
+	get_tree().paused = true
+	MobileInput.clear_move()
+	MobileInput.clear_dash()
+	# Enemies may have deferred a coin spawn earlier in the same physics tick.
+	call_deferred("_absorb_boss_drops")
+
+func _absorb_boss_drops() -> void:
+	if not _forge_collecting: return
+	var previous_level: int = level_manager.level
+	var flights := create_tween().set_parallel().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	var animated := 0
+	var pickups := pickup_container.get_children()
+	for drop in pickups:
+		if drop.is_queued_for_deletion(): continue
+		if drop is XP_COIN_SCRIPT or drop is HEALING_ORB_SCRIPT:
+			if animated < 48:
+				flights.tween_property(drop,"global_position",player.global_position,0.24).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+				animated += 1
+			else:
+				_collect_stage_drop(drop)
+	if animated:
+		await flights.finished
+	else:
+		flights.kill()
+	if not _forge_collecting: return
+	for drop in pickup_container.get_children():
+		if not drop.is_queued_for_deletion(): _collect_stage_drop(drop)
+	if level_manager.level == previous_level:
+		# Grant one real level while retaining progress already earned toward the next one.
+		level_manager.add_coin(level_manager.level_need_coin_number)
+	forge.seal_stage()
+	_forge_due = true
+	_forge_collecting = false
+	_show_next_reward()
+
+func _collect_stage_drop(drop: Node) -> void:
+	if drop is XP_COIN_SCRIPT: drop.credit_once()
+	elif drop is HEALING_ORB_SCRIPT: drop.collect()
+
+func _open_forge() -> void:
+	if not is_instance_valid(forge_screen):
+		forge_screen = preload("res://script/forge_screen.gd").new()
+		add_child(forge_screen)
+		forge_screen.finished.connect(_on_forge_finished)
+	forge_screen.open_for(self)
+
+func _on_forge_finished() -> void:
+	if not _forge_due: return
+	if forge.settle_stage().is_empty():
+		forge_screen.show()
+		forge_screen.message = L10n.text("材料保存失败，请重新结算")
+		forge_screen._build()
+		return
+	forge_screen.hide()
+	_forge_due = false
+	get_tree().paused = false
+	if forge.training:
+		get_tree().current_scene._on_game_end_ui_main_menu_pressed()
+		return
+	_show_next_reward()
 
 func _open_rest_hub() -> void :
 	variety.clear_combat_effects()
@@ -528,6 +616,9 @@ func _open_rest_hub() -> void :
 
 func _on_rest_reward(reward_id: String) -> void :
 	if player == null or rest_hub == null:
+		return
+	if forge.enabled and equipment_panel.EQUIP_DEFS.has(reward_id):
+		_on_upgrade_selected(reward_id,0)
 		return
 	match reward_id:
 		"max_hp":
@@ -562,6 +653,7 @@ func _on_rest_next_stage() -> void :
 		spawner.begin_next_stage()
 
 func _on_stage_advanced(next_stage: int) -> void :
+	if forge.enabled: forge.begin_stage()
 	variety.clear_combat_effects()
 	Engine.time_scale = 1.0
 	var bg: = get_node_or_null("InfiniteBackground")
@@ -582,7 +674,9 @@ func _build_run_stats(victory: bool) -> Dictionary:
 		"kills": spawner.enemy_killed_num, 
 		"level": current_level, 
 		"stage": stage_num, 
-		"victory": victory, 
+		"victory": victory,
+		"forge_earned": forge.run_materials if forge.enabled and not forge.training else -1,
+		"forge_bonus": forge.victory_materials,
 		"difficulty": run_difficulty.index, 
 		"trials": trials.results.duplicate(true)
 	}
@@ -915,6 +1009,7 @@ func prepare_growth_debug(both: bool = false) -> void:
 	variety.notify(L10n.text("生机组合：经验+30%% · 移速/回复+20%%\n%s") % (L10n.text("两组图标已激活：荧光绿 / 金色同步流光") if both else L10n.text("右侧拾取、移速、回复图标：荧光绿同步流光")))
 
 func _show_next_reward() -> void :
+	if _forge_collecting or (forge_screen and forge_screen.visible): return
 	if _death_presented or player.player_health <= 0.0 or process_mode == Node.PROCESS_MODE_DISABLED:
 		return
 	if trials.blocks_rewards():
@@ -922,6 +1017,13 @@ func _show_next_reward() -> void :
 	if beast_powers._pending_reward >= 0:
 		return
 	if pause_menu.visible or (is_instance_valid(treasure_lottery) and treasure_lottery.visible) or (is_instance_valid(rest_hub) and rest_hub.visible):
+		return
+	if _forge_due:
+		if _level_reward_queue.is_empty():
+			_open_forge()
+		else:
+			_level_reward_queue.pop_front()
+			pause_menu.show_upgrade_options()
 		return
 	if _lottery_pending:
 		_lottery_pending = false
@@ -969,6 +1071,7 @@ func prepare_treasure_debug_run() -> void :
 func _on_beast_defeated(stage_num: int) -> void :
 	variety.clear_combat_effects()
 	_blessing_pending = stage_num
+	if forge.enabled: _start_forge_settlement()
 	call_deferred("_show_next_reward")
 
 func _on_blessing_claimed(stage_num: int, settle: bool) -> void :

@@ -2,6 +2,7 @@ extends "res://script/treasure_lottery.gd"
 
 signal loadout_claimed(loadout: Dictionary)
 
+const QUALITY := preload("res://script/card_quality_style.gd")
 const MAX_REROLLS := 3
 const EQUIPMENT := preload("res://script/equipment_panel.gd").EQUIP_DEFS
 const COMBOS := preload("res://script/equipment_combos.gd")
@@ -15,6 +16,7 @@ var _reroll: Button
 var foil := ShaderMaterial.new()
 var previous_icons: Array[TextureRect] = []
 var roll_tweens: Array[Tween] = []
+var tier_labels: Array[Label] = []
 
 static func draw_loadout(perk: String, percentile: int) -> Dictionary:
 	var cards: Array[String] = []
@@ -42,7 +44,13 @@ static func draw_loadout(perk: String, percentile: int) -> Dictionary:
 			if COMBOS.ARSENAL_MEMBERS.all(func(item): return item in owned): continue
 			cards.append(id)
 			if cards.size() == 3: break
-	return {"cards": cards, "group": group, "backup": backup, "perk": perk}
+	var tiers := {}
+	var awarded := cards.duplicate()
+	if not backup.is_empty(): awarded.append(backup)
+	for id in awarded:
+		var roll := randi_range(0, 99)
+		tiers[id] = 0 if roll < 80 else (1 if roll < 98 else 2)
+	return {"cards": cards, "group": group, "backup": backup, "perk": perk, "tiers": tiers}
 
 func _ready() -> void:
 	super._ready()
@@ -72,8 +80,19 @@ func _ready() -> void:
 		var previous := icon.duplicate() as TextureRect
 		window.add_child(previous)
 		previous.hide()
+		var badge := Label.new()
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		badge.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+		badge.add_theme_constant_override("outline_size", 4)
+		badge.add_theme_color_override("font_outline_color", Color("#191a24"))
+		window.add_child(badge)
+		badge.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		badge.hide()
+		tier_labels.append(badge)
 		previous_icons.append(previous)
 		roll_tweens.append(null)
+	_fit()
 	for id: String in EQUIPMENT:
 		var card: Dictionary = EQUIPMENT[id].duplicate()
 		card.id = id
@@ -81,6 +100,8 @@ func _ready() -> void:
 
 func _fit() -> void:
 	super._fit()
+	for badge in tier_labels:
+		UiFonts.apply_to_label(badge, maxi(10, _detail.get_theme_font_size("font_size")-1), true)
 	if _reroll:
 		UiFonts.apply_to_button(_reroll, _button.get_theme_font_size("font_size"))
 		_reroll.custom_minimum_size.y = _button.custom_minimum_size.y
@@ -111,6 +132,7 @@ func _prepare_roll(perk: String) -> void:
 	_result.add_theme_color_override("font_color", Color.WHITE)
 	_detail.text = L10n.text("角色自带：%s · 完整套装概率 30%%") % item_name(perk)
 	for i in _reels.size():
+		tier_labels[i].hide()
 		_set_reel(i, _pool.pick_random())
 		_reel_panels[i].modulate = Color.WHITE
 		_reel_panels[i].material = null
@@ -161,6 +183,10 @@ func _reveal() -> void:
 	for i in _reels.size():
 		_stopped_reel(i)
 		names.append(item_name(loadout.cards[i]))
+		var tier := int(loadout.get("tiers", {}).get(loadout.cards[i], 0))
+		tier_labels[i].text = QUALITY.tier_name(tier)
+		tier_labels[i].add_theme_color_override("font_color", QUALITY.COLORS[tier])
+		tier_labels[i].show()
 	var jackpot: bool = loadout.group != ""
 	if jackpot:
 		_panel.material = foil
@@ -171,7 +197,7 @@ func _reveal() -> void:
 	_result.text = "  ·  ".join(names)
 	_detail.text = L10n.text("角色自带：%s") % item_name(loadout.perk)
 	if loadout.backup != "":
-		_detail.text += "\n" + L10n.text("随行武器：%s") % item_name(loadout.backup)
+		_detail.text += "\n" + L10n.text("随行武器：%s") % (QUALITY.tier_name(loadout.get("tiers", {}).get(loadout.backup,0))+" · "+item_name(loadout.backup))
 	_reroll.show()
 	_reroll.disabled = rerolls_left == 0
 	_button.text = L10n.text("确定并出发")

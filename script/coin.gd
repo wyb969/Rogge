@@ -12,6 +12,7 @@ var max_distance: int = 5
 var base_scale: Vector2
 var pickup_tween: Tween
 var is_collecting: = false
+var _credited := false
 
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -125,5 +126,10 @@ func collect_coin() -> void :
 
 	await tween.finished
 
+	credit_once()
+
+func credit_once() -> void:
+	if _credited: return
+	_credited = true
 	coin_collected.emit(xp_value)
 	queue_free()

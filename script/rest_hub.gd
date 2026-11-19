@@ -6,6 +6,7 @@ extends CanvasLayer
 signal reward_picked(reward_id: String)
 signal next_stage_pressed
 
+const QUALITY := preload("res://script/card_quality_style.gd")
 const MAX_HP_BONUS: = 120.0
 const DEFENSE_BONUS: = 0.15
 const MOVE_SPEED_BONUS: = 35.0
@@ -62,7 +63,12 @@ func _refresh_reward_numbers() -> void:
 			"defense": text = CardNumbers.change(L10n.text("减伤"),player.damage_reduction*100,player.rest_defense_for(DEFENSE_BONUS)*100,"%",false).text
 			"move_speed": text = CardNumbers.change(L10n.text("移速"),player.effective_move_speed(),player.move_speed_for(player.SPEED+MOVE_SPEED_BONUS,player.growth_move_multiplier)).text
 			"cooldown": text = CardNumbers.change(L10n.text("冲刺冷却"),player.DASH_COOLDOWN*player.cooldown_scale,player.DASH_COOLDOWN*player.rest_cooldown_for(COOLDOWN_SCALE),"s").text + L10n.text("\n枪支使用相同冷却倍率")
-			_: text = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title)) + "\n" + str(preload("res://script/card_preview.gd").build(game,id).rows[0].text)
+			_:
+				text = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title))
+				if game.forge.enabled:
+					text += " · " + QUALITY.tier_name(0) + "\n" + game.forge.card_preview(id,0)
+				else:
+					text += "\n" + str(preload("res://script/card_preview.gd").build(game,id).rows[0].text)
 		button.set_meta("reward_label",text)
 
 func _build_ui() -> void :

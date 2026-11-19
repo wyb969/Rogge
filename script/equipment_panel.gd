@@ -1,5 +1,7 @@
 extends Control
 
+const QUALITY := preload("res://script/card_quality_style.gd")
+const QUALITY_FOOTPRINT := Vector2(110, 28)
 const SLOT_SIZE: = Vector2(48, 48)
 const ICON_SIZE: = Vector2(36, 36)
 const UI_FONT_SIZE: = 16
@@ -124,7 +126,16 @@ func _ready() -> void :
 	get_viewport().size_changed.connect(_fit_equipment)
 	reset_equipment()
 
+# Invoked on inventory changes, never in the per-frame HUD pass.
+func _quality_inventory() -> Variant:
+	var host := get_parent().get_parent()
+	var inventory: Variant = host.get("forge") if host else null
+	return inventory if inventory != null and inventory.enabled else null
+
 func _fit_equipment() -> void :
+	if _quality_inventory() != null:
+		_fit_quality_equipment()
+		return
 	var vp: = get_viewport().get_visible_rect().size
 	var count: = _slots.size()
 	slot_list.columns = 2 if count > 1 else 1
@@ -144,9 +155,34 @@ func _fit_equipment() -> void :
 	_arsenal_label.position = Vector2(0, icon_height + 4)
 	_growth_label.position = Vector2(0, icon_height + 4 + (20 if _arsenal_label.visible else 0))
 
+func _fit_quality_equipment() -> void:
+	var vp := get_viewport_rect().size
+	var hud := preload("res://script/boss_hud_layout.gd")
+	var ui: float = hud.display_scale(self)
+	var top: float = hud.header_top(self) + 148
+	var budget := maxf(90, vp.y/ui - top - 18)
+	var status_rows := int(_arsenal_label.visible) + int(_growth_label.visible)
+	var spacing := 3
+	var rows_fit := maxi(1, floori((budget - status_rows*20) / (QUALITY_FOOTPRINT.y + spacing)))
+	var max_columns := clampi(floori(vp.x/ui * 0.55 / QUALITY_FOOTPRINT.x), 2, 3)
+	slot_list.columns = clampi(ceili(float(_slots.size()) / rows_fit), 1, max_columns)
+	slot_list.add_theme_constant_override("h_separation", spacing)
+	slot_list.add_theme_constant_override("v_separation", spacing)
+	var rows := ceili(float(_slots.size()) / slot_list.columns)
+	var grid_size := Vector2(slot_list.columns * (QUALITY_FOOTPRINT.x+spacing)-spacing, rows * (QUALITY_FOOTPRINT.y+spacing))
+	var factor := minf(1.0, budget / maxf(1.0, grid_size.y+status_rows*20))
+	var width := maxf(grid_size.x, 128.0 if status_rows else 0.0)
+	scale = Vector2.ONE * factor * ui
+	global_position = Vector2(vp.x-width*scale.x-8*ui, top*ui)
+	slot_list.position = Vector2(width-grid_size.x, 0)
+	slot_list.size = grid_size
+	_arsenal_label.position = Vector2(0, grid_size.y)
+	_growth_label.position = Vector2(0, grid_size.y+(20 if _arsenal_label.visible else 0))
+
 func reset_equipment(classic_weapons := true) -> void :
 	reset_combo_effects()
 	for child in slot_list.get_children():
+		slot_list.remove_child(child)
 		child.queue_free()
 	_slots.clear()
 	set_arsenal_status(0, false, 0.0)
@@ -165,6 +201,72 @@ func apply_upgrade(upgrade_id: String) -> void :
 	else:
 		_add_or_set_level(upgrade_id, 1, true)
 	refresh_combo_borders()
+
+func set_card_count(id: String, count: int) -> void:
+	if not EQUIP_DEFS.has(id): return
+	if count > 0:
+		_add_or_set_level(id, count, false)
+		refresh_quality(id)
+	elif _slots.has(id):
+		_kill_slot_tween(id)
+		var slot: Control = _slots[id].root
+		slot_list.remove_child(slot)
+		slot.queue_free()
+		_slots.erase(id)
+		_fit_equipment()
+	refresh_combo_borders()
+
+func refresh_quality(id: String) -> void:
+	if not _slots.has(id): return
+	var inventory: Variant = _quality_inventory()
+	if inventory == null: return
+	var slot: Dictionary = _slots[id]
+	if not slot.has("counters"):
+		_add_quality_counters(slot)
+	var counts: Array = inventory.counts(id)
+	var lines := PackedStringArray([L10n.text(EQUIP_DEFS[id].title)])
+	for tier in QUALITY.COLORS.size():
+		var number: Label = slot.counters[tier]
+		number.text = str(counts[tier])
+		var font := number.get_theme_font("font")
+		var width := font.get_string_size(number.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11).x
+		number.add_theme_font_size_override("font_size", mini(11, maxi(6, floori(11.0 * 16.0 / maxf(width, 1.0)))))
+		number.size = Vector2(18,18)
+		lines.append("%s × %d" % [QUALITY.tier_name(tier), counts[tier]])
+	var hint := COMBOS.hint_for(id)
+	if not hint.is_empty(): lines.append(hint)
+	slot.icon_wrap.tooltip_text = "\n".join(lines)
+
+func _add_quality_counters(slot: Dictionary) -> void:
+	slot.root.custom_minimum_size = QUALITY_FOOTPRINT
+	slot.level_label.hide()
+	slot.icon_wrap.position = Vector2(2, 1)
+	slot.icon_wrap.size = Vector2(26, 26)
+	slot.icon_wrap.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	slot.icon.custom_minimum_size = Vector2(24, 24)
+	slot.icon.size = Vector2(24, 24)
+	slot.icon.position = Vector2(1, 1)
+	var counters: Array[Label] = []
+	for tier in QUALITY.COLORS.size():
+		var number := Label.new()
+		var style := StyleBoxFlat.new()
+		style.bg_color = QUALITY.COLORS[tier].darkened(0.69)
+		style.border_color = QUALITY.COLORS[tier]
+		style.set_border_width_all(1)
+		for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+			style.set_content_margin(side, 0)
+		number.clip_text = true
+		number.add_theme_stylebox_override("normal", style)
+		number.add_theme_color_override("font_color", Color.WHITE)
+		number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		number.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		number.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		UiFonts.apply_to_label(number, 11, true)
+		number.position = Vector2(30+tier*20, 5)
+		number.size = Vector2(18, 18)
+		slot.root.add_child(number)
+		counters.append(number)
+	slot.counters = counters
 
 func get_level(upgrade_id: String) -> int:
 	if _slots.has(upgrade_id):
@@ -293,6 +395,8 @@ func _add_or_set_level(upgrade_id: String, level: int, juice: bool = false) -> v
 		"combo_border": combo_border,
 		"juice_tween": null
 	}
+	if _quality_inventory() != null:
+		refresh_quality(upgrade_id)
 	_fit_equipment()
 
 	if juice:
@@ -399,5 +503,8 @@ func _play_new_slot_juice(upgrade_id: String) -> void :
 
 func refresh_language() -> void:
 	for id in _slots:
+		if _quality_inventory() != null:
+			refresh_quality(id)
+			continue
 		var hint:=COMBOS.hint_for(id)
 		_slots[id].icon_wrap.tooltip_text=L10n.text(EQUIP_DEFS[id].title)+("\n"+hint if not hint.is_empty() else "")

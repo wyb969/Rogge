@@ -12,10 +12,13 @@ static func damage_multiplier_for(rank: int) -> float:
 	return MASTER_MULTIPLIER if rank >= MAX_LEVEL else BASE_MULTIPLIER
 
 static func roll_multiplier(rank: int, hit: Dictionary, rng: RandomNumberGenerator) -> float:
-	if rank <= 0 or float(hit.get("damage", 0.0)) <= 0.0:
+	return roll_chance(chance_for(rank), damage_multiplier_for(rank), hit, rng)
+
+static func roll_chance(chance: float, multiplier: float, hit: Dictionary, rng: RandomNumberGenerator) -> float:
+	if chance <= 0.0 or float(hit.get("damage", 0.0)) <= 0.0:
 		return 1.0
 	if hit.get("from_status", false) or not hit.get("can_crit", true):
 		return 1.0
-	if rank < MAX_LEVEL and rng.randf() >= chance_for(rank):
+	if chance < 1.0 and rng.randf() >= chance:
 		return 1.0
-	return damage_multiplier_for(rank)
+	return multiplier

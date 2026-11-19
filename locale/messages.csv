@@ -1622,3 +1622,53 @@ Lv %d,Lv %d,等级 %d
 领取并出发,Equip and start,领取并出发
 重摇（%d）,Reroll (%d),重摇（%d）
 确定并出发,Confirm and start,确定并出发
+关后锻造,The forge,关后锻造
+成功预览,On success,成功预览
+这张卡已在炉中。,This copy is already in the forge.,这张卡已在炉中。
+成功！主卡升至 %s。,Success! Upgraded to %s.,成功！主卡升至 %s。
+降级。主卡降至 %s。,Downgrade. Main card is now %s.,降级。主卡降至 %s。
+保级。主卡仍为 %s。,Held. Main card remains %s.,保级。主卡仍为 %s。
+炉子已升级，成功率提高。,Furnace upgraded. Success rate increased.,炉子已升级，成功率提高。
+炉 Lv.%d  ·  金币 %d,Furnace Lv.%d  ·  Gold %d,炉 Lv.%d  ·  金币 %d
+升炉  %d/%d,Upgrade  %d/%d,升炉  %d/%d
+消耗无尽的永恒，永久提升锻造成功率。,Spend Endless Eternity for a permanent boost to success.,消耗无尽的永恒，永久提升锻造成功率。
+完成锻造,Finish,完成锻造
+跳过,Skip,跳过
+主卡,Main,主卡
+副卡 %d,Offer %d,副卡 %d
+点选,Select,点选
+可选,Optional,可选
+本关无尽的永恒 +%d   ·   装备 +%d   速度 +%d,Endless Eternity +%d   ·   Gear +%d   Speed +%d,本关无尽的永恒 +%d   ·   装备 +%d   速度 +%d
+   ·   通关另奖 +%d,   ·   Clear bonus +%d,   ·   通关另奖 +%d
+选主卡,Choose main card,选主卡
+选副卡 %d,Choose offering %d,选副卡 %d
+开始锻造 · %d 金币,Forge · %d gold,开始锻造 · %d 金币
+开始锻造,Forge,开始锻造
+从下方选一张主卡,Choose a main card below,从下方选一张主卡
+升级 %.1f%%   保级 %.1f%%   降级 %.1f%%,Up %.1f%%   Hold %.1f%%   Down %.1f%%,升级 %.1f%%   保级 %.1f%%   降级 %.1f%%
+装备评分  %d → %d,Gear score  %d → %d,装备评分  %d → %d
+消耗 %d 张副卡 · 评分 %d → %d,Consume %d offerings · Score %d → %d,消耗 %d 张副卡 · 评分 %d → %d
+青色,Cyan,青色
+紫色,Purple,紫色
+粉色,Pink,粉色
+橙色,Orange,橙色
+请选择一张主卡,Choose a main card,请选择一张主卡
+最多放入两张副卡,Select up to two offerings,最多放入两张副卡
+请选择不同的卡片,Choose distinct cards,请选择不同的卡片
+失去：%s,Lose: %s,失去：%s
+保级：%s,On hold: %s,保级：%s
+降级：%s,On downgrade: %s,降级：%s
+生机套装将失效,Growth set bonus will be lost,生机套装将失效
+军械套装将失效,Arsenal set bonus will be lost,军械套装将失效
+必须保留一种可以独立攻击的装备,Keep at least one piece of gear that can attack on its own,必须保留一种可以独立攻击的装备
+当前锻造已结束,This forge session has ended,当前锻造已结束
+金币不足,Not enough gold,金币不足
+材料保存失败，请重新结算,Could not save materials. Try collecting again.,材料保存失败，请重新结算
+无尽的永恒 +%d · 通关额外 +%d,Endless Eternity +%d · Clear bonus +%d,无尽的永恒 +%d · 通关额外 +%d
+锻造试用,Forge practice,锻造试用
+持有 %d / %d 张,Held %d / %d copies,持有 %d / %d 张
+持有 %d 张,Held %d copies,持有 %d 张
+持有张数已满，仍可锻造现有卡片。,Copy limit reached. Your cards can still be forged.,持有张数已满，仍可锻造现有卡片。
+再获得一张时,If you gain one more copy,再获得一张时
+提高直接攻击的暴击率。,Direct attacks gain critical chance.,提高直接攻击的暴击率。
+移动留下毒雾，持有五张时附加减速。,Leave poison behind as you move. Five copies also slow enemies.,移动留下毒雾，持有五张时附加减速。

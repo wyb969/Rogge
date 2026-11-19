@@ -3,6 +3,7 @@ const IDS := ["thorn_whip", "rune_bolt", "pulse_aura"]
 const MAX_LEVEL := 5
 const MAX_RUNES := 8
 const MAX_FLASHES := 12
+var forged_stats: Dictionary = {}
 var levels := {"thorn_whip":0,"rune_bolt":0,"pulse_aura":0}
 var cooldowns := {"thorn_whip":0.0,"rune_bolt":0.0,"pulse_aura":0.0}
 var runes: Array[Dictionary] = []
@@ -42,7 +43,24 @@ func upgrade(id: String) -> void:
 	cooldowns[id] = minf(float(cooldowns[id]),0.3)
 	set_physics_process(true)
 
+func set_forged_stats(id: String, rank: int, stats: Dictionary) -> void:
+	if not levels.has(id): return
+	if levels[id] == 0: cooldowns[id] = 0.3
+	levels[id] = rank
+	if rank > 0: forged_stats[id] = stats
+	else:
+		forged_stats.erase(id)
+		if id == "rune_bolt":
+			for rune in runes:
+				rune.active = false
+				rune.hit_times.clear()
+	if levels.values().all(func(value): return value == 0):
+		clear_combat_effects()
+		set_physics_process(false)
+	else: set_physics_process(true)
+
 func reset() -> void:
+	forged_stats.clear()
 	clear_combat_effects()
 	for id in IDS: levels[id] = 0
 	hits = 0
@@ -76,7 +94,7 @@ func _flash(kind: String, at: Vector2, radius: float, angle: float = 0.0) -> voi
 
 func cast(id: String) -> bool:
 	if not levels.has(id) or levels[id]<=0 or not game.variety._battle_active(): return false
-	var stats := stats_for(id,levels[id])
+	var stats: Dictionary = forged_stats[id] if forged_stats.has(id) else stats_for(id,levels[id])
 	var origin: Vector2 = game.player.global_position
 	_targets.clear()
 	var radius: float = stats.get("range",stats.get("radius",0.0))

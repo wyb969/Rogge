@@ -46,5 +46,9 @@ func show_result(stats: Dictionary) -> void :
 	kill_label.text = L10n.text("Kills: %d") % stats.get("kills", 0)
 	level_label.text = L10n.text("Level: %d    Stage: %d") % [stats.get("level", 1), int(stats.get("stage", 1))]
 
+	var earned: int = stats.get("forge_earned",-1)
+	if earned >= 0:
+		level_label.text += "\n" + L10n.text("无尽的永恒 +%d · 通关额外 +%d") % [earned-int(stats.forge_bonus),int(stats.forge_bonus)]
+
 func hide_result() -> void :
 	root_ui.hide()

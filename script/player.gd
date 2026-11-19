@@ -103,6 +103,7 @@ const LIFESTEAL_CAP_BASE: = 1.0
 const LIFESTEAL_CAP_STEP: = 1.0
 const LIFESTEAL_CAP_MAX: = 4.0
 const LIFESTEAL_MIN_HIT: = 8.0
+var forged_passives: Dictionary = {}
 var regen_level: int = 0
 var lifesteal_level: int = 0
 var monster_necklace_level: int = 0
@@ -225,12 +226,21 @@ func add_critical_glasses_level() -> void:
 	critical_glasses_level = mini(critical_glasses_level + 1, CRITICAL_GLASSES.MAX_LEVEL)
 
 func roll_critical_multiplier(hit: Dictionary) -> float:
+	if forged_passives.has("critical_glasses"):
+		var stats: Dictionary = forged_passives.critical_glasses
+		return CRITICAL_GLASSES.roll_chance(stats.chance, stats.crit, hit, _critical_rng)
 	return CRITICAL_GLASSES.roll_multiplier(critical_glasses_level, hit, _critical_rng)
 
 func reset_critical_glasses() -> void:
 	critical_glasses_level = 0
+	forged_passives.erase("critical_glasses")
 
 func monster_necklace_heal_for(level: int) -> float:
+	if level == monster_necklace_level and forged_passives.has("monster_necklace"):
+		return forged_passives.monster_necklace.heal
+	return necklace_base_heal(level)
+
+func necklace_base_heal(level: int) -> float:
 	return 5.0 * float(maxi(level, 0))
 
 func add_shield_level() -> void :
@@ -254,7 +264,7 @@ func shield_decay_for(level: int) -> float:
 func notify_enemy_killed() -> void :
 	if shield_level <= 0 or player_health <= 0.0:
 		return
-	shield += shield_gain_for(shield_level)
+	shield += float(forged_passives.shield_up.shield) if forged_passives.has("shield_up") else shield_gain_for(shield_level)
 	_shield_idle = 0.0
 	_sync_shield_visuals()
 
@@ -289,7 +299,7 @@ func _sync_shield_visuals() -> void :
 		shield_gem.visible = shield > 0.05 and player_health > 0.0
 
 func regen_amount() -> float:
-	return regen_amount_for(regen_level)
+	return float(forged_passives.regen_up.heal) if forged_passives.has("regen_up") else regen_amount_for(regen_level)
 
 func regen_amount_for(level: int) -> float:
 	if level <= 0:
@@ -325,6 +335,10 @@ func _tick_regen(delta: float) -> void :
 
 func notify_damage_dealt(dealt: float) -> void :
 	if lifesteal_level <= 0 or dealt < LIFESTEAL_MIN_HIT or player_health <= 0.0:
+		return
+	if forged_passives.has("lifesteal_up"):
+		var stats: Dictionary = forged_passives.lifesteal_up
+		heal(minf(stats.cap, stats.flat + dealt * stats.percent))
 		return
 	var percent: = lifesteal_percent_for(lifesteal_level)
 	var cap: = lifesteal_cap_for(lifesteal_level)
@@ -425,19 +439,22 @@ func get_side_damage_multiplier(target_global_pos: Vector2) -> float:
 
 	return side_multiplier_for(target_global_pos.x < global_position.x, left_fist_level, right_fist_level)
 
+func _fist_bonus(id: String, rank: int) -> float:
+	return float(forged_passives[id].bonus) if forged_passives.has(id) else get_fist_bonus(rank)
+
 func side_multiplier_for(target_on_left: bool, left_level: int, right_level: int) -> float:
 	var both: = left_level > 0 and right_level > 0
 	var mult: = 1.0
 
 	if left_level > 0:
 		if target_on_left:
-			mult *= 1.0 + get_fist_bonus(left_level)
+			mult *= 1.0 + _fist_bonus("left_fist",left_level)
 		elif not both:
 			mult *= 1.0 - get_fist_penalty(left_level)
 
 	if right_level > 0:
 		if not target_on_left:
-			mult *= 1.0 + get_fist_bonus(right_level)
+			mult *= 1.0 + _fist_bonus("right_fist",right_level)
 		elif not both:
 			mult *= 1.0 - get_fist_penalty(right_level)
 

@@ -15,6 +15,7 @@ extends Node2D
 var aim_tween: Tween
 var recoil_tween: Tween
 
+var forged_shot_range := Vector2i.ZERO
 var gun_base_position: Vector2
 
 @export var aim_duration: = 0.2
@@ -73,7 +74,8 @@ func shoot() -> void :
 	var lights: = preload("res://script/combat_lighting.gd").find(self)
 	if lights != null: lights.muzzle(fire_point.global_position, v.normalized(), fire_point)
 	instance.setVelocity(v)
-	instance.setBulletDemage(damage + randi_range(5, 15))
+	var shot_damage := randi_range(forged_shot_range.x, forged_shot_range.y) if forged_shot_range.y > 0 else damage + randi_range(5,15)
+	instance.setBulletDemage(shot_damage)
 	instance.pierce = pierce
 	instance.scale = Vector2.ONE * bullet_scale
 	var rotation_rad = v.angle()
@@ -180,6 +182,26 @@ func upgrade() -> void :
 
 	bullet_scale = (level - 1) * 0.01 + 0.4
 	_sync_cooldown_timers()
+
+func set_forged_rank(rank: int, stats: Dictionary) -> void:
+	var previous := level
+	level = rank
+	visible = rank > 0
+	set_process(visible)
+	set_physics_process(visible)
+	if rank == 0:
+		auto_attack_timer.stop()
+		cool_down_timer.stop()
+		cool_down = true
+		forged_shot_range = Vector2i.ZERO
+		line_2d.clear_points()
+		return
+	forged_shot_range = Vector2i(stats.lo, stats.hi)
+	damage = damage_for_upgrade(rank)
+	pierce = 3 if rank == 1 else rank + 3
+	bullet_scale = minf(1.0,0.4 + 0.01 * (rank-1))
+	_sync_cooldown_timers()
+	if previous == 0: auto_attack_timer.start()
 
 func apply_cooldown_scale(scale: float) -> void :
 	cooldown_scale = clampf(scale, 0.45, 1.0)

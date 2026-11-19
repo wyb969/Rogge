@@ -8,7 +8,10 @@ var _tracking_press := false
 var _dragged := false
 
 const CARD_SIZE: = Vector2(190, 307.42)
+const QUALITY := preload("res://script/card_quality_style.gd")
 var stats_label: RichTextLabel
+var rarity_label: Label
+var rarity_color := GamePalette.PLAYER_DAMAGE_WHITE
 
 @onready var title_label: Label = $VBoxContainer / TitleLabel
 @onready var desc_label: RichTextLabel = $VBoxContainer / DescLabel
@@ -40,6 +43,10 @@ func _ready() -> void :
 	stats_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stats_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	$VBoxContainer.add_child(stats_label)
+	rarity_label = Label.new()
+	rarity_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rarity_label.hide()
+	$VBoxContainer.add_child(rarity_label)
 
 func _configure_labels() -> void :
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -63,6 +70,13 @@ func _configure_labels() -> void :
 
 func setup(data: Dictionary):
 	upgrade_id = data["id"]
+	var tier := int(data.get("tier", -1))
+	rarity_color = QUALITY.COLORS[clampi(tier, 0, 3)] if tier >= 0 else GamePalette.PLAYER_DAMAGE_WHITE
+	rarity_label.visible = tier >= 0
+	if tier >= 0:
+		rarity_label.text = QUALITY.tier_name(tier)
+		rarity_label.add_theme_color_override("font_color", rarity_color)
+	stats_label.add_theme_color_override("default_color", rarity_color)
 
 	title_label.tooltip_text = L10n.text(str(data.get("title", "")))
 	# Keep the rank comparison visible instead of truncating it after a long name.
@@ -88,10 +102,17 @@ func set_display_size(dimensions: Vector2, ui: float, row_layout: bool) -> void:
 	var text_width := dimensions.x-padding*2
 	var icon_size := (40.0 if narrow else 72.0)*ui
 	var title_height := (19.0 if narrow else 24.0)*ui
-	var stat_height := 22*ui
+	var stat_height := 22.0 * ui
+	if rarity_label.visible:
+		# The forge comparison can span multiple lines on a three-column phone draft.
+		var measure := UiFonts.ui_bold().get_multiline_string_size(stats_label.get_parsed_text(), HORIZONTAL_ALIGNMENT_CENTER, text_width, int((9 if narrow else 12) * ui))
+		stat_height = clampf(measure.y + 8 * ui, 30 * ui, 72 * ui)
 	var body_height := minf(96*ui,dimensions.y-icon_size-title_height-stat_height-32*ui)
 	var block_height := icon_size+8*ui+title_height+stat_height+8*ui+body_height
 	var top := maxf(8*ui,(dimensions.y-block_height)*0.5)
+	if rarity_label.visible:
+		UiFonts.apply_to_label(rarity_label, int((9 if narrow else 12)*ui), true)
+		rarity_label.position = Vector2(padding,4*ui)
 	UiFonts.apply_to_label(title_label,int((10 if narrow else 16)*ui))
 	for label in [title_label,desc_label,stats_label]: label.custom_minimum_size=Vector2.ZERO
 	title_label.position=Vector2(padding,top+icon_size+8*ui)
@@ -165,4 +186,4 @@ func _style_description(font_size: int) -> void:
 	desc_label.add_theme_font_override("bold_font",UiFonts.ui_bold())
 	desc_label.add_theme_font_size_override("normal_font_size",font_size)
 	desc_label.add_theme_font_size_override("bold_font_size",font_size)
-	desc_label.add_theme_color_override("default_color",GamePalette.PLAYER_DAMAGE_WHITE)
+	desc_label.add_theme_color_override("default_color",rarity_color)

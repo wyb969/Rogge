@@ -3,6 +3,7 @@ extends Node2D
 const COURIER: = preload("res://scenes/loot_courier.tscn")
 const COURIER_DATA: = preload("res://resource/LootCourier.tres")
 const MAX_PULSES: = 8
+var forged_damage: Dictionary = {}
 var wind_level: = 0
 var echo_level: = 0
 var echo_charge: = 0
@@ -68,6 +69,7 @@ func _fit() -> void :
 	_charge_label.size = Vector2(vp.x * 0.5, 24 * ui_scale)
 
 func reset() -> void :
+	forged_damage.clear()
 	_generation += 1
 	_running = false
 	wind_level = 0
@@ -111,6 +113,20 @@ func upgrade(id: String) -> void :
 
 
 		if echo_charge >= int(echo_stats(echo_level).kills):
+			echo_charge = 0
+			_pending_echoes.append(_last_kill_at)
+	_refresh_charge()
+
+func set_forged_stats(id: String, rank: int, stats: Dictionary) -> void:
+	if rank > 0: forged_damage[id] = stats.damage
+	else: forged_damage.erase(id)
+	if id == "wind_emblem": wind_level = rank
+	else:
+		echo_level = rank
+		if rank == 0:
+			echo_charge = 0
+			_pending_echoes.clear()
+		elif echo_charge >= int(echo_stats(rank).kills):
 			echo_charge = 0
 			_pending_echoes.append(_last_kill_at)
 	_refresh_charge()
@@ -198,6 +214,8 @@ func _release_echo(at: Vector2, generation: int) -> void :
 	_in_echo = false
 
 func _hit_area(at: Vector2, stats: Dictionary, wind: bool) -> void :
+	var power_id := "wind_emblem" if wind else "echo_ember"
+	var damage: float = forged_damage.get(power_id,stats.damage)
 	pulses_cast += 1
 	var pulse: = _pulses[_slot]
 	pulse.at = at
@@ -207,7 +225,7 @@ func _hit_area(at: Vector2, stats: Dictionary, wind: bool) -> void :
 	_slot = (_slot + 1) % MAX_PULSES
 	queue_redraw()
 	for actor in CombatTargets.in_radius(at, stats.radius * stats.radius, game):
-		actor.apply_hit({"damage": stats.damage, "direction": (actor.global_position - at).normalized(), "effect": "wind_emblem" if wind else "echo_ember", "source": self})
+		actor.apply_hit({"damage": damage, "direction": (actor.global_position - at).normalized(), "effect": power_id, "source": self})
 	game.combat_feedback.spray(at, Vector2.ZERO, Color(0.5, 1, 0.95) if wind else Color(1, 0.68, 0.4), 8, 68)
 	AudioManager.play_juice("dash" if wind else "kill")
 

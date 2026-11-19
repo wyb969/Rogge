@@ -1,5 +1,6 @@
 extends Node2D
 
+var forged_stats: Dictionary = {}
 var level: = 0
 var strike_left: = 0.0
 var game: Node
@@ -25,10 +26,14 @@ func upgrade() -> void :
 		strike_left = 0.35
 
 func reset() -> void :
+	forged_stats.clear()
 	level = 0
 	strike_left = 0
 	if is_instance_valid(_audio):
 		_audio.stop()
+
+func _current_stats() -> Dictionary:
+	return stats_for(level) if forged_stats.is_empty() else forged_stats
 
 func _can_attack() -> bool:
 	if level <= 0 or get_tree().paused or not game.visible or not is_instance_valid(player) or player.player_health <= 0:
@@ -42,10 +47,10 @@ func _process(delta: float) -> void :
 		return
 	strike_left -= delta
 	if strike_left <= 0:
-		strike_left = stats_for(level).interval if strike() > 0 else 0.15
+		strike_left = _current_stats().interval if strike() > 0 else 0.15
 
 func targets_in_range() -> Array[Node2D]:
-	var stats: = stats_for(level)
+	var stats: = _current_stats()
 	return CombatTargets.nearest_visible(player.global_position, stats.range * stats.range, stats.bolts, game, get_viewport().get_visible_rect(), get_viewport().get_canvas_transform())
 
 func strike() -> int:
@@ -55,7 +60,7 @@ func strike() -> int:
 	if targets.is_empty():
 		return 0
 	var positions: Array[Vector2] = []
-	var stats: = stats_for(level)
+	var stats: = _current_stats()
 	for target in targets:
 		positions.append(target.global_position)
 

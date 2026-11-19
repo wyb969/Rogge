@@ -23,6 +23,7 @@ var rerolls: = 2
 var reroll_button: Button
 var reroll_hint: Label
 var _offered: Array = []
+var pending_quality: Dictionary = {}
 var _draft_rng: = RandomNumberGenerator.new()
 var _fit_pending: = false
 var _card_area: Control
@@ -198,7 +199,12 @@ func _display_options(excluded: Array) -> void :
 
 	var drawn: = _draw_upgrades(DRAW_COUNT, excluded)
 	_offered.clear()
+	pending_quality.clear()
+	var game := _get_game()
+	var forge: Variant = game.get("forge") if game else null
 	for data in drawn:
+		if forge != null and forge.enabled:
+			pending_quality[data.id] = forge.draft_tier()
 		_offered.append(str(data.id))
 		var card = card_scene.instantiate()
 		h_box_container.add_child(card)
@@ -208,6 +214,7 @@ func _display_options(excluded: Array) -> void :
 	_fit_cards()
 
 func reset_draft() -> void :
+	pending_quality.clear()
 	rerolls = 2
 	_offered.clear()
 	_refresh_reroll()
@@ -250,7 +257,7 @@ func _fit_cards() -> void:
 	var height_limit := available-60*ui
 	var width := minf((vp.x-48*ui-gap*(count-1))/count,minf(220*ui,height_limit/1.618))
 	# Preserve readable text on narrow phones; roomy screens use the golden ratio.
-	var height := minf(height_limit,maxf(width*1.618,200*ui))
+	var height := minf(height_limit,maxf(width*1.618,(228 if not pending_quality.is_empty() else 200)*ui))
 	for card in h_box_container.get_children(): card.set_display_size(Vector2(width,height),ui,false)
 	h_box_container.add_theme_constant_override("h_separation",int(gap))
 	h_box_container.add_theme_constant_override("v_separation",int(gap))
@@ -317,6 +324,14 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 	var result := data.duplicate(true)
 	var game := _get_game()
 	var id: String = result.get("id", "")
+	if game != null and pending_quality.has(id):
+		var tier: int = pending_quality[id]
+		result.tier = tier
+		result.title = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title))
+		result.short_desc = CodexData.quality_summary(id)
+		result.draft_line = game.forge.card_preview(id, tier)
+		result.desc = result.draft_line
+		return result
 	result.merge(PREVIEW.build(game, id), true)
 	result.short_desc = CodexData.summary(id)
 	result.compact_stats = CodexData.compact_stats(result.rows)
@@ -355,9 +370,11 @@ func _freeze_desc() -> String: return PREVIEW.build(_get_game(), "freeze_up").de
 
 func on_card_selected(upgrade_id: String):
 	if not visible: return
+	if not pending_quality.is_empty() and not pending_quality.has(upgrade_id): return
 	visible = false
-	upgrade_selected.emit(upgrade_id)
 	get_tree().paused = false
+	upgrade_selected.emit(upgrade_id)
+	if not visible: pending_quality.clear()
 
 
 func _on_button_pressed():

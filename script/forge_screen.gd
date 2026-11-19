@@ -1,0 +1,410 @@
+extends CanvasLayer
+
+signal finished
+
+const HEARTH := preload("res://rogge_art/environment-ui/forge/hearth.webp")
+const EQUIP := preload("res://script/equipment_panel.gd").EQUIP_DEFS
+const QUALITY := preload("res://script/card_quality_style.gd")
+const PAPER := Color("#efe0c6")
+const MUTED := Color("#b2a99a")
+const GOLD := Color("#edb36b")
+const PANEL := Color("#22262e")
+const EDGE := Color("#6b5545")
+const DARK := Color("#151a21")
+
+var game: Node
+var main_uid := -1
+var sub_uids: Array = [-1, -1]
+var active_slot := 0
+var has_forged := false
+var message := ""
+var backdrop := ColorRect.new()
+var board := Control.new()
+var inventory_scroll: ScrollContainer
+var deck: Control
+var quit_button: Button
+var action_button: Button
+var upgrade_button: Button
+var header_status: Label
+var inventory_hint: Label
+var outcome_label: Label
+var reward_label: Label
+var result_icon: TextureRect
+var result_title: Label
+var odds_label: Label
+var changes_label: Label
+var details_scroll: ScrollContainer
+var slot_buttons: Array[Button] = []
+var slot_icons: Array[TextureRect] = []
+var slot_titles: Array[Label] = []
+var slot_contents: Array[Label] = []
+var slot_clear: Array[Button] = []
+var fan_buttons: Array[Button] = []
+var groups: Array = []
+var inventory_offset := 0
+var portrait := false
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	layer = 170
+	visible = false
+	backdrop.color = Color("#11151bef")
+	add_child(backdrop)
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(board)
+	board.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	board.mouse_filter = Control.MOUSE_FILTER_STOP
+	get_viewport().size_changed.connect(_resize)
+
+func open_for(current_game: Node) -> void:
+	game = current_game
+	main_uid = -1
+	sub_uids = [-1, -1]
+	active_slot = 0
+	has_forged = false
+	inventory_offset = 0
+	message = ""
+	get_tree().paused = true
+	if has_node("/root/MobileInput"):
+		get_node("/root/MobileInput").clear_move()
+		get_node("/root/MobileInput").clear_dash()
+	show()
+	_build()
+
+func _resize() -> void:
+	if visible and is_instance_valid(game):
+		_build()
+
+func _place(node: Control, parent: Control, rect: Rect2) -> void:
+	parent.add_child(node)
+	node.position = rect.position
+	node.size = rect.size
+
+func _box(fill: Color, rim: Color, border := 2) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = fill
+	style.border_color = rim
+	style.set_border_width_all(border)
+	style.set_corner_radius_all(4)
+	return style
+
+func _panel(parent: Control, rect: Rect2, fill := PANEL, rim := EDGE) -> Panel:
+	var panel := Panel.new()
+	panel.add_theme_stylebox_override("panel", _box(fill, rim))
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_place(panel, parent, rect)
+	return panel
+
+func _label(parent: Control, rect: Rect2, value: String, font_size: int, color := PAPER, bold := false) -> Label:
+	var label := Label.new()
+	label.text = value
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.clip_text = true
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	UiFonts.apply_to_label(label, font_size, bold)
+	label.add_theme_color_override("font_color", color)
+	_place(label, parent, rect)
+	return label
+
+func _btn(parent: Control, rect: Rect2, value: String, callback: Callable, accent := false) -> Button:
+	var button := Button.new()
+	var fill := Color("#8b461e") if accent else Color("#313541")
+	var rim := GOLD if accent else Color("#786b5d")
+	button.text = value
+	UiFonts.apply_to_button(button, 17)
+	button.add_theme_stylebox_override("normal", _box(fill, rim))
+	button.add_theme_stylebox_override("hover", _box(fill.lightened(0.12), GOLD))
+	button.add_theme_stylebox_override("pressed", _box(fill.darkened(0.15), GOLD))
+	button.add_theme_stylebox_override("disabled", _box(Color("#303238"), Color("#575655")))
+	button.add_theme_color_override("font_disabled_color", Color("#a19a90"))
+	button.pressed.connect(callback)
+	_place(button, parent, rect)
+	return button
+
+func _image(parent: Control, rect: Rect2, texture: Texture2D = null) -> TextureRect:
+	var image := TextureRect.new()
+	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	image.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	image.texture = texture
+	image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_place(image, parent, rect)
+	return image
+
+func _build() -> void:
+	var last_view := get_viewport().get_visible_rect().size
+	portrait = last_view.y > last_view.x
+	if is_instance_valid(inventory_scroll) and inventory_scroll.is_inside_tree():
+		inventory_offset = inventory_scroll.scroll_horizontal
+	for child in board.get_children():
+		board.remove_child(child)
+		child.queue_free()
+	slot_buttons.clear()
+	slot_icons.clear()
+	slot_titles.clear()
+	slot_contents.clear()
+	slot_clear.clear()
+	fan_buttons.clear()
+	var design := Vector2(396, 750) if portrait else Vector2(900, 532)
+	var factor := minf(last_view.x / design.x, last_view.y / design.y)
+	board.scale = Vector2.ONE * factor
+	board.size = design
+	board.position = (last_view - design * factor) * 0.5
+	_panel(board, Rect2(Vector2.ZERO, design), Color("#191d24"), EDGE)
+	_label(board, Rect2(14, 4, 220, 34), L10n.text("关后锻造"), 25, PAPER, true)
+	quit_button = _btn(board, Rect2(design.x-112, 6, 100, 36), "", _finish)
+	header_status = _label(board, Rect2(14 if portrait else 255, 44 if portrait else 6, design.x-160 if portrait else 384, 32), "", 16, GOLD)
+	upgrade_button = _btn(board, Rect2(design.x-154 if portrait else 610, 44 if portrait else 6, 142 if portrait else 158, 34), "", _upgrade)
+	var left := _panel(board, Rect2(10,85,376,166) if portrait else Rect2(12,54,457,198))
+	var art_width := 97 if portrait else 149
+	var art := _image(left, Rect2(2,2,art_width,left.size.y-4), HEARTH)
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.clip_contents = true
+	var sx := art_width + 9
+	var sw := (left.size.x - sx - 14) / 3.0
+	for i in 3:
+		_build_slot(left, Rect2(sx + i * sw, 15, sw-4, left.size.y-29), i)
+	var result := _panel(board, Rect2(10,258,376,166) if portrait else Rect2(478,54,410,198))
+	_label(result, Rect2(12,5,160,24), L10n.text("成功预览"), 15, MUTED)
+	result_icon = _image(result, Rect2(11,36,48,48) if portrait else Rect2(13,37,58,58))
+	result_title = _label(result, Rect2(68,27,result.size.x-76,36), "", 20, PAPER, true)
+	odds_label = _label(result, Rect2(68,62,result.size.x-76,28), "", 14, GOLD)
+	details_scroll = ScrollContainer.new()
+	details_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_place(details_scroll, result, Rect2(12,88,result.size.x-24,result.size.y-95))
+	changes_label = Label.new()
+	changes_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	changes_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	UiFonts.apply_to_label(changes_label, 15)
+	changes_label.add_theme_color_override("font_color", PAPER)
+	details_scroll.add_child(changes_label)
+	var action_y := 432 if portrait else 260
+	var action_width := 178 if portrait else 251
+	action_button = _btn(board, Rect2(12,action_y,action_width,44), "", _attempt, true)
+	outcome_label = _label(board, Rect2(action_width+24, action_y-1, design.x-action_width-35, 47), "", 15, MUTED)
+	outcome_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var reward_y := 485 if portrait else 310
+	reward_label = _label(board, Rect2(14,reward_y,design.x-28,46 if portrait else 28), "", 15, GOLD)
+	reward_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var head_y := 539 if portrait else 343
+	inventory_hint = _label(board, Rect2(14,head_y,design.x-114,34), "", 17, PAPER, true)
+	_btn(board, Rect2(design.x-99,head_y,40,34), "‹", _scroll_deck.bind(-1))
+	_btn(board, Rect2(design.x-53,head_y,40,34), "›", _scroll_deck.bind(1))
+	inventory_scroll = ScrollContainer.new()
+	inventory_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	inventory_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	inventory_scroll.scroll_deadzone = 6
+	_place(inventory_scroll, board, Rect2(10,head_y+39,design.x-20,design.y-head_y-47))
+	deck = Control.new()
+	inventory_scroll.add_child(deck)
+	_refresh(true)
+
+func _build_slot(parent: Control, rect: Rect2, index: int) -> void:
+	var button := _btn(parent, rect, "", _select_slot.bind(index))
+	slot_buttons.append(button)
+	var title := _label(button, Rect2(2,2,rect.size.x-4,24), "", 14, MUTED)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	slot_titles.append(title)
+	var side := minf(rect.size.x-18, 62)
+	slot_icons.append(_image(button, Rect2((rect.size.x-side)*0.5, (rect.size.y-side)*0.48,side,side)))
+	var content := _label(button, Rect2(2,rect.size.y-43,rect.size.x-4,40), "", 14)
+	content.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	content.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	slot_contents.append(content)
+	if index > 0:
+		var clear := _btn(parent, Rect2(rect.end.x-23,rect.position.y-10,27,27), "×", _clear_sub.bind(index-1))
+		slot_clear.append(clear)
+
+func _card(uid: int) -> Dictionary:
+	for card: Dictionary in game.forge.cards:
+		if int(card.uid) == uid: return card
+	return {}
+
+func _subs() -> Array:
+	return sub_uids.filter(func(uid): return uid >= 0)
+
+func _title(id: String) -> String:
+	return L10n.text(str(EQUIP.get(id, {}).get("title", id)))
+
+func _tier_name(tier: int) -> String:
+	return QUALITY.tier_name(tier)
+
+func _tier_color(tier: int) -> Color:
+	return QUALITY.COLORS[clampi(tier, 0, 3)]
+
+func _select_slot(index: int) -> void:
+	active_slot = index
+	message = ""
+	_refresh(false)
+
+func _clear_sub(index: int) -> void:
+	sub_uids[index] = -1
+	active_slot = index + 1
+	message = ""
+	_refresh(false)
+
+func _pick(group: Dictionary) -> void:
+	var current: int = main_uid if active_slot == 0 else int(sub_uids[active_slot-1])
+	var occupied := _subs()
+	occupied.append(main_uid)
+	for uid: int in group.uids:
+		if uid in occupied and uid != current: continue
+		if active_slot == 0: main_uid = uid
+		else: sub_uids[active_slot-1] = uid
+		message = ""
+		_refresh(false)
+		return
+	message = L10n.text("这张卡已在炉中。")
+	_refresh(false)
+
+func _attempt() -> void:
+	if not visible or main_uid < 0: return
+	var result: Dictionary = game.forge.attempt(main_uid, _subs())
+	if not result.get("ok", false):
+		message = L10n.text(str(result.get("reason", "")))
+	else:
+		var tier := _tier_name(result.get("tier", 0))
+		match str(result.get("outcome","")):
+			"up": message = L10n.text("成功！主卡升至 %s。") % tier
+			"down": message = L10n.text("降级。主卡降至 %s。") % tier
+			_: message = L10n.text("保级。主卡仍为 %s。") % tier
+		sub_uids = [-1,-1]
+		has_forged = true
+		active_slot = 0
+	_refresh(true)
+
+func _upgrade() -> void:
+	if game.forge.upgrade_furnace():
+		message = L10n.text("炉子已升级，成功率提高。")
+	_refresh(false)
+
+func _finish() -> void:
+	if not visible: return
+	hide()
+	finished.emit()
+
+func _refresh(rebuild_deck: bool) -> void:
+	if not visible: return
+	var forge: Variant = game.forge
+	header_status.text = L10n.text("炉 Lv.%d  ·  金币 %d") % [forge.furnace_level, forge.wallet]
+	upgrade_button.text = L10n.text("升炉  %d/%d") % [forge.materials, forge.furnace_cost()]
+	upgrade_button.tooltip_text = L10n.text("消耗无尽的永恒，永久提升锻造成功率。")
+	upgrade_button.disabled = forge.materials < forge.furnace_cost()
+	quit_button.text = L10n.text("完成锻造") if has_forged else L10n.text("跳过")
+	var card := _card(main_uid)
+	for i in 3:
+		var assigned := card if i == 0 else _card(sub_uids[i-1])
+		var tint: Color = GOLD if i == active_slot else EDGE
+		slot_buttons[i].add_theme_stylebox_override("normal", _box(Color("#36302b") if i == active_slot else DARK, tint))
+		slot_titles[i].text = L10n.text("主卡") if i == 0 else L10n.text("副卡 %d") % i
+		if assigned.is_empty():
+			slot_icons[i].texture = null
+			slot_contents[i].text = L10n.text("点选") if i == 0 else L10n.text("可选")
+			slot_contents[i].add_theme_color_override("font_color", MUTED)
+		else:
+			slot_icons[i].texture = load(EQUIP[assigned.id].icon)
+			slot_contents[i].text = _tier_name(assigned.tier) + " " + _title(assigned.id)
+			slot_contents[i].add_theme_color_override("font_color", _tier_color(assigned.tier))
+		if i > 0: slot_clear[i-1].visible = not assigned.is_empty()
+	var info: Dictionary = forge.preview(main_uid, _subs()) if not card.is_empty() else {}
+	_fill_preview(card, info)
+	var reward: Dictionary = forge.reward_preview()
+	reward_label.text = L10n.text("本关无尽的永恒 +%d   ·   装备 +%d   速度 +%d") % [reward.get("total",0),reward.get("score",0),reward.get("speed",0)]
+	if reward.get("clear", 0) > 0:
+		reward_label.text += L10n.text("   ·   通关另奖 +%d") % reward.clear
+
+	inventory_hint.text = L10n.text("选主卡") if active_slot == 0 else L10n.text("选副卡 %d") % active_slot
+	if rebuild_deck: _build_deck()
+	else: _update_fan_selection()
+
+func _fill_preview(card: Dictionary, info: Dictionary) -> void:
+	var has_main := not card.is_empty()
+	outcome_label.add_theme_color_override("font_color", MUTED)
+	action_button.disabled = not info.get("valid", false)
+	action_button.text = L10n.text("开始锻造 · %d 金币") % int(info.get("cost",0)) if has_main else L10n.text("开始锻造")
+	if not has_main:
+		result_icon.texture = null
+		result_title.text = L10n.text("从下方选一张主卡")
+		result_title.add_theme_color_override("font_color", PAPER)
+		odds_label.text = ""
+		changes_label.text = ""
+		outcome_label.text = message
+		return
+	result_icon.texture = load(EQUIP[card.id].icon)
+	var next_tier: int = int(card.tier) + 1
+	result_title.text = _tier_name(card.tier) + " → " + _tier_name(next_tier) + "   " + _title(card.id)
+	result_title.add_theme_color_override("font_color", _tier_color(next_tier))
+	odds_label.text = L10n.text("升级 %.1f%%   保级 %.1f%%   降级 %.1f%%") % [info.get("up",0),info.get("stay",0),info.get("down",0)]
+	changes_label.text = str(info.get("changes", ""))
+	changes_label.tooltip_text = changes_label.text
+	var reason := str(info.get("reason",""))
+	outcome_label.text = L10n.text(reason) if not reason.is_empty() else message
+	var warnings: PackedStringArray = info.get("warnings", PackedStringArray())
+	if reason.is_empty() and not warnings.is_empty():
+		outcome_label.text = " · ".join(warnings)
+		outcome_label.add_theme_color_override("font_color", Color("#ffc390"))
+	if outcome_label.text.is_empty():
+		var offered := _subs().size()
+		if offered > 0:
+			outcome_label.text = L10n.text("消耗 %d 张副卡 · 评分 %d → %d") % [offered, info.get("score_before",0), info.get("score_after",0)]
+		else:
+			outcome_label.text = L10n.text("装备评分  %d → %d") % [info.get("score_before",0), info.get("score_after",0)]
+	outcome_label.tooltip_text = outcome_label.text
+
+func _build_deck() -> void:
+	if deck.get_child_count() > 0:
+		inventory_offset = inventory_scroll.scroll_horizontal
+	for child in deck.get_children():
+		deck.remove_child(child)
+		child.queue_free()
+	fan_buttons.clear()
+	groups.clear()
+	var by_kind := {}
+	for card: Dictionary in game.forge.cards:
+		var key := "%s/%d" % [card.id,card.tier]
+		if not by_kind.has(key):
+			by_kind[key] = groups.size()
+			groups.append({"id":card.id,"tier":card.tier,"uids":[]})
+		groups[int(by_kind[key])].uids.append(card.uid)
+	var count := groups.size()
+	var card_w := 94.0 if portrait else 102.0
+	var card_h := 106.0 if portrait else 109.0
+	var visible_width := inventory_scroll.size.x
+	var step := clampf((visible_width-card_w-26)/maxi(count-1,1), card_w*0.68, card_w+8)
+	var total := (count-1)*step + card_w
+	var start := maxf(12, (visible_width-total)*0.5)
+	deck.custom_minimum_size = Vector2(maxf(visible_width-1, total+26), card_h+28)
+	for i in count:
+		var group: Dictionary = groups[i]
+		var t := (float(i)/maxi(count-1,1)-0.5)*2.0 if count > 1 else 0.0
+		var button := _btn(deck, Rect2(start+i*step,5+absf(t)*9,card_w,card_h), "", _pick.bind(group))
+		button.mouse_filter = Control.MOUSE_FILTER_PASS
+		button.pivot_offset = Vector2(card_w*0.5,card_h)
+		button.rotation = deg_to_rad(t*4.5)
+		button.tooltip_text = _tier_name(group.tier)+" "+_title(group.id)
+		var top := _label(button, Rect2(5,1,card_w-10,22), _tier_name(group.tier), 13, _tier_color(group.tier), true)
+		top.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		if group.uids.size() > 1:
+			var copies := _label(button, Rect2(card_w-40,1,34,22), "×%d"%group.uids.size(), 13)
+			copies.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		_image(button, Rect2((card_w-44)*0.5,23,44,44), load(EQUIP[group.id].icon))
+		var name_label := _label(button, Rect2(3,69,card_w-6,37), _title(group.id), 14, PAPER, true)
+		name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		fan_buttons.append(button)
+	_update_fan_selection()
+	inventory_scroll.set_deferred("scroll_horizontal", inventory_offset)
+
+func _update_fan_selection() -> void:
+	for i in fan_buttons.size():
+		var group: Dictionary = groups[i]
+		var chosen: bool = main_uid in group.uids
+		for uid in sub_uids:
+			if uid in group.uids: chosen = true
+		var rim := _tier_color(group.tier)
+		var fill := Color("#453c32") if chosen else Color("#242c36")
+		fan_buttons[i].add_theme_stylebox_override("normal", _box(fill, rim, 4 if chosen else 2))
+
+func _scroll_deck(direction: int) -> void:
+	inventory_scroll.scroll_horizontal += direction * int(inventory_scroll.size.x * 0.67)
+	inventory_offset = inventory_scroll.scroll_horizontal

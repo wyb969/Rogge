@@ -1,6 +1,7 @@
 class_name CodexData
 extends RefCounted
 
+const QUALITY := preload("res://script/card_quality_style.gd")
 const EQUIPMENT = preload("res://script/equipment_panel.gd")
 const PREVIEW = preload("res://script/card_preview.gd")
 const POWERS = preload("res://script/beast_powers.gd")
@@ -342,12 +343,29 @@ static func description(entry: Dictionary, game: Node = null) -> String:
 	var body := L10n.text(entry.get("detail",""))
 	if entry.category == 0:
 		var cap: int = EQUIPMENT.EQUIP_DEFS[entry.id].get("max_level",0)
+		var inventory: Variant = game.get("forge") if is_instance_valid(game) else null
+		if not is_instance_valid(game) or (inventory != null and inventory.enabled):
+			if cap > 0 or entry.id in ["speed_up", "monster_necklace"]:
+				body = quality_summary(entry.id)
+			if not is_instance_valid(game):
+				return body + "\n\n" + L10n.text("在对局中打开词典，可查看当前数值与升级对比。")
+			var copies: int = game.equipment_panel.get_level(entry.id)
+			body += "\n\n" + (L10n.text("持有 %d / %d 张") % [copies, cap] if cap > 0 else L10n.text("持有 %d 张") % copies)
+			if cap > 0 and copies >= cap:
+				return body + "\n" + L10n.text("持有张数已满，仍可锻造现有卡片。")
+			body += "\n\n" + L10n.text("再获得一张时")
+			for tier in [0, 1]:
+				body += "\n%s  %s" % [QUALITY.tier_name(tier), inventory.card_preview(entry.id, tier)]
+			return body
 		body += "\n\n" + (L10n.text("最高等级：%d") % cap if cap>0 else L10n.text("可继续升级，具体数值随当前构筑变化。"))
-		if is_instance_valid(game):
-			if cap>0 and PREVIEW.rank_for(game,entry.id)>=cap: body += "\n"+L10n.text("已达到最高等级")
-			else: body += "\n\n"+L10n.text("当前构筑 · 下一次升级")+"\n"+str(PREVIEW.build(game,entry.id).desc)
-		else: body += "\n\n"+L10n.text("在对局中打开词典，可查看当前数值与升级对比。")
+		if cap>0 and PREVIEW.rank_for(game,entry.id)>=cap: body += "\n"+L10n.text("已达到最高等级")
+		else: body += "\n\n"+L10n.text("当前构筑 · 下一次升级")+"\n"+str(PREVIEW.build(game,entry.id).desc)
 	return body
+
+static func quality_summary(id: String) -> String:
+	if id == "critical_glasses": return L10n.text("提高直接攻击的暴击率。")
+	if id == "poison_trail": return L10n.text("移动留下毒雾，持有五张时附加减速。")
+	return summary(id)
 
 static func summary(id: String) -> String:
 	return L10n.text(CARDS.get(id,{}).get("summary",""))

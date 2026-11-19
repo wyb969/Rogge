@@ -5,6 +5,7 @@ const MAX_LEVEL := 5
 const MAX_SHOTS := 32
 const MAX_POOLS := 8
 const TICK := 0.5
+var forged_stats: Dictionary = {}
 var levels := {"silver_knife":0, "cross_blade":0, "holy_water":0}
 var cooldowns := {"silver_knife":0.0, "cross_blade":0.0, "holy_water":0.0}
 var shots: Array[Dictionary] = []
@@ -62,7 +63,26 @@ func clear_combat_effects() -> void:
 	set_process(false)
 	queue_redraw()
 
+func set_forged_stats(id: String, rank: int, stats: Dictionary) -> void:
+	if not levels.has(id): return
+	if levels[id] == 0: cooldowns[id] = 0.3
+	levels[id] = rank
+	if rank > 0: forged_stats[id] = stats
+	else:
+		forged_stats.erase(id)
+		for shot in shots:
+			if shot.kind == id:
+				shot.active = false
+				shot.hit_ids.clear()
+		if id == "holy_water":
+			for pool in pools: pool.active = false
+	if levels.values().all(func(value): return value == 0):
+		clear_combat_effects()
+		set_physics_process(false)
+	else: set_physics_process(true)
+
 func reset() -> void:
+	forged_stats.clear()
 	clear_combat_effects()
 	for id in IDS: levels[id] = 0
 	casts = 0
@@ -74,7 +94,7 @@ func _active() -> bool:
 
 func cast(id: String) -> bool:
 	if not levels.has(id) or levels[id] <= 0 or not _active(): return false
-	var stats := stats_for(id,levels[id])
+	var stats: Dictionary = forged_stats[id] if forged_stats.has(id) else stats_for(id,levels[id])
 	var origin: Vector2 = game.player.global_position
 	var target: Node2D = CombatTargets.nearest(origin,380.0*380.0)
 	if target == null or not game.is_ancestor_of(target): return false

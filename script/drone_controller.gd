@@ -3,6 +3,7 @@ extends Node2D
 @export var player: CharacterBody2D
 @export var drone_scene: PackedScene
 
+var forged_damage := -1.0
 var level: int = 0
 var summon_timer: float = 0.0
 var active_drones: Array[Node] = []
@@ -12,7 +13,24 @@ func upgrade() -> void :
 
 	_summon_wave()
 
+func set_forged_rank(rank: int, stats: Dictionary) -> void:
+	if rank == 0:
+		reset()
+		return
+	level = rank
+	forged_damage = stats.damage
+	_prune_drones()
+	var want := get_drone_count()
+	while active_drones.size() > want:
+		var drone: Node = active_drones.pop_back()
+		drone.queue_free()
+	for drone in active_drones:
+		drone.damage = forged_damage
+		drone.fire_cd = get_fire_cd()
+	_summon_wave()
+
 func reset() -> void :
+	forged_damage = -1.0
 	level = 0
 	summon_timer = 0.0
 	_clear_drones()
@@ -79,13 +97,15 @@ func get_fire_cd(rank: int = -1) -> float:
 	return maxf(0.28, 0.95 - float(rank) * 0.08)
 
 func get_damage(rank: int = -1) -> float:
+	if rank < 0 and forged_damage >= 0.0: return forged_damage
 	if rank < 0: rank = level
 
 	return 4.5 + float(rank) * 3.2
 
 func get_drone_count(rank: int = -1) -> int:
 	if rank < 0: rank = level
-	return 1 + int((rank - 1) / 3)
+	var count := 1 + int((rank - 1) / 3)
+	return mini(8, count) if forged_damage >= 0.0 else count
 
 func get_respawn_interval(rank: int = -1) -> float:
 	if rank < 0: rank = level

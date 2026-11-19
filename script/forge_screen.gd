@@ -331,7 +331,9 @@ func _selection_changed(index: int) -> void:
 	_refresh(false)
 
 func _select_slot(index: int) -> void:
-	if not working: _selection_changed(index)
+	if working: return
+	_selection_changed(index)
+	if _slot_uid(index) >= 0: feedback.card_cue(feedback.LIFT)
 
 func _remove_slot(index: int) -> void:
 	if working: return
@@ -348,6 +350,7 @@ func _exchange(source: int, target: int) -> void:
 	_assign(source,_slot_uid(target))
 	_assign(target,moving)
 	_selection_changed(target)
+	feedback.card_cue(feedback.SEAT)
 
 func _drop_group(group: Dictionary, target: int) -> void:
 	if working: return
@@ -356,6 +359,7 @@ func _drop_group(group: Dictionary, target: int) -> void:
 		if uid == current or (uid != main_uid and uid not in sub_uids):
 			_assign(target,uid)
 			_selection_changed(target)
+			if uid != current: feedback.card_cue(feedback.SEAT)
 			return
 	# Every copy is already in a slot. Move the first one and swap any displaced card.
 	for index in 3:
@@ -370,6 +374,7 @@ func _pick(group: Dictionary) -> void:
 		if uid == current or (uid != main_uid and uid not in sub_uids):
 			_assign(active_slot,uid)
 			_selection_changed(active_slot)
+			if uid != current: feedback.card_cue(feedback.TAP)
 			return
 	message = L10n.text("这张卡已在炉中。")
 	_refresh(false)
@@ -568,6 +573,7 @@ func _fill_preview(card: Dictionary, info: Dictionary) -> void:
 	outcome_label.tooltip_text = outcome_label.text
 
 func _build_deck() -> void:
+	inputs.clear_light()
 	if deck.get_child_count() > 0:
 		inventory_offset = inventory_scroll.scroll_horizontal
 	for child in deck.get_children():
@@ -598,14 +604,18 @@ func _build_deck() -> void:
 		button.pivot_offset = Vector2(card_w*0.5,card_h)
 		button.rotation = deg_to_rad(t*4.5)
 		button.tooltip_text = _tier_name(group.tier)+" "+_title(group.id)
-		if group.tier >= 2: _foil_tier(_foil(button),group.tier)
-		var top := _label(button, Rect2(5,1,card_w-10,22), _tier_name(group.tier), 13, _tier_color(group.tier), true)
+		# Keep the hit rectangle still while its visible face lifts toward the light.
+		var face := _panel(button,Rect2(Vector2.ZERO,button.size))
+		face.name = "CardFace"
+		face.pivot_offset = button.size * 0.5
+		if group.tier >= 2: _foil_tier(_foil(face),group.tier)
+		var top := _label(face, Rect2(5,1,card_w-10,22), _tier_name(group.tier), 13, _tier_color(group.tier), true)
 		top.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		if group.uids.size() > 1:
-			var copies := _label(button, Rect2(card_w-40,1,34,22), "×%d"%group.uids.size(), 13)
+			var copies := _label(face, Rect2(card_w-40,1,34,22), "×%d"%group.uids.size(), 13)
 			copies.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		_image(button, Rect2((card_w-44)*0.5,23,44,44), load(EQUIP[group.id].icon))
-		var name_label := _label(button, Rect2(3,69,card_w-6,37), _title(group.id), 14, PAPER, true)
+		_image(face, Rect2((card_w-44)*0.5,23,44,44), load(EQUIP[group.id].icon))
+		var name_label := _label(face, Rect2(3,69,card_w-6,37), _title(group.id), 14, PAPER, true)
 		name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		fan_buttons.append(button)
@@ -620,7 +630,8 @@ func _update_fan_selection() -> void:
 			if uid in group.uids: chosen = true
 		var rim := _tier_color(group.tier)
 		var fill := Color("#453c32") if chosen else Color("#242c36")
-		fan_buttons[i].add_theme_stylebox_override("normal", _box(fill, rim, 4 if chosen else 2))
+		var style := _box(fill, rim, 4 if chosen else 2)
+		fan_buttons[i].get_node("CardFace").add_theme_stylebox_override("panel",style)
 
 func _scroll_deck(direction: int) -> void:
 	inventory_scroll.scroll_horizontal += direction * int(inventory_scroll.size.x * 0.67)

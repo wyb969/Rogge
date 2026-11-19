@@ -23,9 +23,56 @@ var outline: Panel
 var target_slot := NO_TARGET
 var owns_cursor := false
 var hand_closed := false
+var light := ColorRect.new()
+var light_material := ShaderMaterial.new()
+var tilted_face: Control
 
 func _ready() -> void:
 	forge = get_parent()
+	light_material.shader = preload("res://shaders/forge_card_glint.gdshader")
+	light.material = light_material
+	light.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	light.hide()
+	add_child(light)
+	get_window().mouse_exited.connect(clear_light)
+
+func clear_light() -> void:
+	if is_instance_valid(tilted_face):
+		tilted_face.scale = Vector2.ONE
+		tilted_face.rotation = 0
+		tilted_face.position = Vector2.ZERO
+	tilted_face = null
+	if light.get_parent() != self:
+		light.reparent(self,false)
+	light.hide()
+
+func _light_card(surface: Control, tilt: Vector2, lift_face := false) -> void:
+	if light.get_parent() != surface:
+		clear_light()
+		light.reparent(surface,false)
+		light.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		light.show()
+	if lift_face:
+		tilted_face = surface
+		surface.rotation = tilt.x * 0.075
+		surface.scale = Vector2(1.035 - absf(tilt.x)*0.035, 1.03 - absf(tilt.y)*0.025)
+		surface.position = Vector2(tilt.x*2, -3 + tilt.y*1.5)
+	light_material.set_shader_parameter("tilt",tilt)
+
+func _hover(point: Vector2) -> void:
+	var button: Button
+	var slot := _slot_at(point)
+	if slot >= 0 and forge._slot_uid(slot) >= 0:
+		button = forge.slot_buttons[slot]
+	else:
+		var index := _fan_index_at(point)
+		if index >= 0: button = forge.fan_buttons[index]
+	if button == null:
+		clear_light()
+		return
+	var tilt := (button.make_canvas_position_local(point)/button.size*2.0-Vector2.ONE).clamp(-Vector2.ONE,Vector2.ONE)
+	var face := button.get_node_or_null("CardFace") as Control
+	_light_card(face if face else button,tilt,face != null)
 
 func _menu_visible() -> bool:
 	var host := get_tree().current_scene
@@ -57,6 +104,7 @@ func _exit_tree() -> void:
 	_restore_cursor()
 
 func cancel() -> void:
+	clear_light()
 	for control in [ghost, outline]:
 		if is_instance_valid(control):
 			control.hide()
@@ -71,7 +119,7 @@ func cancel() -> void:
 	if hand_closed: _show_hand(false)
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and (pointer != IDLE or hand_closed):
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_node_ready():
 		cancel()
 
 func _inside(control: Control, point: Vector2) -> bool:
@@ -83,11 +131,15 @@ func _slot_at(point: Vector2) -> int:
 	return NO_TARGET
 
 func _group_at(point: Vector2) -> Dictionary:
-	if not _inside(forge.inventory_scroll,point): return {}
-	if _inside(forge.inventory_scroll.get_h_scroll_bar(),point): return {}
+	var index := _fan_index_at(point)
+	return {} if index < 0 else forge.groups[index]
+
+func _fan_index_at(point: Vector2) -> int:
+	if not _inside(forge.inventory_scroll,point): return -1
+	if _inside(forge.inventory_scroll.get_h_scroll_bar(),point): return -1
 	for i in range(forge.fan_buttons.size()-1,-1,-1):
-		if _inside(forge.fan_buttons[i],point): return forge.groups[i]
-	return {}
+		if _inside(forge.fan_buttons[i],point): return i
+	return -1
 
 func _source_at(point: Vector2) -> bool:
 	for clear_button in forge.slot_clear:
@@ -116,6 +168,8 @@ func _input(event: InputEvent) -> void:
 	if event.device == InputEvent.DEVICE_ID_EMULATION:
 		if pointer != IDLE or _source_at(point): get_viewport().set_input_as_handled()
 		return
+	if pointer == IDLE and (event is InputEventMouseMotion or event is InputEventScreenTouch or event is InputEventMouseButton):
+		_hover(point)
 	var id := MOUSE
 	if event is InputEventScreenTouch or event is InputEventScreenDrag: id = event.index
 	if event is InputEventMouseButton and event.button_index != MOUSE_BUTTON_LEFT: return
@@ -137,6 +191,7 @@ func _input(event: InputEvent) -> void:
 				if origin_slot >= 0 and _slot_at(point) == origin_slot: forge._select_slot(origin_slot)
 				elif origin_slot == DECK and _group_at(point) == source_group: forge._pick(source_group)
 			cancel()
+			if id == MOUSE: _hover(point)
 		elif pointer == IDLE: return
 	elif id == pointer:
 		_move(point)
@@ -154,11 +209,13 @@ func _move(point: Vector2) -> void:
 		if delta.length() < DEADZONE: return
 		if pointer != MOUSE and origin_slot == DECK and not above_fan and absf(delta.x) > 1.2 * absf(delta.y):
 			panning = true
+			clear_light()
 		else:
 			var uid: int = forge._slot_uid(origin_slot) if origin_slot >= 0 else source_group.uids[0]
 			var card: Dictionary = forge._card(uid)
 			if card.is_empty(): return
 			dragging = true
+			if origin_slot == DECK: forge.feedback.card_cue(forge.feedback.LIFT)
 			ghost = forge._panel(forge.board,Rect2(0,0,72,84),Color("#30323bf0"),forge._tier_color(card.tier))
 			ghost.z_index = 15
 			forge._image(ghost,Rect2(12,5,48,48),load(forge.EQUIP[card.id].icon))
@@ -168,6 +225,10 @@ func _move(point: Vector2) -> void:
 		forge.inventory_scroll.scroll_horizontal = initial_scroll-roundi(delta.x)
 		return
 	ghost.position = forge.board.make_canvas_position_local(point)-Vector2(36,66)
+	var tilt := (delta/140.0).clamp(-Vector2.ONE,Vector2.ONE)
+	ghost.pivot_offset = Vector2(36,66)
+	ghost.rotation = tilt.x * 0.09
+	_light_card(ghost,tilt)
 	var target := _slot_at(point)
 	if target == target_slot: return
 	target_slot = target

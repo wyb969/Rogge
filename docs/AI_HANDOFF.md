@@ -1,5 +1,9 @@
 # ROGGE 开发交接
 
+## 锻造配乐 · 20261119-190641
+
+锻造专曲《炉心脉冲》为原创 144 BPM、16 小节的 Ogg 循环。关底锻造和 Debug 试用共用 Music 总线和既有 Web 音频解锁；锤击和揭晓通过 SFX 短暂压低音乐。正式结算后恢复当前关卡音乐，练习结束后返回菜单音乐。牌堆卡面随指针倾斜，暖反光和冷色边光随触点移动；点选使用合成的拿放声，槽间互换只响一次。普通、粉、橙成功声分别延长至 2.04、2.52、3.30 秒，金光读取实际音频进度，保级和降级使用不同落音。相关回归在 tools/smoke_forge.gd 和 tools/smoke_forge_drag.gd。
+
 ## 2026-11-19 锻造首张卡与鼠标指针
 
 itch 网页版 **20261119-185039** 已切换到原 HTML 通道的 build **2436485**，游戏源码 `d95f6a2`。[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/44510280383)的 36 组检查通过，[通道核验](https://github.com/wyb969/PixelFishing/actions/runs/44510682603)确认为当前版本。公开页面返回的 JS、WASM、PCK 与构建清单逐项匹配。 [验证记录](validation/itch-forge-pointer-20261119-185039.json)。

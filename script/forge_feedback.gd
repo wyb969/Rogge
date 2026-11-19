@@ -1,5 +1,8 @@
 extends Control
 
+const LIFT := preload("res://assest/sounds/forge_lift.ogg")
+const SEAT := preload("res://assest/sounds/forge_seat.ogg")
+const TAP := preload("res://assest/sounds/forge_tap.ogg")
 const WORK := preload("res://assest/sounds/forge_work.ogg")
 const UPGRADE := preload("res://assest/sounds/forge_upgrade.ogg")
 const PINK_CHIME := preload("res://assest/sounds/forge_pink.ogg")
@@ -14,6 +17,7 @@ const ROSE := Color("#ff82c6")
 const ORCHID := Color("#c089ed")
 const PEARL := Color("#fff0fd")
 
+var _card_voice := AudioStreamPlayer.new()
 var _voice := AudioStreamPlayer.new()
 var _frame := Control.new()
 var _ink := Control.new()
@@ -28,6 +32,9 @@ func _ready() -> void:
 	AudioManager.configure_sfx(_voice)
 	_voice.volume_db = -6.5
 	add_child(_voice)
+	AudioManager.configure_sfx(_card_voice)
+	_card_voice.volume_db = -11.0
+	add_child(_card_voice)
 	_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_frame.clip_contents = true
 	add_child(_frame)
@@ -39,9 +46,15 @@ func _ready() -> void:
 	set_process(false)
 
 func reveal_seconds(tier: int) -> float:
-	if tier >= 3: return 1.65
-	if tier == 2: return 1.25
-	return 0.92
+	return _success_chime(tier).get_length()
+
+func _success_chime(tier: int) -> AudioStream:
+	if tier >= 3: return ORANGE_CHIME
+	return PINK_CHIME if tier == 2 else UPGRADE
+
+func card_cue(stream: AudioStream) -> void:
+	_card_voice.stream = stream
+	_card_voice.play()
 
 func start_work() -> void:
 	cancel_fx()
@@ -54,7 +67,7 @@ func reveal(outcome: String, target: Rect2, tier := 1) -> void:
 			_tier = tier
 			_duration = reveal_seconds(tier)
 			_elapsed = 0.0
-			_play(ORANGE_CHIME if tier >= 3 else (PINK_CHIME if tier == 2 else UPGRADE))
+			_play(_success_chime(tier))
 			move_target(target)
 			_frame.show()
 			set_process(true)
@@ -70,17 +83,19 @@ func move_target(target: Rect2) -> void:
 	_frame.size = target.size + Vector2(4,4)
 
 func _play(stream: AudioStream) -> void:
+	AudioManager.focus_sfx(stream.get_length())
 	_voice.stream = stream
 	_voice.play()
 
 func cancel_fx() -> void:
+	_card_voice.stop()
 	_voice.stop()
 	_elapsed = _duration
 	_frame.hide()
 	set_process(false)
 
-func _process(delta: float) -> void:
-	_elapsed += delta
+func _process(_delta: float) -> void:
+	_elapsed = _voice.get_playback_position() if _voice.playing else _duration
 	if _elapsed >= _duration:
 		_frame.hide()
 		set_process(false)
@@ -106,6 +121,11 @@ func _paint() -> void:
 	else:
 		_strike_rays(t, fade)
 	_sweep(t, white, fade)
+	# A second glint answers the cadence; the last rim fades with the ringing chord.
+	var coda := smoothstep(0.48, 0.67, t) * (1.0 - smoothstep(0.7, 1.0, t))
+	var glint := Vector2(lerpf(18.0, 81.0, smoothstep(0.5, 0.91, t)), 22)
+	_star(glint, 11 * coda, 18 * coda, white, coda)
+	_ink.draw_rect(Rect2(2,2,96,96), Color(rim, 0.6 * coda), false, 2)
 
 func _sweep(t: float, color: Color, fade: float) -> void:
 	var head := lerpf(-18,160,t / 0.54)

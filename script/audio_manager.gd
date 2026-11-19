@@ -17,7 +17,7 @@ extends Node
 @onready var drone_attack_audio_player: AudioStreamPlayer = $DroneAttackAudioPlayer
 @onready var drone_despawn_audio_player: AudioStreamPlayer = $DroneDespawnAudioPlayer
 
-enum BgmKind{NONE, MENU, GAME, BOSS}
+enum BgmKind{NONE, MENU, GAME, BOSS, FORGE}
 signal game_track_changed(title: String)
 signal pickup_tone_played(pitch: float)
 const ADVENTURE_MUSIC: = preload("res://script/adventure_music.gd")
@@ -28,6 +28,8 @@ var weather_audio: Node
 const BEAST_MUSIC: = [preload("res://assest/sounds/beast_tide_8bit.wav"), preload("res://assest/sounds/beast_thunder_8bit.wav"), preload("res://assest/sounds/beast_gale_8bit.wav"), preload("res://assest/sounds/beast_aegis_8bit.wav")]
 const FIRST_BOSS_MUSIC: = preload("res://assest/sounds/boss_bgm.mp3")
 const KNIGHT_BOSS_MUSIC: = preload("res://assest/sounds/knight_boss_8bit.wav")
+
+const FORGE_MUSIC := preload("res://assest/music/crucible_pulse.ogg")
 
 var _desired_bgm: BgmKind = BgmKind.NONE
 var _web_audio_unlocked: bool = false
@@ -290,16 +292,22 @@ func preview_game_bgm_next() -> void :
 	_ensure_web_ready()
 
 func play_boss_bgm(stage: int = 1) -> void :
-	_desired_bgm = BgmKind.BOSS
+	var selected: AudioStream = BEAST_MUSIC[clampi(stage - 3, 0, 3)] if stage >= 3 else (KNIGHT_BOSS_MUSIC if stage == 2 else FIRST_BOSS_MUSIC)
+	_play_encounter_bgm(BgmKind.BOSS, selected, -4.0 if stage >= 2 else 0.0)
 	_ensure_web_ready()
+
+func play_forge_bgm() -> void:
+	_play_encounter_bgm(BgmKind.FORGE, FORGE_MUSIC, -6.0)
+
+func _play_encounter_bgm(kind: BgmKind, selected: AudioStream, gain_db: float) -> void:
+	_desired_bgm = kind
 	_stop_result_sfx()
 	menu_audio_player.stop()
 	adventure_music.stop()
-	var selected: AudioStream = BEAST_MUSIC[clampi(stage - 3, 0, 3)] if stage >= 3 else (KNIGHT_BOSS_MUSIC if stage == 2 else FIRST_BOSS_MUSIC)
 	if boss_audio_player.stream != selected:
 		boss_audio_player.stop()
 		boss_audio_player.stream = selected
-	boss_audio_player.volume_db = -4.0 if stage >= 2 else 0.0
+	boss_audio_player.volume_db = gain_db
 	_play_bgm_player(boss_audio_player)
 
 func play_boss_warning() -> void :
@@ -371,7 +379,7 @@ func _resume_desired_bgm(force: bool = false) -> void :
 				menu_audio_player.play()
 		BgmKind.GAME:
 			adventure_music.unlock()
-		BgmKind.BOSS:
+		BgmKind.BOSS, BgmKind.FORGE:
 			if force or not boss_audio_player.playing:
 				boss_audio_player.play()
 		_:

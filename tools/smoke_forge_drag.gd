@@ -61,6 +61,8 @@ func run() -> void:
 	main.find_child("DebugButton").pressed.emit()
 	main.find_child("DebugForgeButton").pressed.emit()
 	await frames(25)
+	var audio := root.get_node("AudioManager")
+	expect(audio._desired_bgm == audio.BgmKind.FORGE and audio.boss_audio_player.playing, "practice uses the same forge score")
 	ui = main.game.forge_screen
 	var forge: Variant = main.game.forge
 	# Web enables the combat joystick even when the user plays with a mouse.
@@ -77,6 +79,27 @@ func run() -> void:
 	expect(inputs.owns_cursor and not inputs.hand_closed,"forge opens with an open hand")
 	var first: int = ui.groups[0].uids[0]
 	var second: int = ui.groups[1].uids[0]
+	var fx: Control = ui.feedback
+	move(spot(0),false)
+	var face: Control = ui.fan_buttons[0].get_node("CardFace")
+	expect(inputs.light.visible and inputs.light.get_parent() == face and face.rotation != 0.0,"hover lights and tilts the first card")
+	var tilt: Vector2 = inputs.light_material.get_shader_parameter("tilt")
+	move(spot(0)+Vector2(15,4),false)
+	expect(tilt != inputs.light_material.get_shader_parameter("tilt"),"light follows pointer position on the same card")
+	move(Vector2.ZERO,false)
+	expect(not inputs.light.visible and face.rotation == 0.0,"leaving returns the face to rest")
+	for tier in [1,2,3]:
+		fx.reveal("up",Rect2(0,0,80,100),tier)
+		var seconds: float = [2.04,2.52,3.30][tier-1]
+		expect(absf(fx._duration-seconds)<0.01 and is_equal_approx(fx._duration,fx._voice.stream.get_length()),"success timing matches its doubled chime")
+	for outcome in ["down","stay"]:
+		fx.reveal(outcome,Rect2(),1)
+		expect(fx._voice.playing and fx._voice.stream == (fx.DOWNGRADE if outcome=="down" else fx.HOLD),"unsuccessful outcomes each sound")
+	fx.cancel_fx()
+	press(spot(0),true)
+	press(spot(0),false)
+	expect(fx._card_voice.stream == fx.TAP and ui.main_uid == first,"tap-to-seat plays its combined cue")
+	ui._remove_slot(0)
 	for i in 3:
 		var source := spot(0)
 		press(source,true)
@@ -103,7 +126,13 @@ func run() -> void:
 	expect(ui.main_uid == first,"mouse deck to main")
 	drag(spot(1),slot(1),true)
 	expect(ui.sub_uids[0] == second,"touch deck to offering")
-	drag(slot(1),slot(0))
+	var prior_cue = fx._card_voice.get_stream_playback()
+	press(slot(1),true)
+	move(slot(1)+Vector2(0,20),false)
+	expect(fx._card_voice.get_stream_playback() == prior_cue,"starting a slot transfer emits no extra pickup")
+	move(slot(0),false)
+	press(slot(0),false)
+	expect(fx._card_voice.stream == fx.SEAT and fx._card_voice.get_stream_playback() != prior_cue,"exchange plays one new seating sound")
 	expect(ui.main_uid == second and ui.sub_uids[0] == first,"occupied slot exchange")
 	drag(slot(1),slot(2),true)
 	expect(ui.sub_uids == [-1,first],"touch move to empty slot")

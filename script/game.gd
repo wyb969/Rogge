@@ -586,6 +586,7 @@ func _open_forge() -> void:
 		add_child(forge_screen)
 		forge_screen.finished.connect(_on_forge_finished)
 	forge_screen.open_for(self)
+	AudioManager.play_forge_bgm()
 
 func _on_forge_finished() -> void:
 	if not _forge_due: return
@@ -600,6 +601,7 @@ func _on_forge_finished() -> void:
 	if forge.training:
 		get_tree().current_scene._on_game_end_ui_main_menu_pressed()
 		return
+	AudioManager.play_game_bgm(spawner.stage)
 	_show_next_reward()
 
 func _open_rest_hub() -> void :

@@ -178,6 +178,9 @@ func _run() -> void:
 	if not game.forge_screen.visible:
 		_finish()
 		return
+	var audio := root.get_node("AudioManager")
+	expect(audio._desired_bgm == audio.BgmKind.FORGE and audio.boss_audio_player.playing and audio.boss_audio_player.stream == audio.FORGE_MUSIC, "normal paused forge plays its own score")
+	expect(audio.FORGE_MUSIC.loop and audio.boss_audio_player.bus == &"Music" and not audio.adventure_music.active, "loop uses the music slider and replaces the adventure voices")
 	await verify_crafting()
 	var reward: Dictionary = forge.reward_preview()
 	expect(reward.total > 0 and reward.score >= reward.speed, "gear makes the largest stage award and fast time is secondary")
@@ -187,6 +190,7 @@ func _run() -> void:
 	expect(not is_instance_valid(game.forge_screen.supply_button) and normal_wallet == forge.wallet and owned == forge.cards.size(), "normal stage forge cannot grant practice supplies")
 	await finish_forge()
 	expect(forge.materials > materials_before and game.rest_hub.visible, "skipping or closing the forge banks this stage and continues to rest")
+	expect(audio._desired_bgm == audio.BgmKind.GAME and not audio.boss_audio_player.playing, "rest resumes stage music after the forge")
 	var earned: int = forge.materials
 	forge.settle_stage()
 	expect(forge.materials == earned, "repeated settlement cannot pay twice")

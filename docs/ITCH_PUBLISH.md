@@ -35,6 +35,10 @@ GitHub artifact 默认保留 30 天。长期需要的源码、验证概要和发
 
 ## 最新发布记录
 
+itch 网页版 **20261119-185039** 已切换到原 HTML 通道的 build **2436485**，游戏源码 `d95f6a2`。[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/44510280383)的 36 组检查通过，[通道核验](https://github.com/wyb969/PixelFishing/actions/runs/44510682603)确认为当前版本。公开页面返回的 JS、WASM、PCK 与构建清单逐项匹配。 [下载 Web 包与日志](https://github.com/wyb969/PixelFishing/actions/runs/44510280383/artifacts/14524335068)。
+
+### 2026-11-19 锻造系统发布
+
 2026-11-19 发布 **20261119-174407**，内容为卡片品质、关后锻造及练习补给，游戏源码为 `ff57983`。原网页通道的 itch build 为 **2436221**。[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/44502957016)通过 36 组检查，[通道核验](https://github.com/wyb969/PixelFishing/actions/runs/44503494998)确认该版本为当前构建。 下载方式见[构建包和验证日志](https://github.com/wyb969/PixelFishing/actions/runs/44502957016/artifacts/14518286582)。另有锻造流程、战斗数值与拖拽/补给三组测试。
 
 ### 2026-11-19 早期发布

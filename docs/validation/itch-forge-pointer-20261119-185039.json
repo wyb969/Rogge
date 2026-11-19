@@ -1,0 +1,36 @@
+{
+  "source": "d95f6a2b086f7658794749dda57626bebcf57548",
+  "version": "20261119-185039",
+  "target": "ybwangrogger/rogue-white:html",
+  "upload": 20115514,
+  "build": 2436485,
+  "previous_build": 2436221,
+  "head_state": "completed",
+  "pending": false,
+  "publish": "https://github.com/wyb969/PixelFishing/actions/runs/44510280383",
+  "verify": "https://github.com/wyb969/PixelFishing/actions/runs/44510682603",
+  "artifact": "https://github.com/wyb969/PixelFishing/actions/runs/44510280383/artifacts/14524335068",
+  "packed_suites": 36,
+  "forge_gesture_checks": 36,
+  "system_mouse": "Godot 4.7 X11 window: OS mouse input moved first card to the main slot. Cursor pixel hashes matched cross, open, grip, open, cross.",
+  "physical_phone": false,
+  "live_hashes_verified": true,
+  "live": {
+    "page": "https://ybwangrogger.itch.io/rogue-white",
+    "embed": "https://html.itch.zone/html/20115514-2436485/index.html?v=1795085995",
+    "files": {
+      "index.wasm": {
+        "bytes": 39509339,
+        "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+      },
+      "index.pck": {
+        "bytes": 30268300,
+        "sha256": "39339f4e5f0640cb4b6d1c729b6bc25dee5ef74f68881ecbf31b7c7fc03061e7"
+      }
+    }
+  }
+}

@@ -27,13 +27,17 @@ GitHub artifact 默认保留 30 天。长期需要的源码、验证概要和发
 
 ## 验证边界
 
-当前发布流程选取33项实际PCK检查：`smoke_menu_layout`、`smoke_session_toolbar`、`smoke_equipment_badges`、`smoke_three_cards`、`smoke_codex_menu`、`smoke_localization`、`smoke_debug_menu`、`smoke_palette_cards`、`smoke_combat_balance`、`smoke_relic_weapons`、`smoke_arcane_weapons`、`smoke_star_chain`、`smoke_weather_lighting`、`smoke_winter`、`smoke_world_snow`、`smoke_environment_surface`、`smoke_surface_art`、`smoke_wind_trails`、`smoke_electric_grid`、`smoke_minefield`、`smoke_ice_spikes`、`smoke_airborne_feedback`、`smoke_stage_hazards`、`smoke_boss_control_guard`、`smoke_boss_rhythm`、`smoke_beasts`、`smoke_trials`、`smoke_wooden_trial`、`smoke_resource_bounds`、`smoke_hero_art`、`smoke_stage_monster_art`、`smoke_runtime_optimization`、`smoke_boss_facing`。覆盖本次新增的武器、环境、危险地形、中英菜单/词典与卡片，以及Boss控制、试炼和资源上限。检查脚本以当前发布工作流为准；由原生Godot加载实际Web PCK，不等于浏览器/Safari实测，也不是全量回归。
+当前发布流程选取36项检查：`smoke_menu_layout`、`smoke_session_toolbar`、`smoke_equipment_badges`、`smoke_three_cards`、`smoke_codex_menu`、`smoke_localization`、`smoke_debug_menu`、`smoke_palette_cards`、`smoke_combat_balance`、`smoke_relic_weapons`、`smoke_arcane_weapons`、`smoke_star_chain`、`smoke_weather_lighting`、`smoke_winter`、`smoke_world_snow`、`smoke_environment_surface`、`smoke_surface_art`、`smoke_wind_trails`、`smoke_electric_grid`、`smoke_minefield`、`smoke_ice_spikes`、`smoke_airborne_feedback`、`smoke_stage_hazards`、`smoke_boss_control_guard`、`smoke_boss_rhythm`、`smoke_beasts`、`smoke_trials`、`smoke_wooden_trial`、`smoke_resource_bounds`、`smoke_hero_art`、`smoke_stage_monster_art`、`smoke_runtime_optimization`、`smoke_boss_facing`。覆盖本次新增的武器、环境、危险地形、中英菜单/词典与卡片，以及Boss控制、试炼和资源上限。检查脚本以当前发布工作流为准；由原生Godot加载实际Web PCK，不等于浏览器/Safari实测，也不是全量回归。
 
 现存脚本退出时的 ObjectDB / resources-in-use 警告保留在报告中，与运行中脚本/解析错误分开。若出现新运行时错误或检查断言失败，发布任务必须停止；不得将其混同于已知退出警告忽略。
 
 发布只替换当前通道的最新版本。Butler 构建历史可供回退；“页面只有一个当前上传项”不要求删除这些历史记录。上传游戏也不会自动修改商店文案、封面或字体。
 
 ## 最新发布记录
+
+2026-11-19 发布 **20261119-174407**，内容为卡片品质、关后锻造及练习补给，游戏源码为 `ff57983`。原网页通道的 itch build 为 **2436221**。[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/44502957016)通过 36 组检查，[通道核验](https://github.com/wyb969/PixelFishing/actions/runs/44503494998)确认该版本为当前构建。 下载方式见[构建包和验证日志](https://github.com/wyb969/PixelFishing/actions/runs/44502957016/artifacts/14518286582)。另有锻造流程、战斗数值与拖拽/补给三组测试。
+
+### 2026-11-19 早期发布
 
 2026-11-19 发布 **`20261119-103149`**。master 源码 `b10a0eb4599719fa7c8fb5635845848822a03c6e` 包含四位可选角色、逐关主题怪物及八套精细 Boss 动作。[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/44447222306)通过 33 项 Web PCK 检查，并产出[可下载的 Web 包和验证日志](https://github.com/wyb969/PixelFishing/actions/runs/44447222306/artifacts/14494321532)。[通道检查](https://github.com/wyb969/PixelFishing/actions/runs/44447598120)确认原 HTML 通道的 build **2433648** 已完成，待处理队列为空。
 

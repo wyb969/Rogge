@@ -1620,3 +1620,5 @@ Lv %d,Lv %d,等级 %d
 角色自带：%s,Hero perk: %s,角色自带：%s
 随行武器：%s,Sidearm: %s,随行武器：%s
 领取并出发,Equip and start,领取并出发
+重摇（%d）,Reroll (%d),重摇（%d）
+确定并出发,Confirm and start,确定并出发

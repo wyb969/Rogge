@@ -2,6 +2,7 @@ extends "res://script/treasure_lottery.gd"
 
 signal loadout_claimed(loadout: Dictionary)
 
+const MAX_REROLLS := 3
 const EQUIPMENT := preload("res://script/equipment_panel.gd").EQUIP_DEFS
 const COMBOS := preload("res://script/equipment_combos.gd")
 const FOIL := preload("res://shaders/starter_foil.gdshader")
@@ -9,6 +10,8 @@ const FOIL := preload("res://shaders/starter_foil.gdshader")
 const WEAPONS := ["axe_up", "circle_up", "gun_up", "drone_up", "bomb", "rune_bolt",
 	"silver_knife", "cross_blade", "holy_water", "pulse_aura", "thorn_whip", "lightning_ring"]
 var loadout: Dictionary = {}
+var rerolls_left := MAX_REROLLS
+var _reroll: Button
 var foil := ShaderMaterial.new()
 var previous_icons: Array[TextureRect] = []
 var roll_tweens: Array[Tween] = []
@@ -43,6 +46,19 @@ static func draw_loadout(perk: String, percentile: int) -> Dictionary:
 
 func _ready() -> void:
 	super._ready()
+	var actions := HBoxContainer.new()
+	actions.add_theme_constant_override("separation", 12)
+	_box.add_child(actions)
+	_reroll = Button.new()
+	_reroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_reroll.add_theme_stylebox_override("normal", _style(Color("#28374a"), Color("#809bb3")))
+	_reroll.add_theme_stylebox_override("disabled", _style(Color("#35383b"), Color("#575a5d")))
+	_reroll.add_theme_color_override("font_disabled_color", Color("#aaadb0"))
+	_reroll.pressed.connect(_on_reroll_pressed)
+	actions.add_child(_reroll)
+	_button.reparent(actions, false)
+	_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_fit()
 	foil.shader = FOIL
 	_burst.set_process(false)
 	for i in _reels.size():
@@ -63,9 +79,26 @@ func _ready() -> void:
 		card.id = id
 		_pool.append(card)
 
+func _fit() -> void:
+	super._fit()
+	if _reroll:
+		UiFonts.apply_to_button(_reroll, _button.get_theme_font_size("font_size"))
+		_reroll.custom_minimum_size.y = _button.custom_minimum_size.y
+
 func open_for(perk: String) -> void:
-	loadout = draw_loadout(perk, randi_range(0, 99))
+	rerolls_left = MAX_REROLLS
+	_reroll.hide()
 	claimed = false
+	_prepare_roll(perk)
+	get_tree().paused = true
+	root_clear_movement()
+	show()
+	_button.grab_focus()
+
+func _prepare_roll(perk: String) -> void:
+	loadout = draw_loadout(perk, randi_range(0, 99))
+	_reroll.disabled = true
+	_reroll.text = L10n.text("重摇（%d）") % rerolls_left
 	spinning = false
 	revealed = false
 	spin_time = 0.0
@@ -83,10 +116,12 @@ func open_for(perk: String) -> void:
 		_reel_panels[i].material = null
 	_button.text = L10n.text("转动老虎机")
 	_button.disabled = false
-	get_tree().paused = true
-	root_clear_movement()
-	show()
-	_button.grab_focus()
+
+func _on_reroll_pressed() -> void:
+	if not visible or claimed or not revealed or spinning or rerolls_left <= 0: return
+	rerolls_left -= 1
+	_prepare_roll(loadout.perk)
+	super._on_button()
 
 func item_name(id: String) -> String:
 	return L10n.text(EQUIPMENT[id].title)
@@ -137,7 +172,9 @@ func _reveal() -> void:
 	_detail.text = L10n.text("角色自带：%s") % item_name(loadout.perk)
 	if loadout.backup != "":
 		_detail.text += "\n" + L10n.text("随行武器：%s") % item_name(loadout.backup)
-	_button.text = L10n.text("领取并出发")
+	_reroll.show()
+	_reroll.disabled = rerolls_left == 0
+	_button.text = L10n.text("确定并出发")
 	_button.disabled = false
 	_fanfare.pitch_scale = 1.15 if jackpot else 1.0
 	_fanfare.play()

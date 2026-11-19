@@ -9,8 +9,9 @@ func check(value: bool, message: String) -> void:
 func _init() -> void:
 	call_deferred("_run")
 
-func claim_start(main: Node, perk: String, group: String = "") -> Dictionary:
+func claim_start(main: Node, perk: String, group: String = "", rerolls: int = 0) -> Dictionary:
 	var machine: Node = main.starter_lottery
+	check(machine.rerolls_left == 3 and not machine._reroll.visible, "new opening has three unused rerolls")
 	if group == "mixed":
 		machine.loadout = machine.draw_loadout(perk, 99)
 	elif group != "":
@@ -24,6 +25,33 @@ func claim_start(main: Node, perk: String, group: String = "") -> Dictionary:
 	machine._button.pressed.emit()
 	check(machine.spinning and machine._button.disabled, "single spin locked")
 	machine._process(3.0)
+	await process_frame
+	await process_frame
+	var left: Rect2 = machine._reroll.get_global_rect()
+	var right: Rect2 = machine._button.get_global_rect()
+	check(left.end.x <= right.position.x and is_equal_approx(left.position.y, right.position.y), "reroll left and confirm right")
+	check(root.get_visible_rect().encloses(left) and root.get_visible_rect().encloses(right), "both actions fit")
+	check(machine._reroll.visible and not machine._reroll.disabled and machine.rerolls_left == 3, "first spin is free")
+	for i in rerolls:
+		var old: Dictionary = machine.loadout
+		for down in [true, false]:
+			var click := InputEventMouseButton.new()
+			click.button_index = MOUSE_BUTTON_LEFT
+			click.position = left.get_center()
+			click.pressed = down
+			root.push_input(click, true)
+		check(machine.spinning and machine._reroll.disabled and machine._button.disabled, "clicking reroll locks both buttons")
+		check(not is_same(machine.loadout, old) and machine.loadout.perk == perk, "reroll draws fresh gear for the same hero")
+		check(machine._panel.material == null, "reroll clears previous jackpot foil")
+		machine._on_reroll_pressed()
+		machine._on_button()
+		check(machine.visible and paused and not machine.claimed and machine.rerolls_left == 2-i, "extra inputs cannot spend or claim mid-spin")
+		machine._process(3.0)
+		check(machine._reroll.disabled == (i == 2) and not machine._button.disabled, "only an exhausted reroll stays disabled")
+		if machine.rerolls_left == 0:
+			var final_draw: Dictionary = machine.loadout
+			machine._on_reroll_pressed()
+			check(is_same(machine.loadout, final_draw) and machine.rerolls_left == 0, "fourth reroll rejected")
 	for i in 3:
 		var id: String = machine.loadout.cards[i]
 		check(machine._reels[i].texture.resource_path == machine.EQUIPMENT[id].icon, "reel matches item")
@@ -74,7 +102,7 @@ func _run() -> void:
 		picker.cards[index].pressed.emit()
 		await process_frame
 		await process_frame
-		var rolled := await claim_start(main, ROSTER.START_CARDS[index], ["growth", "mixed", "arsenal", "mixed"][index])
+		var rolled := await claim_start(main, ROSTER.START_CARDS[index], ["growth", "mixed", "arsenal", "mixed"][index], [0, 3, 0, 1][index])
 		var g: Node = main.game
 		var expected: Array = rolled.cards.duplicate()
 		expected.append(rolled.perk)
@@ -106,7 +134,7 @@ func _run() -> void:
 		check(g.player.animated_sprite_2d.animation == &"dash_right","right dash")
 		if index == 3:
 			await main._on_game_end_ui_retry_pressed()
-			await claim_start(main, ROSTER.START_CARDS[index])
+			await claim_start(main, ROSTER.START_CARDS[index], "", 2)
 			check(main.game.player.animated_sprite_2d.sprite_frames == ROSTER.FRAMES[index] and main.game.equipment_panel.get_level("rune_bolt") == 1,"Retry retains choice exactly once")
 		await main._on_game_end_ui_main_menu_pressed()
 
@@ -144,7 +172,7 @@ func _run() -> void:
 		poses._physics_process(0.2)
 		check(poses.current == &"idle", "no motion returns to idle")
 		actor.free()
-	if errors.is_empty(): print("HERO ART OK: four heroes, 30/70 roll boundary, both live sets, rank zero weapons, retry, icons, directional actions, eight boss walk/idle skins")
+	if errors.is_empty(): print("HERO ART OK: four heroes, 30/70 roll boundary, three rerolls, final-only equipment, both live sets, rank zero weapons, retry, icons, directional actions, eight boss walk/idle skins")
 	else:
 		for error in errors: push_error(error)
 	quit(0 if errors.is_empty() else 1)

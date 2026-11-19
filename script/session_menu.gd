@@ -68,6 +68,7 @@ func _input(event: InputEvent) -> void:
 		open_menu()
 
 func _can_open() -> bool:
+	if is_instance_valid(host.game) and is_instance_valid(host.game.forge_screen) and host.game.forge_screen.working: return false
 	return is_instance_valid(host.game) and host.game.visible and host.game.player.player_health>0 and not host._starting_run and not host._returning_home and not host.game._death_presented
 
 func _begin(from: String) -> void:

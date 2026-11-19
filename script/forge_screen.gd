@@ -43,6 +43,14 @@ var fan_buttons: Array[Button] = []
 var groups: Array = []
 var inventory_offset := 0
 var portrait := false
+var working := false
+var work_tween: Tween
+var result_tween: Tween
+var result_visible := false
+var hearth: TextureRect
+var preview_heading: Label
+var inputs := preload("res://script/forge_drag.gd").new()
+var feedback := preload("res://script/forge_feedback.gd").new()
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -54,9 +62,29 @@ func _ready() -> void:
 	add_child(board)
 	board.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	board.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(inputs)
+	board.add_child(feedback)
+	feedback.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	get_viewport().size_changed.connect(_resize)
+	visibility_changed.connect(_visibility_changed)
+
+func _visibility_changed() -> void:
+	if not visible: _stop_effects()
+
+func _stop_effects() -> void:
+	inputs.cancel()
+	if is_instance_valid(work_tween): work_tween.kill()
+	if is_instance_valid(result_tween): result_tween.kill()
+	working = false
+	result_visible = false
+	feedback.cancel_fx()
+
+func _exit_tree() -> void:
+	if is_instance_valid(work_tween): work_tween.kill()
+	if is_instance_valid(result_tween): result_tween.kill()
 
 func open_for(current_game: Node) -> void:
+	_stop_effects()
 	game = current_game
 	main_uid = -1
 	sub_uids = [-1, -1]
@@ -132,11 +160,13 @@ func _image(parent: Control, rect: Rect2, texture: Texture2D = null) -> TextureR
 	return image
 
 func _build() -> void:
+	inputs.cancel()
 	var last_view := get_viewport().get_visible_rect().size
 	portrait = last_view.y > last_view.x
 	if is_instance_valid(inventory_scroll) and inventory_scroll.is_inside_tree():
 		inventory_offset = inventory_scroll.scroll_horizontal
 	for child in board.get_children():
+		if child == feedback: continue
 		board.remove_child(child)
 		child.queue_free()
 	slot_buttons.clear()
@@ -157,15 +187,16 @@ func _build() -> void:
 	upgrade_button = _btn(board, Rect2(design.x-154 if portrait else 610, 44 if portrait else 6, 142 if portrait else 158, 34), "", _upgrade)
 	var left := _panel(board, Rect2(10,85,376,166) if portrait else Rect2(12,54,457,198))
 	var art_width := 97 if portrait else 149
-	var art := _image(left, Rect2(2,2,art_width,left.size.y-4), HEARTH)
-	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	art.clip_contents = true
+	hearth = _image(left, Rect2(2,2,art_width,left.size.y-4), HEARTH)
+	hearth.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	hearth.clip_contents = true
+	hearth.pivot_offset = Vector2(hearth.size.x * 0.5, hearth.size.y * 0.9)
 	var sx := art_width + 9
 	var sw := (left.size.x - sx - 14) / 3.0
 	for i in 3:
 		_build_slot(left, Rect2(sx + i * sw, 15, sw-4, left.size.y-29), i)
 	var result := _panel(board, Rect2(10,258,376,166) if portrait else Rect2(478,54,410,198))
-	_label(result, Rect2(12,5,160,24), L10n.text("成功预览"), 15, MUTED)
+	preview_heading = _label(result, Rect2(12,5,160,24), L10n.text("成功预览"), 15, MUTED)
 	result_icon = _image(result, Rect2(11,36,48,48) if portrait else Rect2(13,37,58,58))
 	result_title = _label(result, Rect2(68,27,result.size.x-76,36), "", 20, PAPER, true)
 	odds_label = _label(result, Rect2(68,62,result.size.x-76,28), "", 14, GOLD)
@@ -187,7 +218,7 @@ func _build() -> void:
 	reward_label = _label(board, Rect2(14,reward_y,design.x-28,46 if portrait else 28), "", 15, GOLD)
 	reward_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var head_y := 539 if portrait else 343
-	inventory_hint = _label(board, Rect2(14,head_y,design.x-114,34), "", 17, PAPER, true)
+	inventory_hint = _label(board, Rect2(14,head_y,design.x-114,34), "", 16, PAPER, true)
 	_btn(board, Rect2(design.x-99,head_y,40,34), "‹", _scroll_deck.bind(-1))
 	_btn(board, Rect2(design.x-53,head_y,40,34), "›", _scroll_deck.bind(1))
 	inventory_scroll = ScrollContainer.new()
@@ -197,7 +228,9 @@ func _build() -> void:
 	_place(inventory_scroll, board, Rect2(10,head_y+39,design.x-20,design.y-head_y-47))
 	deck = Control.new()
 	inventory_scroll.add_child(deck)
+	board.move_child(feedback,-1)
 	_refresh(true)
+	if result_visible: feedback.move_target(_result_rect())
 
 func _build_slot(parent: Control, rect: Rect2, index: int) -> void:
 	var button := _btn(parent, rect, "", _select_slot.bind(index))
@@ -232,54 +265,133 @@ func _tier_name(tier: int) -> String:
 func _tier_color(tier: int) -> Color:
 	return QUALITY.COLORS[clampi(tier, 0, 3)]
 
-func _select_slot(index: int) -> void:
+func _slot_uid(index: int) -> int:
+	return main_uid if index == 0 else int(sub_uids[index-1])
+
+func _assign(index: int, uid: int) -> void:
+	if index == 0: main_uid = uid
+	else: sub_uids[index-1] = uid
+
+func _selection_changed(index: int) -> void:
+	if result_visible:
+		result_visible = false
+		result_tween.kill()
+		feedback.cancel_fx()
 	active_slot = index
 	message = ""
 	_refresh(false)
 
+func _select_slot(index: int) -> void:
+	if not working: _selection_changed(index)
+
+func _remove_slot(index: int) -> void:
+	if working: return
+	_assign(index,-1)
+	_selection_changed(index)
+
 func _clear_sub(index: int) -> void:
-	sub_uids[index] = -1
-	active_slot = index + 1
-	message = ""
-	_refresh(false)
+	_remove_slot(index+1)
+
+func _exchange(source: int, target: int) -> void:
+	if working or source == target: return
+	var moving := _slot_uid(source)
+	if moving < 0: return
+	_assign(source,_slot_uid(target))
+	_assign(target,moving)
+	_selection_changed(target)
+
+func _drop_group(group: Dictionary, target: int) -> void:
+	if working: return
+	var current := _slot_uid(target)
+	for uid: int in group.uids:
+		if uid == current or (uid != main_uid and uid not in sub_uids):
+			_assign(target,uid)
+			_selection_changed(target)
+			return
+	# Every copy is already in a slot. Move the first one and swap any displaced card.
+	for index in 3:
+		if _slot_uid(index) in group.uids:
+			_exchange(index,target)
+			return
 
 func _pick(group: Dictionary) -> void:
-	var current: int = main_uid if active_slot == 0 else int(sub_uids[active_slot-1])
-	var occupied := _subs()
-	occupied.append(main_uid)
+	if working: return
+	var current := _slot_uid(active_slot)
 	for uid: int in group.uids:
-		if uid in occupied and uid != current: continue
-		if active_slot == 0: main_uid = uid
-		else: sub_uids[active_slot-1] = uid
-		message = ""
-		_refresh(false)
-		return
+		if uid == current or (uid != main_uid and uid not in sub_uids):
+			_assign(active_slot,uid)
+			_selection_changed(active_slot)
+			return
 	message = L10n.text("这张卡已在炉中。")
 	_refresh(false)
 
 func _attempt() -> void:
-	if not visible or main_uid < 0: return
-	var result: Dictionary = game.forge.attempt(main_uid, _subs())
-	if not result.get("ok", false):
-		message = L10n.text(str(result.get("reason", "")))
-	else:
-		var tier := _tier_name(result.get("tier", 0))
-		match str(result.get("outcome","")):
-			"up": message = L10n.text("成功！主卡升至 %s。") % tier
-			"down": message = L10n.text("降级。主卡降至 %s。") % tier
-			_: message = L10n.text("保级。主卡仍为 %s。") % tier
-		sub_uids = [-1,-1]
-		has_forged = true
-		active_slot = 0
+	if not visible or working or main_uid < 0: return
+	var offerings := _subs()
+	var plan: Dictionary = game.forge.preview(main_uid,offerings)
+	if not plan.valid:
+		message = plan.reason
+		_refresh(false)
+		return
+	inputs.cancel()
+	if is_instance_valid(result_tween): result_tween.kill()
+	result_visible = false
+	working = true
+	message = ""
+	_refresh(false)
+	feedback.start_work()
+	work_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_ignore_time_scale(true)
+	work_tween.tween_method(_shake_hearth,0.0,1.5,1.5)
+	work_tween.tween_callback(_resolve.bind(main_uid,offerings))
+
+func _shake_hearth(seconds: float) -> void:
+	# Three fast impacts with a damped tail. Only the furnace art moves.
+	var phase := fposmod(seconds-0.10,0.50)
+	var force := exp(-phase*13.0) if seconds >= 0.10 else 0.0
+	hearth.position = Vector2(2,2) + Vector2(roundf(sin(phase*78.0)*5.0*force),-roundf(4.0*force))
+	hearth.rotation = sin(phase*62.0)*0.035*force
+
+func _resolve(uid: int, offerings: Array) -> void:
+	if not working or not visible: return
+	working = false
+	hearth.position = Vector2(2,2)
+	hearth.rotation = 0.0
+	var result: Dictionary = game.forge.attempt(uid,offerings)
+	if not result.get("ok",false):
+		message = L10n.text(str(result.get("reason","")))
+		_refresh(false)
+		return
+	var tier := _tier_name(result.tier)
+	match str(result.outcome):
+		"up": message = L10n.text("成功！主卡升至 %s。") % tier
+		"down": message = L10n.text("降级。主卡降至 %s。") % tier
+		_: message = L10n.text("保级。主卡仍为 %s。") % tier
+	sub_uids = [-1,-1]
+	has_forged = true
+	active_slot = 0
+	result_visible = true
 	_refresh(true)
+	feedback.reveal(result.outcome,_result_rect())
+	result_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_ignore_time_scale(true)
+	result_tween.tween_interval(1.15)
+	result_tween.tween_callback(_end_reveal)
+
+func _result_rect() -> Rect2:
+	var local_pos := feedback.get_global_transform().affine_inverse() * result_icon.global_position
+	return Rect2(local_pos,result_icon.size)
+
+func _end_reveal() -> void:
+	result_visible = false
+	_refresh(false)
 
 func _upgrade() -> void:
+	if working: return
 	if game.forge.upgrade_furnace():
 		message = L10n.text("炉子已升级，成功率提高。")
 	_refresh(false)
 
 func _finish() -> void:
-	if not visible: return
+	if working or not visible: return
 	hide()
 	finished.emit()
 
@@ -289,10 +401,13 @@ func _refresh(rebuild_deck: bool) -> void:
 	header_status.text = L10n.text("炉 Lv.%d  ·  金币 %d") % [forge.furnace_level, forge.wallet]
 	upgrade_button.text = L10n.text("升炉  %d/%d") % [forge.materials, forge.furnace_cost()]
 	upgrade_button.tooltip_text = L10n.text("消耗无尽的永恒，永久提升锻造成功率。")
-	upgrade_button.disabled = forge.materials < forge.furnace_cost()
+	quit_button.disabled = working
+	upgrade_button.disabled = working or forge.materials < forge.furnace_cost()
 	quit_button.text = L10n.text("完成锻造") if has_forged else L10n.text("跳过")
 	var card := _card(main_uid)
 	for i in 3:
+		slot_buttons[i].disabled = working
+		if i > 0: slot_clear[i-1].disabled = working
 		var assigned := card if i == 0 else _card(sub_uids[i-1])
 		var tint: Color = GOLD if i == active_slot else EDGE
 		slot_buttons[i].add_theme_stylebox_override("normal", _box(Color("#36302b") if i == active_slot else DARK, tint))
@@ -314,14 +429,28 @@ func _refresh(rebuild_deck: bool) -> void:
 		reward_label.text += L10n.text("   ·   通关另奖 +%d") % reward.clear
 
 	inventory_hint.text = L10n.text("选主卡") if active_slot == 0 else L10n.text("选副卡 %d") % active_slot
+	inventory_hint.text += L10n.text(" · 拖卡入槽，槽间可互换")
 	if rebuild_deck: _build_deck()
 	else: _update_fan_selection()
+	for button in fan_buttons: button.disabled = working
 
 func _fill_preview(card: Dictionary, info: Dictionary) -> void:
 	var has_main := not card.is_empty()
 	outcome_label.add_theme_color_override("font_color", MUTED)
-	action_button.disabled = not info.get("valid", false)
+	preview_heading.text = L10n.text("锻造结果") if result_visible else L10n.text("成功预览")
+	action_button.disabled = working or not info.get("valid", false)
 	action_button.text = L10n.text("开始锻造 · %d 金币") % int(info.get("cost",0)) if has_main else L10n.text("开始锻造")
+	if working: action_button.text = L10n.text("锻造中…")
+	if result_visible and has_main:
+		result_icon.texture = load(EQUIP[card.id].icon)
+		result_title.text = _tier_name(card.tier) + "   " + _title(card.id)
+		result_title.add_theme_color_override("font_color",_tier_color(card.tier))
+		odds_label.text = ""
+		changes_label.text = message
+		changes_label.tooltip_text = message
+		outcome_label.text = message
+		outcome_label.tooltip_text = message
+		return
 	if not has_main:
 		result_icon.texture = null
 		result_title.text = L10n.text("从下方选一张主卡")

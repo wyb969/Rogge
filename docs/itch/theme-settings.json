@@ -24,8 +24,8 @@
     "instructions": "Use itch's native Text and Colors controls. Font sizes, content width, heading-only color, and header alignment are visual targets; apply only controls actually available in the editor. Preserve the current playable embed dimensions and orientation unless a preview reveals a problem."
   },
   "gallery_order": [
-    "../screenshots/combat.png",
-    "../screenshots/wind-guardians.png",
+    "../screenshots/bosses-20261119/tide-charge.png",
+    "../screenshots/bosses-20261119/wind-pair.png",
     "../screenshots/boss-rush.png",
     "../screenshots/snow-poison.png",
     "../screenshots/upgrade-cards.png"

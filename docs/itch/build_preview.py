@@ -8,13 +8,11 @@ ROOT = Path(__file__).resolve().parent
 settings = json.loads((ROOT / "theme-settings.json").read_text(encoding="utf-8"))
 description = (ROOT / settings["description_source"]).read_text(encoding="utf-8")
 # The preview uses local captures so the downloadable kit works offline.
-for name in ("combat", "wind-guardians"):
-    remote = (
-        "https://raw.githubusercontent.com/wyb969/Rogge/"
-        "1b2f5699777403b76797861652c5cb760435d545/docs/screenshots/"
-        f"{name}.png"
-    )
-    description = description.replace(remote, f"../screenshots/{name}.png")
+for capture in settings["gallery_order"]:
+    name = Path(capture).name
+    if name in description:
+        remote = "https://raw.githubusercontent.com/wyb969/Rogge/master/docs/" + capture.removeprefix("../")
+        description = description.replace(remote, capture)
 
 page = """<!doctype html>
 <html lang="en">

@@ -35,6 +35,10 @@ GitHub artifact 默认保留 30 天。长期需要的源码、验证概要和发
 
 ## 最新发布记录
 
+itch 网页版 **20261119-190641** 由源码 `ffb0336` 构建，原 HTML 通道当前 build 为 **2436615**。36 组 Web 导出包回归通过；线上 JS、WASM、PCK 与构建清单逐项一致。[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/44513492230) · [核验记录](validation/itch-forge-audio-20261119-190641.json)。
+
+### 锻造拖拽与手形指针
+
 itch 网页版 **20261119-185039** 已切换到原 HTML 通道的 build **2436485**，游戏源码 `d95f6a2`。[发布任务](https://github.com/wyb969/PixelFishing/actions/runs/44510280383)的 36 组检查通过，[通道核验](https://github.com/wyb969/PixelFishing/actions/runs/44510682603)确认为当前版本。公开页面返回的 JS、WASM、PCK 与构建清单逐项匹配。 [下载 Web 包与日志](https://github.com/wyb969/PixelFishing/actions/runs/44510280383/artifacts/14524335068)。
 
 ### 2026-11-19 锻造系统发布

@@ -1,0 +1,32 @@
+{
+  "version": "20261119-190641",
+  "source": "ffb033613705090f0fc62dbd4f229d5c5a0283c3",
+  "build": 2436615,
+  "previous": 2436485,
+  "publish": "https://github.com/wyb969/PixelFishing/actions/runs/44513492230",
+  "verify": "https://github.com/wyb969/PixelFishing/actions/runs/44514012256",
+  "packed_suites": 36,
+  "forge_checks": 49,
+  "gesture_checks": 48,
+  "native": "Godot 4.7 Compatibility: two rendered positions of same hovered card",
+  "physical_phone": false,
+  "browser_playthrough": false,
+  "live": {
+    "page": "https://ybwangrogger.itch.io/rogue-white",
+    "embed": "https://html.itch.zone/html/20115514-2436615/index.html?v=1795087324",
+    "files": {
+      "index.wasm": {
+        "bytes": 39509339,
+        "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+      },
+      "index.pck": {
+        "bytes": 30493936,
+        "sha256": "3e0b0c40b415ddfe0606ad40e7da7308cd7959a03df36f7d8bde4a447840d691"
+      }
+    }
+  }
+}

@@ -68,6 +68,12 @@ func _run() -> void:
 		var poses: Node = actor.poses
 		check(poses.sprite.material == null and poses.sprite.modulate == Color.WHITE, "native palette " + spec[1])
 		check(poses.sprite.texture.resource_path.ends_with("/%s/poses.png" % spec[1]),"boss skin "+spec[1])
+		var neutral := poses.clips.get_frame_texture(&"idle", 0) as AtlasTexture
+		check(neutral.region.size == Vector2(144, 144), "fine source frame " + spec[1])
+		for action in poses.clips.get_animation_names():
+			for frame in poses.clips.get_frame_count(action):
+				var tile := poses.clips.get_frame_texture(action, frame) as AtlasTexture
+				check(tile.region.size == neutral.region.size and Rect2(Vector2.ZERO, tile.atlas.get_size()).encloses(tile.region), "valid pose region " + spec[1])
 		poses._physics_process(0.1)
 		actor.position.x += 10
 		poses._physics_process(0.1)

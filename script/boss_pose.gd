@@ -1,5 +1,8 @@
 extends Node
 
+const DESIGN_FRAME_HEIGHT := 48.0
+const DESIGN_FOOT_OFFSET := 21.0
+
 var clips: SpriteFrames
 var sprite: Sprite2D
 var actor: CharacterBody2D
@@ -19,11 +22,12 @@ func setup(host: CharacterBody2D, body: Sprite2D, art: String, zoom: float, foot
 	var neutral := clips.get_frame_texture(&"idle", 0) as AtlasTexture
 	sprite.frame = 0
 	sprite.texture = neutral.atlas
-	sprite.hframes = 4
-	sprite.vframes = 4
+	sprite.hframes = roundi(neutral.atlas.get_width() / neutral.region.size.x)
+	sprite.vframes = roundi(neutral.atlas.get_height() / neutral.region.size.y)
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	sprite.scale = Vector2.ONE * zoom
-	sprite.offset.y = foot_y / zoom - 21.0
+	var density := neutral.region.size.y / DESIGN_FRAME_HEIGHT
+	sprite.scale = Vector2.ONE * zoom / density
+	sprite.offset.y = (foot_y / zoom - DESIGN_FOOT_OFFSET) * density
 	stride = 12.0 * zoom * host.scale.x
 	host.add_child(self)
 
@@ -48,5 +52,5 @@ func _physics_process(delta: float) -> void:
 		elapsed += clip_delta * clips.get_animation_speed(action)
 	var index := floori(elapsed) % count if clips.get_animation_loop(action) else mini(floori(elapsed), count-1)
 	var tile := clips.get_frame_texture(action,index) as AtlasTexture
-	var cell := Vector2i(tile.region.position / 48.0)
+	var cell := Vector2i(tile.region.position / tile.region.size)
 	if sprite.frame_coords != cell: sprite.frame_coords = cell

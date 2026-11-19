@@ -14,12 +14,14 @@ const SETTINGS_PAGE_SCENE: = preload("res://scenes/settings_page.tscn")
 
 const HEROES := preload("res://script/hero_roster.gd")
 var hero_picker := preload("res://script/hero_picker.gd").new()
+var starter_lottery := preload("res://script/starter_lottery.gd").new()
 var hero_index := 0
 var game: Node = null
 var mobile_controls: CanvasLayer = null
 var fullscreen_toggle: CanvasLayer = null
 var settings_page: CanvasLayer = null
 var _test_mode: StringName = &""
+var _rolled_start := false
 var _starting_run: bool = false
 var _fresh_game := false
 var _returning_home := false
@@ -59,6 +61,8 @@ func _ready() -> void :
 
 	hero_picker.hide()
 	$mainUI/Control.add_child(hero_picker)
+	add_child(starter_lottery)
+	starter_lottery.loadout_claimed.connect(_on_starting_loadout_claimed)
 	hero_picker.chosen.connect(_hero_chosen)
 	hero_picker.cancelled.connect(func():
 		hero_picker.hide()
@@ -129,6 +133,7 @@ func _ensure_fullscreen_toggle() -> void:
 
 
 func show_main_menu() -> void :
+	starter_lottery.hide()
 	if session_menu: session_menu.dismiss()
 	fullscreen_toggle.set_home_available(false)
 	_test_mode = &""
@@ -155,7 +160,7 @@ func _layout_build_version() -> void :
 	build_version_label.size = Vector2(vp.x - 28 * ui_scale, 24 * ui_scale)
 
 
-func start_game() -> void :
+func start_game(rolled_start := false) -> void :
 	_fresh_game = false
 	fullscreen_toggle.set_home_available(true)
 	_dismiss_settings()
@@ -170,7 +175,7 @@ func start_game() -> void :
 	get_tree().paused = false
 
 	if game and is_instance_valid(game):
-		game.start_game()
+		game.start_game(rolled_start)
 	if mobile_controls:
 		mobile_controls.show_controls()
 
@@ -184,7 +189,11 @@ func _hero_chosen(index: int) -> void:
 	if _starting_run or not hero_picker.visible: return
 	hero_index = index
 	hero_picker.hide()
-	await _launch_run(&"")
+	starter_lottery.open_for(HEROES.START_CARDS[hero_index])
+
+
+func _on_starting_loadout_claimed(rolled: Dictionary) -> void:
+	await _launch_run(&"", rolled)
 
 
 func _on_setting_button_pressed() -> void :
@@ -240,7 +249,11 @@ func on_game_over(stat: Dictionary) -> void :
 
 
 func _on_game_end_ui_retry_pressed() -> void :
-	await _launch_run(_test_mode)
+	if _rolled_start:
+		game_end_ui.hide_result()
+		starter_lottery.open_for(HEROES.START_CARDS[hero_index])
+	else:
+		await _launch_run(_test_mode)
 
 
 func _on_game_end_ui_main_menu_pressed() -> void :
@@ -315,19 +328,24 @@ func _on_debug_necklace_pressed() -> void :
 func _on_debug_treasure_pressed() -> void :
 	await _launch_run(&"treasure")
 
-func _launch_run(mode: StringName) -> void :
+func _launch_run(mode: StringName, opening: Dictionary = {}) -> void :
 	if _starting_run or _returning_home:
 		return
 	_starting_run = true
 	_test_mode = mode
+	_rolled_start = not opening.is_empty()
 	AudioManager.unlock_web_audio()
 	if not _fresh_game or not is_instance_valid(game):
 		await load_new_game()
 	game.diagnostic_mode = str(mode) if mode != &"" else "normal"
 	game.player.set_hero(hero_index if mode == &"" else 0)
-	start_game()
+	start_game(_rolled_start)
 	if mode == &"":
 		game._on_upgrade_selected(HEROES.START_CARDS[hero_index])
+		for id in opening.get("cards", []):
+			game._on_upgrade_selected(id)
+		if opening.get("backup", "") != "":
+			game._on_upgrade_selected(opening.backup)
 	match mode:
 		&"arcane_weapons":
 			game.prepare_arcane_debug()

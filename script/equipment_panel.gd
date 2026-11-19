@@ -144,7 +144,7 @@ func _fit_equipment() -> void :
 	_arsenal_label.position = Vector2(0, icon_height + 4)
 	_growth_label.position = Vector2(0, icon_height + 4 + (20 if _arsenal_label.visible else 0))
 
-func reset_equipment() -> void :
+func reset_equipment(classic_weapons := true) -> void :
 	reset_combo_effects()
 	for child in slot_list.get_children():
 		child.queue_free()
@@ -152,6 +152,7 @@ func reset_equipment() -> void :
 	set_arsenal_status(0, false, 0.0)
 	set_growth_status(0, false)
 
+	if not classic_weapons: return
 	for id in ["axe_up", "circle_up"]:
 		_add_or_set_level(id, EQUIP_DEFS[id]["start_level"], false)
 

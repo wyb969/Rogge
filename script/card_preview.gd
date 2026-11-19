@@ -61,15 +61,15 @@ static func build(game: Node, id: String) -> Dictionary:
 		"axe_up":
 			var weapon: Node = game.hand_weapon
 			var stats: Dictionary = weapon.upgrade_preview(game.current_level)
-			_row(rows,"基础伤害",weapon.weapon_demage,stats.damage)
-			_row(rows,"飞行速度",weapon.max_speed,stats.speed)
+			_row(rows,"基础伤害",weapon.weapon_demage if rank > 0 else 0,stats.damage)
+			_row(rows,"飞行速度",weapon.max_speed if rank > 0 else 0,stats.speed)
 			hint = L10n.text("往返各命中一次 · 不附带灼烧")
 		"circle_up":
 			var weapon: Node = game.circle_weapon
-			var old_damage: float = weapon.get_child(0).weapon_demage
+			var old_damage: float = weapon.get_child(0).weapon_demage if rank > 0 else 0
 			_row(rows,"每本伤害",old_damage,BOOK.damage_for(maxi(weapon.current_level,game.current_level),next))
 			_row(rows,"书本数量",weapon.num_weapons,weapon.count_for(next),"",false)
-			_row(rows,"环绕速度",weapon.rotation_speed,weapon.rotation_for(next))
+			_row(rows,"环绕速度",weapon.rotation_speed if rank > 0 else 0,weapon.rotation_for(next))
 			hint = L10n.text("最多12本 · 达上限后继续增伤")
 		"gun_up":
 			var gun: Node = game.gun_weapon

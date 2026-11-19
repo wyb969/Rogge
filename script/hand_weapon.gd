@@ -89,7 +89,7 @@ func get_nearest_enemy() -> Node2D:
 	return CombatTargets.nearest(global_position)
 
 func start_attack() -> void :
-	if flying_out or returning or not is_instance_valid(player):
+	if level == 0 or flying_out or returning or not is_instance_valid(player):
 		return
 	global_position = player.global_position + relative_pos
 	var target_enemy: = get_nearest_enemy()
@@ -104,13 +104,26 @@ func start_attack() -> void :
 	flying_out = true
 	returning = false
 
+func start_unequipped() -> void:
+	level = 0
+	hide()
+	$AttackTimer.stop()
+	set_physics_process(false)
+
 func handle_level_up(character_level: int) -> void :
+	if level == 0:
+		level = 1
+		show()
+		set_physics_process(true)
+		$AttackTimer.start()
+		return
 	var next := upgrade_preview(character_level)
 	level += 1
 	weapon_demage = next.damage
 	max_speed = next.speed
 
 func upgrade_preview(character_level: int) -> Dictionary:
+	if level == 0: return {"damage": weapon_demage, "speed": max_speed}
 	var upgrades := float(level)
 	return {"damage": weapon_demage + 8.0 + 0.6 * clampi(character_level, 0, 30),
 		"speed": mini(MAX_FLIGHT_SPEED, roundi(BASE_FLIGHT_SPEED * (1.0 + 0.12 * upgrades + 0.015 * upgrades * upgrades)))}

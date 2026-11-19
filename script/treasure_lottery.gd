@@ -225,10 +225,13 @@ func _process(delta: float) -> void :
 			if spin_time < 1.65 + float(i) * 0.5:
 				_set_reel(i, _pool[randi() % _pool.size()])
 			else:
-				_set_reel(i, reward)
+				_stopped_reel(i)
 				_reel_panels[i].modulate = Color(1.25, 1.08, 0.65)
 	if spin_time >= SPIN_SECONDS:
 		_reveal()
+
+func _stopped_reel(i: int) -> void:
+	_set_reel(i, reward)
 
 func _reveal() -> void :
 	spinning = false

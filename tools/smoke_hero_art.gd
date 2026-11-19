@@ -9,12 +9,53 @@ func check(value: bool, message: String) -> void:
 func _init() -> void:
 	call_deferred("_run")
 
+func claim_start(main: Node, perk: String, group: String = "") -> Dictionary:
+	var machine: Node = main.starter_lottery
+	if group == "mixed":
+		machine.loadout = machine.draw_loadout(perk, 99)
+	elif group != "":
+		# Exercise both real jackpot definitions regardless of the random seed.
+		var members: Array = machine.COMBOS.GROWTH_MEMBERS if group == "growth" else machine.COMBOS.ARSENAL_MEMBERS
+		var backup := "gun_up" if group == "growth" and perk not in machine.WEAPONS else ""
+		machine.loadout = {"cards":members, "group":group, "backup":backup, "perk":perk}
+	check(machine._panel.material == null, "every new spin starts without foil")
+	check(machine.visible and paused, "selection pauses at the machine")
+	check(root.get_visible_rect().encloses(machine._button.get_global_rect()), "spin is reachable")
+	machine._button.pressed.emit()
+	check(machine.spinning and machine._button.disabled, "single spin locked")
+	machine._process(3.0)
+	for i in 3:
+		var id: String = machine.loadout.cards[i]
+		check(machine._reels[i].texture.resource_path == machine.EQUIPMENT[id].icon, "reel matches item")
+	check((machine._panel.material != null) == (machine.loadout.group != ""), "jackpot-only foil")
+	var rolled: Dictionary = machine.loadout
+	check(rolled.perk == perk, "chosen hero's perk retained")
+	machine._button.pressed.emit()
+	machine._on_button()
+	await process_frame
+	await process_frame
+	return rolled
+
 func _run() -> void:
 	var main: Node = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	current_scene = main
 	await process_frame
 	await process_frame
+	var machine: Node = main.starter_lottery
+	for perk: String in ROSTER.START_CARDS:
+		var jackpots := 0
+		for bucket in 100:
+			var draw: Dictionary = machine.draw_loadout(perk, bucket)
+			var items: Array = draw.cards.duplicate()
+			items.append(perk)
+			if draw.backup != "": items.append(draw.backup)
+			var growth: bool = machine.COMBOS.GROWTH_MEMBERS.all(func(id): return id in items)
+			var arsenal: bool = machine.COMBOS.ARSENAL_MEMBERS.all(func(id): return id in items)
+			check((bucket < 30) == (growth or arsenal), "actual full set at the 30/70 boundary")
+			check(machine.WEAPONS.any(func(id): return id in items), "every opening can attack")
+			if growth or arsenal: jackpots += 1
+		check(jackpots == 30, "exactly 30 jackpot buckets")
 	var picker: Node = main.hero_picker
 	for index in 4:
 		root.size = Vector2i(390,844) if index % 2 == 0 else Vector2i(900,600)
@@ -33,10 +74,28 @@ func _run() -> void:
 		picker.cards[index].pressed.emit()
 		await process_frame
 		await process_frame
+		var rolled := await claim_start(main, ROSTER.START_CARDS[index], ["growth", "mixed", "arsenal", "mixed"][index])
 		var g: Node = main.game
+		var expected: Array = rolled.cards.duplicate()
+		expected.append(rolled.perk)
+		if rolled.backup != "": expected.append(rolled.backup)
+		for id in g.equipment_panel.EQUIP_DEFS:
+			check(g.equipment_panel.get_level(id) == expected.count(id), "exact starting rank "+id)
+		check(g.hand_weapon.visible == ("axe_up" in expected), "axe visibility")
+		check((g.circle_weapon.get_child_count() > 0) == ("circle_up" in expected), "book colliders")
+		check(g.growth_combo_active == (rolled.group == "growth"), "real growth bonus activated")
+		check(g.arsenal_combo.unlocked == (rolled.group == "arsenal"), "real arsenal shield activated")
+		for weapon_id in ["axe_up", "circle_up"]:
+			if weapon_id in expected: continue
+			var preview: Dictionary = load("res://script/card_preview.gd").build(g, weapon_id)
+			check(not preview.rows.is_empty(), "unowned weapon shows first-rank preview")
+			g._on_upgrade_selected(weapon_id)
+			check(g.equipment_panel.get_level(weapon_id) == 1, "unowned weapon acquired at rank one")
+		check(g.hand_weapon.visible and g.hand_weapon.is_physics_processing(), "axe can attack")
+		check(g.circle_weapon.get_child_count() > 0 and g.circle_weapon.is_processing(), "books orbit after acquisition")
 		check(not paused and not picker.is_visible_in_tree(),"confirmed run")
 		check(g.player.animated_sprite_2d.sprite_frames == ROSTER.FRAMES[index],"selected player in combat")
-		check(g.equipment_panel.get_level(ROSTER.START_CARDS[index]) == 1,"starter applied once")
+		check(g.equipment_panel.get_level(ROSTER.START_CARDS[index]) == expected.count(rolled.perk),"starter applied once")
 		g.player._update_locomotion(Vector2(-1,0), 1.0/60)
 		check(g.player.animated_sprite_2d.animation == &"walk_left","left poses")
 		g.player.cast_pose()
@@ -47,6 +106,7 @@ func _run() -> void:
 		check(g.player.animated_sprite_2d.animation == &"dash_right","right dash")
 		if index == 3:
 			await main._on_game_end_ui_retry_pressed()
+			await claim_start(main, ROSTER.START_CARDS[index])
 			check(main.game.player.animated_sprite_2d.sprite_frames == ROSTER.FRAMES[index] and main.game.equipment_panel.get_level("rune_bolt") == 1,"Retry retains choice exactly once")
 		await main._on_game_end_ui_main_menu_pressed()
 
@@ -84,7 +144,7 @@ func _run() -> void:
 		poses._physics_process(0.2)
 		check(poses.current == &"idle", "no motion returns to idle")
 		actor.free()
-	if errors.is_empty(): print("HERO ART OK: four selection paths, retry, icons, directional actions, eight boss walk/idle skins")
+	if errors.is_empty(): print("HERO ART OK: four heroes, 30/70 roll boundary, both live sets, rank zero weapons, retry, icons, directional actions, eight boss walk/idle skins")
 	else:
 		for error in errors: push_error(error)
 	quit(0 if errors.is_empty() else 1)

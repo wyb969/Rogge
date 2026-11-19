@@ -1609,3 +1609,14 @@ Lv %d,Lv %d,等级 %d
 星灯学徒,Starlight Apprentice,星灯学徒
 选择角色,Choose a hero,选择角色
 初始能力：%s,Starts with %s,初始能力：%s
+出发前的补给,Starting supplies,出发前的补给
+开局老虎机,Loadout slots,开局老虎机
+转动三轴，领取开局装备,Spin the three reels for your starting gear,转动三轴，领取开局装备
+角色自带：%s · 完整套装概率 30%%,Hero perk: %s · Full set chance: 30%%,角色自带：%s · 完整套装概率 30%%
+转动老虎机,Spin,转动老虎机
+生机套装！,Growth set!,生机套装！
+军械套装！,Arsenal set!,军械套装！
+开局装备已就绪,Loadout ready,开局装备已就绪
+角色自带：%s,Hero perk: %s,角色自带：%s
+随行武器：%s,Sidearm: %s,随行武器：%s
+领取并出发,Equip and start,领取并出发

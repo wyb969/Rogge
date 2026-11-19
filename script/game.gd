@@ -199,7 +199,7 @@ func prepare_game() -> void :
 		hud_layer.hide()
 	_reset_skill_controllers()
 
-func start_game() -> void :
+func start_game(rolled_start := false) -> void :
 	combat_feedback.start()
 	_capture_difficulty()
 	spawner.start_run()
@@ -215,7 +215,10 @@ func start_game() -> void :
 	if hud_layer:
 		hud_layer.show()
 	if equipment_panel and equipment_panel.has_method("reset_equipment"):
-		equipment_panel.reset_equipment()
+		equipment_panel.reset_equipment(not rolled_start)
+	if rolled_start:
+		hand_weapon.start_unequipped()
+		circle_weapon.start_unequipped()
 	_reset_skill_controllers()
 	RunDiagnostics.begin(self, diagnostic_mode)
 	variety.begin_run()

@@ -36,7 +36,16 @@ func _process(delta: float) -> void :
 	rotation = fposmod(rotation + rotation_speed * delta, TAU)
 	global_position = player.global_position
 
+func start_unequipped() -> void:
+	card_level = 0
+	num_weapons = 0
+	set_process(false)
+	for book in get_children():
+		remove_child(book)
+		book.queue_free()
+
 func handle_level_up(character_level: int) -> void :
+	set_process(true)
 	card_level += 1
 	current_level = maxi(current_level, character_level)
 	num_weapons = count_for(card_level)

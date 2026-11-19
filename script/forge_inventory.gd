@@ -6,6 +6,8 @@ const COLORS = STYLE.COLORS
 const COMBOS := preload("res://script/equipment_combos.gd")
 const STARTER := preload("res://script/starter_lottery.gd")
 const OTHER_ATTACKS := ["molotov_up", "black_hole", "poison_trail", "banana_fan", "wind_emblem"]
+const PRACTICE_GOLD := 600
+const PRACTICE_CARDS := [["pickup_up",0],["speed_up",0],["gun_up",1],["regen_up",1],["axe_up",2],["shield_up",2]]
 const PROFILE := "user://rogge_forge.cfg"
 const FLOORS := [12, 16, 20, 24, 28, 32]
 const PAR_SECONDS := [90, 75, 90, 90, 100, 115]
@@ -118,6 +120,12 @@ func add_card(id: String, tier: int) -> int:
 	game.arsenal_combo.refresh_equipment()
 	game._refresh_growth_combo()
 	return uid
+
+func refill_practice() -> void:
+	if not enabled or not training or _sealed_stage <= _settled_stage: return
+	wallet += PRACTICE_GOLD
+	for card in PRACTICE_CARDS:
+		add_card(card[0],card[1])
 
 func card_preview(id: String, tier: int) -> String:
 	var old := _summary(id,cards)

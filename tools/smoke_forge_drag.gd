@@ -97,6 +97,7 @@ func run() -> void:
 	ui.action_button.pressed.emit()
 	ui._attempt()
 	ui._upgrade()
+	ui.supply_button.pressed.emit()
 	ui._finish()
 	drag(slot(1),slot(0))
 	expect(ui.working and ui.visible and ui.quit_button.disabled and ui.action_button.disabled,"all mutation and exit paths lock")
@@ -112,5 +113,22 @@ func run() -> void:
 	ui.hide()
 	await create_timer(1.6,true,false,true).timeout
 	expect(forge.wallet == wallet-cost and forge.cards.size() == 8,"hiding cancels outstanding work")
+	ui.show()
+	var balance: int = forge.wallet
+	var income: int = forge.stage_income
+	var original: int = forge.cards.size()
+	var offer_price: int = forge.preview(first,[]).cost
+	for size in [Vector2i(390,844),Vector2i(844,390)]:
+		root.size = size
+		await frames(5)
+		var point: Vector2 = ui.supply_button.get_global_rect().get_center()
+		expect(root.get_visible_rect().has_point(point) and not ui.quit_button.get_global_rect().has_point(point),"refill has its own reachable space")
+		press(point,true)
+		press(point,false)
+	expect(forge.wallet == balance+1200 and forge.cards.size() == original+12,"both button presses grant fresh gold and cards")
+	var tiers := [0,0,0,0]
+	for card in forge.cards.slice(original): tiers[card.tier] += 1
+	expect(tiers == [4,4,4,0],"each supply has two cards of each non-orange quality")
+	expect(forge.stage_income == income and forge.preview(first,[]).cost == offer_price and ui.main_uid == first,"top-ups preserve the quote and main card")
 	if errors == 0: print("FORGE GESTURES OK: %d checks" % checks)
 	quit(int(errors > 0))

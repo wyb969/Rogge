@@ -24,6 +24,11 @@ var inventory_scroll: ScrollContainer
 var deck: Control
 var quit_button: Button
 var action_button: Button
+var supply_button: Button
+var foil_materials: Array[ShaderMaterial] = []
+var slot_foils: Array[ColorRect] = []
+var result_plate: Panel
+var result_foil: ColorRect
 var upgrade_button: Button
 var header_status: Label
 var inventory_hint: Label
@@ -55,6 +60,11 @@ var feedback := preload("res://script/forge_feedback.gd").new()
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 170
+	for amber in [false,true]:
+		var foil := ShaderMaterial.new()
+		foil.shader = preload("res://shaders/forge_foil.gdshader")
+		foil.set_shader_parameter("amber",amber)
+		foil_materials.append(foil)
 	visible = false
 	backdrop.color = Color("#11151bef")
 	add_child(backdrop)
@@ -159,6 +169,21 @@ func _image(parent: Control, rect: Rect2, texture: Texture2D = null) -> TextureR
 	_place(image, parent, rect)
 	return image
 
+func _foil(parent: Control) -> ColorRect:
+	var face := ColorRect.new()
+	face.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(face)
+	face.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	face.offset_left = 4
+	face.offset_top = 4
+	face.offset_right = -4
+	face.offset_bottom = -4
+	return face
+
+func _foil_tier(face: ColorRect, tier: int) -> void:
+	face.visible = tier >= 2
+	if face.visible: face.material = foil_materials[1 if tier >= 3 else 0]
+
 func _build() -> void:
 	inputs.cancel()
 	var last_view := get_viewport().get_visible_rect().size
@@ -171,6 +196,7 @@ func _build() -> void:
 		child.queue_free()
 	slot_buttons.clear()
 	slot_icons.clear()
+	slot_foils.clear()
 	slot_titles.clear()
 	slot_contents.clear()
 	slot_clear.clear()
@@ -185,6 +211,12 @@ func _build() -> void:
 	quit_button = _btn(board, Rect2(design.x-112, 6, 100, 36), "", _finish)
 	header_status = _label(board, Rect2(14 if portrait else 255, 44 if portrait else 6, design.x-160 if portrait else 384, 32), "", 16, GOLD)
 	upgrade_button = _btn(board, Rect2(design.x-154 if portrait else 610, 44 if portrait else 6, 142 if portrait else 158, 34), "", _upgrade)
+	supply_button = null
+	if game.forge.training:
+		var supply_rect := Rect2(128,3,150,42) if portrait else Rect2(445,3,154,42)
+		supply_button = _btn(board,supply_rect,L10n.text("+%d 金币 · +%d 卡") % [game.forge.PRACTICE_GOLD,game.forge.PRACTICE_CARDS.size()],_refill_practice)
+		UiFonts.apply_to_button(supply_button,15)
+		supply_button.tooltip_text = L10n.text("练习补给：青、紫、粉卡各两张，可重复领取。")
 	var left := _panel(board, Rect2(10,85,376,166) if portrait else Rect2(12,54,457,198))
 	var art_width := 97 if portrait else 149
 	hearth = _image(left, Rect2(2,2,art_width,left.size.y-4), HEARTH)
@@ -197,6 +229,8 @@ func _build() -> void:
 		_build_slot(left, Rect2(sx + i * sw, 15, sw-4, left.size.y-29), i)
 	var result := _panel(board, Rect2(10,258,376,166) if portrait else Rect2(478,54,410,198))
 	preview_heading = _label(result, Rect2(12,5,160,24), L10n.text("成功预览"), 15, MUTED)
+	result_plate = _panel(result,Rect2(12,34,82,112),DARK,EDGE)
+	result_foil = _foil(result_plate)
 	result_icon = _image(result, Rect2(11,36,48,48) if portrait else Rect2(13,37,58,58))
 	result_title = _label(result, Rect2(68,27,result.size.x-76,36), "", 20, PAPER, true)
 	odds_label = _label(result, Rect2(68,62,result.size.x-76,28), "", 14, GOLD)
@@ -235,6 +269,7 @@ func _build() -> void:
 func _build_slot(parent: Control, rect: Rect2, index: int) -> void:
 	var button := _btn(parent, rect, "", _select_slot.bind(index))
 	slot_buttons.append(button)
+	slot_foils.append(_foil(button))
 	var title := _label(button, Rect2(2,2,rect.size.x-4,24), "", 14, MUTED)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	slot_titles.append(title)
@@ -371,18 +406,34 @@ func _resolve(uid: int, offerings: Array) -> void:
 	active_slot = 0
 	result_visible = true
 	_refresh(true)
-	feedback.reveal(result.outcome,_result_rect())
+	feedback.reveal(result.outcome,_result_rect(),result.tier)
 	result_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_ignore_time_scale(true)
-	result_tween.tween_interval(1.15)
+	if result.outcome == "up":
+		var peak := 1.20 if int(result.tier) >= 3 else 1.12
+		_scale_result_icon(0.78)
+		result_tween.tween_method(_scale_result_icon,0.78,peak,0.13).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		result_tween.tween_method(_scale_result_icon,peak,1.0,0.19).set_trans(Tween.TRANS_SINE)
+		result_tween.tween_interval(maxf(1.15,feedback.reveal_seconds(result.tier)+0.12)-0.32)
+	else:
+		result_tween.tween_interval(1.15)
 	result_tween.tween_callback(_end_reveal)
 
+func _scale_result_icon(factor: float) -> void:
+	result_icon.pivot_offset = result_icon.size * 0.5
+	result_icon.scale = Vector2.ONE * factor
+
 func _result_rect() -> Rect2:
-	var local_pos := feedback.get_global_transform().affine_inverse() * result_icon.global_position
-	return Rect2(local_pos,result_icon.size)
+	var local_pos := feedback.get_global_transform().affine_inverse() * result_plate.global_position
+	return Rect2(local_pos,result_plate.size)
 
 func _end_reveal() -> void:
 	result_visible = false
 	_refresh(false)
+
+func _refill_practice() -> void:
+	if not visible or working or not game.forge.training: return
+	game.forge.refill_practice()
+	_refresh(true)
 
 func _upgrade() -> void:
 	if working: return
@@ -402,6 +453,7 @@ func _refresh(rebuild_deck: bool) -> void:
 	upgrade_button.text = L10n.text("升炉  %d/%d") % [forge.materials, forge.furnace_cost()]
 	upgrade_button.tooltip_text = L10n.text("消耗无尽的永恒，永久提升锻造成功率。")
 	quit_button.disabled = working
+	if is_instance_valid(supply_button): supply_button.disabled = working
 	upgrade_button.disabled = working or forge.materials < forge.furnace_cost()
 	quit_button.text = L10n.text("完成锻造") if has_forged else L10n.text("跳过")
 	var card := _card(main_uid)
@@ -411,6 +463,7 @@ func _refresh(rebuild_deck: bool) -> void:
 		var assigned := card if i == 0 else _card(sub_uids[i-1])
 		var tint: Color = GOLD if i == active_slot else EDGE
 		slot_buttons[i].add_theme_stylebox_override("normal", _box(Color("#36302b") if i == active_slot else DARK, tint))
+		_foil_tier(slot_foils[i],int(assigned.get("tier",-1)))
 		slot_titles[i].text = L10n.text("主卡") if i == 0 else L10n.text("副卡 %d") % i
 		if assigned.is_empty():
 			slot_icons[i].texture = null
@@ -436,6 +489,26 @@ func _refresh(rebuild_deck: bool) -> void:
 
 func _fill_preview(card: Dictionary, info: Dictionary) -> void:
 	var has_main := not card.is_empty()
+	var pane_width: float = result_plate.get_parent().size.x
+	result_plate.visible = result_visible and has_main
+	if result_plate.visible:
+		var tier: int = card.tier
+		result_plate.add_theme_stylebox_override("panel",_box(DARK,_tier_color(tier)))
+		_foil_tier(result_foil,tier)
+		result_icon.position = Vector2(25,62)
+		result_icon.size = Vector2(56,56)
+		result_title.position.x = 108
+		result_title.size.x = pane_width-116
+		details_scroll.position.x = 108
+		details_scroll.size.x = pane_width-120
+	else:
+		result_icon.scale = Vector2.ONE
+		result_icon.position = Vector2(11,36) if portrait else Vector2(13,37)
+		result_icon.size = Vector2(48,48) if portrait else Vector2(58,58)
+		result_title.position.x = 68
+		result_title.size.x = pane_width-76
+		details_scroll.position.x = 12
+		details_scroll.size.x = pane_width-24
 	outcome_label.add_theme_color_override("font_color", MUTED)
 	preview_heading.text = L10n.text("锻造结果") if result_visible else L10n.text("成功预览")
 	action_button.disabled = working or not info.get("valid", false)
@@ -511,6 +584,7 @@ func _build_deck() -> void:
 		button.pivot_offset = Vector2(card_w*0.5,card_h)
 		button.rotation = deg_to_rad(t*4.5)
 		button.tooltip_text = _tier_name(group.tier)+" "+_title(group.id)
+		if group.tier >= 2: _foil_tier(_foil(button),group.tier)
 		var top := _label(button, Rect2(5,1,card_w-10,22), _tier_name(group.tier), 13, _tier_color(group.tier), true)
 		top.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		if group.uids.size() > 1:

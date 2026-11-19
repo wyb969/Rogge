@@ -181,6 +181,10 @@ func _run() -> void:
 	await verify_crafting()
 	var reward: Dictionary = forge.reward_preview()
 	expect(reward.total > 0 and reward.score >= reward.speed, "gear makes the largest stage award and fast time is secondary")
+	var normal_wallet: int = forge.wallet
+	var owned: int = forge.cards.size()
+	forge.refill_practice()
+	expect(not is_instance_valid(game.forge_screen.supply_button) and normal_wallet == forge.wallet and owned == forge.cards.size(), "normal stage forge cannot grant practice supplies")
 	await finish_forge()
 	expect(forge.materials > materials_before and game.rest_hub.visible, "skipping or closing the forge banks this stage and continues to rest")
 	var earned: int = forge.materials

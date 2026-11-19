@@ -27,6 +27,10 @@ func isolate() -> void:
 	g = main.game
 	p = g.player
 	w = g.weather
+	# Measure ordinary wind and ice motion without an independently rolled terrain hit.
+	for hazard in [w.electric_grid,w.minefield,w.spikes]:
+		hazard.stop()
+		hazard.set_physics_process(false)
 	g.spawner.timer.stop()
 	g.spawner.get_node("Elite").stop()
 	g.spawner.set_process(false)

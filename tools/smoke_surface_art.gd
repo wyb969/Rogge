@@ -27,7 +27,10 @@ func run() -> void:
 	g.variety.set_process(false)
 	g.meteors.set_process(false)
 	w.set_process(false)
-	w.spikes.set_physics_process(false)
+	# The optical test needs uninterrupted four-direction motion.
+	for hazard in [w.electric_grid,w.minefield,w.spikes]:
+		hazard.stop()
+		hazard.set_physics_process(false)
 	g.banana_fan.set_physics_process(false)
 	g.black_hole.set_physics_process(false)
 	for path in ["HandWeapon","CircleWeapon","Weapon","DroneController","MolotovController","FreezeController"]: g.get_node(path).process_mode = Node.PROCESS_MODE_DISABLED

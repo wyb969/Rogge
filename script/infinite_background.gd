@@ -30,6 +30,9 @@ var coverage_rebuilds: = 0
 var decoration_rebuilds: = 0
 
 
+# Quiet edges on the moss painting; plain flagstones inside the tide painting's frame.
+const MOSS_FLOOR_REGION := Vector4(38, 60, 860, 530)
+const TIDE_FLOOR_REGION := Vector4(228, 130, 668, 474)
 const PALETTE_NAMES: Array[String] = GamePalette.STAGE_NAMES
 var PALETTE_TINTS: Array[Color]:
 	get:
@@ -192,7 +195,9 @@ func _apply_palette(idx: int) -> void :
 	_decor_dirty = true
 	set_stage_tint(color)
 	if _shader_mat:
-		_shader_mat.set_shader_parameter("painted_ground", preload("res://script/painted_ui.gd").MOSS_GROUND if idx % 2 == 0 else preload("res://script/painted_ui.gd").TIDE_GROUND)
+		var use_moss := idx % 2 == 0
+		_shader_mat.set_shader_parameter("painted_region_px", MOSS_FLOOR_REGION if use_moss else TIDE_FLOOR_REGION)
+		_shader_mat.set_shader_parameter("painted_ground", preload("res://script/painted_ui.gd").MOSS_GROUND if use_moss else preload("res://script/painted_ui.gd").TIDE_GROUND)
 		_shader_mat.set_shader_parameter("grade", stage_grade)
 		_shader_mat.set_shader_parameter("vignette", GamePalette.stage_vignette(idx))
 

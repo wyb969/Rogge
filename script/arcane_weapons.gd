@@ -1,4 +1,7 @@
 extends Node2D
+
+const FX_ATLAS := preload("res://script/combat_fx_atlas.gd")
+const BRIAR := preload("res://rogge_art/combat-fx/briar.png")
 const IDS := ["thorn_whip", "rune_bolt", "pulse_aura"]
 const MAX_LEVEL := 5
 const MAX_RUNES := 8
@@ -223,13 +226,7 @@ func _draw() -> void:
 		var at: Vector2 = to_local(flash.at)
 		var color := Color(cyan,1.0-progress)
 		if flash.kind=="thorn_whip":
-			var start: float = flash.angle-PI/3.0
-			var end: float = flash.angle+PI/3.0
-			draw_arc(at,flash.radius*(0.75+0.25*progress),start,end,24,color,5)
-			draw_arc(at,flash.radius*0.75,start,end,24,Color(1,1,1,1.0-progress),2)
-			for i in 7:
-				var direction := Vector2.RIGHT.rotated(lerpf(start,end,float(i)/6.0))
-				draw_line(at+direction*flash.radius*0.83,at+direction*flash.radius,color,2)
+			FX_ATLAS.sweep(self, BRIAR, at, flash.angle, flash.radius, progress)
 		else:
 			draw_arc(at,flash.radius*(0.5+0.5*progress),0,TAU,32,color,3)
 			if flash.kind=="pulse_aura":

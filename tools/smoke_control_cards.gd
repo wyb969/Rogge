@@ -58,7 +58,7 @@ func _run() -> void:
 		menu.upgrade_pool = [entries[id]]
 		menu.show_upgrade_options()
 		var card: Node = menu.h_box_container.get_child(0)
-		_expect(card.icon.texture != null and card.desc_label.text.contains("130" if id == "banana_fan" else "70"), "real card icon and rank-one stats are rendered")
+		_expect(card.icon.texture != null and card.tooltip_text.contains("130" if id == "banana_fan" else "70"), "real card icon and detailed rank-one reach are available")
 		card.selected.emit(id)
 	_expect(fan.level == 1 and hole.level == 1 and game.equipment_panel.get_level("banana_fan") == 1 and game.equipment_panel.get_level("black_hole") == 1 and game.spawner._offense_cards == 2, "real selections synchronize controllers, HUD and offense balance")
 	_isolate(game)

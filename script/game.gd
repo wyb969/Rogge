@@ -970,6 +970,7 @@ func prepare_control_debug(mode: StringName) -> void:
 	var ids: Array[String] = []
 	if mode in [&"fan", &"fan5", &"control_cards"]: ids.append("banana_fan")
 	if mode in [&"black_hole", &"black_hole5", &"control_cards"]: ids.append("black_hole")
+	if mode == &"control_cards": ids.append("thorn_whip")
 	for id in ids:
 		for _i in rank: _on_upgrade_selected(id)
 	variety.notify(L10n.text("控场卡片 %d 级\n芭蕉扇沿移动方向吹风 · 黑洞自动聚怪") % rank)

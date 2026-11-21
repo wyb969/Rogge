@@ -218,7 +218,7 @@ text = "黑洞 · 5级"
 
 [node name="DebugControlCardsButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
-text = "芭蕉扇 + 黑洞 · 满级"
+text = "战斗特效 · 黑洞 / 风 / 鞭"
 
 [node name="DebugReportButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer" unique_id=2014651469]
 layout_mode = 2

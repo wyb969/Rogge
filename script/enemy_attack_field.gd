@@ -1,5 +1,8 @@
 extends Node2D
 
+const FX_ATLAS := preload("res://script/combat_fx_atlas.gd")
+const CLEAVE := preload("res://rogge_art/combat-fx/cleave.png")
+
 const ARC := preload("res://script/arc_motion.gd")
 const MAX_ATTACKS := 12
 const CAPS := {&"cleave":3,&"boomerang":4,&"mortar":3}
@@ -200,10 +203,10 @@ func _draw() -> void:
 			draw_arc(Vector2.ZERO,SLASH_RADIUS,-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,18,Color(EDGE,0.35),7.0,false)
 			draw_polyline(_border,EDGE,2.4,false)
 			if warning: draw_arc(Vector2.ZERO,SLASH_RADIUS*progress,-SLASH_HALF_ANGLE,SLASH_HALF_ANGLE,18,Color(EDGE,0.9),2.2,false)
-			else:
-				var swing := (maxf(age,slot.windup)-slot.windup)/0.18
-				draw_arc(Vector2.ZERO,SLASH_RADIUS*0.85,-SLASH_HALF_ANGLE+1.15*swing-0.35,-SLASH_HALF_ANGLE+1.15*swing+0.4,12,Color(EDGE,0.95),5,false)
 			draw_set_transform(Vector2.ZERO)
+			if not warning:
+				var swing := clampf((age-slot.windup)/0.18, 0.0, 1.0)
+				FX_ATLAS.sweep(self, CLEAVE, to_local(slot.origin), slot.heading.angle(), SLASH_RADIUS, swing)
 		elif slot.kind==&"boomerang":
 			if warning:
 				draw_line(to_local(slot.origin),to_local(slot.target),INK,5,false)

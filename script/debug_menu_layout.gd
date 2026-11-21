@@ -2,7 +2,7 @@ extends Control
 
 # Only recent interactive tests live here. Older presets remain callable by smoke tests.
 const RECENT_ORDER: Array[String] = [
-	"DebugForgeButton", "DebugMinefieldButton",
+	"DebugForgeButton", "DebugControlCardsButton", "DebugMinefieldButton",
 	"DebugElectricGridButton",
 	"DebugWindSceneButton", "DebugIceSceneButton",
 	"DebugWinterButton",
@@ -17,7 +17,7 @@ const RECENT_ORDER: Array[String] = [
 	"DebugTacticalEnemiesButton",
 	"DebugEquipmentCombosButton", "DebugGrowthButton", "DebugArsenalButton",
 	"DebugBomb5Button", "DebugBombButton", "DebugFanStatusButton",
-	"DebugControlCardsButton", "DebugFan5Button", "DebugFanButton",
+	"DebugFan5Button", "DebugFanButton",
 	"DebugBlackHole5Button", "DebugBlackHoleButton", "DebugCritical5Button", "DebugCriticalButton",
 ]
 const DEFAULT_HINT: = "近期测试 · 下方按钮翻页"

@@ -66,7 +66,7 @@ func observed(id: String) -> Dictionary:
 			if id == "wind_emblem": stats = game.variety.wind_stats(game.variety.wind_level)
 			elif id == "echo_ember": stats = game.variety.echo_stats(game.variety.echo_level)
 			else:
-				var actor: Node = {"bomb":game.bomb_controller,"banana_fan":game.banana_fan,"black_hole":game.black_hole,"light_thorn":game.light_thorn,"ice_wave":game.ice_wave,"poison_trail":game.poison_trail,"lightning_ring":game.lightning_ring}[id]
+				var actor: Node = {"bomb":game.bomb_controller,"banana_fan":game.banana_fan,"black_hole":game.black_hole,"light_thorn":game.light_thorn,"ice_wave":game.ice_wave,"draw_slash":game.draw_slash,"poison_trail":game.poison_trail,"lightning_ring":game.lightning_ring}[id]
 				stats = actor._stats if id != "lightning_ring" else actor.stats_for(actor.level)
 			var result := {}
 			if id == "ice_wave": result["冰冻几率"] = stats.freeze_chance * 100

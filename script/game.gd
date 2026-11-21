@@ -42,6 +42,7 @@ var meteors: Node2D
 const POISON_TRAIL: = preload("res://script/poison_trail.gd")
 var poison_trail: Node2D
 const BANANA_FAN := preload("res://script/banana_fan.gd")
+const DRAW_SLASH := preload("res://script/draw_slash.gd")
 const ICE_WAVE := preload("res://script/ice_wave.gd")
 const LIGHT_THORN := preload("res://script/light_thorn.gd")
 const BLACK_HOLE := preload("res://script/black_hole.gd")
@@ -49,6 +50,7 @@ const BOMB := preload("res://script/bomb_controller.gd")
 const ARSENAL_COMBO := preload("res://script/arsenal_combo.gd")
 var banana_fan: Node2D
 var light_thorn: Node2D
+var draw_slash: Node2D
 var ice_wave: Node2D
 var black_hole: Node2D
 const RELIC_WEAPONS := preload("res://script/relic_weapons.gd")
@@ -154,6 +156,9 @@ func _ready() -> void :
 	banana_fan = BANANA_FAN.new()
 	banana_fan.name = "BananaFan"
 	add_child(banana_fan)
+	draw_slash = DRAW_SLASH.new()
+	draw_slash.name = "DrawSlash"
+	add_child(draw_slash)
 	ice_wave = ICE_WAVE.new()
 	ice_wave.name = "IceWave"
 	add_child(ice_wave)
@@ -305,6 +310,7 @@ func _reset_skill_controllers() -> void :
 	if poison_trail: poison_trail.reset()
 	if banana_fan: banana_fan.reset()
 	if light_thorn: light_thorn.reset()
+	if draw_slash: draw_slash.reset()
 	if ice_wave: ice_wave.reset()
 	if black_hole: black_hole.reset()
 	if arcane_weapons: arcane_weapons.reset()
@@ -406,6 +412,8 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 			poison_trail.upgrade()
 		"banana_fan":
 			banana_fan.upgrade()
+		"draw_slash":
+			draw_slash.upgrade()
 		"ice_wave":
 			ice_wave.upgrade()
 		"light_thorn":
@@ -424,7 +432,7 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
-		"banana_fan", "black_hole", "ice_wave", "light_thorn", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
+		"banana_fan", "black_hole", "ice_wave", "draw_slash", "light_thorn", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
 	]:
 		spawner.note_offense_card()
 
@@ -992,6 +1000,13 @@ func prepare_control_debug(mode: StringName) -> void:
 	variety.notify(L10n.text("控场卡片 %d 级\n芭蕉扇沿移动方向吹风 · 黑洞自动聚怪") % rank)
 	_spawn_control_targets()
 
+func prepare_draw_slash_debug() -> void:
+	hand_weapon.start_unequipped()
+	circle_weapon.start_unequipped()
+	equipment_panel.reset_equipment(false)
+	for i in 3: _on_upgrade_selected("draw_slash")
+	_spawn_control_targets([Vector2(-71, -38), Vector2(24, -91), Vector2(89, 24), Vector2(-18, 81), Vector2(147, 57)])
+
 func prepare_ice_wave_debug() -> void:
 	hand_weapon.start_unequipped()
 	circle_weapon.start_unequipped()
@@ -1006,8 +1021,8 @@ func prepare_light_thorn_debug() -> void:
 	for i in 3: _on_upgrade_selected("light_thorn")
 	_spawn_control_targets()
 
-func _spawn_control_targets() -> void:
-	for offset in [Vector2(95, -28), Vector2(125, 22), Vector2(165, 0), Vector2(-100, -45), Vector2(65, 105)]:
+func _spawn_control_targets(offsets := [Vector2(95, -28), Vector2(125, 22), Vector2(165, 0), Vector2(-100, -45), Vector2(65, 105)]) -> void:
+	for offset in offsets:
 		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
 		actor.set_player_ref(player)
 		actor.set_enemy_data(load("res://resource/Enemy_1.tres"))

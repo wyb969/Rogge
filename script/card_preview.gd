@@ -1,5 +1,6 @@
 extends RefCounted
 
+const DRAW_SLASH := preload("res://script/draw_slash.gd")
 const ICE_WAVE := preload("res://script/ice_wave.gd")
 const LIGHT_THORN := preload("res://script/light_thorn.gd")
 const FAN := preload("res://script/banana_fan.gd")
@@ -38,6 +39,7 @@ static func rank_for(game: Node, id: String) -> int:
 		"silver_knife", "cross_blade", "holy_water": return game.relic_weapons.levels[id]
 		"bomb": return game.bomb_controller.level
 		"light_thorn": return game.light_thorn.level
+		"draw_slash": return game.draw_slash.level
 		"ice_wave": return game.ice_wave.level
 		"banana_fan": return game.banana_fan.level
 		"black_hole": return game.black_hole.level
@@ -154,15 +156,15 @@ static func build(game: Node, id: String) -> Dictionary:
 			_row(rows,"作用距离",before.range if rank else 0,after.range)
 			_row(rows,"作用半径",before.radius if rank else 0,after.radius)
 			hint = L10n.text("后续直接攻击碎冰，追加冰刃基础伤害的60%。")
-		"bomb", "banana_fan", "light_thorn", "black_hole", "poison_trail", "lightning_ring", "wind_emblem", "echo_ember":
-			var source: Script = {"bomb":BOMB,"light_thorn":LIGHT_THORN,"banana_fan":FAN,"black_hole":HOLE,"poison_trail":POISON,"lightning_ring":RING}.get(id,VARIETY)
+		"bomb", "banana_fan", "light_thorn", "draw_slash", "black_hole", "poison_trail", "lightning_ring", "wind_emblem", "echo_ember":
+			var source: Script = {"bomb":BOMB,"light_thorn":LIGHT_THORN,"draw_slash":DRAW_SLASH,"banana_fan":FAN,"black_hole":HOLE,"poison_trail":POISON,"lightning_ring":RING}.get(id,VARIETY)
 			var before: Dictionary = source.wind_stats(maxi(rank,1)) if id == "wind_emblem" else (source.echo_stats(maxi(rank,1)) if id == "echo_ember" else source.stats_for(maxi(rank,1)))
 			var after: Dictionary = source.wind_stats(next) if id == "wind_emblem" else (source.echo_stats(next) if id == "echo_ember" else source.stats_for(next))
 			for key in ["damage","dps","radius","range","swing_time","interval","bolts","kills"]:
 				if not after.has(key): continue
 				var label: String = {"damage":"基础伤害","dps":"每秒伤害","radius":"作用半径","range":"作用距离","swing_time":"挥击用时","interval":"触发间隔","bolts":"闪电目标","kills":"所需击杀"}[key]
 				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key in ["interval","swing_time"] else "",key not in ["bolts","kills"])
-			hint = {"light_thorn":L10n.text("鞭身触敌造成伤害，每次挥击对同一敌人生效一次。"),"bomb":L10n.text("爆炸击飞 · 最高5级"),"banana_fan":L10n.text("气流击退 · 最高5级\n已有灼烧/中毒追加一跳，不传播"),"black_hole":L10n.text("牵引聚怪 · 持续3秒 · 最高5级"),"poison_trail":L10n.text("移动留雾 · 持续4 秒\n最高5级减速25% · 重叠不叠伤"),"lightning_ring":L10n.text("同时击中不同目标"),"wind_emblem":L10n.text("冲刺结束释放风压"),"echo_ember":L10n.text("最后击杀处引爆回响")}[id]
+			hint = {"draw_slash":L10n.text("拔剑一闪，斩中周身敌人。"),"light_thorn":L10n.text("鞭身触敌造成伤害，每次挥击对同一敌人生效一次。"),"bomb":L10n.text("爆炸击飞 · 最高5级"),"banana_fan":L10n.text("气流击退 · 最高5级\n已有灼烧/中毒追加一跳，不传播"),"black_hole":L10n.text("牵引聚怪 · 持续3秒 · 最高5级"),"poison_trail":L10n.text("移动留雾 · 持续4 秒\n最高5级减速25% · 重叠不叠伤"),"lightning_ring":L10n.text("同时击中不同目标"),"wind_emblem":L10n.text("冲刺结束释放风压"),"echo_ember":L10n.text("最后击杀处引爆回响")}[id]
 	var combo: String = COMBOS.hint_for(id)
 	if not combo.is_empty(): hint += ("\n" if not hint.is_empty() else "") + combo
 	var suffix := ("\n" + hint) if not hint.is_empty() else ""

@@ -1691,3 +1691,8 @@ Lv %d,Lv %d,等级 %d
 冰刃沿地面依次破出，有几率将敌人封入冰块。,Ice blades erupt along the ground and can encase enemies in ice.,冰刃沿地面依次破出，有几率将敌人封入冰块。
 每道冰刃波只命中同一目标一次。冰封期间，下一次直接攻击打碎冰块并追加冰刃基础伤害的60%。持续伤害不会碎冰。升级提高伤害、冰冻几率和冰刃覆盖的长宽。,"Each wave hits each target once. The next direct hit shatters the ice for an extra 60% of wave base damage. Damage over time leaves ice intact. Upgrades increase damage, freeze chance, reach and width.",每道冰刃波只命中同一目标一次。冰封期间，下一次直接攻击打碎冰块并追加冰刃基础伤害的60%。持续伤害不会碎冰。升级提高伤害、冰冻几率和冰刃覆盖的长宽。
 后续直接攻击碎冰，追加冰刃基础伤害的60%。,The next direct hit shatters ice for an extra 60% of wave base damage.,后续直接攻击碎冰，追加冰刃基础伤害的60%。
+拔刀斩,Draw Slash,拔刀斩
+拔刀斩 · 试刀,Draw Slash · Sword practice,拔刀斩 · 试刀
+拔刀 %s伤,Slash %s DMG,拔刀 %s伤
+拔剑一闪，斩中周身敌人。,Draw the blade in a flash and strike all around you.,拔剑一闪，斩中周身敌人。
+敌人贴近时自动拔刀，瞬间斩中玩家周围一整圈。每个目标每刀只受一次伤害。升级缩短冷却，提高伤害并扩大斩击半径。,Automatically draw when enemies close in. Each slash hits every enemy in the circle once. Upgrades shorten the cooldown and increase damage and radius.,敌人贴近时自动拔刀，瞬间斩中玩家周围一整圈。每个目标每刀只受一次伤害。升级缩短冷却，提高伤害并扩大斩击半径。

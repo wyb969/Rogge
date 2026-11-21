@@ -1685,3 +1685,9 @@ Lv %d,Lv %d,等级 %d
 鞭身触敌造成伤害，每次挥击对同一敌人生效一次。,Each enemy takes damage once per swing when touched by the lash.,鞭身触敌造成伤害，每次挥击对同一敌人生效一次。
 光鞭朝附近敌人挥动。鞭梢滞后于握柄，每次出手的弧度和节奏都会变化。一次挥击可击中多个敌人，同一敌人只受一次伤害。升级增加伤害和鞭长，挥鞭更快，两鞭之间的间隔也更短。,"The whip swings toward nearby enemies. Its tip trails the grip, changing its arc and rhythm each swing. One swing can strike several enemies, each only once. Upgrades increase damage and reach while shortening both the swing and the time between attacks.",光鞭朝附近敌人挥动。鞭梢滞后于握柄，每次出手的弧度和节奏都会变化。一次挥击可击中多个敌人，同一敌人只受一次伤害。升级增加伤害和鞭长，挥鞭更快，两鞭之间的间隔也更短。
 挥击用时,Swing time,挥击用时
+冰刃波,Ice Blade Wave,冰刃波
+冰刃波 · 碎冰练习,Ice Blade Wave · Shatter practice,冰刃波 · 碎冰练习
+冰刃 %s伤,Ice blade %s dmg,冰刃 %s伤
+冰刃沿地面依次破出，有几率将敌人封入冰块。,Ice blades erupt along the ground and can encase enemies in ice.,冰刃沿地面依次破出，有几率将敌人封入冰块。
+每道冰刃波只命中同一目标一次。冰封期间，下一次直接攻击打碎冰块并追加冰刃基础伤害的60%。持续伤害不会碎冰。升级提高伤害、冰冻几率和冰刃覆盖的长宽。,"Each wave hits each target once. The next direct hit shatters the ice for an extra 60% of wave base damage. Damage over time leaves ice intact. Upgrades increase damage, freeze chance, reach and width.",每道冰刃波只命中同一目标一次。冰封期间，下一次直接攻击打碎冰块并追加冰刃基础伤害的60%。持续伤害不会碎冰。升级提高伤害、冰冻几率和冰刃覆盖的长宽。
+后续直接攻击碎冰，追加冰刃基础伤害的60%。,The next direct hit shatters ice for an extra 60% of wave base damage.,后续直接攻击碎冰，追加冰刃基础伤害的60%。

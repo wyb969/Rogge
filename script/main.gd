@@ -356,6 +356,8 @@ func _launch_run(mode: StringName, opening: Dictionary = {}) -> void :
 			game.forge.seal_stage()
 			game._forge_due = true
 			game._open_forge()
+		&"ice_wave":
+			game.prepare_ice_wave_debug()
 		&"light_thorn":
 			game.prepare_light_thorn_debug()
 		&"arcane_weapons":

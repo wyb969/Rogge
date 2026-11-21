@@ -1,5 +1,6 @@
 extends RefCounted
 
+const ICE_WAVE := preload("res://script/ice_wave.gd")
 const LIGHT_THORN := preload("res://script/light_thorn.gd")
 const FAN := preload("res://script/banana_fan.gd")
 const HOLE := preload("res://script/black_hole.gd")
@@ -37,6 +38,7 @@ static func rank_for(game: Node, id: String) -> int:
 		"silver_knife", "cross_blade", "holy_water": return game.relic_weapons.levels[id]
 		"bomb": return game.bomb_controller.level
 		"light_thorn": return game.light_thorn.level
+		"ice_wave": return game.ice_wave.level
 		"banana_fan": return game.banana_fan.level
 		"black_hole": return game.black_hole.level
 		"poison_trail": return game.poison_trail.level
@@ -144,6 +146,14 @@ static func build(game: Node, id: String) -> Dictionary:
 				var label: String = {"damage":"单次伤害","dps":"每秒伤害","count":"飞刀数量","range":"飞行距离","radius":"净化半径","duration":"持续时间","interval":"触发间隔"}[key]
 				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key in ["duration","interval"] else "",key != "count")
 			hint = {"silver_knife":L10n.text("自动瞄准附近敌人穿透 · 每把对同一目标命中一次"),"cross_blade":L10n.text("自动瞄准 · 固定路径往返各命中一次"),"holy_water":L10n.text("敌人脚下净化区域 · 每0.5秒结算\n重叠区域不叠伤，不触发暴击和异常传播")}[id]+L10n.text("\n最高5级")
+		"ice_wave":
+			var before := ICE_WAVE.stats_for(maxi(rank, 1))
+			var after := ICE_WAVE.stats_for(next)
+			_row(rows,"基础伤害",before.damage if rank else 0,after.damage)
+			_row(rows,"冰冻几率",100*before.freeze_chance if rank else 0,100*after.freeze_chance,"%")
+			_row(rows,"作用距离",before.range if rank else 0,after.range)
+			_row(rows,"作用半径",before.radius if rank else 0,after.radius)
+			hint = L10n.text("后续直接攻击碎冰，追加冰刃基础伤害的60%。")
 		"bomb", "banana_fan", "light_thorn", "black_hole", "poison_trail", "lightning_ring", "wind_emblem", "echo_ember":
 			var source: Script = {"bomb":BOMB,"light_thorn":LIGHT_THORN,"banana_fan":FAN,"black_hole":HOLE,"poison_trail":POISON,"lightning_ring":RING}.get(id,VARIETY)
 			var before: Dictionary = source.wind_stats(maxi(rank,1)) if id == "wind_emblem" else (source.echo_stats(maxi(rank,1)) if id == "echo_ember" else source.stats_for(maxi(rank,1)))

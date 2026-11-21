@@ -82,6 +82,7 @@ const BURN_SPREAD_RADIUS: = 78.0
 
 var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
 var electric_stun_left := 0.0
+var blade_ice: RefCounted
 var freeze_time: float = 0.0
 var freeze_slow: float = 0.5
 var poison_slow: = 1.0
@@ -268,7 +269,7 @@ func _process(delta: float) -> void :
 	if _hit_flash_left == 0 and not terrain_impulse.is_active(): set_process(false)
 
 func is_frozen() -> bool:
-	return freeze_time > 0.0
+	return freeze_time > 0.0 or blade_ice != null
 
 func status_move_scale() -> float:
 	return minf(freeze_slow if is_frozen() else 1.0, poison_slow)
@@ -827,7 +828,9 @@ func apply_hit(hit_data: Dictionary) -> void :
 	var crit_multiplier := 1.0
 	if not damage_is_final and player_node != null and player_node.has_method("roll_critical_multiplier"):
 		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
-	var dealt: float = receive_hit(damage_dir, damage_value * crit_multiplier, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))), not hit_data.get("from_status",false))
+	var impact_damage: float = damage_value * crit_multiplier
+	if blade_ice != null: impact_damage += blade_ice.break_damage(self, hit_data)
+	var dealt: float = receive_hit(damage_dir, impact_damage, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))), not hit_data.get("from_status",false))
 	if not hit_data.get("from_status", false) and not damage_is_final:
 		_report_lifesteal(dealt)
 
@@ -950,6 +953,7 @@ func _apply_health_loss(dealt: float, death_direction: Vector2 = Vector2.ZERO) -
 	health -= dealt
 	if health <= 0:
 		_death_started = true
+		if blade_ice != null: blade_ice.release(self)
 		var feedback: = JUICE.find(self)
 		if feedback != null:
 			var force := death_direction
@@ -998,6 +1002,16 @@ func _apply_environment_motion(delta: float, previous_velocity: Vector2) -> void
 	else:
 		velocity = desired
 
+func encase_in_blade_ice(ice: RefCounted) -> bool:
+	if _death_started or blade_ice != null: return false
+	blade_ice = ice
+	clear_terrain_impulse()
+	_cancel_controlled_attack()
+	return true
+
+func _exit_tree() -> void:
+	if blade_ice != null: blade_ice.release(self)
+
 func apply_electric_stun(seconds: float) -> void:
 	if _death_started: return
 	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
@@ -1038,6 +1052,10 @@ func apply_terrain_impulse(push: Vector2) -> void:
 
 func _tick_environment_control(delta: float) -> bool:
 	var stunned := _tick_electric_stun(delta)
+	if blade_ice != null:
+		blade_ice.tick(self, delta)
+		velocity = Vector2.ZERO
+		return true
 	if terrain_impulse.tick(self,delta): return true
 	return stunned
 

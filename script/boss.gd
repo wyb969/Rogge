@@ -47,6 +47,7 @@ var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
 var electric_stun_left := 0.0
 const CONTROL_LIMIT := 3.0
 const CONTROL_IMMUNITY := 3.0
+var blade_ice: RefCounted
 var control_time := 0.0
 var control_immunity_left := 0.0
 var warning_locked: = false
@@ -323,6 +324,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 	if not damage_is_final and critical_player != null and critical_player.has_method("roll_critical_multiplier"):
 		crit_multiplier = critical_player.roll_critical_multiplier(hit_data)
 	damage_value *= crit_multiplier
+	if blade_ice != null: damage_value += blade_ice.break_damage(self, hit_data)
 	var critical := crit_multiplier > 1.0
 	var status_damage := preload("res://script/demage_text.gd").is_status_hit(hit_data)
 	boss_current_health = max(0.0, boss_current_health - damage_value)
@@ -538,6 +540,16 @@ func _add_to_effect_container(node: Node) -> void :
 	else:
 		get_tree().current_scene.add_child(node)
 
+func encase_in_blade_ice(ice: RefCounted) -> bool:
+	if is_dying or is_control_immune() or is_in_group("trial_enemy") or blade_ice != null: return false
+	blade_ice = ice
+	clear_terrain_impulse()
+	_cancel_controlled_attack()
+	return true
+
+func _exit_tree() -> void:
+	if blade_ice != null: blade_ice.release(self)
+
 func apply_electric_stun(seconds: float) -> void:
 	if is_dying or is_control_immune() or seconds<=0: return
 	electric_stun_left = maxf(electric_stun_left,clampf(seconds,0,1))
@@ -570,6 +582,7 @@ func is_control_immune() -> bool:
 	return control_immunity_left>0
 
 func _reset_control_guard() -> void:
+	if blade_ice != null: blade_ice.release(self)
 	control_time=0
 	control_immunity_left=0
 	electric_stun_left=0
@@ -583,11 +596,13 @@ func _tick_environment_control(delta: float) -> bool:
 		control_immunity_left=maxf(0,control_immunity_left-step)
 		return false
 	var duration := maxf(electric_stun_left,terrain_impulse.left)
+	if blade_ice != null: duration = maxf(duration, blade_ice.left)
 	if duration>0 or poison_slow<1:
 		control_time+=step if poison_slow<1 else minf(step,duration)
 		if control_time>=CONTROL_LIMIT-0.000001:
 			control_time=0
 			control_immunity_left=CONTROL_IMMUNITY
+			if blade_ice != null: blade_ice.release(self)
 			electric_stun_left=0
 			poison_slow=1
 			clear_terrain_impulse()
@@ -595,6 +610,10 @@ func _tick_environment_control(delta: float) -> bool:
 	else:
 		control_time=0
 	var stunned := _tick_electric_stun(delta)
+	if blade_ice != null:
+		blade_ice.tick(self, delta)
+		velocity = Vector2.ZERO
+		return true
 	if terrain_impulse.tick(self,delta): return true
 	return stunned
 

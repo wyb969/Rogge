@@ -108,6 +108,10 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugIceWaveButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "冰刃波 · 碎冰练习"
+
 [node name="DebugLightThornButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "光之荆棘 · 试挥"
@@ -284,3 +288,4 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugForgeButton" to="." method="_launch_run" binds= [&"forge"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugMinefieldButton" to="." method="_launch_run" binds= [&"minefield"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugLightThornButton" to="." method="_launch_run" binds= [&"light_thorn"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugIceWaveButton" to="." method="_launch_run" binds= [&"ice_wave"]]

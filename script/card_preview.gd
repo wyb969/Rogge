@@ -164,9 +164,10 @@ static func build(game: Node, id: String) -> Dictionary:
 			var after := BLOOD_VORTEX.stats_for(next)
 			_row(rows,"单段伤害",before.damage if rank else 0,after.damage)
 			_row(rows,"终斩伤害",before.damage * BLOOD_VORTEX.FINISH_MULTIPLIER if rank else 0,after.damage * BLOOD_VORTEX.FINISH_MULTIPLIER)
-			_row(rows,"持续时间",before.beats if rank else 0,after.beats,"s")
+			_row(rows,"触发间隔",before.interval if rank else 0,after.interval,"s")
+			_row(rows,"持续时间",before.duration if rank else 0,after.duration,"s")
 			_row(rows,"攻击段数",before.beats if rank else 0,after.beats,"",false)
-			hint = L10n.text("血涡吸住前方敌人，每秒攻击，最后重斩击飞。")
+			hint = L10n.text("长螺旋沿剑锋吸聚敌人，最后一段重斩击飞。")
 		"ice_wave":
 			var before := ICE_WAVE.stats_for(maxi(rank, 1))
 			var after := ICE_WAVE.stats_for(next)

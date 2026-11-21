@@ -55,6 +55,7 @@ func _run() -> void:
 	check(v.cast(), "nearby target starts a vortex")
 	var center: Vector2 = v.global_position
 	var outer: Node2D = actors[1]
+	outer.global_position = center + Vector2(88,-19)
 	var dist := outer.global_position.distance_to(center)
 	await physics_frame
 	await physics_frame
@@ -63,34 +64,43 @@ func _run() -> void:
 	outer._physics_process(0.05)
 	check(outer.global_position.distance_to(center) < dist, "real actor moves toward core")
 	var targets: Array[Target] = []
-	for i in 69: targets.append(place(g,center + Vector2.from_angle(TAU*i/69.0) * 44.0))
+	for i in 69: targets.append(place(g,center + Vector2.from_angle(TAU*i/69.0) * 29.0))
 	var outside := place(g,center+Vector2.DOWN*120)
 	var late := place(g,center+Vector2.UP*140)
+	var near := place(g,origin+Vector2(9,3))
+	var mid := place(g,center+Vector2(0,39))
+	var far := place(g,origin+Vector2(247,55))
+	var narrow_side := place(g,origin+Vector2(20,36))
+	var past_tip := place(g,origin+Vector2(281,0))
 	await physics_frame
 	await physics_frame
-	v._physics_process(0.89)
-	check(targets[0].pulses == 0, "no damage before first second")
+	var interval: float = v._interval
+	v._physics_process(interval-0.11)
+	check(targets[0].pulses == 0, "no damage before first beat")
 	paused = true
 	v._physics_process(1.0)
 	paused = false
-	check(targets[0].pulses == 0 and is_equal_approx(v._age,0.99), "pause freezes the attack clock")
+	check(targets[0].pulses == 0 and is_equal_approx(v._age,interval-0.01), "pause freezes the attack clock")
 	v._physics_process(0.01)
 	check(targets[68].pulses == 1 and targets[0].pulses == 1, "first pulse crosses the 64-body page boundary")
-	late.global_position = center + Vector2.UP*60
+	check(near.pulses == 1 and mid.pulses == 1 and far.pulses == 1, "sword end, middle and far mouth are damaging")
+	check(narrow_side.pulses == 0 and past_tip.pulses == 0, "narrow flank and beyond mouth remain outside")
+	late.global_position = center + Vector2.UP*24
 	await physics_frame
 	await physics_frame
 	var damage: float = v._damage
+	var cast_beats: int = v._beats
 	v.upgrade()
 	v.set_physics_process(false)
-	v._physics_process(2.04)
+	v._physics_process(interval*2+0.04)
 	check(targets[0].pulses == 3 and late.pulses == 2 and outside.damage == 0.0, "global beats include late arrivals even across long updates")
 	late.global_position = center + Vector2.UP*160
 	await physics_frame
 	await physics_frame
-	v._physics_process(2.0)
+	v._physics_process(interval*(cast_beats-3))
 	var correct := true
-	for t in targets: correct = correct and t.pulses == 4 and t.slashes == 1 and is_equal_approx(t.damage,damage * 7)
-	check(correct, "all 69 targets receive four ordinary beats and one triple finisher using the cast snapshot")
+	for t in targets: correct = correct and t.pulses == cast_beats-1 and t.slashes == 1 and is_equal_approx(t.damage,damage * (cast_beats+2))
+	check(correct, "all 69 targets receive the snapshotted ordinary beats and one triple finisher using the cast snapshot")
 	check(late.pulses == 2 and late.slashes == 0 and outside.damage == 0, "leaving the circle avoids the last beats")
 	check(not v._active and outer.blood_vortex_source == null and outer.terrain_impulse.left > 0, "release and airborne impulse on the finishing beat")
 	outer._tick_airborne_visual(0.09)
@@ -99,11 +109,33 @@ func _run() -> void:
 	check(targets[0].slashes == 1 and not v._active, "afterimage cannot repeat damage")
 	for rank in range(1,6):
 		var stats: Dictionary = v.stats_for(rank)
-		check(stats.beats == rank+2 and stats.damage == 12+3*(rank-1), "each rank adds one second, one beat and damage")
-	check(v.cast() and v._beats == 6, "next cast uses upgraded duration")
+		check(stats.beats == 6+2*(rank-1) and is_equal_approx(stats.interval,0.50-0.03*(rank-1)) and is_equal_approx(stats.duration, stats.beats * stats.interval) and stats.damage == 12+3*(rank-1), "rank increases hits, frequency, duration and damage")
+	check(v.cast() and v._beats == 12, "next cast uses upgraded duration")
 	v._physics_process(0.15)
 	g.variety.clear_combat_effects()
 	check(not v._active and v._held.is_empty() and outer.blood_vortex_source == null and not v._fx.visible and v.level == 4, "stage exit releases without a late strike")
+	# Rotate a real cast toward an enemy below the player; test a complete rank-one cycle.
+	for a in actors: a.global_position = origin+Vector2(-480,0)
+	for t in targets: t.global_position = origin+Vector2(500,0)
+	for t in [outside,late,near,mid,far,narrow_side,past_tip]: t.global_position = origin+Vector2(-500,0)
+	var vertical := place(g,origin+Vector2(0,30))
+	var vertical_tip := place(g,origin+Vector2(51,248))
+	var wrong_axis := place(g,origin+Vector2(180,0))
+	await physics_frame
+	await physics_frame
+	v.reset()
+	v.upgrade()
+	v.set_physics_process(false)
+	check(v.cast() and v._heading.dot(Vector2.DOWN) > 0.99, "real cast turns the entire hit area toward the target")
+	v._physics_process(0.49)
+	check(vertical.pulses == 0, "rank one waits a full half second")
+	for i in 5:
+		v._physics_process(0.01 if i == 0 else 0.5)
+		check(vertical.pulses == i+1 and vertical.slashes == 0, "first five rank-one half-second beats are ordinary")
+	v._physics_process(0.499)
+	check(vertical.slashes == 0, "final strike waits until three seconds")
+	v._physics_process(0.001)
+	check(vertical_tip.pulses == 5 and vertical_tip.slashes == 1 and wrong_axis.damage == 0 and is_equal_approx(vertical.damage,96.0), "sixth hit is a single triple finisher along the rotated helix")
 	g.spawner.stage = 1
 	g.spawner.spawn_boss()
 	var boss: Node = g.spawner._active_bosses[0]

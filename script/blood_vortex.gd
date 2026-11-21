@@ -3,8 +3,9 @@ extends Node2D
 const FX := preload("res://script/blood_vortex_fx.gd")
 const PULSE := preload("res://rogge_art/combat-fx/blood-vortex/pulse.ogg")
 const FINISH := preload("res://rogge_art/combat-fx/blood-vortex/finish.ogg")
-const RADIUS := 88.0
-const REACH := 105.0
+const LENGTH := 270.0
+const ROOT_RADIUS := 18.0
+const MOUTH_RADIUS := 70.0
 const SCAN_STEP := 0.08
 const RECOVERY := 4.5
 const FINISH_MULTIPLIER := 3.0
@@ -15,6 +16,8 @@ var _stats := stats_for(1)
 var _active := false
 var _age := 0.0
 var _beats := 0
+var _interval := 0.5
+var _duration := 0.0
 var _next_beat := 1
 var _damage := 0.0
 var _heading := Vector2.RIGHT
@@ -29,18 +32,30 @@ var _sound := AudioStreamPlayer.new()
 
 static func stats_for(rank: int) -> Dictionary:
 	var step := clampi(rank, 1, 5) - 1
-	return {"damage": 12.0 + 3.0 * step, "beats": 3 + step}
+	var beats := 6 + 2 * step
+	var interval := (50 - 3 * step) / 100.0
+	return {"damage": 12.0 + 3.0 * step, "beats": beats, "interval": interval, "duration": beats * interval}
 
 func _ready() -> void:
 	add_child(_fx)
 	add_child(_sound)
 	AudioManager.configure_sfx(_sound)
 	_sound.volume_db = -10.0
-	var shape := CircleShape2D.new()
-	shape.radius = RADIUS
-	_query.shape = shape
+	_query.shape = _funnel_shape()
 	_query.collision_mask = 8
 	reset()
+
+# The axial profile matches the drawn helix, with an eight-pixel cap at either end.
+func _funnel_shape() -> ConvexPolygonShape2D:
+	var points := PackedVector2Array()
+	for offset: float in [0.0, 1.0, 3.0, 5.0, 8.0, LENGTH - 8.0, LENGTH - 5.0, LENGTH - 3.0, LENGTH - 1.0, LENGTH]:
+		var cap := minf(minf(offset, LENGTH - offset) / 8.0, 1.0)
+		var width := lerpf(ROOT_RADIUS, MOUTH_RADIUS, offset / LENGTH) * sqrt(cap * (2.0 - cap))
+		points.append(Vector2(offset - LENGTH * 0.5, width))
+		points.append(Vector2(offset - LENGTH * 0.5, -width))
+	var shape := ConvexPolygonShape2D.new()
+	shape.set_point_cloud(points)
+	return shape
 
 func upgrade() -> void:
 	level = mini(5, level + 1)
@@ -70,20 +85,22 @@ func _release_all() -> void:
 func cast() -> bool:
 	if level == 0 or _active or not game.variety._battle_active(): return false
 	var origin: Vector2 = game.player.global_position
-	var target := CombatTargets.nearest(origin, (REACH + RADIUS) ** 2)
+	var target := CombatTargets.nearest(origin, LENGTH * LENGTH)
 	if not is_instance_valid(target) or not game.is_ancestor_of(target): return false
 	_heading = origin.direction_to(target.global_position)
 	if _heading.is_zero_approx(): _heading = game.player.last_move_direction.normalized()
 	if _heading.is_zero_approx(): _heading = Vector2.RIGHT
-	global_position = origin + _heading * clampf(origin.distance_to(target.global_position), 42.0, REACH)
-	_query.transform = Transform2D(0.0, global_position)
+	global_position = origin + _heading * (LENGTH * 0.5)
+	_query.transform = Transform2D(_heading.angle(), global_position)
 	_damage = _stats.damage
 	_beats = int(_stats.beats)
+	_interval = _stats.interval
+	_duration = _stats.duration
 	_next_beat = 1
 	_age = 0.0
 	_scan_left = 0.0
 	_active = true
-	_fx.begin(global_position, _heading, RADIUS)
+	_fx.begin(global_position, _heading, LENGTH, MOUTH_RADIUS)
 	return true
 
 func _contacts() -> Dictionary:
@@ -142,14 +159,14 @@ func _physics_process(delta: float) -> void:
 		_cooldown -= delta
 		if _cooldown <= 0.0 and not cast(): _cooldown = 0.20
 		return
-	_age = minf(_beats, _age + delta)
-	_fx.advance(_age, float(_beats))
+	_age = minf(_duration, _age + delta)
+	_fx.advance(_age, _duration)
 	_scan_left -= delta
-	if _scan_left > 0.0 and _age + 0.000001 < _next_beat: return
+	if _scan_left > 0.0 and _age + 0.000001 < _next_beat * _interval: return
 	_scan_left = SCAN_STEP
 	var inside := _contacts()
 	_capture(inside)
-	while _active and _age + 0.000001 >= _next_beat:
+	while _active and _age + 0.000001 >= _next_beat * _interval:
 		var final := _next_beat == _beats
 		_next_beat += 1
 		if final:

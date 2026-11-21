@@ -1708,5 +1708,5 @@ Lv %d,Lv %d,等级 %d
 终斩伤害,Finishing damage,终斩伤害
 攻击段数,Total hits,攻击段数
 血涡 %s伤,Vortex %s DMG,血涡 %s伤
-血涡吸住前方敌人，每秒攻击，最后重斩击飞。,Draw enemies into a blood vortex. Hit every second and launch them with the final slash.,血涡吸住前方敌人，每秒攻击，最后重斩击飞。
-血涡固定在前方，范围内的敌人每秒受到一段攻击。最后一段替换为三倍伤害的重斩，将敌人击飞。升级提高每段伤害，并延长一秒、多攻击一段。首领遵守既有控制抗性。,"The vortex stays ahead of the caster. It hits every enemy inside once per second. The final pulse becomes a heavy slash dealing triple damage and launching targets. Each rank adds damage, one second and one hit. Boss control resistance applies.",血涡固定在前方，范围内的敌人每秒受到一段攻击。最后一段替换为三倍伤害的重斩，将敌人击飞。升级提高每段伤害，并延长一秒、多攻击一段。首领遵守既有控制抗性。
+长螺旋沿剑锋吸聚敌人，最后一段重斩击飞。,Draw enemies along the helix and launch them with the final slash.,长螺旋沿剑锋吸聚敌人，最后一段重斩击飞。
+从剑端到涡口，整条螺旋都能吸附和命中敌人。一级每0.5秒一击，共6段，第6段为三倍伤害的击飞重斩。每次升级增加2段，提高伤害并缩短段间隔。首领遵守既有控制抗性。,"The whole helix pulls and hits enemies. Rank one hits six times at 0.5-second intervals. The last hit deals triple damage and launches targets. Each rank adds two hits, increases damage and shortens the interval. Boss control resistance applies.",从剑端到涡口，整条螺旋都能吸附和命中敌人。一级每0.5秒一击，共6段，第6段为三倍伤害的击飞重斩。每次升级增加2段，提高伤害并缩短段间隔。首领遵守既有控制抗性。

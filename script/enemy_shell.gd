@@ -796,13 +796,13 @@ func get_status_echo_damage(poison_tick: float) -> float:
 		total += _mitigate(poison_tick)
 	return total
 
-func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false, visual_effect: StringName = &"", impact: bool = true, quiet_feedback: bool = false) -> float:
+func receive_hit(direction: Vector2, damage_value: float, status_damage: bool = false, critical: bool = false, damage_is_final: bool = false, visual_effect: StringName = &"", impact: bool = true, quiet_feedback: bool = false, hitstop: bool = true) -> float:
 	if _death_started or damage_value <= 0: return 0.0
 	var dealt: float = damage_value if damage_is_final else _mitigate(damage_value)
 	if not quiet_feedback:
 		var feedback: = JUICE.find(self)
 		if feedback != null: feedback.hit(global_position, direction, is_elite)
-		if feedback != null and dealt > 0 and impact: feedback.impact_feedback.pulse(self,sprite_2d)
+		if feedback != null and dealt > 0 and impact: feedback.impact_feedback.pulse(self,sprite_2d,false,hitstop)
 		if impact and not status_damage: _hurt_pose_left = 4.0 / 12.0
 		play_hit_tween(direction)
 		show_damage_text(dealt, status_damage, critical, visual_effect)
@@ -833,7 +833,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
 	var impact_damage: float = damage_value * crit_multiplier
 	if blade_ice != null: impact_damage += blade_ice.break_damage(self, hit_data)
-	var dealt: float = receive_hit(damage_dir, impact_damage, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))), not hit_data.get("from_status",false), hit_data.get("quiet_crowd_feedback", false))
+	var dealt: float = receive_hit(damage_dir, impact_damage, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))), not hit_data.get("from_status",false), hit_data.get("quiet_crowd_feedback", false), hit_data.get("hitstop",true))
 	if not hit_data.get("from_status", false) and not damage_is_final:
 		_report_lifesteal(dealt)
 

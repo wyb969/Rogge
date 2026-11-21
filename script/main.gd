@@ -72,6 +72,7 @@ func _ready() -> void :
 	game_end_ui.hide_result()
 
 	await load_new_game()
+	preload("res://script/blood_vortex_fx.gd").warm_at_menu(main_ui, game.combat_feedback.impact_feedback.material)
 
 	show_main_menu()
 

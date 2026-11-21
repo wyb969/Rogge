@@ -14,6 +14,8 @@ var _game: WeakRef
 var _last_frame: = 0
 var _last_sample: = 0
 var _last_save: = 0
+var _transition_frames: Array = []
+var _transition_left := 0
 var _last_stall: = -10000
 var _js: Object
 var _logger: Logger
@@ -38,6 +40,7 @@ func _ready() -> void :
 func begin(game: Node, mode: String) -> void :
 	if report.get("state") == "active":
 		finish("replaced_run")
+	_transition_left = 0
 	_game = weakref(game)
 	var now: = Time.get_ticks_msec()
 	_last_frame = now
@@ -68,6 +71,15 @@ func mark(kind: String, details: Dictionary = {}, checkpoint: bool = false) -> v
 		_sample(0.0)
 		_save()
 
+# Keep short transition hitches visible even below the generic 160ms stall
+# threshold. Only the regular save timer writes these samples to storage.
+func mark_transition(kind: String, details: Dictionary = {}) -> void:
+	if report.get("state") != "active": return
+	mark(kind, details)
+	_transition_frames = []
+	report.events.back().details["display_frame_ms"] = _transition_frames
+	_transition_left = 4
+
 func finish(reason: String) -> void :
 	if report.get("state") != "active":
 		return
@@ -82,6 +94,9 @@ func _process(_delta: float) -> void :
 	_last_frame = now
 	if report.get("state") != "active":
 		return
+	if _transition_left > 0:
+		_transition_frames.append(frame_ms)
+		_transition_left -= 1
 	report.peaks["frame_ms"] = maxf(float(report.peaks.get("frame_ms", 0)), frame_ms)
 	if now - _last_sample >= 1000:
 		_sample(frame_ms)

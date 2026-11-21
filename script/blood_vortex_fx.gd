@@ -16,6 +16,22 @@ var _length := 1.0
 var _heading := Vector2.RIGHT
 var _frame := 0
 
+# Submit both sheets once while the main menu is visible. A hidden sprite does
+# not issue a draw. Each sheet has a transparent top-left texel.
+static func warm_at_menu(layer: CanvasLayer, hit_material: Material) -> void:
+	if DisplayServer.get_name() == "headless": return
+	for i in 3:
+		var sample := Sprite2D.new()
+		sample.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		sample.texture = CLEAVE if i == 1 else VORTEX
+		if i == 2: sample.material = hit_material
+		sample.region_enabled = true
+		sample.region_rect = Rect2(0, 0, 1, 1)
+		sample.centered = false
+		sample.position = Vector2(2, 2)
+		layer.add_child(sample)
+		RenderingServer.frame_post_draw.connect(sample.queue_free, CONNECT_ONE_SHOT)
+
 func _ready() -> void:
 	z_index = 12
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST

@@ -340,7 +340,7 @@ func apply_hit(hit_data: Dictionary) -> void :
 		if steal_target != null and steal_target.has_method("notify_damage_dealt"):
 			steal_target.notify_damage_dealt(damage_value)
 
-	play_hit_feedback(damage_dir.normalized(),damage_value > 0 and not hit_data.get("from_status",false))
+	play_hit_feedback(damage_dir.normalized(),damage_value > 0 and not hit_data.get("from_status",false),hit_data.get("hitstop",true))
 
 	if boss_current_health <= health_max_value * 0.72:
 		rush_ready_time = 0.25
@@ -383,7 +383,7 @@ func _sync_outline_frame_uv() -> void :
 	var fh: = 1.0 / float(vf)
 	mat.set_shader_parameter("frame_uv_rect", Vector4(float(col) * fw, float(row) * fh, fw, fh))
 
-func play_hit_feedback(hit_dir: Vector2, impact: bool = true) -> void :
+func play_hit_feedback(hit_dir: Vector2, impact: bool = true, hitstop: bool = true) -> void :
 	if impact and poses: poses.hurt_left = 0.18
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null: feedback.hit(global_position, hit_dir, true)
@@ -394,7 +394,7 @@ func play_hit_feedback(hit_dir: Vector2, impact: bool = true) -> void :
 	_play_hit_deform(hit_dir)
 	if impact and feedback != null:
 		feedback.impact_feedback.pulse(self,sprite_2d,false,false)
-		_request_hitstop(0.42,0.022)
+		if hitstop: _request_hitstop(0.42,0.022)
 
 func _play_hit_deform(hit_dir: Vector2) -> void :
 	if hurt_tween != null and hurt_tween.is_valid():

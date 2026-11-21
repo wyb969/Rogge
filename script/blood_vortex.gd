@@ -1,8 +1,8 @@
 extends Node2D
 
 const FX := preload("res://script/blood_vortex_fx.gd")
-const PULSE := preload("res://rogge_art/combat-fx/blood-vortex/pulse.ogg")
-const FINISH := preload("res://rogge_art/combat-fx/blood-vortex/finish.ogg")
+const PULSE := preload("res://rogge_art/combat-fx/blood-vortex/pulse.wav")
+const FINISH := preload("res://rogge_art/combat-fx/blood-vortex/finish.wav")
 const LENGTH := 270.0
 const ROOT_RADIUS := 18.0
 const MOUTH_RADIUS := 70.0
@@ -30,7 +30,8 @@ var _retry_at := {}
 var _generation := 0
 var _query := PhysicsShapeQueryParameters2D.new()
 var _fx := FX.new()
-var _sound := AudioStreamPlayer.new()
+var _pulse_sound := AudioStreamPlayer.new()
+var _finish_sound := AudioStreamPlayer.new()
 @onready var game: Node = get_parent()
 
 static func stats_for(rank: int) -> Dictionary:
@@ -41,9 +42,12 @@ static func stats_for(rank: int) -> Dictionary:
 
 func _ready() -> void:
 	add_child(_fx)
-	add_child(_sound)
-	AudioManager.configure_sfx(_sound)
-	_sound.volume_db = -10.0
+	_pulse_sound.stream = PULSE
+	_finish_sound.stream = FINISH
+	for player: AudioStreamPlayer in [_pulse_sound, _finish_sound]:
+		add_child(player)
+		AudioManager.configure_sfx(player)
+		player.volume_db = -10.0
 	_query.shape = _funnel_shape()
 	_query.collision_mask = 8
 	reset()
@@ -76,7 +80,8 @@ func clear_combat_effects() -> void:
 	_generation += 1
 	_active = false
 	_release_all()
-	_sound.stop()
+	_pulse_sound.stop()
+	_finish_sound.stop()
 	_fx.clear()
 
 func _release_all() -> void:
@@ -105,6 +110,7 @@ func cast() -> bool:
 	_scan_left = 0.0
 	_active = true
 	_fx.begin(global_position, _heading, LENGTH, MOUTH_RADIUS)
+	RunDiagnostics.mark_transition("blood_vortex_start")
 	return true
 
 func _contacts() -> Dictionary:
@@ -134,7 +140,10 @@ func _capture(inside: Dictionary) -> void:
 	for id in inside:
 		var actor: Node = inside[id]
 		if actor.has_method("catch_blood_vortex") and actor.blood_vortex_source != self:
-			if actor.catch_blood_vortex(self): _held[id] = actor
+			if actor.catch_blood_vortex(self):
+				_held[id] = actor
+				# Take control immediately, but spread a new crowd's first body sweeps over four ticks.
+				if inside.size() >= 24: _retry_at[id] = _age + float(posmod(hash(id), 4)) / 60.0
 
 func pull_body(actor: CharacterBody2D, delta: float, resistance: float) -> void:
 	var id := actor.get_instance_id()
@@ -168,7 +177,7 @@ func _strike(inside: Dictionary, final: bool) -> void:
 		# Sample overlapping cosmetic feedback, never damage, procs or launch.
 		var quiet := count > 6 and (index + offset) % count >= CROWD_FEEDBACK
 		index += 1
-		actor.apply_hit({"quiet_crowd_feedback": quiet, "damage": _damage * (FINISH_MULTIPLIER if final else 1.0),
+		actor.apply_hit({"hitstop": false, "quiet_crowd_feedback": quiet, "damage": _damage * (FINISH_MULTIPLIER if final else 1.0),
 			"direction": direction, "from_status": not final, "source": self})
 		if generation != _generation: return
 		if final and is_instance_valid(actor) and not actor.is_queued_for_deletion() and actor.is_in_group("EnemyGroup") and not actor.is_in_group("trial_enemy") and actor.has_method("apply_terrain_impulse"):
@@ -177,7 +186,7 @@ func _strike(inside: Dictionary, final: bool) -> void:
 func _physics_process(delta: float) -> void:
 	if get_tree().paused: return
 	if not game.variety._battle_active():
-		if _active or _fx.visible or _sound.playing: clear_combat_effects()
+		if _active or _fx.visible or _pulse_sound.playing or _finish_sound.playing: clear_combat_effects()
 		return
 	if not _active:
 		_cooldown -= delta
@@ -189,7 +198,8 @@ func _physics_process(delta: float) -> void:
 	if _scan_left > 0.0 and _age + 0.000001 < _next_beat * _interval: return
 	_scan_left = SCAN_STEP
 	var inside := _contacts()
-	_capture(inside)
+	# The last beat releases the crowd; survivors get their launch directly.
+	if _next_beat != _beats or _age < _duration - 0.000001: _capture(inside)
 	while _active and _age + 0.000001 >= _next_beat * _interval:
 		var final := _next_beat == _beats
 		_next_beat += 1
@@ -198,9 +208,10 @@ func _physics_process(delta: float) -> void:
 			_cooldown = RECOVERY
 			_release_all()
 			_fx.finish()
+			if _pulse_sound.playing: _pulse_sound.stop()
+			_finish_sound.play()
+			RunDiagnostics.mark_transition("blood_vortex_finish", {"targets": inside.size()})
 		else:
 			_fx.pulse()
-		var cue := FINISH if final else PULSE
-		if _sound.stream != cue: _sound.stream = cue
-		_sound.play()
+			_pulse_sound.play()
 		_strike(inside, final)

@@ -48,11 +48,13 @@ func nearest(origin: Vector2, distance_squared: float = INF, excluded: Dictionar
 	candidates_examined += _entries.size()
 	var best: Node2D
 	for entry in _entries:
-		if not _live(entry, group) or excluded.has(entry.actor): continue
-		var distance: = origin.distance_squared_to(entry.actor.global_position)
-		if distance < distance_squared:
-			distance_squared = distance
-			best = entry.actor
+		var actor := entry.actor
+		if not is_instance_valid(actor): continue
+		var distance := origin.distance_squared_to(actor.global_position)
+		if distance >= distance_squared: continue
+		if not _live(entry, group) or excluded.has(actor): continue
+		distance_squared = distance
+		best = actor
 	return best
 
 func nearest_visible(origin: Vector2, radius_squared: float, limit: int, owner: Node, rect: Rect2, canvas: Transform2D) -> Array[Node2D]:

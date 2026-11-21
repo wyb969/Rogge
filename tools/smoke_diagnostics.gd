@@ -21,6 +21,10 @@ func _run() -> void :
 	_expect(game.spawner.stage == 6 and game.spawner._active_bosses[0].phase == 2, "legacy stability preset enters the final beast's second phase")
 	_expect(game.circle_weapon.get_child_count() == 12 and game.circle_weapon.card_level == 17, "stress fixture includes capped high-rank books")
 	var diag: Node = root.get_node("RunDiagnostics")
+	diag.mark_transition("blood_vortex_finish", {"targets": 5})
+	var transition: Dictionary = diag.report.events.back()
+	for i in 6: await process_frame
+	_expect(transition.details.display_frame_ms.size() == 4 and transition.details.targets == 5, "skill transition records exactly four display intervals")
 	for i in range(180):
 		diag.mark("bounded_fixture", {"index": i})
 		diag._sample(16)

@@ -56,6 +56,11 @@ func _run() -> void:
 	check(v.level == 3 and g.equipment_panel.get_level("blood_vortex") == 3, "rank three practice equips the real card")
 	check(v.cast(), "nearby target starts a vortex")
 	var center: Vector2 = v.global_position
+	var pulse_player: AudioStreamPlayer = v._pulse_sound
+	var finish_player: AudioStreamPlayer = v._finish_sound
+	var pulse_clip := pulse_player.stream as AudioStreamWAV
+	var finish_clip := finish_player.stream as AudioStreamWAV
+	check(pulse_clip != null and finish_clip != null and pulse_clip.format == AudioStreamWAV.FORMAT_16_BITS and finish_clip.format == AudioStreamWAV.FORMAT_16_BITS, "both cues are decoded PCM bound before the first beat")
 	var outer: Node2D = actors[1]
 	outer.global_position = center + Vector2(88,-19)
 	var dist := outer.global_position.distance_to(center)
@@ -169,6 +174,12 @@ func _run() -> void:
 	check(vertical.slashes == 0, "final strike waits until three seconds")
 	v._physics_process(0.001)
 	check(vertical_tip.pulses == 5 and vertical_tip.slashes == 1 and wrong_axis.damage == 0 and is_equal_approx(vertical.damage,96.0), "sixth hit is a single triple finisher along the rotated helix")
+	check(v._pulse_sound == pulse_player and v._finish_sound == finish_player and pulse_clip == pulse_player.stream and finish_clip == finish_player.stream, "casts reuse both players and clips")
+	g.combat_feedback.impact_feedback.clear_combat_effects()
+	var stops: int = g.combat_feedback.impact_feedback.stops
+	var flashes: int = g.combat_feedback.impact_feedback.flashes
+	v._strike({outer.get_instance_id():outer},true)
+	check(g.combat_feedback.impact_feedback.stops == stops and g.combat_feedback.impact_feedback.flashes > flashes and is_equal_approx(Engine.time_scale,1.0), "enemy finisher flashes without slowing the game")
 	g.spawner.stage = 1
 	g.spawner.spawn_boss()
 	var boss: Node = g.spawner._active_bosses[0]
@@ -179,7 +190,9 @@ func _run() -> void:
 	var hp: float = boss.boss_current_health
 	v._strike({boss.get_instance_id():boss},true)
 	check(boss.boss_current_health < hp and boss.terrain_impulse.left == 0, "immune boss takes damage but resists launch")
+	check(g.combat_feedback.impact_feedback.stops == stops and is_equal_approx(Engine.time_scale,1.0), "boss finisher also keeps the world clock running")
 	v.reset()
+	check(not pulse_player.playing and not finish_player.playing, "teardown stops both cues")
 	check(v.level == 0 and not v.is_physics_processing(), "skill resets between runs")
 	if not failures: print("BLOOD VORTEX OK: ",checks," checks")
 	quit(1 if failures else 0)

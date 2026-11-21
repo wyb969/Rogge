@@ -9,7 +9,8 @@ const MOUTH_RADIUS := 70.0
 const SCAN_STEP := 0.08
 const RECOVERY := 4.5
 const FINISH_MULTIPLIER := 3.0
-const PAGE_SIZE := 64
+const PAGE_SIZE := 256
+const CROWD_FEEDBACK := 4
 
 var level := 0
 var _stats := stats_for(1)
@@ -24,6 +25,8 @@ var _heading := Vector2.RIGHT
 var _cooldown := 0.0
 var _scan_left := 0.0
 var _held := {}
+# Only blocked bodies enter this table. Deadlines use the paused cast clock.
+var _retry_at := {}
 var _generation := 0
 var _query := PhysicsShapeQueryParameters2D.new()
 var _fx := FX.new()
@@ -81,6 +84,7 @@ func _release_all() -> void:
 		if is_instance_valid(actor) and actor.blood_vortex_source == self:
 			actor.blood_vortex_source = null
 	_held.clear()
+	_retry_at.clear()
 
 func cast() -> bool:
 	if level == 0 or _active or not game.variety._battle_active(): return false
@@ -108,16 +112,16 @@ func _contacts() -> Dictionary:
 	var excluded: Array[RID] = []
 	var world := get_world_2d().direct_space_state
 	while true:
-		_query.exclude = excluded
 		var hits := world.intersect_shape(_query, PAGE_SIZE)
 		for hit in hits:
-			excluded.append(hit.rid)
 			var actor: Node2D = hit.collider
 			if actor.is_in_group("EnemyGroup") and not actor.is_queued_for_deletion() and game.is_ancestor_of(actor) and actor.has_method("apply_hit"):
 				if not actor.has_method("vulnerable") or actor.vulnerable():
 					result[actor.get_instance_id()] = actor
 		if hits.size() < PAGE_SIZE: break
-	_query.exclude = []
+		for hit in hits: excluded.append(hit.rid)
+		_query.exclude = excluded
+	if not excluded.is_empty(): _query.exclude = []
 	return result
 
 func _capture(inside: Dictionary) -> void:
@@ -126,25 +130,45 @@ func _capture(inside: Dictionary) -> void:
 		var actor = _held[id]
 		if is_instance_valid(actor) and actor.blood_vortex_source == self: actor.blood_vortex_source = null
 		_held.erase(id)
+		_retry_at.erase(id)
 	for id in inside:
 		var actor: Node = inside[id]
 		if actor.has_method("catch_blood_vortex") and actor.blood_vortex_source != self:
 			if actor.catch_blood_vortex(self): _held[id] = actor
 
 func pull_body(actor: CharacterBody2D, delta: float, resistance: float) -> void:
+	var id := actor.get_instance_id()
+	if _age < float(_retry_at.get(id, -1.0)):
+		actor.velocity = Vector2.ZERO
+		return
 	var inward := global_position - actor.global_position
+	if inward.length_squared() < 1.0:
+		actor.velocity = Vector2.ZERO
+		return
 	# Tangential speed falls off at the core so bodies settle between beats.
 	var motion := (inward * 7.0 + inward.orthogonal() * 2.0).limit_length(240.0) * resistance
 	actor.velocity = motion
-	actor.move_and_collide((motion * delta).limit_length(inward.length()))
+	var collision := actor.move_and_collide((motion * delta).limit_length(inward.length()))
+	if collision:
+		# A packed crowd usually blocks the same sweep for several ticks.
+		# Retry on staggered deadlines; never teleport through another body.
+		_retry_at[id] = _age + 0.075 + float(posmod(hash(id), 6)) / 60.0
+	else:
+		_retry_at.erase(id)
 
 func _strike(inside: Dictionary, final: bool) -> void:
 	var generation := _generation
+	var count := inside.size()
+	var index := 0
+	var offset := (_next_beat * CROWD_FEEDBACK) % maxi(1, count)
 	for actor in inside.values():
 		if not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_in_group("EnemyGroup"): continue
 		var direction := global_position.direction_to(actor.global_position)
 		if direction.is_zero_approx(): direction = _heading
-		actor.apply_hit({"damage": _damage * (FINISH_MULTIPLIER if final else 1.0),
+		# Sample overlapping cosmetic feedback, never damage, procs or launch.
+		var quiet := count > 6 and (index + offset) % count >= CROWD_FEEDBACK
+		index += 1
+		actor.apply_hit({"quiet_crowd_feedback": quiet, "damage": _damage * (FINISH_MULTIPLIER if final else 1.0),
 			"direction": direction, "from_status": not final, "source": self})
 		if generation != _generation: return
 		if final and is_instance_valid(actor) and not actor.is_queued_for_deletion() and actor.is_in_group("EnemyGroup") and not actor.is_in_group("trial_enemy") and actor.has_method("apply_terrain_impulse"):
@@ -176,6 +200,7 @@ func _physics_process(delta: float) -> void:
 			_fx.finish()
 		else:
 			_fx.pulse()
-		_sound.stream = FINISH if final else PULSE
+		var cue := FINISH if final else PULSE
+		if _sound.stream != cue: _sound.stream = cue
 		_sound.play()
 		_strike(inside, final)

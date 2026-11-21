@@ -92,6 +92,3 @@ func _draw() -> void:
 		var release := smoothstep(_duration - 0.17, _duration, _age)
 		size.y *= (0.92 + 0.08 * draw_in) * (1.0 - 0.045 * hit - 0.045 * release)
 		_stamp(VORTEX, _frame, size, Color(1, 1 + 0.52 * hit, 1 + 0.32 * hit, 0.79 + 0.21 * draw_in))
-		if hit > 0.0:
-			var n := _radius * (0.12 + hit * 0.19)
-			draw_colored_polygon(PackedVector2Array([Vector2(-n, 2), Vector2(-3, -2), Vector2(n, -n * 0.42), Vector2(2, 3)]), Color(1.0, 0.76, 0.60, hit))

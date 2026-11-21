@@ -4,8 +4,10 @@ class Target extends StaticBody2D:
 	var pulses := 0
 	var slashes := 0
 	var damage := 0.0
+	var visible_hits := 0
 	func apply_hit(hit: Dictionary) -> void:
 		damage += hit.damage
+		if not hit.get("quiet_crowd_feedback",false): visible_hits += 1
 		if hit.from_status: pulses += 1
 		else: slashes += 1
 
@@ -63,8 +65,36 @@ func _run() -> void:
 	check(outer.blood_vortex_source == v, "pull ownership assigned on entry")
 	outer._physics_process(0.05)
 	check(outer.global_position.distance_to(center) < dist, "real actor moves toward core")
+	# Trap a real body against a wide static blocker, then open the path.
+	var wall := StaticBody2D.new()
+	var box := RectangleShape2D.new()
+	box.size = Vector2(8,70)
+	var wall_shape := CollisionShape2D.new()
+	wall_shape.shape = box
+	wall.add_child(wall_shape)
+	wall.collision_layer = 8
+	wall.collision_mask = 0
+	g.add_child(wall)
+	wall.global_position = outer.global_position + Vector2(-13,0)
+	await physics_frame
+	await physics_frame
+	for step in 4: v.pull_body(outer,0.05,1.0)
+	var stopped := outer.global_position
+	var id := outer.get_instance_id()
+	check(v._retry_at.has(id), "blocked sweep starts a bounded retry delay")
+	wall.queue_free()
+	await physics_frame
+	await physics_frame
+	v.pull_body(outer,0.05,1.0)
+	check(outer.global_position.is_equal_approx(stopped), "blocked actor skips immediate repeat sweeps")
+	var before: float = v._age
+	v._age += 0.17
+	v.pull_body(outer,0.05,1.0)
+	check(outer.global_position.distance_to(center) < stopped.distance_to(center), "pull resumes through the opened gap")
+	v._age = before
 	var targets: Array[Target] = []
-	for i in 69: targets.append(place(g,center + Vector2.from_angle(TAU*i/69.0) * 29.0))
+	var crowd_size: int = v.PAGE_SIZE + 5
+	for i in crowd_size: targets.append(place(g,center + Vector2.from_angle(TAU*i/crowd_size) * 29.0))
 	var outside := place(g,center+Vector2.DOWN*120)
 	var late := place(g,center+Vector2.UP*140)
 	var near := place(g,origin+Vector2(9,3))
@@ -82,7 +112,10 @@ func _run() -> void:
 	paused = false
 	check(targets[0].pulses == 0 and is_equal_approx(v._age,interval-0.01), "pause freezes the attack clock")
 	v._physics_process(0.01)
-	check(targets[68].pulses == 1 and targets[0].pulses == 1, "first pulse crosses the 64-body page boundary")
+	check(targets.back().pulses == 1 and targets[0].pulses == 1, "first pulse crosses the query page boundary")
+	var visible_hits := 0
+	for t in targets: visible_hits += t.visible_hits
+	check(visible_hits <= v.CROWD_FEEDBACK, "crowd hits cap repeated cosmetics without dropping damage")
 	check(near.pulses == 1 and mid.pulses == 1 and far.pulses == 1, "sword end, middle and far mouth are damaging")
 	check(narrow_side.pulses == 0 and past_tip.pulses == 0, "narrow flank and beyond mouth remain outside")
 	late.global_position = center + Vector2.UP*24
@@ -100,7 +133,7 @@ func _run() -> void:
 	v._physics_process(interval*(cast_beats-3))
 	var correct := true
 	for t in targets: correct = correct and t.pulses == cast_beats-1 and t.slashes == 1 and is_equal_approx(t.damage,damage * (cast_beats+2))
-	check(correct, "all 69 targets receive the snapshotted ordinary beats and one triple finisher using the cast snapshot")
+	check(correct, "every target across both query pages receive the snapshotted ordinary beats and one triple finisher using the cast snapshot")
 	check(late.pulses == 2 and late.slashes == 0 and outside.damage == 0, "leaving the circle avoids the last beats")
 	check(not v._active and outer.blood_vortex_source == null and outer.terrain_impulse.left > 0, "release and airborne impulse on the finishing beat")
 	outer._tick_airborne_visual(0.09)
@@ -113,7 +146,7 @@ func _run() -> void:
 	check(v.cast() and v._beats == 12, "next cast uses upgraded duration")
 	v._physics_process(0.15)
 	g.variety.clear_combat_effects()
-	check(not v._active and v._held.is_empty() and outer.blood_vortex_source == null and not v._fx.visible and v.level == 4, "stage exit releases without a late strike")
+	check(not v._active and v._held.is_empty() and v._retry_at.is_empty() and outer.blood_vortex_source == null and not v._fx.visible and v.level == 4, "stage exit releases without a late strike")
 	# Rotate a real cast toward an enemy below the player; test a complete rank-one cycle.
 	for a in actors: a.global_position = origin+Vector2(-480,0)
 	for t in targets: t.global_position = origin+Vector2(500,0)

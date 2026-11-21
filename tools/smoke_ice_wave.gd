@@ -40,6 +40,26 @@ func _run() -> void:
 	var gap_jam: float = wave._plate_center(near,0.175).distance_to(wave._plate_center(far,0.175-wave.FRONT_DELAY))
 	var gap_release: float = wave._plate_center(near,0.30).distance_to(wave._plate_center(far,0.30-wave.FRONT_DELAY))
 	check(gap_jam < gap_rest * 0.75 and gap_release > gap_jam * 1.75, "adjacent plates compress and then separate")
+	# Check the real movement in arena coordinates, including straight vertical casts.
+	var saved_heading: Vector2 = wave._heading
+	for heading in [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN, Vector2(1,1).normalized()]:
+		wave._heading = heading
+		var leftmost := 0.0
+		var rightmost := 0.0
+		var last_forward := -INF
+		var forward_only := true
+		var start: Vector2 = wave._plate_center(2, 0.045)
+		for frame in range(3, 26):
+			var offset: Vector2 = wave._plate_center(2, frame / 60.0) - wave._origin
+			var side: float = offset.dot(heading.orthogonal())
+			leftmost = minf(leftmost, side)
+			rightmost = maxf(rightmost, side)
+			var along: float = offset.dot(heading)
+			forward_only = forward_only and along >= last_forward - 0.01
+			last_forward = along
+		check(leftmost < -0.15 * wave._radius and rightmost > 0.15 * wave._radius, "peak crosses both sides of its heading")
+		check(forward_only and (wave._plate_center(2,0.41) - start).dot(heading) > wave._radius, "peak travels outward during the whole sway")
+	wave._heading = saved_heading
 	check(wave._shell_frame(0.28,0) != wave._shell_frame(0.50,0) and wave._shell_frame(1.20,0) == wave._shell_frame(0.28,0), "frozen shell highlights cycle after the initial freeze")
 	for rank in range(1,6):
 		check(is_equal_approx(wave.stats_for(rank).freeze_chance, (40 + 8 * (rank - 1)) * 0.01), "freeze chance tracks real combat rank")

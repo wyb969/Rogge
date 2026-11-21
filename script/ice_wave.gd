@@ -8,7 +8,7 @@ const SHATTER := preload("res://rogge_art/combat-fx/ice-wave/shatter.png")
 const PAIR_STEP := 0.136
 const FRONT_DELAY := 0.036
 const CONTACT_STEP := 0.038
-const LAST_CONTACT := 5
+const LAST_CONTACT := 8
 const RISE_TIME := 0.072
 const SPIKE_LIFE := 0.49
 const SHELL_TIME := 2.15
@@ -101,20 +101,25 @@ func _birth(index: int) -> float:
 func _pressure(pair_age: float) -> float:
 	return smoothstep(0.068, 0.175, pair_age) * (1.0 - smoothstep(0.175, 0.278, pair_age))
 
+func _sway(index: int, age: float) -> float:
+	# Phase lags down the ridge. A smaller harmonic makes the return stroke asymmetric.
+	var phase := age * (17.8 + 0.7 * (index % 3)) - 0.57 * index + 0.73 * (_cast_index % 9)
+	var envelope := smoothstep(0.014, 0.095, age) * (1.0 - smoothstep(0.32, SPIKE_LIFE, age))
+	return envelope * (sin(phase) + 0.13 * sin(2.0 * phase + 0.8)) / 1.13
+
 func _plate_center(index: int, local_age: float) -> Vector2:
 	var front := index % 2
 	var pair_age := local_age + front * FRONT_DELAY
-	var pitch := (_reach - 2.0 * _radius) / (_count - 1)
-	var load := _pressure(pair_age)
-	var release := smoothstep(0.17, 0.29, pair_age)
-	var settle := smoothstep(0.29, 0.43, pair_age)
-	# Rear slab rams the stalled front slab, backs off, then follows its wake.
-	var shift := -0.24 + 0.83 * load + 0.23 * release + 0.14 * settle
+	# Reserve a last stride at the far end so the outer peak can advance as it rises.
+	var pitch := (_reach - 2.0 * _radius) / (_count - 1 + 1.20)
+	var push := smoothstep(0.034, 0.182, pair_age)
+	var slide := smoothstep(0.161, 0.319, pair_age)
+	var follow := smoothstep(0.225, 0.43, pair_age)
+	var shift := -0.61 + 1.23 * push + 0.61 * follow
 	if front:
-		shift = -0.31 - 0.02 * load + 0.84 * release - 0.14 * settle
+		shift = -0.43 + 0.12 * push + 1.46 * slide + 0.12 * follow
 	var along := clampf(_radius + (index + shift) * pitch, _radius, _reach - _radius)
-	var bank := -1.0 if (floori(index * 0.5) + _cast_index) % 2 == 0 else 1.0
-	var side := bank * (1.0 if front else -1.0) * _radius * (0.09 + 0.18 * load)
+	var side := _radius * (0.46 + 0.055 * (index % 3)) * _sway(index, local_age)
 	return _origin + _heading * along + _heading.orthogonal() * side
 
 func _erupt(start: Vector2, finish: Vector2) -> void:
@@ -214,13 +219,20 @@ func _draw() -> void:
 		var pair_age := age + front * FRONT_DELAY
 		var pressure := _pressure(pair_age)
 		var row := (floori(i * 0.5) + front + _cast_index) % 3
-		var lift := pressure * (0.34 if front else 0.19)
-		var width := _radius * (2.45 - 0.26 * pressure)
-		var height := _radius * (2.14 + 0.13 * row + lift)
-		var tilt := (-0.22 if front else 0.34) * pressure
-		tilt += (0.15 if front else -0.11) * smoothstep(0.18, 0.32, pair_age)
-		var frame := floori(age / RISE_TIME * 2) if age < RISE_TIME else mini(7, 2 + floori((age - RISE_TIME) / (SPIKE_LIFE - RISE_TIME) * 6))
-		_stamp(ERUPTION, frame, Vector2(width, height), _plate_center(i, age), Vector2(0.5, 39.0/48.0), 48, row, tilt * _heading.x, _heading.x < 0)
+		var lift := pressure * (0.33 if front else 0.18)
+		var recede := smoothstep(0.20, 0.41, age)
+		var width := _radius * (1.94 - 0.12 * pressure) * (1.0 - 0.20 * recede)
+		var height := _radius * (2.12 + 0.22 * row + lift) * (1.0 - 0.50 * recede)
+		# A tall point reacts slightly after its foot slips. This screen-space
+		# lean also reads when casting straight up or down the arena.
+		var tilt := 0.37 * _sway(i, maxf(age - 0.040, 0.0))
+		tilt += _heading.x * (0.09 + (-0.10 if front else 0.10) * pressure)
+		var frame := floori(age / RISE_TIME * 2)
+		if age >= 0.16:
+			frame = mini(7, 5 + floori((age - 0.16) / 0.115))
+		elif age >= RISE_TIME:
+			frame = 2 + mini(2, floori((age - RISE_TIME) / (0.16 - RISE_TIME) * 3))
+		_stamp(ERUPTION, frame, Vector2(width, height), _plate_center(i, age), Vector2(0.5, 39.0/48.0), 48, row, tilt, _heading.x < 0)
 	for id in _shells:
 		var entry: Dictionary = _shells[id]
 		var actor = entry.actor

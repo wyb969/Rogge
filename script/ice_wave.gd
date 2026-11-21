@@ -4,9 +4,13 @@ const ICE := preload("res://script/blade_ice.gd")
 const ERUPTION := preload("res://rogge_art/combat-fx/ice-wave/eruption.png")
 const SHELL := preload("res://rogge_art/combat-fx/ice-wave/shell.png")
 const SHATTER := preload("res://rogge_art/combat-fx/ice-wave/shatter.png")
-const STEP_TIME := 0.064
+# The two slabs in a pair meet before pressure passes on to the next pair.
+const PAIR_STEP := 0.136
+const FRONT_DELAY := 0.036
+const CONTACT_STEP := 0.038
+const LAST_CONTACT := 5
 const RISE_TIME := 0.072
-const SPIKE_LIFE := 0.40
+const SPIKE_LIFE := 0.49
 const SHELL_TIME := 2.15
 const BURST_LIFE := 0.30
 const MAX_BURSTS := 24
@@ -19,7 +23,8 @@ var _start := 0.0
 var _origin := Vector2.ZERO
 var _heading := Vector2.RIGHT
 var _count := 0
-var _next := 0
+var _contact_steps := PackedInt32Array()
+var _cast_index := 0
 var _reach := 0.0
 var _radius := 0.0
 var _damage := 0.0
@@ -28,7 +33,7 @@ var _hit := {}
 var _shells := {}
 var _bursts: Array[Dictionary] = []
 var _burst_slot := 0
-var _shape := CircleShape2D.new()
+var _shape := CapsuleShape2D.new()
 var _query := PhysicsShapeQueryParameters2D.new()
 var _rng := RandomNumberGenerator.new()
 @onready var game: Node = get_parent()
@@ -36,7 +41,7 @@ var _rng := RandomNumberGenerator.new()
 static func stats_for(rank: int) -> Dictionary:
 	var step := clampi(rank, 1, 5) - 1
 	return {"damage": 24.0 + 7.0 * step, "range": 180.0 + 30.0 * step,
-		"radius": 21.0 + 3.0 * step, "freeze_chance": 0.26 + 0.09 * step, "interval": 1.80}
+		"radius": 21.0 + 3.0 * step, "freeze_chance": 0.40 + 0.08 * step, "interval": 1.80}
 
 func _ready() -> void:
 	z_index = 13
@@ -82,17 +87,41 @@ func cast() -> bool:
 	_chance = _stats.freeze_chance
 	_shape.radius = _radius
 	_count = ceili((_reach - 2 * _radius) / (1.40 * _radius)) + 1
-	_next = 0
+	_cast_index += 1
+	_contact_steps.resize(_count)
+	_contact_steps.fill(0)
 	_start = _clock
 	_hit.clear()
 	_cooldown = _stats.interval
 	return true
 
-func _center(index: int) -> Vector2:
-	return _origin + _heading * lerpf(_radius, _reach - _radius, float(index) / (_count - 1))
+func _birth(index: int) -> float:
+	return floori(index * 0.5) * PAIR_STEP + (index % 2) * FRONT_DELAY
 
-func _erupt(at: Vector2) -> void:
-	_query.transform = Transform2D(0.0, at)
+func _pressure(pair_age: float) -> float:
+	return smoothstep(0.068, 0.175, pair_age) * (1.0 - smoothstep(0.175, 0.278, pair_age))
+
+func _plate_center(index: int, local_age: float) -> Vector2:
+	var front := index % 2
+	var pair_age := local_age + front * FRONT_DELAY
+	var pitch := (_reach - 2.0 * _radius) / (_count - 1)
+	var load := _pressure(pair_age)
+	var release := smoothstep(0.17, 0.29, pair_age)
+	var settle := smoothstep(0.29, 0.43, pair_age)
+	# Rear slab rams the stalled front slab, backs off, then follows its wake.
+	var shift := -0.24 + 0.83 * load + 0.23 * release + 0.14 * settle
+	if front:
+		shift = -0.31 - 0.02 * load + 0.84 * release - 0.14 * settle
+	var along := clampf(_radius + (index + shift) * pitch, _radius, _reach - _radius)
+	var bank := -1.0 if (floori(index * 0.5) + _cast_index) % 2 == 0 else 1.0
+	var side := bank * (1.0 if front else -1.0) * _radius * (0.09 + 0.18 * load)
+	return _origin + _heading * along + _heading.orthogonal() * side
+
+func _erupt(start: Vector2, finish: Vector2) -> void:
+	# Narrow ground sweep of the moving base, including the initial circular contact.
+	_shape.height = 2.0 * _radius + start.distance_to(finish)
+	var delta_pos := finish - start
+	_query.transform = Transform2D(delta_pos.angle() - PI * 0.5, (start + finish) * 0.5)
 	var excluded: Array[RID] = []
 	while _count > 0:
 		_query.exclude = excluded
@@ -146,10 +175,17 @@ func _physics_process(delta: float) -> void:
 	if _cooldown <= 0.0 and _count == 0 and not cast(): _cooldown = 0.16
 	var age := _clock - _start
 	if _count:
-		while _next < _count and age >= _next * STEP_TIME + RISE_TIME:
-			_erupt(_center(_next))
-			_next += 1
-		if age >= (_count - 1) * STEP_TIME + SPIKE_LIFE: _count = 0
+		for i in _count:
+			var local_age := age - _birth(i)
+			var step := _contact_steps[i]
+			while step <= LAST_CONTACT and local_age >= RISE_TIME + step * CONTACT_STEP:
+				var sample_age := RISE_TIME + step * CONTACT_STEP
+				var prior_age := maxf(RISE_TIME, sample_age - CONTACT_STEP)
+				_erupt(_plate_center(i, prior_age), _plate_center(i, sample_age))
+				if _count == 0: return
+				step += 1
+			_contact_steps[i] = step
+		if age >= _birth(_count - 1) + SPIKE_LIFE: _count = 0
 		queue_redraw()
 	if not _bursts.is_empty():
 		for i in range(_bursts.size()-1, -1, -1):
@@ -157,25 +193,39 @@ func _physics_process(delta: float) -> void:
 		queue_redraw()
 	if not _shells.is_empty(): queue_redraw()
 
-func _stamp(atlas: Texture2D, frame: int, size: Vector2, at: Vector2, anchor: Vector2, flip := false) -> void:
-	var cell := float(atlas.get_height())
-	var dest := Rect2(to_local(at) - anchor * size, size)
-	if flip:
-		dest.size.x = -size.x
-	draw_texture_rect_region(atlas, dest, Rect2(cell * frame, 0, cell, cell))
+func _stamp(atlas: Texture2D, frame: int, size: Vector2, at: Vector2, anchor: Vector2, cell: int, row := 0, tilt := 0.0, flip := false) -> void:
+	draw_set_transform(to_local(at), tilt, Vector2(-1, 1) if flip else Vector2.ONE)
+	draw_texture_rect_region(atlas, Rect2(-anchor * size, size), Rect2(frame * cell, row * cell, cell, cell))
+
+func _shell_frame(age: float, offset: float) -> int:
+	if age < 0.22: return mini(3, floori(age / 0.055))
+	# Give the polished face a short sweep followed by a quiet hold.
+	var phase := fposmod(age - 0.22 + offset, 0.92)
+	if phase >= 0.40: return 4
+	return 4 + floori(phase / 0.10)
 
 func _draw() -> void:
-	for i in _count:
-		var age := _clock - _start - i * STEP_TIME
+	# Paint the plates nearest the camera last when the wave approaches it.
+	for order in _count:
+		var i := _count - order - 1 if _heading.y < -0.1 else order
+		var age := _clock - _start - _birth(i)
 		if age < 0.0 or age >= SPIKE_LIFE: continue
-		var frame := floori(age / RISE_TIME * 2) if age < RISE_TIME else mini(7, 2 + floori((age-RISE_TIME) / (SPIKE_LIFE-RISE_TIME) * 6))
-		var width := 2.25 * _radius
-		var height := width * (1.08 + 0.10 * (i % 3))
-		_stamp(ERUPTION, frame, Vector2(width, height), _center(i), Vector2(0.5, 39.0/48.0), _heading.x < 0)
+		var front := i % 2
+		var pair_age := age + front * FRONT_DELAY
+		var pressure := _pressure(pair_age)
+		var row := (floori(i * 0.5) + front + _cast_index) % 3
+		var lift := pressure * (0.34 if front else 0.19)
+		var width := _radius * (2.45 - 0.26 * pressure)
+		var height := _radius * (2.14 + 0.13 * row + lift)
+		var tilt := (-0.22 if front else 0.34) * pressure
+		tilt += (0.15 if front else -0.11) * smoothstep(0.18, 0.32, pair_age)
+		var frame := floori(age / RISE_TIME * 2) if age < RISE_TIME else mini(7, 2 + floori((age - RISE_TIME) / (SPIKE_LIFE - RISE_TIME) * 6))
+		_stamp(ERUPTION, frame, Vector2(width, height), _plate_center(i, age), Vector2(0.5, 39.0/48.0), 48, row, tilt * _heading.x, _heading.x < 0)
 	for id in _shells:
 		var entry: Dictionary = _shells[id]
 		var actor = entry.actor
 		if is_instance_valid(actor):
-			_stamp(SHELL, mini(3, int((_clock-entry.start)*16)), entry.size, actor.sprite_2d.global_position, Vector2(0.5,0.5))
+			_stamp(SHELL, _shell_frame(_clock - entry.start, float(id % 7) * 0.035), entry.size, actor.sprite_2d.global_position, Vector2(0.5,0.5), 40)
 	for burst in _bursts:
-		_stamp(SHATTER, clampi(int((_clock-burst.start)/BURST_LIFE*6),0,5), burst.size, burst.at, Vector2(0.5,0.5))
+		_stamp(SHATTER, clampi(int((_clock-burst.start)/BURST_LIFE*6),0,5), burst.size, burst.at, Vector2(0.5,0.5), 48)
+	draw_set_transform(Vector2.ZERO)

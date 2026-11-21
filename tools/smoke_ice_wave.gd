@@ -34,6 +34,15 @@ func _run() -> void:
 	await physics_frame
 	check(wave.level == 3 and g.equipment_panel.get_level("ice_wave") == 3, "real practice loadout")
 	check(wave.cast(), "nearest target starts a wave")
+	var near := 2
+	var far := 3
+	var gap_rest: float = wave._plate_center(near,0.05).distance_to(wave._plate_center(far,0.05-wave.FRONT_DELAY))
+	var gap_jam: float = wave._plate_center(near,0.175).distance_to(wave._plate_center(far,0.175-wave.FRONT_DELAY))
+	var gap_release: float = wave._plate_center(near,0.30).distance_to(wave._plate_center(far,0.30-wave.FRONT_DELAY))
+	check(gap_jam < gap_rest * 0.75 and gap_release > gap_jam * 1.75, "adjacent plates compress and then separate")
+	check(wave._shell_frame(0.28,0) != wave._shell_frame(0.50,0) and wave._shell_frame(1.20,0) == wave._shell_frame(0.28,0), "frozen shell highlights cycle after the initial freeze")
+	for rank in range(1,6):
+		check(is_equal_approx(wave.stats_for(rank).freeze_chance, (40 + 8 * (rank - 1)) * 0.01), "freeze chance tracks real combat rank")
 	wave._chance = 1.0
 	wave._physics_process(0.055)
 	check(targets[0].health == 1000, "crack telegraphs before hit")

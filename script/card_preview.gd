@@ -148,10 +148,10 @@ static func build(game: Node, id: String) -> Dictionary:
 			var source: Script = {"bomb":BOMB,"light_thorn":LIGHT_THORN,"banana_fan":FAN,"black_hole":HOLE,"poison_trail":POISON,"lightning_ring":RING}.get(id,VARIETY)
 			var before: Dictionary = source.wind_stats(maxi(rank,1)) if id == "wind_emblem" else (source.echo_stats(maxi(rank,1)) if id == "echo_ember" else source.stats_for(maxi(rank,1)))
 			var after: Dictionary = source.wind_stats(next) if id == "wind_emblem" else (source.echo_stats(next) if id == "echo_ember" else source.stats_for(next))
-			for key in ["damage","dps","radius","range","interval","bolts","kills"]:
+			for key in ["damage","dps","radius","range","swing_time","interval","bolts","kills"]:
 				if not after.has(key): continue
-				var label: String = {"damage":"基础伤害","dps":"每秒伤害","radius":"作用半径","range":"作用距离","interval":"触发间隔","bolts":"闪电目标","kills":"所需击杀"}[key]
-				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key == "interval" else "",key not in ["bolts","kills"])
+				var label: String = {"damage":"基础伤害","dps":"每秒伤害","radius":"作用半径","range":"作用距离","swing_time":"挥击用时","interval":"触发间隔","bolts":"闪电目标","kills":"所需击杀"}[key]
+				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key in ["interval","swing_time"] else "",key not in ["bolts","kills"])
 			hint = {"light_thorn":L10n.text("鞭身触敌造成伤害，每次挥击对同一敌人生效一次。"),"bomb":L10n.text("爆炸击飞 · 最高5级"),"banana_fan":L10n.text("气流击退 · 最高5级\n已有灼烧/中毒追加一跳，不传播"),"black_hole":L10n.text("牵引聚怪 · 持续3秒 · 最高5级"),"poison_trail":L10n.text("移动留雾 · 持续4 秒\n最高5级减速25% · 重叠不叠伤"),"lightning_ring":L10n.text("同时击中不同目标"),"wind_emblem":L10n.text("冲刺结束释放风压"),"echo_ember":L10n.text("最后击杀处引爆回响")}[id]
 	var combo: String = COMBOS.hint_for(id)
 	if not combo.is_empty(): hint += ("\n" if not hint.is_empty() else "") + combo

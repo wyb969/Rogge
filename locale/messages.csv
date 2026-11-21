@@ -1683,4 +1683,5 @@ Lv %d,Lv %d,等级 %d
 鞭击 %s伤,Whip %s dmg,鞭击 %s伤
 甩出红色光鞭，鞭身扫到敌人时造成伤害。,Lash nearby enemies with a red whip of light.,甩出红色光鞭，鞭身扫到敌人时造成伤害。
 鞭身触敌造成伤害，每次挥击对同一敌人生效一次。,Each enemy takes damage once per swing when touched by the lash.,鞭身触敌造成伤害，每次挥击对同一敌人生效一次。
-光鞭朝附近敌人挥动。鞭梢滞后于握柄，每次出手的弧度和节奏都会变化。一次挥击可击中多个敌人，同一敌人只受一次伤害。升级增加伤害与鞭长，并缩短间隔。,"The whip swings toward nearby enemies. Its tip trails the grip, changing its arc and rhythm each swing. One swing can strike several enemies, each only once. Upgrades increase damage and reach and shorten the cooldown.",光鞭朝附近敌人挥动。鞭梢滞后于握柄，每次出手的弧度和节奏都会变化。一次挥击可击中多个敌人，同一敌人只受一次伤害。升级增加伤害与鞭长，并缩短间隔。
+光鞭朝附近敌人挥动。鞭梢滞后于握柄，每次出手的弧度和节奏都会变化。一次挥击可击中多个敌人，同一敌人只受一次伤害。升级增加伤害和鞭长，挥鞭更快，两鞭之间的间隔也更短。,"The whip swings toward nearby enemies. Its tip trails the grip, changing its arc and rhythm each swing. One swing can strike several enemies, each only once. Upgrades increase damage and reach while shortening both the swing and the time between attacks.",光鞭朝附近敌人挥动。鞭梢滞后于握柄，每次出手的弧度和节奏都会变化。一次挥击可击中多个敌人，同一敌人只受一次伤害。升级增加伤害和鞭长，挥鞭更快，两鞭之间的间隔也更短。
+挥击用时,Swing time,挥击用时

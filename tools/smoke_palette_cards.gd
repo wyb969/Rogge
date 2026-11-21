@@ -70,7 +70,7 @@ func observed(id: String) -> Dictionary:
 				stats = actor._stats if id != "lightning_ring" else actor.stats_for(actor.level)
 			var result := {}
 			for key in stats:
-				var label: String = {"damage":"基础伤害","dps":"每秒伤害","radius":"作用半径","range":"作用距离","interval":"触发间隔","bolts":"闪电目标","kills":"所需击杀"}.get(key,"")
+				var label: String = {"damage":"基础伤害","dps":"每秒伤害","radius":"作用半径","range":"作用距离","swing_time":"挥击用时","interval":"触发间隔","bolts":"闪电目标","kills":"所需击杀"}.get(key,"")
 				if not label.is_empty(): result[label] = stats[key]
 			return result
 

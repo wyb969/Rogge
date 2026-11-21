@@ -42,10 +42,12 @@ var meteors: Node2D
 const POISON_TRAIL: = preload("res://script/poison_trail.gd")
 var poison_trail: Node2D
 const BANANA_FAN := preload("res://script/banana_fan.gd")
+const LIGHT_THORN := preload("res://script/light_thorn.gd")
 const BLACK_HOLE := preload("res://script/black_hole.gd")
 const BOMB := preload("res://script/bomb_controller.gd")
 const ARSENAL_COMBO := preload("res://script/arsenal_combo.gd")
 var banana_fan: Node2D
+var light_thorn: Node2D
 var black_hole: Node2D
 const RELIC_WEAPONS := preload("res://script/relic_weapons.gd")
 var relic_weapons: Node2D
@@ -150,6 +152,9 @@ func _ready() -> void :
 	banana_fan = BANANA_FAN.new()
 	banana_fan.name = "BananaFan"
 	add_child(banana_fan)
+	light_thorn = LIGHT_THORN.new()
+	light_thorn.name = "LightThorn"
+	add_child(light_thorn)
 	black_hole = BLACK_HOLE.new()
 	black_hole.name = "BlackHole"
 	add_child(black_hole)
@@ -294,6 +299,7 @@ func _reset_skill_controllers() -> void :
 	if meteors: meteors.reset()
 	if poison_trail: poison_trail.reset()
 	if banana_fan: banana_fan.reset()
+	if light_thorn: light_thorn.reset()
 	if black_hole: black_hole.reset()
 	if arcane_weapons: arcane_weapons.reset()
 	if star_chain: star_chain.reset()
@@ -394,6 +400,8 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 			poison_trail.upgrade()
 		"banana_fan":
 			banana_fan.upgrade()
+		"light_thorn":
+			light_thorn.upgrade()
 		"black_hole":
 			black_hole.upgrade()
 		"thorn_whip", "rune_bolt", "pulse_aura":
@@ -408,7 +416,7 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
-		"banana_fan", "black_hole", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
+		"banana_fan", "black_hole", "light_thorn", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
 	]:
 		spawner.note_offense_card()
 
@@ -974,6 +982,16 @@ func prepare_control_debug(mode: StringName) -> void:
 	for id in ids:
 		for _i in rank: _on_upgrade_selected(id)
 	variety.notify(L10n.text("控场卡片 %d 级\n芭蕉扇沿移动方向吹风 · 黑洞自动聚怪") % rank)
+	_spawn_control_targets()
+
+func prepare_light_thorn_debug() -> void:
+	hand_weapon.start_unequipped()
+	circle_weapon.start_unequipped()
+	equipment_panel.reset_equipment(false)
+	for i in 3: _on_upgrade_selected("light_thorn")
+	_spawn_control_targets()
+
+func _spawn_control_targets() -> void:
 	for offset in [Vector2(95, -28), Vector2(125, 22), Vector2(165, 0), Vector2(-100, -45), Vector2(65, 105)]:
 		var actor: Node2D = load("res://scenes/enemy_shell.tscn").instantiate()
 		actor.set_player_ref(player)

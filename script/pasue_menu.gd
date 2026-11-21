@@ -29,6 +29,7 @@ var _fit_pending: = false
 var _card_area: Control
 
 var upgrade_pool: = [
+	{"id": "light_thorn", "title": "光之荆棘", "desc": "", "icon": "res://rogge_art/icons/skills-equipment/light-thorn.png", "max_level": 5},
 	{"id": "thorn_whip", "title": "荆棘鞭", "desc": "", "icon": "res://rogge_art/icons/skills-equipment/A026.png", "max_level": 5},
 	{"id": "rune_bolt", "title": "符文飞弹", "desc": "", "icon": "res://rogge_art/icons/skills-equipment/A027.png", "max_level": 5},
 	{"id": "pulse_aura", "title": "脉冲法阵", "desc": "", "icon": "res://rogge_art/icons/skills-equipment/A028.png", "max_level": 5},

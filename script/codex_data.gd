@@ -108,6 +108,10 @@ const CARDS = {
 		"summary": "在敌人脚下留下持续伤害的净化区。",
 		"detail": "在敌人脚下制造净化区域，每半秒结算一次伤害。重叠区域不会叠加伤害，也不触发暴击或异常传播。每个区域持续三秒；升级提高每秒伤害、范围和出现频率，最高五级。"
 	},
+	"light_thorn": {
+		"summary": "甩出红色光鞭，鞭身扫到敌人时造成伤害。",
+		"detail": "光鞭朝附近敌人挥动。鞭梢滞后于握柄，每次出手的弧度和节奏都会变化。一次挥击可击中多个敌人，同一敌人只受一次伤害。升级增加伤害与鞭长，并缩短间隔。"
+	},
 	"thorn_whip": {
 		"summary": "自动瞄准，以近身鞭击横扫敌群。",
 		"detail": "以一百二十度扇形横扫近身敌人。升级提高伤害和攻击距离，并改善触发间隔，最高五级。靠近敌群时更容易发挥效果。"
@@ -378,7 +382,7 @@ static func compact_stats(rows: Array) -> String:
 		lines.append(L10n.text(row.label)+"\n[b]"+CardNumbers.value_pair(row.before,row.after,row.unit)+"[/b]")
 	return "\n".join(lines)
 
-const DRAFT_LINES = {"axe_up": "穿透 %s伤", "circle_up": "环绕 %s伤", "gun_up": "射击≥%s伤", "pickup_up": "拾取 %s", "speed_up": "移速 %s", "left_fist": "左侧 %s%%", "right_fist": "右侧 %s%%", "drone_up": "激光 %s伤", "molotov_up": "灼烧 %s/秒", "freeze_up": "冰冻 %s%%", "regen_up": "回复 %s生命", "lifesteal_up": "吸血 %s%%", "shield_up": "击杀+%s盾", "monster_necklace": "拾取回%s血", "lightning_ring": "雷击 %s伤", "critical_glasses": "暴击 %s%%", "banana_fan": "击退 %s伤", "black_hole": "聚怪 %s/秒", "poison_trail": "中毒 %s/秒", "bomb": "爆炸 %s伤", "wind_emblem": "风压 %s伤", "echo_ember": "回响 %s伤", "silver_knife": "飞刀 %s伤", "cross_blade": "回旋 %s伤", "holy_water": "净化 %s/秒", "thorn_whip": "横扫 %s伤", "rune_bolt": "反弹 %s伤", "pulse_aura": "脉冲 %s伤"}
+const DRAFT_LINES = {"axe_up": "穿透 %s伤", "circle_up": "环绕 %s伤", "gun_up": "射击≥%s伤", "pickup_up": "拾取 %s", "speed_up": "移速 %s", "left_fist": "左侧 %s%%", "right_fist": "右侧 %s%%", "drone_up": "激光 %s伤", "molotov_up": "灼烧 %s/秒", "freeze_up": "冰冻 %s%%", "regen_up": "回复 %s生命", "lifesteal_up": "吸血 %s%%", "shield_up": "击杀+%s盾", "monster_necklace": "拾取回%s血", "lightning_ring": "雷击 %s伤", "critical_glasses": "暴击 %s%%", "banana_fan": "击退 %s伤", "black_hole": "聚怪 %s/秒", "poison_trail": "中毒 %s/秒", "bomb": "爆炸 %s伤", "wind_emblem": "风压 %s伤", "echo_ember": "回响 %s伤", "silver_knife": "飞刀 %s伤", "cross_blade": "回旋 %s伤", "holy_water": "净化 %s/秒", "thorn_whip": "横扫 %s伤", "light_thorn": "鞭击 %s伤", "rune_bolt": "反弹 %s伤", "pulse_aura": "脉冲 %s伤"}
 
 static func draft_line(id: String, rows: Array) -> String:
 	if rows.is_empty(): return ""

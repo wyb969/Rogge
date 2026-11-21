@@ -108,6 +108,10 @@ layout_mode = 2
 text = "Debug"
 horizontal_alignment = 1
 
+[node name="DebugLightThornButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "光之荆棘 · 试挥"
+
 [node name="DebugForgeButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "锻造试用"
@@ -279,3 +283,4 @@ autowrap_mode = 3
 
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugForgeButton" to="." method="_launch_run" binds= [&"forge"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugMinefieldButton" to="." method="_launch_run" binds= [&"minefield"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugLightThornButton" to="." method="_launch_run" binds= [&"light_thorn"]]

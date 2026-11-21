@@ -66,7 +66,7 @@ func observed(id: String) -> Dictionary:
 			if id == "wind_emblem": stats = game.variety.wind_stats(game.variety.wind_level)
 			elif id == "echo_ember": stats = game.variety.echo_stats(game.variety.echo_level)
 			else:
-				var actor: Node = {"bomb":game.bomb_controller,"banana_fan":game.banana_fan,"black_hole":game.black_hole,"poison_trail":game.poison_trail,"lightning_ring":game.lightning_ring}[id]
+				var actor: Node = {"bomb":game.bomb_controller,"banana_fan":game.banana_fan,"black_hole":game.black_hole,"light_thorn":game.light_thorn,"poison_trail":game.poison_trail,"lightning_ring":game.lightning_ring}[id]
 				stats = actor._stats if id != "lightning_ring" else actor.stats_for(actor.level)
 			var result := {}
 			for key in stats:
@@ -152,7 +152,7 @@ func _run() -> void:
 	expect(not controls.dash_button.available and controls.dash_button.progress == 0.5,"cooldown presentation does not change gameplay state")
 	controls.end_layout_edit()
 	main.show_main_menu()
-	if failures.is_empty(): print("PALETTE CARDS OK: %d checks; all28 real upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls" % checks)
+	if failures.is_empty(): print("PALETTE CARDS OK: %d checks; all equipment upgrades/current character level, shared formulas, read-only preview, combo/heal/fist interactions, three layouts and saved controls" % checks)
 	else:
 		for failure in failures: push_error(failure)
 	quit(0 if failures.is_empty() else 1)

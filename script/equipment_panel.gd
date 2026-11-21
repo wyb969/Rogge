@@ -21,6 +21,7 @@ var _combo_clock := 0.0
 var _border_tick_left := 0.0
 
 const EQUIP_DEFS: = {
+	"light_thorn": {"title": "光之荆棘", "icon": "res://rogge_art/icons/skills-equipment/light-thorn.png", "start_level": 0, "max_level": 5},
 	"thorn_whip": {"title": "荆棘鞭", "icon": "res://rogge_art/icons/skills-equipment/A026.png", "start_level": 0, "max_level": 5},
 	"rune_bolt": {"title": "符文飞弹", "icon": "res://rogge_art/icons/skills-equipment/A027.png", "start_level": 0, "max_level": 5},
 	"pulse_aura": {"title": "脉冲法阵", "icon": "res://rogge_art/icons/skills-equipment/A028.png", "start_level": 0, "max_level": 5},

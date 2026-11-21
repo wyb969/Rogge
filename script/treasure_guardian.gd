@@ -54,7 +54,7 @@ func configure_guardian(hp: float, attack_damage: float) -> void :
 func _physics_process(delta: float) -> void :
 	if _death_started:
 		return
-	if ghost_bound or electric_stun_left>0 or terrain_impulse.left>0:
+	if ghost_bound or blood_vortex_source != null or electric_stun_left>0 or terrain_impulse.left>0:
 		_update_statuses(delta)
 		if not _death_started: _tick_environment_control(delta)
 		return

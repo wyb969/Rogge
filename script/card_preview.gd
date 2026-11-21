@@ -1,6 +1,7 @@
 extends RefCounted
 
 const GHOST_DASH := preload("res://script/ghost_dash.gd")
+const BLOOD_VORTEX := preload("res://script/blood_vortex.gd")
 const DRAW_SLASH := preload("res://script/draw_slash.gd")
 const ICE_WAVE := preload("res://script/ice_wave.gd")
 const LIGHT_THORN := preload("res://script/light_thorn.gd")
@@ -41,6 +42,7 @@ static func rank_for(game: Node, id: String) -> int:
 		"bomb": return game.bomb_controller.level
 		"light_thorn": return game.light_thorn.level
 		"ghost_dash": return game.ghost_dash.level
+		"blood_vortex": return game.blood_vortex.level
 		"draw_slash": return game.draw_slash.level
 		"ice_wave": return game.ice_wave.level
 		"banana_fan": return game.banana_fan.level
@@ -157,6 +159,14 @@ static func build(game: Node, id: String) -> Dictionary:
 			_row(rows,"冲刺距离",before.range if rank else game.player.DASH_SPEED * game.player.DASH_DURATION,after.range)
 			_row(rows,"冲刺冷却",game.player.dash_base_cooldown() * player.cooldown_scale,after.interval * player.cooldown_scale,"s")
 			hint = L10n.text("冲刺穿过敌人，定身一秒后造成伤害。")
+		"blood_vortex":
+			var before := BLOOD_VORTEX.stats_for(maxi(rank, 1))
+			var after := BLOOD_VORTEX.stats_for(next)
+			_row(rows,"单段伤害",before.damage if rank else 0,after.damage)
+			_row(rows,"终斩伤害",before.damage * BLOOD_VORTEX.FINISH_MULTIPLIER if rank else 0,after.damage * BLOOD_VORTEX.FINISH_MULTIPLIER)
+			_row(rows,"持续时间",before.beats if rank else 0,after.beats,"s")
+			_row(rows,"攻击段数",before.beats if rank else 0,after.beats,"",false)
+			hint = L10n.text("血涡吸住前方敌人，每秒攻击，最后重斩击飞。")
 		"ice_wave":
 			var before := ICE_WAVE.stats_for(maxi(rank, 1))
 			var after := ICE_WAVE.stats_for(next)

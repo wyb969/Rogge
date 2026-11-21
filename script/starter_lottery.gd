@@ -9,7 +9,7 @@ const COMBOS := preload("res://script/equipment_combos.gd")
 const FOIL := preload("res://shaders/starter_foil.gdshader")
 # Each of these can deal damage on its own at rank one.
 const WEAPONS := ["axe_up", "circle_up", "gun_up", "drone_up", "bomb", "rune_bolt",
-	"silver_knife", "cross_blade", "holy_water", "pulse_aura", "thorn_whip", "light_thorn", "ice_wave", "ghost_dash", "draw_slash", "lightning_ring"]
+	"silver_knife", "cross_blade", "holy_water", "pulse_aura", "thorn_whip", "light_thorn", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash", "lightning_ring"]
 var loadout: Dictionary = {}
 var rerolls_left := MAX_REROLLS
 var _reroll: Button

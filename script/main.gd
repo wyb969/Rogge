@@ -358,6 +358,8 @@ func _launch_run(mode: StringName, opening: Dictionary = {}) -> void :
 			game._open_forge()
 		&"ghost_dash":
 			game.prepare_ghost_dash_debug()
+		&"blood_vortex":
+			game.prepare_blood_vortex_debug()
 		&"draw_slash":
 			game.prepare_draw_slash_debug()
 		&"ice_wave":

@@ -82,6 +82,7 @@ const BURN_SPREAD_RADIUS: = 78.0
 
 var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
 var electric_stun_left := 0.0
+var blood_vortex_source: Node2D
 var ghost_bound := false
 var blade_ice: RefCounted
 var freeze_time: float = 0.0
@@ -594,7 +595,7 @@ func _fire_projectile(dir: Vector2) -> void :
 	_show_strike(aim)
 
 func _try_contact(dist: float) -> void :
-	if ghost_bound or electric_stun_left>0: return
+	if ghost_bound or blood_vortex_source != null or electric_stun_left>0: return
 	if tactical_ai!=null and (tactical_ai.committed or tactical_ai.recovery>0): return
 	if _death_started or _blast_left > 0.0 or is_queued_for_deletion() or (archetype == EnemyData.Archetype.DASHER and (dash_windup > 0.0 or contact_recovery_left > 0.0)):
 		return
@@ -1003,6 +1004,12 @@ func _apply_environment_motion(delta: float, previous_velocity: Vector2) -> void
 	else:
 		velocity = desired
 
+func catch_blood_vortex(source: Node2D) -> bool:
+	if _death_started: return false
+	blood_vortex_source = source
+	_cancel_controlled_attack()
+	return true
+
 func bind_ghost() -> bool:
 	if _death_started: return false
 	ghost_bound = true
@@ -1068,6 +1075,9 @@ func _tick_environment_control(delta: float) -> bool:
 		velocity = Vector2.ZERO
 		return true
 	if terrain_impulse.tick(self,delta): return true
+	if not stunned and is_instance_valid(blood_vortex_source):
+		blood_vortex_source.pull_body(self, delta, crowd_control_scale())
+		return true
 	return stunned
 
 func _tick_airborne_visual(delta: float) -> void:

@@ -153,6 +153,7 @@ func clear_combat_effects() -> void :
 	if game.get("banana_fan") != null: game.banana_fan.clear_combat_effects()
 	if game.get("light_thorn") != null: game.light_thorn.clear_combat_effects()
 	if game.get("ghost_dash") != null: game.ghost_dash.clear_combat_effects()
+	if game.get("blood_vortex") != null: game.blood_vortex.clear_combat_effects()
 	if game.get("draw_slash") != null: game.draw_slash.clear_combat_effects()
 	if game.get("ice_wave") != null: game.ice_wave.clear_combat_effects()
 	if game.get("black_hole") != null: game.black_hole.clear_combat_effects()

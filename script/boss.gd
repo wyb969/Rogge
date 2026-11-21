@@ -47,6 +47,7 @@ var terrain_impulse := preload("res://script/terrain_impulse.gd").new()
 var electric_stun_left := 0.0
 const CONTROL_LIMIT := 3.0
 const CONTROL_IMMUNITY := 3.0
+var blood_vortex_source: Node2D
 var ghost_bound := false
 var blade_ice: RefCounted
 var control_time := 0.0
@@ -234,7 +235,7 @@ func _try_charge_sweep(before: Vector2, after: Vector2) -> void :
 		_contact_left = CONTACT_INTERVAL
 
 func start_charge_attack(chained: bool = false) -> void :
-	if ghost_bound or electric_stun_left>0: return
+	if ghost_bound or blood_vortex_source != null or electric_stun_left>0: return
 	if is_dying or not is_instance_valid(player) or player.player_health <= 0 or charge_state != ChargeState.WAIT:
 		return
 	rush_timer.stop()
@@ -541,6 +542,12 @@ func _add_to_effect_container(node: Node) -> void :
 	else:
 		get_tree().current_scene.add_child(node)
 
+func catch_blood_vortex(source: Node2D) -> bool:
+	if is_dying or is_control_immune() or is_in_group("trial_enemy"): return false
+	blood_vortex_source = source
+	_cancel_controlled_attack()
+	return true
+
 func bind_ghost() -> bool:
 	if is_dying or is_control_immune(): return false
 	ghost_bound = true
@@ -590,6 +597,7 @@ func is_control_immune() -> bool:
 	return control_immunity_left>0
 
 func _reset_control_guard() -> void:
+	blood_vortex_source = null
 	ghost_bound = false
 	if blade_ice != null: blade_ice.release(self)
 	control_time=0
@@ -605,13 +613,14 @@ func _tick_environment_control(delta: float) -> bool:
 		control_immunity_left=maxf(0,control_immunity_left-step)
 		return false
 	var duration := maxf(electric_stun_left,terrain_impulse.left)
-	if ghost_bound: duration = maxf(duration,step)
+	if ghost_bound or blood_vortex_source != null: duration = maxf(duration,step)
 	if blade_ice != null: duration = maxf(duration, blade_ice.left)
 	if duration>0 or poison_slow<1:
 		control_time+=step if poison_slow<1 else minf(step,duration)
 		if control_time>=CONTROL_LIMIT-0.000001:
 			control_time=0
 			control_immunity_left=CONTROL_IMMUNITY
+			blood_vortex_source = null
 			ghost_bound = false
 			if blade_ice != null: blade_ice.release(self)
 			electric_stun_left=0
@@ -629,6 +638,9 @@ func _tick_environment_control(delta: float) -> bool:
 		velocity = Vector2.ZERO
 		return true
 	if terrain_impulse.tick(self,delta): return true
+	if not stunned and is_instance_valid(blood_vortex_source):
+		blood_vortex_source.pull_body(self, delta, 0.32)
+		return true
 	return stunned
 
 func _tick_terrain_visual(delta: float, base: Vector2) -> void:

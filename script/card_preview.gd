@@ -1,5 +1,6 @@
 extends RefCounted
 
+const GHOST_DASH := preload("res://script/ghost_dash.gd")
 const DRAW_SLASH := preload("res://script/draw_slash.gd")
 const ICE_WAVE := preload("res://script/ice_wave.gd")
 const LIGHT_THORN := preload("res://script/light_thorn.gd")
@@ -39,6 +40,7 @@ static func rank_for(game: Node, id: String) -> int:
 		"silver_knife", "cross_blade", "holy_water": return game.relic_weapons.levels[id]
 		"bomb": return game.bomb_controller.level
 		"light_thorn": return game.light_thorn.level
+		"ghost_dash": return game.ghost_dash.level
 		"draw_slash": return game.draw_slash.level
 		"ice_wave": return game.ice_wave.level
 		"banana_fan": return game.banana_fan.level
@@ -148,6 +150,13 @@ static func build(game: Node, id: String) -> Dictionary:
 				var label: String = {"damage":"单次伤害","dps":"每秒伤害","count":"飞刀数量","range":"飞行距离","radius":"净化半径","duration":"持续时间","interval":"触发间隔"}[key]
 				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key in ["duration","interval"] else "",key != "count")
 			hint = {"silver_knife":L10n.text("自动瞄准附近敌人穿透 · 每把对同一目标命中一次"),"cross_blade":L10n.text("自动瞄准 · 固定路径往返各命中一次"),"holy_water":L10n.text("敌人脚下净化区域 · 每0.5秒结算\n重叠区域不叠伤，不触发暴击和异常传播")}[id]+L10n.text("\n最高5级")
+		"ghost_dash":
+			var before := GHOST_DASH.stats_for(maxi(rank, 1))
+			var after := GHOST_DASH.stats_for(next)
+			_row(rows,"基础伤害",before.damage if rank else 0,after.damage)
+			_row(rows,"冲刺距离",before.range if rank else game.player.DASH_SPEED * game.player.DASH_DURATION,after.range)
+			_row(rows,"冲刺冷却",game.player.dash_base_cooldown() * player.cooldown_scale,after.interval * player.cooldown_scale,"s")
+			hint = L10n.text("冲刺穿过敌人，定身一秒后造成伤害。")
 		"ice_wave":
 			var before := ICE_WAVE.stats_for(maxi(rank, 1))
 			var after := ICE_WAVE.stats_for(next)

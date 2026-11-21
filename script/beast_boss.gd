@@ -45,7 +45,7 @@ func boss_art_id() -> String:
 
 func pose_action() -> StringName:
 	if is_dying: return &"defeat"
-	if electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
+	if ghost_bound or electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
 	return [&"approach", &"warn", active_pose, &"recover", &"phase_shift"][state]
 
 func _ready() -> void :

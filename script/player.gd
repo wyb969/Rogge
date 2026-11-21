@@ -39,6 +39,9 @@ const DASH_DURATION: = 0.14
 const DASH_GRACE_SECONDS: = 0.5
 const DASH_COOLDOWN: = 3.0
 const DASH_SHADOW_INTERVAL: = 0.035
+var ghost_dash: Node
+var _ghost_dash_left := 0.0
+var _ghost_dash_speed := 0.0
 var dashing: bool = false
 var can_dash: bool = true
 var dash_grace_left: = 0.0
@@ -412,10 +415,14 @@ func apply_rest_move_speed(bonus: float) -> void :
 	SPEED += bonus
 
 
+func dash_base_cooldown() -> float:
+	if is_instance_valid(ghost_dash) and ghost_dash.level > 0: return ghost_dash._stats.interval
+	return DASH_COOLDOWN
+
 func apply_rest_cooldown(scale: float) -> float:
 	cooldown_scale = rest_cooldown_for(scale)
 	if can_dasing_timer:
-		can_dasing_timer.wait_time = DASH_COOLDOWN * cooldown_scale
+		can_dasing_timer.wait_time = dash_base_cooldown() * cooldown_scale
 	return cooldown_scale
 
 func upgrade_left_fist() -> void :
@@ -469,12 +476,18 @@ func is_dash_invulnerable() -> bool:
 	return dashing or dash_grace_left > 0
 
 func _cancel_dash() -> void :
+	_ghost_dash_left = 0.0
 	dashing = false
 	_dash_ghost_distance = 0.0
 	dash_grace_left = 0
 	dashing_timer.stop()
 	shadow_timer.stop()
 	_sync_dash_hurt_area()
+
+func cancel_ghost_dash() -> void:
+	if _ghost_dash_left <= 0.0: return
+	_cancel_dash()
+	velocity = Vector2.ZERO
 
 func reset_dash() -> void :
 	clear_terrain_impulse()
@@ -582,7 +595,7 @@ func _physics_process(delta: float) -> void :
 		_start_dash(dash_input_direction)
 
 	if dashing:
-		velocity = dash_direction * DASH_SPEED
+		velocity = dash_direction * (_ghost_dash_speed if _ghost_dash_left > 0.0 else DASH_SPEED)
 	else:
 		max_speed = effective_move_speed()
 		var ice: float = environment.surface.ice_amount() if is_instance_valid(environment) else 0.0
@@ -594,6 +607,16 @@ func _physics_process(delta: float) -> void :
 			velocity = velocity.move_toward(drift, lerpf(friction,100.0,ice) * delta)
 
 	var before_move := global_position
+	if _ghost_dash_left > 0.0:
+		var step := minf(delta, _ghost_dash_left)
+		var wall := move_and_collide(velocity * step)
+		_ghost_dash_left = maxf(0.0, _ghost_dash_left - step)
+		ghost_dash.sweep(before_move, global_position)
+		_emit_dash_ghosts(before_move, global_position)
+		if wall != null or _ghost_dash_left <= 0.000001:
+			_on_dashing_timer_timeout()
+		_update_locomotion(global_position - before_move, delta)
+		return
 	move_and_slide()
 	_update_locomotion(global_position - before_move, delta)
 	if dashing: _emit_dash_ghosts(before_move, global_position)
@@ -633,9 +656,15 @@ func _start_dash(input_direction: Vector2) -> void :
 	else:
 		dash_direction = last_move_direction
 
-	velocity = dash_direction * DASH_SPEED
-	dashing_timer.start()
-	can_dasing_timer.start()
+	if is_instance_valid(ghost_dash) and ghost_dash.level > 0:
+		ghost_dash.begin_pass()
+		_ghost_dash_left = DASH_DURATION
+		_ghost_dash_speed = float(ghost_dash._stats.range) / DASH_DURATION
+		velocity = dash_direction * _ghost_dash_speed
+	else:
+		velocity = dash_direction * DASH_SPEED
+		dashing_timer.start()
+	can_dasing_timer.start(dash_base_cooldown() * cooldown_scale)
 	shadow_timer.stop() # Compatibility timer remains callable; the trail uses actual distance.
 	_dash_ghost_distance = 0.0
 	playAnimation(dash_direction)
@@ -705,6 +734,7 @@ func _on_shadow_timer_timeout() -> void :
 
 func _on_dashing_timer_timeout() -> void :
 	if not dashing: return
+	_ghost_dash_left = 0.0
 	dashing = false
 	dash_grace_left = DASH_GRACE_SECONDS
 	_sync_dash_hurt_area()

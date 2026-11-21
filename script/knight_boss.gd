@@ -21,7 +21,7 @@ var slash_count: int = 0
 var dash_count: int = 0
 func pose_action() -> StringName:
 	if is_dying: return &"defeat"
-	if electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
+	if ghost_bound or electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
 	return [&"approach", &"dash_warn", &"dash", &"slash_warn", &"slash", &"recover", &"phase_shift"][attack_state]
 
 var _title: Label

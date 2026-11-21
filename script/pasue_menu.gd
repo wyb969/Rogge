@@ -31,6 +31,7 @@ var _card_area: Control
 var upgrade_pool: = [
 	{"id": "light_thorn", "title": "光之荆棘", "desc": "", "icon": "res://rogge_art/icons/skills-equipment/light-thorn.png", "max_level": 5},
 	{"id": "ice_wave", "title": "冰刃波", "desc": "", "icon": "res://rogge_art/icons/skills-equipment/ice-wave.png", "max_level": 5},
+	{"id": "ghost_dash", "title": "鬼影步", "desc": "", "icon": "res://rogge_art/combat-fx/ghost-dash/icon.png", "max_level": 5},
 	{"id": "draw_slash", "title": "拔刀斩", "desc": "", "icon": "res://rogge_art/combat-fx/draw-slash/icon.png", "max_level": 5},
 	{"id": "thorn_whip", "title": "荆棘鞭", "desc": "", "icon": "res://rogge_art/icons/skills-equipment/A026.png", "max_level": 5},
 	{"id": "rune_bolt", "title": "符文飞弹", "desc": "", "icon": "res://rogge_art/icons/skills-equipment/A027.png", "max_level": 5},

@@ -9,7 +9,7 @@ const PASSIVES := {
 	"left_fist": "left_fist_level", "right_fist": "right_fist_level",
 }
 const SINGLE_SPELLS := {
-	"bomb": "bomb_controller", "banana_fan": "banana_fan", "light_thorn": "light_thorn", "ice_wave": "ice_wave", "draw_slash": "draw_slash", "black_hole": "black_hole",
+	"bomb": "bomb_controller", "banana_fan": "banana_fan", "light_thorn": "light_thorn", "ice_wave": "ice_wave", "ghost_dash": "ghost_dash", "draw_slash": "draw_slash", "black_hole": "black_hole",
 	"poison_trail": "poison_trail", "lightning_ring": "lightning_ring",
 }
 const ARCANE := ["thorn_whip", "rune_bolt", "pulse_aura"]

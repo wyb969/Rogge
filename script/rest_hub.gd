@@ -62,7 +62,7 @@ func _refresh_reward_numbers() -> void:
 			"max_hp": text = CardNumbers.change(L10n.text("最大生命"),player.max_player_health,player.max_player_health+MAX_HP_BONUS,"",false).text
 			"defense": text = CardNumbers.change(L10n.text("减伤"),player.damage_reduction*100,player.rest_defense_for(DEFENSE_BONUS)*100,"%",false).text
 			"move_speed": text = CardNumbers.change(L10n.text("移速"),player.effective_move_speed(),player.move_speed_for(player.SPEED+MOVE_SPEED_BONUS,player.growth_move_multiplier)).text
-			"cooldown": text = CardNumbers.change(L10n.text("冲刺冷却"),player.DASH_COOLDOWN*player.cooldown_scale,player.DASH_COOLDOWN*player.rest_cooldown_for(COOLDOWN_SCALE),"s").text + L10n.text("\n枪支使用相同冷却倍率")
+			"cooldown": text = CardNumbers.change(L10n.text("冲刺冷却"),player.dash_base_cooldown()*player.cooldown_scale,player.dash_base_cooldown()*player.rest_cooldown_for(COOLDOWN_SCALE),"s").text + L10n.text("\n枪支使用相同冷却倍率")
 			_:
 				text = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title))
 				if game.forge.enabled:

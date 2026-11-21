@@ -23,7 +23,7 @@ func boss_art_id() -> String:
 
 func pose_action() -> StringName:
 	if is_dying: return &"defeat"
-	if electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
+	if ghost_bound or electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
 	if state == State.WARN: return &"fan_warn" if role == Role.RANGED else &"dive_warn"
 	if state == State.ACTIVE:
 		if role == Role.RANGED: return &"wind_blades"

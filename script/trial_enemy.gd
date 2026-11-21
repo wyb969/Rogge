@@ -68,6 +68,10 @@ func _process(delta: float) -> void :
 func _physics_process(delta: float) -> void :
 	if is_dying or not is_instance_valid(director) or not director.active_fight() or not is_instance_valid(player) or player.player_health <= 0:
 		return
+	if ghost_bound or is_control_immune():
+		if _tick_environment_control(delta): return
+	else:
+		control_time = 0.0
 	left -= delta
 	if kind == "power":
 		_step_power(delta)
@@ -75,6 +79,14 @@ func _physics_process(delta: float) -> void :
 		_step_speed()
 	_update_title()
 	queue_redraw()
+
+func bind_ghost() -> bool:
+	if not vulnerable() or not super.bind_ghost(): return false
+	# Discard the attack warning before holding the trial in recovery.
+	trial_state = TrialState.RECOVER
+	left = maxf(left, 0.35)
+	queue_redraw()
+	return true
 
 func _step_power(delta: float) -> void :
 	match trial_state:

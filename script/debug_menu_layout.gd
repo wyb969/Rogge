@@ -2,7 +2,7 @@ extends Control
 
 # Only recent interactive tests live here. Older presets remain callable by smoke tests.
 const RECENT_ORDER: Array[String] = [
-	"DebugForgeButton", "DebugDrawSlashButton", "DebugIceWaveButton", "DebugLightThornButton", "DebugControlCardsButton", "DebugMinefieldButton",
+	"DebugForgeButton", "DebugDrawSlashButton", "DebugGhostDashButton", "DebugIceWaveButton", "DebugLightThornButton", "DebugControlCardsButton", "DebugMinefieldButton",
 	"DebugElectricGridButton",
 	"DebugWindSceneButton", "DebugIceSceneButton",
 	"DebugWinterButton",

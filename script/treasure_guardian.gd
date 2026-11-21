@@ -16,7 +16,7 @@ func _ready() -> void:
 	death_signal.connect(_show_open_lid)
 
 func pose_action() -> StringName:
-	if electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
+	if ghost_bound or electric_stun_left > 0 or terrain_impulse.left > 0: return &"stun"
 	if warning_left > 0: return &"slam_warn"
 	if impact_left > 0: return &"slam"
 	return &"approach"
@@ -54,7 +54,7 @@ func configure_guardian(hp: float, attack_damage: float) -> void :
 func _physics_process(delta: float) -> void :
 	if _death_started:
 		return
-	if electric_stun_left>0 or terrain_impulse.left>0:
+	if ghost_bound or electric_stun_left>0 or terrain_impulse.left>0:
 		_update_statuses(delta)
 		if not _death_started: _tick_environment_control(delta)
 		return

@@ -1696,3 +1696,9 @@ Lv %d,Lv %d,等级 %d
 拔刀 %s伤,Slash %s DMG,拔刀 %s伤
 拔剑一闪，斩中周身敌人。,Draw the blade in a flash and strike all around you.,拔剑一闪，斩中周身敌人。
 敌人贴近时自动拔刀，瞬间斩中玩家周围一整圈。每个目标每刀只受一次伤害。升级缩短冷却，提高伤害并扩大斩击半径。,Automatically draw when enemies close in. Each slash hits every enemy in the circle once. Upgrades shorten the cooldown and increase damage and radius.,敌人贴近时自动拔刀，瞬间斩中玩家周围一整圈。每个目标每刀只受一次伤害。升级缩短冷却，提高伤害并扩大斩击半径。
+鬼影步,Phantom Step,鬼影步
+鬼影步 · 穿阵,Phantom Step · Dash practice,鬼影步 · 穿阵
+冲刺距离,Dash distance,冲刺距离
+鬼印 %s伤,Mark %s DMG,鬼印 %s伤
+冲刺穿过敌人，定身一秒后造成伤害。,"Dash through enemies to bind them for one second, then deal damage.",冲刺穿过敌人，定身一秒后造成伤害。
+使用原来的冲刺按键穿过敌群。沿途的敌人被定身一秒，头顶骷髅淡入淡出，随后受到一次伤害。升级缩短冲刺冷却，增加距离和伤害。首领遵守现有控制抗性。,"Use your usual dash to pass through enemies. A skull fades in and out during the one-second bind, then each enemy takes damage once. Upgrades shorten dash cooldown and increase distance and damage. Boss control resistance applies.",使用原来的冲刺按键穿过敌群。沿途的敌人被定身一秒，头顶骷髅淡入淡出，随后受到一次伤害。升级缩短冲刺冷却，增加距离和伤害。首领遵守现有控制抗性。

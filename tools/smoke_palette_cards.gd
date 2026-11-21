@@ -47,6 +47,9 @@ func observed(id: String) -> Dictionary:
 				var label: String = {"damage":"单次伤害","dps":"每秒伤害","count":"飞刀数量","range":"飞行距离","radius":"净化半径","duration":"持续时间","interval":"触发间隔"}.get(key,"")
 				if not label.is_empty(): values[label] = stats[key]
 			return values
+		"ghost_dash":
+			var stats: Dictionary = game.ghost_dash._stats
+			return {"基础伤害":stats.damage, "冲刺距离":stats.range, "冲刺冷却":stats.interval * p.cooldown_scale}
 		"speed_up": return {"移速":p.effective_move_speed()}
 		"pickup_up": return {"拾取半径":p.pickup_range}
 		"axe_up": return {"基础伤害":game.hand_weapon.weapon_demage,"飞行速度":game.hand_weapon.max_speed}
@@ -66,7 +69,7 @@ func observed(id: String) -> Dictionary:
 			if id == "wind_emblem": stats = game.variety.wind_stats(game.variety.wind_level)
 			elif id == "echo_ember": stats = game.variety.echo_stats(game.variety.echo_level)
 			else:
-				var actor: Node = {"bomb":game.bomb_controller,"banana_fan":game.banana_fan,"black_hole":game.black_hole,"light_thorn":game.light_thorn,"ice_wave":game.ice_wave,"draw_slash":game.draw_slash,"poison_trail":game.poison_trail,"lightning_ring":game.lightning_ring}[id]
+				var actor: Node = {"bomb":game.bomb_controller,"banana_fan":game.banana_fan,"black_hole":game.black_hole,"light_thorn":game.light_thorn,"ice_wave":game.ice_wave,"ghost_dash":game.ghost_dash,"draw_slash":game.draw_slash,"poison_trail":game.poison_trail,"lightning_ring":game.lightning_ring}[id]
 				stats = actor._stats if id != "lightning_ring" else actor.stats_for(actor.level)
 			var result := {}
 			if id == "ice_wave": result["冰冻几率"] = stats.freeze_chance * 100

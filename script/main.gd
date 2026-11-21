@@ -356,6 +356,8 @@ func _launch_run(mode: StringName, opening: Dictionary = {}) -> void :
 			game.forge.seal_stage()
 			game._forge_due = true
 			game._open_forge()
+		&"ghost_dash":
+			game.prepare_ghost_dash_debug()
 		&"draw_slash":
 			game.prepare_draw_slash_debug()
 		&"ice_wave":

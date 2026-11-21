@@ -42,6 +42,7 @@ var meteors: Node2D
 const POISON_TRAIL: = preload("res://script/poison_trail.gd")
 var poison_trail: Node2D
 const BANANA_FAN := preload("res://script/banana_fan.gd")
+const GHOST_DASH := preload("res://script/ghost_dash.gd")
 const DRAW_SLASH := preload("res://script/draw_slash.gd")
 const ICE_WAVE := preload("res://script/ice_wave.gd")
 const LIGHT_THORN := preload("res://script/light_thorn.gd")
@@ -50,6 +51,7 @@ const BOMB := preload("res://script/bomb_controller.gd")
 const ARSENAL_COMBO := preload("res://script/arsenal_combo.gd")
 var banana_fan: Node2D
 var light_thorn: Node2D
+var ghost_dash: Node2D
 var draw_slash: Node2D
 var ice_wave: Node2D
 var black_hole: Node2D
@@ -156,6 +158,9 @@ func _ready() -> void :
 	banana_fan = BANANA_FAN.new()
 	banana_fan.name = "BananaFan"
 	add_child(banana_fan)
+	ghost_dash = GHOST_DASH.new()
+	ghost_dash.name = "GhostDash"
+	add_child(ghost_dash)
 	draw_slash = DRAW_SLASH.new()
 	draw_slash.name = "DrawSlash"
 	add_child(draw_slash)
@@ -310,6 +315,7 @@ func _reset_skill_controllers() -> void :
 	if poison_trail: poison_trail.reset()
 	if banana_fan: banana_fan.reset()
 	if light_thorn: light_thorn.reset()
+	if ghost_dash: ghost_dash.reset()
 	if draw_slash: draw_slash.reset()
 	if ice_wave: ice_wave.reset()
 	if black_hole: black_hole.reset()
@@ -412,6 +418,8 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 			poison_trail.upgrade()
 		"banana_fan":
 			banana_fan.upgrade()
+		"ghost_dash":
+			ghost_dash.upgrade()
 		"draw_slash":
 			draw_slash.upgrade()
 		"ice_wave":
@@ -432,7 +440,7 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
-		"banana_fan", "black_hole", "ice_wave", "draw_slash", "light_thorn", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
+		"banana_fan", "black_hole", "ice_wave", "ghost_dash", "draw_slash", "light_thorn", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
 	]:
 		spawner.note_offense_card()
 
@@ -999,6 +1007,13 @@ func prepare_control_debug(mode: StringName) -> void:
 		for _i in rank: _on_upgrade_selected(id)
 	variety.notify(L10n.text("控场卡片 %d 级\n芭蕉扇沿移动方向吹风 · 黑洞自动聚怪") % rank)
 	_spawn_control_targets()
+
+func prepare_ghost_dash_debug() -> void:
+	hand_weapon.start_unequipped()
+	circle_weapon.start_unequipped()
+	equipment_panel.reset_equipment(false)
+	for i in 3: _on_upgrade_selected("ghost_dash")
+	_spawn_control_targets([Vector2(42, -3), Vector2(92, 7), Vector2(139, -5), Vector2(-71, -40), Vector2(95, 61)])
 
 func prepare_draw_slash_debug() -> void:
 	hand_weapon.start_unequipped()

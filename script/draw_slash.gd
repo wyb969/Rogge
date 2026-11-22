@@ -94,4 +94,4 @@ func _strike(center: Vector2) -> void:
 		var actor: Node2D = targets[id]
 		if not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_in_group("EnemyGroup"): continue
 		if actor.has_method("vulnerable") and not actor.vulnerable(): continue
-		actor.apply_hit({"damage": _damage, "direction": center.direction_to(actor.global_position), "source": self})
+		actor.apply_hit({"hitstop": false, "budget_impact": true, "damage": _damage, "direction": center.direction_to(actor.global_position), "source": self})

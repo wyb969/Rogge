@@ -14,22 +14,47 @@
     storage_available: storage,
     js_heap_bytes: w.performance && w.performance.memory ? w.performance.memory.usedJSHeapSize : null
   });
-  function save() {
+  let scheduled = false;
+  function snapshot() {
     if (!current) return;
     current.browser = environment();
     current.browser_events = events.slice();
     current.long_tasks = tasks.slice();
     current.browser_saved_ms = Date.now();
+  }
+  function save() {
+    if (!current) return;
+    snapshot();
     try { w.localStorage.setItem(key, JSON.stringify(current)); }
     catch (_) { storage = false; current.browser.storage_available = false; }
   }
+  function scheduleSave() {
+    if (scheduled) return;
+    scheduled = true;
+    const flush = () => { scheduled = false; save(); };
+    if (w.requestIdleCallback) w.requestIdleCallback(flush, {timeout: 1200});
+    else w.setTimeout(flush, 100);
+  }
   function note(kind, message) {
     bounded(events, {at_ms: Date.now(), kind, message: String(message || '').slice(0, 1400)});
-    save();
+    if (kind === 'pagehide' || (kind === 'visibility' && w.document.hidden) ||
+        kind === 'error' || kind === 'unhandled_rejection' || kind === 'webgl_context_lost') save();
+    else scheduleSave();
   }
   w.RoggeDiagnostics = {
     previous,
-    update(report) { current = report; save(); },
+    previousJSON() { return JSON.stringify(previous); },
+    updateJSON(json, limit) {
+      const delta = JSON.parse(json);
+      const fresh = !current || current.session_id !== delta.session_id;
+      const history = fresh ? [] : current.samples;
+      delta.samples = history.concat(delta.samples).slice(-limit);
+      current = delta;
+      if (fresh || current.state === 'ended') save();
+      else scheduleSave();
+      return storage;
+    },
+    latestJSON() { snapshot(); return JSON.stringify(this.latest()); },
     latest() { return current || (previous && {...previous, reopened_browser: environment()}); },
     note
   };

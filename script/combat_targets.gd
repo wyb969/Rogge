@@ -57,6 +57,22 @@ func nearest(origin: Vector2, distance_squared: float = INF, excluded: Dictionar
 		best = actor
 	return best
 
+# Casting needs an in-range target in this run, including the exact radius.
+func nearest_hittable(origin: Vector2, radius_squared: float, owner: Node, excluded: Dictionary = {}) -> Node2D:
+	queries += 1
+	candidates_examined += _entries.size()
+	var best: Node2D
+	for entry in _entries:
+		var actor := entry.actor
+		if not is_instance_valid(actor): continue
+		var distance := origin.distance_squared_to(actor.global_position)
+		if distance > radius_squared or (best != null and distance == radius_squared): continue
+		if not _live(entry, &"EnemyGroup") or excluded.has(actor) or not owner.is_ancestor_of(actor): continue
+		if not actor.has_method("apply_hit") or (actor.has_method("vulnerable") and not actor.vulnerable()): continue
+		best = actor
+		radius_squared = distance
+	return best
+
 func nearest_visible(origin: Vector2, radius_squared: float, limit: int, owner: Node, rect: Rect2, canvas: Transform2D) -> Array[Node2D]:
 	queries += 1
 	candidates_examined += _entries.size()
@@ -65,9 +81,11 @@ func nearest_visible(origin: Vector2, radius_squared: float, limit: int, owner: 
 	if limit <= 0: return result
 	for entry in _entries:
 		var actor: = entry.actor
+		if not is_instance_valid(actor): continue
+		var position := actor.global_position
+		var distance := origin.distance_squared_to(position)
+		if distance > radius_squared or not rect.has_point(canvas * position): continue
 		if not _live(entry, &"EnemyGroup") or not owner.is_ancestor_of(actor) or not actor.has_method("apply_hit"): continue
-		var distance: = origin.distance_squared_to(actor.global_position)
-		if distance > radius_squared or not rect.has_point(canvas * actor.global_position): continue
 
 		var at: = 0
 		while at < distances.size() and distances[at] <= distance: at += 1
@@ -87,21 +105,26 @@ func in_radius(origin: Vector2, radius_squared: float, owner: Node) -> Array[Nod
 	candidates_examined += _entries.size()
 	var result: Array[Node2D] = []
 	for entry in _entries:
-		if _live(entry, &"EnemyGroup") and owner.is_ancestor_of(entry.actor) and entry.actor.has_method("apply_hit") and origin.distance_squared_to(entry.actor.global_position) <= radius_squared:
-			result.append(entry.actor)
+		var actor := entry.actor
+		if not is_instance_valid(actor) or origin.distance_squared_to(actor.global_position) > radius_squared: continue
+		if _live(entry, &"EnemyGroup") and owner.is_ancestor_of(actor) and actor.has_method("apply_hit"):
+			result.append(actor)
 	return result
 
 func fill_in_bounds(bounds: Rect2, owner: Node, result: Array[Node2D]) -> void :
 	queries += 1
 	candidates_examined += _entries.size()
 	for entry in _entries:
-		if _live(entry, &"EnemyGroup") and owner.is_ancestor_of(entry.actor) and entry.actor.has_method("apply_hit") and bounds.has_point(entry.actor.global_position): result.append(entry.actor)
+		var actor := entry.actor
+		if not is_instance_valid(actor) or not bounds.has_point(actor.global_position): continue
+		if _live(entry, &"EnemyGroup") and owner.is_ancestor_of(actor) and actor.has_method("apply_hit"):
+			result.append(actor)
 
 func fill_in_radius(origin: Vector2, radius_squared: float, owner: Node, result: Array[Node2D]) -> void :
 	queries += 1
 	candidates_examined += _entries.size()
 	for entry in _entries:
-		if not _live(entry, &"EnemyGroup"): continue
-		var actor: = entry.actor
-		if owner != null and not owner.is_ancestor_of(actor): continue
-		if origin.distance_squared_to(actor.global_position) <= radius_squared: result.append(actor)
+		var actor := entry.actor
+		if not is_instance_valid(actor) or origin.distance_squared_to(actor.global_position) > radius_squared: continue
+		if _live(entry, &"EnemyGroup") and (owner == null or owner.is_ancestor_of(actor)):
+			result.append(actor)

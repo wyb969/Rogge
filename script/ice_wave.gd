@@ -143,7 +143,7 @@ func _erupt(start: Vector2, finish: Vector2) -> void:
 			if actor.has_method("vulnerable") and not actor.vulnerable(): continue
 			_hit[id] = true
 			var had_shell := _shells.has(id)
-			actor.apply_hit({"damage": _damage, "direction": _heading, "source": self})
+			actor.apply_hit({"hitstop": false, "budget_impact": true, "damage": _damage, "direction": _heading, "source": self})
 			if _count == 0: return # A lethal hit can synchronously end the encounter.
 			if had_shell or not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_in_group("EnemyGroup"): continue
 			if actor.has_method("encase_in_blade_ice") and _rng.randf() < _chance:

@@ -153,6 +153,9 @@ func clear_fx() -> void:
 	strike_left=0
 	enlarge_left=0
 
+func has_visible_fx() -> bool:
+	return enlarge_left > 0 or ray_left > 0 or air_left > 0 or strike_left > 0 or not rollers.is_empty()
+
 func _draw() -> void:
 	if enlarge_left>0:
 		var t:=1-enlarge_left/0.3

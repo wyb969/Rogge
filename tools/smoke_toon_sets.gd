@@ -107,6 +107,23 @@ func run() -> void:
 	var hp: float=boss.boss_current_health
 	pocket.cast("air_cannon")
 	check(boss.global_position==boss_at and boss.boss_current_health<hp and pocket.rollers.is_empty(),"boss takes direct damage in place")
+	var fx: Node = game.combat_feedback.impact_feedback
+	check(fx.stops == 0, "automatic themed attacks never stop the world, including on a boss")
+	var offsets := []
+	for i in 16: offsets.append(Vector2(-120 + i * 8, 40))
+	boss.remove_from_group("EnemyGroup")
+	var crowd := await enemies(offsets)
+	await process_frame
+	var flashes: int = fx.flashes
+	var count := 0
+	for mob in crowd:
+		if mob == boss: continue
+		var before: float = mob.health
+		if count % 2: pocket.hit(mob, 10, Vector2.RIGHT)
+		else: mob.apply_hit({"damage":10.0,"direction":Vector2.RIGHT})
+		check(mob.health < before, "every crowded target takes damage")
+		count += 1
+	check(count >= 16 and fx.flashes - flashes == 4 and fx.stops == 0, "simultaneous regular and themed crowd hits share four cosmetic slots")
 	for msg in errors: push_error(msg)
 	if errors.is_empty(): print("TOON SETS OK: six jackpot buckets, both reveals, dash crossfire, five-body strike, real XP coin, boss and sacrifice cleanup")
 	quit(0 if errors.is_empty() else 1)

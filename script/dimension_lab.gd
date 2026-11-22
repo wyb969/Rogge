@@ -97,19 +97,11 @@ func _live(actor) -> bool:
 	return is_instance_valid(actor) and not actor.is_queued_for_deletion() and actor.is_in_group("EnemyGroup") and actor.has_method("apply_hit") and (not actor.has_method("vulnerable") or actor.vulnerable())
 
 func _nearest(at: Vector2, reach: float, excluded := {}) -> Node2D:
-	var best: Node2D
-	var best_distance := INF
-	for actor in CombatTargets.in_radius(at,reach*reach,game):
-		if excluded.has(actor) or not _live(actor): continue
-		var distance := at.distance_squared_to(actor.global_position)
-		if distance < best_distance:
-			best = actor
-			best_distance = distance
-	return best
+	return CombatTargets.nearest_hittable(at, reach * reach, game, excluded)
 
 func _hit(actor, damage: float, direction: Vector2) -> void:
 	if _live(actor):
-		actor.apply_hit({"damage":damage,"direction":direction,"source":self})
+		actor.apply_hit({"hitstop": false, "budget_impact": true, "damage":damage,"direction":direction,"source":self})
 
 func _open(origin: Vector2, nearest: Node2D) -> void:
 	heading = origin.direction_to(nearest.global_position)

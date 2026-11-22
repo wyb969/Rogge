@@ -181,6 +181,9 @@ func clear_fx() -> void:
 	beams.clear()
 	combo_hits.clear()
 
+func has_visible_fx() -> bool:
+	return flash > 0 or window > 0 or echo_left > 0 or charge > 0 or impact > 0 or not discs.is_empty() or not beams.is_empty()
+
 func _draw() -> void:
 	if flash>0:
 		var t:=1-flash/0.28

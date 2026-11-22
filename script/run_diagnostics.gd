@@ -19,6 +19,9 @@ var _transition_left := 0
 var _last_stall: = -10000
 var _js: Object
 var _logger: Logger
+var _web_recorder: Object
+var _unsent_samples := 0
+var _checkpoint_due := false
 
 func _ready() -> void :
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -33,14 +36,17 @@ func _ready() -> void :
 		_js = Engine.get_singleton("JavaScriptBridge")
 		if _js != null:
 			_js.call("eval", FileAccess.get_file_as_string(WEB_HELPER), true)
-			var parsed = JSON.parse_string(str(_js.call("eval", "JSON.stringify(globalThis.RoggeDiagnostics.previous)", true)))
-			if parsed is Dictionary:
-				previous = parsed
+			_web_recorder = _js.call("get_interface", "RoggeDiagnostics")
+			if _web_recorder != null:
+				var parsed = JSON.parse_string(str(_web_recorder.previousJSON()))
+				if parsed is Dictionary: previous = parsed
 
 func begin(game: Node, mode: String) -> void :
 	if report.get("state") == "active":
 		finish("replaced_run")
 	_transition_left = 0
+	_unsent_samples = 0
+	_checkpoint_due = false
 	_game = weakref(game)
 	var now: = Time.get_ticks_msec()
 	_last_frame = now
@@ -51,7 +57,9 @@ func begin(game: Node, mode: String) -> void :
 		"state": "active", "started_unix": Time.get_unix_time_from_system(), 
 		"runtime": {"os": OS.get_name(), "web": OS.has_feature("web"), "engine": Engine.get_version_info().string}, 
 		"events": [], "samples": [], "peaks": {}, "loadout": {}}
-	mark("run_start", {}, true)
+	mark("run_start")
+	_sample(0.0)
+	_save()
 
 func capture_engine_error(details: Dictionary) -> void :
 	mark("engine_error", details, true)
@@ -68,8 +76,7 @@ func mark(kind: String, details: Dictionary = {}, checkpoint: bool = false) -> v
 	if report.events.size() > MAX_EVENTS:
 		report.events.pop_front()
 	if checkpoint and not batching:
-		_sample(0.0)
-		_save()
+		_checkpoint_due = true
 
 # Keep short transition hitches visible even below the generic 160ms stall
 # threshold. Only the regular save timer writes these samples to storage.
@@ -83,7 +90,9 @@ func mark_transition(kind: String, details: Dictionary = {}) -> void:
 func finish(reason: String) -> void :
 	if report.get("state") != "active":
 		return
-	mark("run_end", {"reason": reason}, true)
+	mark("run_end", {"reason": reason})
+	_sample(0.0)
+	_checkpoint_due = false
 	report.state = "ended"
 	report.end_reason = reason
 	_save()
@@ -98,13 +107,14 @@ func _process(_delta: float) -> void :
 		_transition_frames.append(frame_ms)
 		_transition_left -= 1
 	report.peaks["frame_ms"] = maxf(float(report.peaks.get("frame_ms", 0)), frame_ms)
-	if now - _last_sample >= 1000:
-		_sample(frame_ms)
-		_last_sample = now
 	if frame_ms >= 160 and now - _last_stall >= 2000 and not get_tree().paused:
 		_last_stall = now
 		mark("frame_stall", {"frame_ms": frame_ms}, true)
-	if now - _last_save >= 5000:
+	if _checkpoint_due or now - _last_sample >= 1000:
+		_sample(frame_ms)
+		_last_sample = now
+	if _checkpoint_due or now - _last_save >= 5000:
+		_checkpoint_due = false
 		_save()
 
 func _owned_count(group: StringName, game: Node) -> int:
@@ -172,6 +182,7 @@ func _sample(frame_ms: float) -> void :
 	for id in game.equipment_panel.EQUIP_DEFS:
 		report.loadout[id] = game.equipment_panel.get_level(id)
 	report.samples.append(sample)
+	_unsent_samples = mini(_unsent_samples + 1, MAX_SAMPLES)
 	if report.samples.size() > MAX_SAMPLES:
 		report.samples.pop_front()
 	for key in ["nodes", "books", "enemies", "player_shots", "effects", "pickups", "xp_coins", "healing_orbs", "damage_popups", "frame_ms", "juice_shards", "juice_rings", "juice_ghosts", "boss_visuals"]:
@@ -183,18 +194,23 @@ func _save() -> void :
 	if report.is_empty():
 		return
 	_last_save = Time.get_ticks_msec()
-	var data: = JSON.stringify(report)
+	if _web_recorder != null:
+		# Send only new samples across WASM. Browser storage owns the full ring.
+		var delta := report.duplicate()
+		delta.samples = report.samples.slice(report.samples.size() - _unsent_samples)
+		var browser_storage: bool = _web_recorder.updateJSON(JSON.stringify(delta, "", false), MAX_SAMPLES)
+		_unsent_samples = 0
+		if browser_storage: return
+	var data := JSON.stringify(report, "", false)
 	var file: = FileAccess.open(PATH + ".tmp", FileAccess.WRITE)
 	if file != null:
 		file.store_string(data)
 		file.close()
 		DirAccess.rename_absolute(ProjectSettings.globalize_path(PATH + ".tmp"), ProjectSettings.globalize_path(PATH))
-	if _js != null:
-		_js.call("eval", "globalThis.RoggeDiagnostics.update(" + data + ")", true)
 
 func latest() -> Dictionary:
-	if _js != null:
-		var browser = JSON.parse_string(str(_js.call("eval", "JSON.stringify(globalThis.RoggeDiagnostics.latest())", true)))
+	if _web_recorder != null:
+		var browser = JSON.parse_string(str(_web_recorder.latestJSON()))
 		if browser is Dictionary:
 			return browser
 	return report.duplicate(true) if not report.is_empty() else previous.duplicate(true)

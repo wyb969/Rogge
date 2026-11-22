@@ -851,7 +851,15 @@ func apply_hit(hit_data: Dictionary) -> void :
 		crit_multiplier = player_node.roll_critical_multiplier(hit_data)
 	var impact_damage: float = damage_value * crit_multiplier
 	if blade_ice != null: impact_damage += blade_ice.break_damage(self, hit_data)
-	var dealt: float = receive_hit(damage_dir, impact_damage, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))), not hit_data.get("from_status",false), hit_data.get("quiet_crowd_feedback", false), hit_data.get("hitstop",true))
+	var quiet: bool = hit_data.get("quiet_crowd_feedback", false)
+	var impact: bool = not hit_data.get("from_status", false)
+	var stop: bool = hit_data.get("hitstop", true)
+	if impact and _ordinary_theme_target():
+		var crowded := get_tree().get_node_count_in_group("EnemyGroup") >= FEEDBACK_BUDGET.CROWD_SIZE
+		if crowded: stop = false
+		if not quiet and (crowded or hit_data.get("budget_impact", false)):
+			quiet = not FEEDBACK_BUDGET.allow_skill_impact()
+	var dealt: float = receive_hit(damage_dir, impact_damage, status_damage, crit_multiplier > 1.0, damage_is_final, StringName(hit_data.get("visual_effect", hit_data.get("effect", ""))), impact, quiet, stop)
 	if not hit_data.get("from_status", false) and not damage_is_final:
 		_report_lifesteal(dealt)
 

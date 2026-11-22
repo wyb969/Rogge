@@ -10,6 +10,8 @@ var cue := AudioStreamPlayer.new()
 var epoch := 0
 var in_battle := false
 var clock := 0.0
+var _sweep_candidates: Array[Node2D] = []
+var _had_visible_fx := false
 
 static func stats_for(id: String, rank: int) -> Dictionary:
 	var s := clampi(rank-1,0,4)
@@ -70,35 +72,38 @@ func _physics_process(dt: float) -> void:
 		if start != epoch: return
 		cooldowns[id] = interval if fired else 0.18
 	advance(dt)
-	queue_redraw()
+	var visible_fx := has_visible_fx()
+	if visible_fx or _had_visible_fx: queue_redraw()
+	_had_visible_fx = visible_fx
 
 func live(actor) -> bool:
 	return is_instance_valid(actor) and not actor.is_queued_for_deletion() and actor.is_in_group("EnemyGroup") and (not actor.has_method("vulnerable") or actor.vulnerable())
 
 func closest(origin: Vector2, reach: float, prefer_small := false) -> Node2D:
+	if not prefer_small: return CombatTargets.nearest_hittable(origin, reach * reach, game)
 	var best: Node2D
 	var score := INF
 	for actor in CombatTargets.in_radius(origin,reach*reach,game):
 		if not live(actor): continue
 		var distance := origin.distance_squared_to(actor.global_position)
-		if prefer_small and actor.get("pocket_small_left") != null and actor.pocket_small_left > 0: distance -= reach*reach
+		if actor.get("pocket_small_left") != null and actor.pocket_small_left > 0: distance -= reach*reach
 		if distance < score:
 			score = distance
 			best = actor
 	return best
 
 func swept(a: Vector2, b: Vector2, radius: float) -> Array[Node2D]:
-	var hits: Array[Node2D] = []
-	CombatTargets.fill_in_bounds(Rect2(a,b-a).abs().grow(radius+1),game,hits)
+	_sweep_candidates.clear()
+	CombatTargets.fill_in_bounds(Rect2(a,b-a).abs().grow(radius+1),game,_sweep_candidates)
 	var result: Array[Node2D] = []
-	for actor in hits:
+	for actor in _sweep_candidates:
 		if not live(actor): continue
 		var point := a if a.is_equal_approx(b) else Geometry2D.get_closest_point_to_segment(actor.global_position,a,b)
 		if point.distance_squared_to(actor.global_position) <= radius*radius: result.append(actor)
 	return result
 
 func hit(actor, damage: float, direction: Vector2) -> void:
-	if live(actor): actor.apply_hit({"damage":damage,"direction":direction,"source":self})
+	if live(actor): actor.apply_hit({"hitstop": false, "budget_impact": true, "damage":damage,"direction":direction,"source":self})
 
 func play_cue(stream: AudioStream, pitch := 1.0) -> void:
 	cue.stream = stream
@@ -106,6 +111,7 @@ func play_cue(stream: AudioStream, pitch := 1.0) -> void:
 	cue.play()
 
 func cast(_id: String) -> bool: return false
+func has_visible_fx() -> bool: return false
 func advance(_dt: float) -> void: pass
 func removed(_id: String) -> void: pass
 func clear_fx() -> void: pass

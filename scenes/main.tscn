@@ -112,6 +112,14 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "鬼影步 · 穿阵"
 
+[node name="DebugDragonButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "龟仙流反击 · 套装试抽"
+
+[node name="DebugPocketButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "口袋保龄球 · 套装试抽"
+
 [node name="DebugDimensionButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "跨维度外包 · 套装试抽"
@@ -309,6 +317,8 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugMinefieldButton" to="." method="_launch_run" binds= [&"minefield"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugLightThornButton" to="." method="_launch_run" binds= [&"light_thorn"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugGhostDashButton" to="." method="_launch_run" binds= [&"ghost_dash"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugDragonButton" to="." method="_on_theme_practice" binds=[10]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugPocketButton" to="." method="_on_theme_practice" binds=[15]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugDimensionButton" to="." method="_on_dimension_practice"]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugCrimsonSetButton" to="." method="_on_crimson_practice"]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBloodVortexButton" to="." method="_launch_run" binds= [&"blood_vortex"]]

@@ -47,6 +47,13 @@ signal death_signal
 
 var archetype: EnemyData.Archetype = EnemyData.Archetype.CHASER
 var defense: float = 0.0
+var solar_blind_left := 0.0
+var solar_heading := Vector2.RIGHT
+var pocket_small_left := 0.0
+var pocket_rolling := false
+var pocket_big := false
+var pocket_enemy_mask := false
+var pocket_sprite_visible := true
 var body_scale: float = 1.0
 var contact_damage: float = 46.0
 var contact_cooldown: float = 0.8
@@ -366,9 +373,20 @@ func _physics_process(delta: float) -> void :
 	_update_statuses(delta)
 	if _death_started:
 		return
+	if pocket_small_left>0:
+		pocket_small_left-=delta
+		if pocket_small_left<=0: pocket_restore()
+	if pocket_rolling: return
 	if _tick_environment_control(delta):
 		if _has_action_art:
 			_apply_move_juice(delta)
+		return
+	if solar_blind_left>0:
+		solar_blind_left-=delta
+		velocity=solar_heading*speed*status_move_scale()
+		var before:=global_position
+		move_and_collide(velocity*delta)
+		_apply_move_juice(delta,before.distance_to(global_position))
 		return
 	contact_timer = maxf(0.0, contact_timer - delta)
 	var recovering: = archetype == EnemyData.Archetype.DASHER and contact_recovery_left > 0.0
@@ -603,8 +621,8 @@ func _try_contact(dist: float) -> void :
 		return
 	if contact_timer > 0.0 or not is_instance_valid(player_reference):
 		return
-	var radius: = contact_radius
-	var dmg: = contact_damage
+	var radius: = contact_radius * (0.5 if pocket_small_left>0 else 1.0)
+	var dmg: = contact_damage * (0.5 if pocket_small_left>0 else 1.0)
 	var cd: = contact_cooldown
 	if archetype == EnemyData.Archetype.DASHER and is_dashing:
 		radius += 8.0
@@ -649,7 +667,7 @@ func _action_column(delta: float, travel: float) -> int:
 	return floori(_idle_phase)
 
 func _apply_body_scale() -> void :
-	scale = Vector2(body_scale, body_scale)
+	scale = Vector2.ONE * body_scale * (1.8 if pocket_big else (0.5 if pocket_small_left>0 else 1.0))
 
 
 
@@ -1106,3 +1124,46 @@ func travel_through_portal(exit: Vector2, direction: Vector2) -> bool:
 	reset_physics_interpolation()
 	apply_terrain_impulse(direction*420)
 	return true
+
+func _ordinary_theme_target() -> bool:
+	return not (_death_started or is_elite or has_method("configure_guardian") or has_method("vulnerable"))
+
+func solar_blind(seconds: float) -> bool:
+	if not _ordinary_theme_target(): return false
+	if solar_blind_left <= 0:
+		solar_heading = velocity.normalized()
+		if solar_heading.is_zero_approx(): solar_heading = global_position.direction_to(player_reference.global_position)
+	_cancel_controlled_attack()
+	solar_blind_left = maxf(solar_blind_left,seconds)
+	return true
+
+func pocket_shrink(seconds: float) -> bool:
+	if not _ordinary_theme_target() or pocket_rolling: return false
+	pocket_small_left = maxf(pocket_small_left,seconds)
+	_apply_body_scale()
+	return true
+
+func pocket_restore() -> void:
+	pocket_small_left = 0
+	_apply_body_scale()
+
+func pocket_launch(big: bool) -> bool:
+	if not _ordinary_theme_target() or pocket_rolling or ghost_bound or blade_ice != null or blood_vortex_source != null: return false
+	_cancel_controlled_attack()
+	clear_terrain_impulse()
+	pocket_enemy_mask = get_collision_mask_value(4)
+	set_collision_mask_value(4,false)
+	pocket_rolling = true
+	pocket_big = big
+	pocket_sprite_visible = sprite_2d.visible
+	sprite_2d.hide()
+	_apply_body_scale()
+	return true
+
+func pocket_land() -> void:
+	if not pocket_rolling: return
+	pocket_rolling = false
+	set_collision_mask_value(4,pocket_enemy_mask)
+	pocket_big = false
+	sprite_2d.visible = pocket_sprite_visible
+	_apply_body_scale()

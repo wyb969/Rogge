@@ -53,6 +53,8 @@ const ARSENAL_COMBO := preload("res://script/arsenal_combo.gd")
 var banana_fan: Node2D
 var light_thorn: Node2D
 var ghost_dash: Node2D
+var turtle_school: Node2D
+var pocket_school: Node2D
 var dimension_lab: Node2D
 var blood_vortex: Node2D
 var draw_slash: Node2D
@@ -164,6 +166,10 @@ func _ready() -> void :
 	ghost_dash = GHOST_DASH.new()
 	ghost_dash.name = "GhostDash"
 	add_child(ghost_dash)
+	turtle_school = preload("res://script/turtle_school.gd").new()
+	add_child(turtle_school)
+	pocket_school = preload("res://script/pocket_school.gd").new()
+	add_child(pocket_school)
 	dimension_lab = preload("res://script/dimension_lab.gd").new()
 	dimension_lab.name = "DimensionLab"
 	add_child(dimension_lab)
@@ -325,6 +331,8 @@ func _reset_skill_controllers() -> void :
 	if banana_fan: banana_fan.reset()
 	if light_thorn: light_thorn.reset()
 	if ghost_dash: ghost_dash.reset()
+	if turtle_school: turtle_school.reset()
+	if pocket_school: pocket_school.reset()
 	if dimension_lab: dimension_lab.reset()
 	if blood_vortex: blood_vortex.reset()
 	if draw_slash: draw_slash.reset()
@@ -431,6 +439,12 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 			banana_fan.upgrade()
 		"ghost_dash":
 			ghost_dash.upgrade()
+		"solar_flare", "kienzan", "kamehameha":
+			var rank := int(equipment_panel.get_level(upgrade_id))+1
+			turtle_school.set_forged_stats(upgrade_id,rank,turtle_school.stats_for(upgrade_id,rank))
+		"small_light", "air_cannon", "big_light":
+			var rank := int(equipment_panel.get_level(upgrade_id))+1
+			pocket_school.set_forged_stats(upgrade_id,rank,pocket_school.stats_for(upgrade_id,rank))
 		"portal_gun", "errand_box", "micro_cell":
 			var rank := int(equipment_panel.get_level(upgrade_id)) + 1
 			dimension_lab.set_forged_stats(upgrade_id,rank,dimension_lab.stats_for(upgrade_id,rank))
@@ -456,7 +470,7 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
-		"portal_gun", "errand_box", "micro_cell", "banana_fan", "black_hole", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash", "light_thorn", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
+		"portal_gun", "errand_box", "micro_cell", "solar_flare", "kienzan", "kamehameha", "small_light", "air_cannon", "big_light", "banana_fan", "black_hole", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash", "light_thorn", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
 	]:
 		spawner.note_offense_card()
 

@@ -4,6 +4,16 @@ const GROWTH_MEMBERS: Array[String] = ["pickup_up", "speed_up", "regen_up"]
 const ARSENAL_MEMBERS: Array[String] = ["gun_up", "drone_up", "bomb"]
 const CRIMSON_MEMBERS: Array[String] = ["ice_wave", "draw_slash", "ghost_dash", "blood_vortex"]
 const DIMENSION_MEMBERS: Array[String] = ["portal_gun", "errand_box", "micro_cell"]
+const DRAGON_MEMBERS: Array[String] = ["solar_flare", "kienzan", "kamehameha"]
+const DRAGON_COLOR := Color("#ff7926")
+const DRAGON_TITLE := "龟仙流反击"
+const DRAGON_BONUS := "太阳拳后冲刺 · 残像合击"
+const DRAGON_HINT := "太阳拳命中后，趁橙环仍在时冲刺。残像释放龟派气功，本体甩出气圆斩；两招交叉命中同一敌人时追加爆击。"
+const POCKET_MEMBERS: Array[String] = ["small_light", "air_cannon", "big_light"]
+const POCKET_COLOR := Color("#009fe3")
+const POCKET_TITLE := "口袋保龄球"
+const POCKET_BONUS := "缩小敌人 · 空气炮发射 · 五连全中"
+const POCKET_HINT := "空气炮优先瞄准缩小的敌人，将它放大成保龄球。撞到五个不同敌人会触发全中爆发，首领也能受到撞击和爆发伤害。"
 const DIMENSION_COLOR := Color("#fff36a")
 const DIMENSION_TITLE := "跨维度外包"
 const DIMENSION_BONUS := "满电派单 · 穿门投送 · 范围电击"
@@ -30,6 +40,8 @@ static func owned_count(panel: Node, members: Array[String]) -> int:
 	return count
 
 static func group_for(id: String) -> String:
+	if id in DRAGON_MEMBERS: return "dragon"
+	if id in POCKET_MEMBERS: return "pocket"
 	if id in DIMENSION_MEMBERS: return "dimension"
 	if id in CRIMSON_MEMBERS: return "crimson"
 	if id in GROWTH_MEMBERS: return "growth"
@@ -37,12 +49,16 @@ static func group_for(id: String) -> String:
 	return ""
 
 static func color_for(group: String) -> Color:
+	if group == "dragon": return DRAGON_COLOR
+	if group == "pocket": return POCKET_COLOR
 	if group == "dimension": return DIMENSION_COLOR
 	if group == "crimson": return CRIMSON_COLOR
 	return GROWTH_COLOR if group == "growth" else ARSENAL_COLOR
 
 static func hint_for(id: String) -> String:
 	match group_for(id):
+		"dragon": return L10n.text(DRAGON_HINT)
+		"pocket": return L10n.text(POCKET_HINT)
 		"dimension": return L10n.text(DIMENSION_HINT)
 		"crimson": return L10n.text(CRIMSON_HINT)
 		"growth": return L10n.text(GROWTH_HINT)

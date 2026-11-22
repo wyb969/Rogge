@@ -191,6 +191,10 @@ func preview(uid: int, subs: Array) -> Dictionary:
 	var lines := PackedStringArray()
 	var crimson_before: bool = game.equipment_panel.crimson_active
 	var crimson_after := _set_active(kept,COMBOS.CRIMSON_MEMBERS)
+	if game.equipment_panel.dragon_active and not _set_active(kept,COMBOS.DRAGON_MEMBERS):
+		out.warnings.append(L10n.text("龟仙流反击将失效"))
+	if game.equipment_panel.pocket_active and not _set_active(kept,COMBOS.POCKET_MEMBERS):
+		out.warnings.append(L10n.text("口袋保龄球将失效"))
 	if game.equipment_panel.dimension_active and not _set_active(kept,COMBOS.DIMENSION_MEMBERS):
 		out.warnings.append(L10n.text("跨维度外包将失效"))
 	if crimson_before and not crimson_after:

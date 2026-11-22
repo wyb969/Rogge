@@ -112,6 +112,12 @@ const CARDS = {
 		"summary": "冲刺穿过敌人，定身一秒后造成伤害。",
 		"detail": "使用原来的冲刺按键穿过敌群。沿途的敌人被定身一秒，头顶骷髅淡入淡出，随后受到一次伤害。升级缩短冲刺冷却，增加距离和伤害。首领遵守现有控制抗性。"
 	},
+	"solar_flare": {"summary":"近身金光使普通怪沿原方向盲走。", "detail":"敌人靠近时释放金光并造成伤害。普通怪暂时失去追踪，沿原方向移动；首领仍受伤害。升级增加伤害、范围和致盲时间。"},
+	"kienzan": {"summary":"金色薄盘沿直线穿透敌群。", "detail":"金色气盘直线飞行，每次投掷对同一目标命中一次。升级增加伤害、盘宽和穿透数。"},
+	"kamehameha": {"summary":"蓄力后向密集敌群打出贯穿光束。", "detail":"蓄力时可以继续移动。蓝白光束向敌人密集的方向连续造成伤害，升级增加伤害、宽度与持续时间。"},
+	"small_light": {"summary":"扫出黄光，缩小普通敌人并减轻接触伤害。", "detail":"黄色灯光缩小一条路径上的普通怪，缩小期间接触伤害减半，更容易被空气炮打远。升级拓宽照射路径、延长缩小时间。"},
+	"air_cannon": {"summary":"将近处的怪打飞，撞伤沿途同伴。", "detail":"空气炮朝近处的敌人发射，普通怪沿玩家与它的连线飞出，每个被撞的敌人只受一次撞击。升级增加伤害、射程和可撞目标数量。"},
+	"big_light": {"summary":"让经验金币或石子化为滚动弹珠。", "detail":"附近闲置的经验金币会变成滚动弹珠，沿途造成伤害，落地后仍可拾取。没有金币时使用石子。升级提高直径与伤害。"},
 	"portal_gun": {
 		"summary": "把靠近入口的怪从另一扇门弹出去。",
 		"detail": "普通怪穿过绿门后会被横向弹出，撞到同伴可追加伤害。首领和精英受到门的伤害并留在原地。升级提高伤害、开门频率和通行次数。"
@@ -336,6 +342,22 @@ const EXTRA = [
 		"frames": 1
 	},
 	{
+		"id": "combo_dragon",
+		"category": 4,
+		"title": "龟仙流反击",
+		"icon": "equipment:kienzan",
+		"detail": "太阳拳命中后，趁橙环仍在时冲刺。残像释放龟派气功，本体甩出气圆斩；两招交叉命中同一敌人时追加爆击。",
+		"frames": 1
+	},
+	{
+		"id": "combo_pocket",
+		"category": 4,
+		"title": "口袋保龄球",
+		"icon": "equipment:air_cannon",
+		"detail": "空气炮优先瞄准缩小的敌人，将它放大成保龄球。撞到五个不同敌人会触发全中爆发，首领也能受到撞击和爆发伤害。",
+		"frames": 1
+	},
+	{
 		"id": "combo_dimension",
 		"category": 4,
 		"title": "跨维度外包",
@@ -426,7 +448,7 @@ static func compact_stats(rows: Array) -> String:
 		lines.append(L10n.text(row.label)+"\n[b]"+CardNumbers.value_pair(row.before,row.after,row.unit)+"[/b]")
 	return "\n".join(lines)
 
-const DRAFT_LINES = {"portal_gun":"传送 %s伤", "errand_box":"助手 %s伤", "micro_cell":"电弧 %s伤", "axe_up": "穿透 %s伤", "circle_up": "环绕 %s伤", "gun_up": "射击≥%s伤", "pickup_up": "拾取 %s", "speed_up": "移速 %s", "left_fist": "左侧 %s%%", "right_fist": "右侧 %s%%", "drone_up": "激光 %s伤", "molotov_up": "灼烧 %s/秒", "freeze_up": "冰冻 %s%%", "regen_up": "回复 %s生命", "lifesteal_up": "吸血 %s%%", "shield_up": "击杀+%s盾", "monster_necklace": "拾取回%s血", "lightning_ring": "雷击 %s伤", "critical_glasses": "暴击 %s%%", "banana_fan": "击退 %s伤", "black_hole": "聚怪 %s/秒", "poison_trail": "中毒 %s/秒", "bomb": "爆炸 %s伤", "wind_emblem": "风压 %s伤", "echo_ember": "回响 %s伤", "silver_knife": "飞刀 %s伤", "cross_blade": "回旋 %s伤", "holy_water": "净化 %s/秒", "thorn_whip": "横扫 %s伤", "ice_wave": "冰刃 %s伤", "draw_slash": "拔刀 %s伤", "blood_vortex": "血涡 %s伤", "ghost_dash": "鬼印 %s伤", "light_thorn": "鞭击 %s伤", "rune_bolt": "反弹 %s伤", "pulse_aura": "脉冲 %s伤"}
+const DRAFT_LINES = {"big_light":"弹珠 %s伤","air_cannon":"气炮 %s伤","small_light":"缩光 %s伤","kamehameha":"气功 %s伤","kienzan":"气盘 %s伤","solar_flare":"闪光 %s伤","portal_gun":"传送 %s伤", "errand_box":"助手 %s伤", "micro_cell":"电弧 %s伤", "axe_up": "穿透 %s伤", "circle_up": "环绕 %s伤", "gun_up": "射击≥%s伤", "pickup_up": "拾取 %s", "speed_up": "移速 %s", "left_fist": "左侧 %s%%", "right_fist": "右侧 %s%%", "drone_up": "激光 %s伤", "molotov_up": "灼烧 %s/秒", "freeze_up": "冰冻 %s%%", "regen_up": "回复 %s生命", "lifesteal_up": "吸血 %s%%", "shield_up": "击杀+%s盾", "monster_necklace": "拾取回%s血", "lightning_ring": "雷击 %s伤", "critical_glasses": "暴击 %s%%", "banana_fan": "击退 %s伤", "black_hole": "聚怪 %s/秒", "poison_trail": "中毒 %s/秒", "bomb": "爆炸 %s伤", "wind_emblem": "风压 %s伤", "echo_ember": "回响 %s伤", "silver_knife": "飞刀 %s伤", "cross_blade": "回旋 %s伤", "holy_water": "净化 %s/秒", "thorn_whip": "横扫 %s伤", "ice_wave": "冰刃 %s伤", "draw_slash": "拔刀 %s伤", "blood_vortex": "血涡 %s伤", "ghost_dash": "鬼印 %s伤", "light_thorn": "鞭击 %s伤", "rune_bolt": "反弹 %s伤", "pulse_aura": "脉冲 %s伤"}
 
 static func draft_line(id: String, rows: Array) -> String:
 	if rows.is_empty(): return ""

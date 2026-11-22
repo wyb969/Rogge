@@ -153,6 +153,13 @@ static func build(game: Node, id: String) -> Dictionary:
 				var label: String = {"damage":"单次伤害","dps":"每秒伤害","count":"飞刀数量","range":"飞行距离","radius":"净化半径","duration":"持续时间","interval":"触发间隔"}[key]
 				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key in ["duration","interval"] else "",key != "count")
 			hint = {"silver_knife":L10n.text("自动瞄准附近敌人穿透 · 每把对同一目标命中一次"),"cross_blade":L10n.text("自动瞄准 · 固定路径往返各命中一次"),"holy_water":L10n.text("敌人脚下净化区域 · 每0.5秒结算\n重叠区域不叠伤，不触发暴击和异常传播")}[id]+L10n.text("\n最高5级")
+		"solar_flare", "kienzan", "kamehameha", "small_light", "air_cannon", "big_light":
+			var school: Node = game.turtle_school if id in COMBOS.DRAGON_MEMBERS else game.pocket_school
+			var before: Dictionary = school.profiles.get(id,{})
+			var after: Dictionary = school.stats_for(id,next)
+			for key in after:
+				_row(rows,school.LABELS[key],before.get(key,0),after[key],"s" if key in ["interval","duration"] else "")
+			hint = COMBOS.hint_for(id)
 		"portal_gun", "errand_box", "micro_cell":
 			var before: Dictionary = game.dimension_lab.profiles.get(id,{})
 			var after: Dictionary = game.dimension_lab.stats_for(id,next)

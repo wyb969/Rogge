@@ -50,6 +50,11 @@ func observed(id: String) -> Dictionary:
 		"ghost_dash":
 			var stats: Dictionary = game.ghost_dash._stats
 			return {"基础伤害":stats.damage, "冲刺距离":stats.range, "冲刺冷却":stats.interval * p.cooldown_scale}
+		"solar_flare", "kienzan", "kamehameha", "small_light", "air_cannon", "big_light":
+			var school: Node = game.turtle_school if id in game.turtle_school.DRAGON else game.pocket_school
+			var result := {}
+			for key in school.profiles[id]: result[school.LABELS[key]] = school.profiles[id][key]
+			return result
 		"portal_gun", "errand_box", "micro_cell":
 			var s: Dictionary = game.dimension_lab.profiles[id]
 			return {"单次伤害":s.damage,"通行次数":s.get("count",0),"电弧目标":s.get("count",0),"充电路程":s.get("range",0),"触发间隔":s.get("interval",0)}

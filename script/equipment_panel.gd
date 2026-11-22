@@ -11,6 +11,8 @@ const LEVEL_COLOR: = preload("res://script/visual_style.gd").TEXT
 @onready var slot_list: GridContainer = $SlotList
 
 var _slots: Dictionary = {}
+var dragon_active := false
+var pocket_active := false
 var dimension_active := false
 var crimson_active := false
 var _arsenal_label: Label
@@ -26,6 +28,12 @@ const EQUIP_DEFS: = {
 	"light_thorn": {"title": "光之荆棘", "icon": "res://rogge_art/icons/skills-equipment/light-thorn.png", "start_level": 0, "max_level": 5},
 	"ice_wave": {"title": "冰刃波", "icon": "res://rogge_art/icons/skills-equipment/ice-wave.png", "start_level": 0, "max_level": 5},
 	"ghost_dash": {"title": "鬼影步", "icon": "res://rogge_art/combat-fx/ghost-dash/icon.png", "start_level": 0, "max_level": 5},
+	"solar_flare": {"title":"太阳拳", "icon":"res://rogge_art/combat-fx/toon/solar_flare.png", "start_level":0, "max_level":5},
+	"kienzan": {"title":"气圆斩", "icon":"res://rogge_art/combat-fx/toon/kienzan.png", "start_level":0, "max_level":5},
+	"kamehameha": {"title":"龟派气功", "icon":"res://rogge_art/combat-fx/toon/kamehameha.png", "start_level":0, "max_level":5},
+	"small_light": {"title":"缩小灯", "icon":"res://rogge_art/combat-fx/toon/small_light.png", "start_level":0, "max_level":5},
+	"air_cannon": {"title":"空气炮", "icon":"res://rogge_art/combat-fx/toon/air_cannon.png", "start_level":0, "max_level":5},
+	"big_light": {"title":"放大灯", "icon":"res://rogge_art/combat-fx/toon/big_light.png", "start_level":0, "max_level":5},
 	"portal_gun": {"title": "传送枪", "icon": "res://rogge_art/combat-fx/dimension/portal_gun.png", "start_level": 0, "max_level": 5},
 	"errand_box": {"title": "Meeseeks 盒子", "icon": "res://rogge_art/combat-fx/dimension/errand_box.png", "start_level": 0, "max_level": 5},
 	"micro_cell": {"title": "微宇宙电池", "icon": "res://rogge_art/combat-fx/dimension/micro_cell.png", "start_level": 0, "max_level": 5},
@@ -299,6 +307,8 @@ func set_growth_status(owned: int, active: bool) -> void:
 	if was_visible != _growth_label.visible: _fit_equipment()
 
 func reset_combo_effects() -> void:
+	dragon_active = false
+	pocket_active = false
 	dimension_active = false
 	crimson_active = false
 	for slot in _slots.values():
@@ -310,6 +320,8 @@ func reset_combo_effects() -> void:
 	set_process(false)
 
 func refresh_combo_borders() -> void:
+	dragon_active = COMBOS.owned_count(self,COMBOS.DRAGON_MEMBERS) == COMBOS.DRAGON_MEMBERS.size()
+	pocket_active = COMBOS.owned_count(self,COMBOS.POCKET_MEMBERS) == COMBOS.POCKET_MEMBERS.size()
 	dimension_active = COMBOS.owned_count(self, COMBOS.DIMENSION_MEMBERS) == COMBOS.DIMENSION_MEMBERS.size()
 	crimson_active = COMBOS.completes_crimson(self, "")
 	var growth := COMBOS.owned_count(self, COMBOS.GROWTH_MEMBERS) == COMBOS.GROWTH_MEMBERS.size()
@@ -320,6 +332,8 @@ func refresh_combo_borders() -> void:
 		if not is_instance_valid(border): continue
 		var group := COMBOS.group_for(id)
 		var active := crimson_active if group == "crimson" else (growth if group == "growth" else arsenal)
+		if group == "dragon": active = dragon_active
+		if group == "pocket": active = pocket_active
 		if group == "dimension": active = dimension_active
 		border.configure(group, COMBOS.color_for(group), active)
 		if active: _active_combo_borders.append(border)

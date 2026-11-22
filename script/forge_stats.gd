@@ -27,7 +27,12 @@ static func _profile(g: Node, id: String, count: int, power: float, peak: float)
 	var stats: Dictionary
 	var first: Dictionary
 	var second: Dictionary
-	if id in preload("res://script/dimension_lab.gd").IDS:
+	var school := preload("res://script/theme_skill_school.gd")
+	if id in school.DRAGON or id in school.POCKET:
+		stats = school.stats_for(id,count)
+		first = school.stats_for(id,1)
+		second = school.stats_for(id,2)
+	elif id in preload("res://script/dimension_lab.gd").IDS:
 		stats = g.dimension_lab.stats_for(id,count)
 		first = g.dimension_lab.stats_for(id,1)
 		second = g.dimension_lab.stats_for(id,2)
@@ -101,6 +106,11 @@ static func apply(g: Node, id: String, old_count: int, count: int, old_power: fl
 			p.shield = 0.0
 			p._sync_shield_visuals()
 		if id == "regen_up" and count == 0: p._regen_acc = 0.0
+		return
+	var school := preload("res://script/theme_skill_school.gd")
+	if id in school.DRAGON or id in school.POCKET:
+		var owner: Node = g.turtle_school if id in school.DRAGON else g.pocket_school
+		owner.set_forged_stats(id,count,data)
 		return
 	if id in preload("res://script/dimension_lab.gd").IDS:
 		g.dimension_lab.set_forged_stats(id,count,data)

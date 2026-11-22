@@ -197,6 +197,10 @@ func _on_crimson_practice() -> void:
 	debug_page.hide()
 	starter_lottery.open_for(HEROES.START_CARDS[hero_index], 20)
 
+func _on_theme_practice(roll: int) -> void:
+	debug_page.hide()
+	starter_lottery.open_for(HEROES.START_CARDS[hero_index],roll)
+
 func _on_dimension_practice() -> void:
 	debug_page.hide()
 	starter_lottery.open_for(HEROES.START_CARDS[hero_index], 25)

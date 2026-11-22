@@ -1736,3 +1736,39 @@ Meeseeks 盒子,Meeseeks Box,Meeseeks 盒子
 传送 %s伤,Portal %s DMG,传送 %s伤
 助手 %s伤,Helper %s DMG,助手 %s伤
 电弧 %s伤,Zap %s DMG,电弧 %s伤
+穿透数,Piercing,穿透数
+龟仙流反击,Turtle School Counter,龟仙流反击
+太阳拳后冲刺 · 残像合击,Dash after Solar Flare · Afterimage crossfire,太阳拳后冲刺 · 残像合击
+太阳拳命中后，趁橙环仍在时冲刺。残像释放龟派气功，本体甩出气圆斩；两招交叉命中同一敌人时追加爆击。,Dash while the orange ring from Solar Flare is lit. Your afterimage fires a beam as you throw a disc. Enemies hit by both take an extra burst.,太阳拳命中后，趁橙环仍在时冲刺。残像释放龟派气功，本体甩出气圆斩；两招交叉命中同一敌人时追加爆击。
+龟仙流反击 · 套装试抽,Turtle School Counter · Set preview,龟仙流反击 · 套装试抽
+龟仙流反击将失效,Turtle School Counter will deactivate,龟仙流反击将失效
+太阳拳,Solar Flare,太阳拳
+近身金光使普通怪沿原方向盲走。,Flash nearby enemies and blind ordinary pursuers.,近身金光使普通怪沿原方向盲走。
+敌人靠近时释放金光并造成伤害。普通怪暂时失去追踪，沿原方向移动；首领仍受伤害。升级增加伤害、范围和致盲时间。,"Flash nearby enemies. Ordinary foes lose track of you and continue on their old heading. Bosses take damage. Upgrades improve damage, radius and blind time.",敌人靠近时释放金光并造成伤害。普通怪暂时失去追踪，沿原方向移动；首领仍受伤害。升级增加伤害、范围和致盲时间。
+闪光 %s伤,Solar %s DMG,闪光 %s伤
+气圆斩,Destructo Disc,气圆斩
+金色薄盘沿直线穿透敌群。,Throw a piercing golden energy disc.,金色薄盘沿直线穿透敌群。
+金色气盘直线飞行，每次投掷对同一目标命中一次。升级增加伤害、盘宽和穿透数。,"Throw a spinning disc that can hit each enemy once. Upgrades increase damage, disc width and piercing.",金色气盘直线飞行，每次投掷对同一目标命中一次。升级增加伤害、盘宽和穿透数。
+气盘 %s伤,Destructo %s DMG,气盘 %s伤
+龟派气功,Kamehameha,龟派气功
+蓄力后向密集敌群打出贯穿光束。,Charge and fire a piercing beam toward a crowd.,蓄力后向密集敌群打出贯穿光束。
+蓄力时可以继续移动。蓝白光束向敌人密集的方向连续造成伤害，升级增加伤害、宽度与持续时间。,"Keep moving while charging, then fire a pulsing blue beam toward the densest group. Upgrades improve damage, width and duration.",蓄力时可以继续移动。蓝白光束向敌人密集的方向连续造成伤害，升级增加伤害、宽度与持续时间。
+气功 %s伤,Kamehameha %s DMG,气功 %s伤
+口袋保龄球,Pocket Bowling,口袋保龄球
+缩小敌人 · 空气炮发射 · 五连全中,Shrink · Launch · Five hits for a strike,缩小敌人 · 空气炮发射 · 五连全中
+空气炮优先瞄准缩小的敌人，将它放大成保龄球。撞到五个不同敌人会触发全中爆发，首领也能受到撞击和爆发伤害。,The air cannon prefers shrunken targets and turns them into giant bowling balls. Hit five distinct enemies for a strike burst. Impacts and bursts can damage bosses.,空气炮优先瞄准缩小的敌人，将它放大成保龄球。撞到五个不同敌人会触发全中爆发，首领也能受到撞击和爆发伤害。
+口袋保龄球 · 套装试抽,Pocket Bowling · Set preview,口袋保龄球 · 套装试抽
+口袋保龄球将失效,Pocket Bowling will deactivate,口袋保龄球将失效
+缩小灯,Small Light,缩小灯
+扫出黄光，缩小普通敌人并减轻接触伤害。,Shrink ordinary enemies and halve contact damage.,扫出黄光，缩小普通敌人并减轻接触伤害。
+黄色灯光缩小一条路径上的普通怪，缩小期间接触伤害减半，更容易被空气炮打远。升级拓宽照射路径、延长缩小时间。,Shrink ordinary foes in the light beam. Contact damage is halved and the air cannon launches them farther. Upgrades widen the beam and extend shrink time.,黄色灯光缩小一条路径上的普通怪，缩小期间接触伤害减半，更容易被空气炮打远。升级拓宽照射路径、延长缩小时间。
+缩光 %s伤,Small %s DMG,缩光 %s伤
+空气炮,Air Cannon,空气炮
+将近处的怪打飞，撞伤沿途同伴。,Launch a nearby foe into the enemies behind it.,将近处的怪打飞，撞伤沿途同伴。
+空气炮朝近处的敌人发射，普通怪沿玩家与它的连线飞出，每个被撞的敌人只受一次撞击。升级增加伤害、射程和可撞目标数量。,"Launch ordinary enemies along your line of aim. Each enemy in the path takes one impact. Upgrades improve damage, distance and impact count.",空气炮朝近处的敌人发射，普通怪沿玩家与它的连线飞出，每个被撞的敌人只受一次撞击。升级增加伤害、射程和可撞目标数量。
+气炮 %s伤,Air %s DMG,气炮 %s伤
+放大灯,Big Light,放大灯
+让经验金币或石子化为滚动弹珠。,Turn a loose XP coin or pebble into a rolling marble.,让经验金币或石子化为滚动弹珠。
+附近闲置的经验金币会变成滚动弹珠，沿途造成伤害，落地后仍可拾取。没有金币时使用石子。升级提高直径与伤害。,Roll a nearby loose XP coin through enemies as a giant marble. The coin remains collectible. A pebble is used if no coin is available. Upgrades improve marble size and damage.,附近闲置的经验金币会变成滚动弹珠，沿途造成伤害，落地后仍可拾取。没有金币时使用石子。升级提高直径与伤害。
+弹珠 %s伤,Big %s DMG,弹珠 %s伤
+全中！,STRIKE!,全中！

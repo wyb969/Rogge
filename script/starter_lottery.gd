@@ -9,7 +9,7 @@ const COMBOS := preload("res://script/equipment_combos.gd")
 const FOIL := preload("res://shaders/starter_foil.gdshader")
 # Each of these can deal damage on its own at rank one.
 const WEAPONS := ["axe_up", "circle_up", "gun_up", "drone_up", "bomb", "rune_bolt",
-	"silver_knife", "cross_blade", "holy_water", "pulse_aura", "thorn_whip", "light_thorn", "portal_gun", "errand_box", "micro_cell", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash", "lightning_ring"]
+	"silver_knife", "cross_blade", "holy_water", "pulse_aura", "thorn_whip", "light_thorn", "portal_gun", "errand_box", "micro_cell", "solar_flare", "kienzan", "kamehameha", "small_light", "air_cannon", "big_light", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash", "lightning_ring"]
 var loadout: Dictionary = {}
 var rerolls_left := MAX_REROLLS
 var _reroll: Button
@@ -28,15 +28,21 @@ static func draw_loadout(perk: String, percentile: float) -> Dictionary:
 	var weapons := WEAPONS.duplicate()
 	weapons.erase(perk)
 	if percentile < 30:
-		if percentile < 7.5:
+		if percentile < 5:
 			group = "growth"
 			cards.assign(COMBOS.GROWTH_MEMBERS)
 			if perk not in WEAPONS:
 				backup = weapons.pick_random()
-		elif percentile < 15:
+		elif percentile < 10:
 			group = "arsenal"
 			cards.assign(COMBOS.ARSENAL_MEMBERS)
-		elif percentile < 22.5:
+		elif percentile < 15:
+			group = "dragon"
+			cards.assign(COMBOS.DRAGON_MEMBERS)
+		elif percentile < 20:
+			group = "pocket"
+			cards.assign(COMBOS.POCKET_MEMBERS)
+		elif percentile < 25:
 			group = "crimson"
 			cards.assign(COMBOS.CRIMSON_MEMBERS)
 		else:
@@ -50,6 +56,8 @@ static func draw_loadout(perk: String, percentile: float) -> Dictionary:
 			if id == perk or id in cards: continue
 			var owned := cards + [perk, id]
 			if COMBOS.GROWTH_MEMBERS.all(func(item): return item in owned): continue
+			if COMBOS.DRAGON_MEMBERS.all(func(item): return item in owned): continue
+			if COMBOS.POCKET_MEMBERS.all(func(item): return item in owned): continue
 			if COMBOS.DIMENSION_MEMBERS.all(func(item): return item in owned): continue
 			if COMBOS.CRIMSON_MEMBERS.all(func(item): return item in owned): continue
 			if COMBOS.ARSENAL_MEMBERS.all(func(item): return item in owned): continue
@@ -202,7 +210,7 @@ func _reveal() -> void:
 	_reel_panels[3].visible = crimson
 	_fit()
 	for i in loadout.cards.size():
-		if crimson or dimension: _reel_panels[i].modulate = Color.WHITE
+		if crimson or dimension or loadout.group in ["dragon","pocket"]: _reel_panels[i].modulate = Color.WHITE
 		_stopped_reel(i)
 		names.append(item_name(loadout.cards[i]))
 		var tier := int(loadout.get("tiers", {}).get(loadout.cards[i], 0))
@@ -213,6 +221,8 @@ func _reveal() -> void:
 	if jackpot:
 		foil.set_shader_parameter("crimson", crimson)
 		foil.set_shader_parameter("dimension", dimension)
+		foil.set_shader_parameter("toon",loadout.group in ["dragon","pocket"])
+		foil.set_shader_parameter("toon_tint",COMBOS.color_for(loadout.group))
 		_panel.material = foil
 		for reel in _reel_panels: reel.material = foil
 	_title.text = L10n.text("开局装备已就绪")
@@ -221,11 +231,19 @@ func _reveal() -> void:
 	if crimson:
 		_title.text = L10n.text(COMBOS.CRIMSON_TITLE)
 		_title.add_theme_color_override("font_color", COMBOS.CRIMSON_COLOR.lightened(0.38))
+	if loadout.group == "dragon":
+		_title.text = L10n.text(COMBOS.DRAGON_TITLE)
+		_title.add_theme_color_override("font_color",COMBOS.DRAGON_COLOR)
+	if loadout.group == "pocket":
+		_title.text = L10n.text(COMBOS.POCKET_TITLE)
+		_title.add_theme_color_override("font_color",COMBOS.POCKET_COLOR)
 	if dimension:
 		_title.text = L10n.text(COMBOS.DIMENSION_TITLE)
 		_title.add_theme_color_override("font_color",COMBOS.DIMENSION_COLOR)
 	_result.text = "  ·  ".join(names)
 	_detail.text = L10n.text("角色自带：%s") % item_name(loadout.perk)
+	if loadout.group == "dragon": _detail.text += "\n" + L10n.text(COMBOS.DRAGON_BONUS)
+	if loadout.group == "pocket": _detail.text += "\n" + L10n.text(COMBOS.POCKET_BONUS)
 	if dimension: _detail.text += "\n" + L10n.text(COMBOS.DIMENSION_BONUS)
 	if crimson: _detail.text += "\n" + L10n.text(COMBOS.CRIMSON_BONUS)
 	if loadout.backup != "":

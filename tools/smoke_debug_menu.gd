@@ -92,7 +92,7 @@ func _run() -> void:
 		await _layout(page, Vector2i(Vector2(390,844) * ratio), ratio)
 		_expect(page.columns == 1 and page.page_size == 4 and page.page_count == ceili(float(page.entries.size()) / page.page_size), "high-DPI phone keeps the same CSS layout at DPR %s" % ratio)
 		await _layout(page, Vector2i(Vector2(844,390) * ratio), ratio)
-		_expect(page.columns == 2 and page.page_size == 6 and page.page_count == 6, "high-DPI landscape keeps the same CSS layout at DPR %s" % ratio)
+		_expect(page.columns == 2 and page.page_size == 6 and page.page_count == ceili(float(page.entries.size())/page.page_size), "high-DPI landscape keeps the same CSS layout at DPR %s" % ratio)
 	page.display_pixel_ratio = 1.0
 	root.size = Vector2i(900,600)
 	await process_frame

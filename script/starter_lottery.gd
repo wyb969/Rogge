@@ -9,7 +9,7 @@ const COMBOS := preload("res://script/equipment_combos.gd")
 const FOIL := preload("res://shaders/starter_foil.gdshader")
 # Each of these can deal damage on its own at rank one.
 const WEAPONS := ["axe_up", "circle_up", "gun_up", "drone_up", "bomb", "rune_bolt",
-	"silver_knife", "cross_blade", "holy_water", "pulse_aura", "thorn_whip", "light_thorn", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash", "lightning_ring"]
+	"silver_knife", "cross_blade", "holy_water", "pulse_aura", "thorn_whip", "light_thorn", "portal_gun", "errand_box", "micro_cell", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash", "lightning_ring"]
 var loadout: Dictionary = {}
 var rerolls_left := MAX_REROLLS
 var _reroll: Button
@@ -21,24 +21,27 @@ var tier_labels: Array[Label] = []
 func reel_capacity() -> int:
 	return 4
 
-static func draw_loadout(perk: String, percentile: int) -> Dictionary:
+static func draw_loadout(perk: String, percentile: float) -> Dictionary:
 	var cards: Array[String] = []
 	var group := ""
 	var backup := ""
 	var weapons := WEAPONS.duplicate()
 	weapons.erase(perk)
 	if percentile < 30:
-		if percentile < 10:
+		if percentile < 7.5:
 			group = "growth"
 			cards.assign(COMBOS.GROWTH_MEMBERS)
 			if perk not in WEAPONS:
 				backup = weapons.pick_random()
-		elif percentile < 20:
+		elif percentile < 15:
 			group = "arsenal"
 			cards.assign(COMBOS.ARSENAL_MEMBERS)
-		else:
+		elif percentile < 22.5:
 			group = "crimson"
 			cards.assign(COMBOS.CRIMSON_MEMBERS)
+		else:
+			group = "dimension"
+			cards.assign(COMBOS.DIMENSION_MEMBERS)
 	else:
 		cards.append(weapons.pick_random())
 		var candidates := EQUIPMENT.keys()
@@ -47,6 +50,7 @@ static func draw_loadout(perk: String, percentile: int) -> Dictionary:
 			if id == perk or id in cards: continue
 			var owned := cards + [perk, id]
 			if COMBOS.GROWTH_MEMBERS.all(func(item): return item in owned): continue
+			if COMBOS.DIMENSION_MEMBERS.all(func(item): return item in owned): continue
 			if COMBOS.CRIMSON_MEMBERS.all(func(item): return item in owned): continue
 			if COMBOS.ARSENAL_MEMBERS.all(func(item): return item in owned): continue
 			cards.append(id)
@@ -116,18 +120,18 @@ func _fit() -> void:
 		UiFonts.apply_to_button(_reroll, _button.get_theme_font_size("font_size"))
 		_reroll.custom_minimum_size.y = _button.custom_minimum_size.y
 
-func open_for(perk: String, crimson_practice := false) -> void:
+func open_for(perk: String, practice_roll := -1) -> void:
 	rerolls_left = MAX_REROLLS
 	_reroll.hide()
 	claimed = false
-	_prepare_roll(perk, crimson_practice)
+	_prepare_roll(perk, practice_roll)
 	get_tree().paused = true
 	root_clear_movement()
 	show()
 	_button.grab_focus()
 
-func _prepare_roll(perk: String, crimson_practice := false) -> void:
-	loadout = draw_loadout(perk, 20 if crimson_practice else randi_range(0, 99))
+func _prepare_roll(perk: String, practice_roll := -1) -> void:
+	loadout = draw_loadout(perk, float(practice_roll) if practice_roll >= 0 else randi_range(0,399) * 0.25)
 	_reel_panels[3].hide()
 	_fit()
 	_reroll.disabled = true
@@ -194,10 +198,11 @@ func _reveal() -> void:
 	revealed = true
 	var names := PackedStringArray()
 	var crimson: bool = loadout.group == "crimson"
+	var dimension: bool = loadout.group == "dimension"
 	_reel_panels[3].visible = crimson
 	_fit()
 	for i in loadout.cards.size():
-		if crimson: _reel_panels[i].modulate = Color.WHITE
+		if crimson or dimension: _reel_panels[i].modulate = Color.WHITE
 		_stopped_reel(i)
 		names.append(item_name(loadout.cards[i]))
 		var tier := int(loadout.get("tiers", {}).get(loadout.cards[i], 0))
@@ -207,6 +212,7 @@ func _reveal() -> void:
 	var jackpot: bool = loadout.group != ""
 	if jackpot:
 		foil.set_shader_parameter("crimson", crimson)
+		foil.set_shader_parameter("dimension", dimension)
 		_panel.material = foil
 		for reel in _reel_panels: reel.material = foil
 	_title.text = L10n.text("开局装备已就绪")
@@ -215,8 +221,12 @@ func _reveal() -> void:
 	if crimson:
 		_title.text = L10n.text(COMBOS.CRIMSON_TITLE)
 		_title.add_theme_color_override("font_color", COMBOS.CRIMSON_COLOR.lightened(0.38))
+	if dimension:
+		_title.text = L10n.text(COMBOS.DIMENSION_TITLE)
+		_title.add_theme_color_override("font_color",COMBOS.DIMENSION_COLOR)
 	_result.text = "  ·  ".join(names)
 	_detail.text = L10n.text("角色自带：%s") % item_name(loadout.perk)
+	if dimension: _detail.text += "\n" + L10n.text(COMBOS.DIMENSION_BONUS)
 	if crimson: _detail.text += "\n" + L10n.text(COMBOS.CRIMSON_BONUS)
 	if loadout.backup != "":
 		_detail.text += "\n" + L10n.text("随行武器：%s") % (QUALITY.tier_name(loadout.get("tiers", {}).get(loadout.backup,0))+" · "+item_name(loadout.backup))

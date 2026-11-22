@@ -53,6 +53,7 @@ const ARSENAL_COMBO := preload("res://script/arsenal_combo.gd")
 var banana_fan: Node2D
 var light_thorn: Node2D
 var ghost_dash: Node2D
+var dimension_lab: Node2D
 var blood_vortex: Node2D
 var draw_slash: Node2D
 var ice_wave: Node2D
@@ -163,6 +164,9 @@ func _ready() -> void :
 	ghost_dash = GHOST_DASH.new()
 	ghost_dash.name = "GhostDash"
 	add_child(ghost_dash)
+	dimension_lab = preload("res://script/dimension_lab.gd").new()
+	dimension_lab.name = "DimensionLab"
+	add_child(dimension_lab)
 	blood_vortex = BLOOD_VORTEX.new()
 	blood_vortex.name = "BloodVortex"
 	add_child(blood_vortex)
@@ -321,6 +325,7 @@ func _reset_skill_controllers() -> void :
 	if banana_fan: banana_fan.reset()
 	if light_thorn: light_thorn.reset()
 	if ghost_dash: ghost_dash.reset()
+	if dimension_lab: dimension_lab.reset()
 	if blood_vortex: blood_vortex.reset()
 	if draw_slash: draw_slash.reset()
 	if ice_wave: ice_wave.reset()
@@ -426,6 +431,9 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 			banana_fan.upgrade()
 		"ghost_dash":
 			ghost_dash.upgrade()
+		"portal_gun", "errand_box", "micro_cell":
+			var rank := int(equipment_panel.get_level(upgrade_id)) + 1
+			dimension_lab.set_forged_stats(upgrade_id,rank,dimension_lab.stats_for(upgrade_id,rank))
 		"blood_vortex":
 			blood_vortex.upgrade()
 		"draw_slash":
@@ -448,7 +456,7 @@ func _on_upgrade_selected(upgrade_id: String, tier := -1):
 		"drone_up", "molotov_up", "freeze_up", "lightning_ring", 
 		"wind_emblem", "echo_ember", 
 		"poison_trail", 
-		"banana_fan", "black_hole", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash", "light_thorn", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
+		"portal_gun", "errand_box", "micro_cell", "banana_fan", "black_hole", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash", "light_thorn", "critical_glasses", "bomb", "silver_knife", "cross_blade", "holy_water", "thorn_whip", "rune_bolt", "pulse_aura",
 	]:
 		spawner.note_offense_card()
 

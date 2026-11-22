@@ -3,6 +3,11 @@ extends RefCounted
 const GROWTH_MEMBERS: Array[String] = ["pickup_up", "speed_up", "regen_up"]
 const ARSENAL_MEMBERS: Array[String] = ["gun_up", "drone_up", "bomb"]
 const CRIMSON_MEMBERS: Array[String] = ["ice_wave", "draw_slash", "ghost_dash", "blood_vortex"]
+const DIMENSION_MEMBERS: Array[String] = ["portal_gun", "errand_box", "micro_cell"]
+const DIMENSION_COLOR := Color("#fff36a")
+const DIMENSION_TITLE := "跨维度外包"
+const DIMENSION_BONUS := "满电派单 · 穿门投送 · 范围电击"
+const DIMENSION_HINT := "传送枪、Meeseeks 盒子、微宇宙电池各持有一张。满电时，下一名助手带电池穿门，在目标旁落地放出范围电击。"
 const CRIMSON_COLOR := Color("#ff4059")
 const CRIMSON_DAMAGE := 1.30
 const CRIMSON_SIZE := 1.30
@@ -25,17 +30,20 @@ static func owned_count(panel: Node, members: Array[String]) -> int:
 	return count
 
 static func group_for(id: String) -> String:
+	if id in DIMENSION_MEMBERS: return "dimension"
 	if id in CRIMSON_MEMBERS: return "crimson"
 	if id in GROWTH_MEMBERS: return "growth"
 	if id in ARSENAL_MEMBERS: return "arsenal"
 	return ""
 
 static func color_for(group: String) -> Color:
+	if group == "dimension": return DIMENSION_COLOR
 	if group == "crimson": return CRIMSON_COLOR
 	return GROWTH_COLOR if group == "growth" else ARSENAL_COLOR
 
 static func hint_for(id: String) -> String:
 	match group_for(id):
+		"dimension": return L10n.text(DIMENSION_HINT)
 		"crimson": return L10n.text(CRIMSON_HINT)
 		"growth": return L10n.text(GROWTH_HINT)
 		"arsenal": return L10n.text(ARSENAL_HINT)

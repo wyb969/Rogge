@@ -112,6 +112,18 @@ const CARDS = {
 		"summary": "冲刺穿过敌人，定身一秒后造成伤害。",
 		"detail": "使用原来的冲刺按键穿过敌群。沿途的敌人被定身一秒，头顶骷髅淡入淡出，随后受到一次伤害。升级缩短冲刺冷却，增加距离和伤害。首领遵守现有控制抗性。"
 	},
+	"portal_gun": {
+		"summary": "把靠近入口的怪从另一扇门弹出去。",
+		"detail": "普通怪穿过绿门后会被横向弹出，撞到同伴可追加伤害。首领和精英受到门的伤害并留在原地。升级提高伤害、开门频率和通行次数。"
+	},
+	"errand_box": {
+		"summary": "派出一名蓝色助手，追击标记的目标。",
+		"detail": "助手认领一个目标，追上后挥拳并举起完工单。目标提前消失时可以改派。升级提高交单伤害并缩短派工间隔。"
+	},
+	"micro_cell": {
+		"summary": "移动积攒电量，满电后向附近敌人放电。",
+		"detail": "按实际移动距离充电。单卡满电后自动释放电弧。升级缩短充电路程，提高电击伤害与跳数。"
+	},
 	"blood_vortex": {
 		"summary": "长螺旋沿剑锋吸聚敌人，最后一段重斩击飞。",
 		"detail": "从剑端到涡口，整条螺旋都能吸附和命中敌人。一级每0.5秒一击，共6段，第6段为三倍伤害的击飞重斩。每次升级增加2段，提高伤害并缩短段间隔。首领遵守既有控制抗性。"
@@ -324,6 +336,14 @@ const EXTRA = [
 		"frames": 1
 	},
 	{
+		"id": "combo_dimension",
+		"category": 4,
+		"title": "跨维度外包",
+		"icon": "equipment:errand_box",
+		"detail": "传送枪、Meeseeks 盒子、微宇宙电池各持有一张。满电时，下一名助手带电池穿门，在目标旁落地放出范围电击。",
+		"frames": 1
+	},
+	{
 		"id": "combo_crimson",
 		"category": 4,
 		"title": "绯刃四式",
@@ -406,7 +426,7 @@ static func compact_stats(rows: Array) -> String:
 		lines.append(L10n.text(row.label)+"\n[b]"+CardNumbers.value_pair(row.before,row.after,row.unit)+"[/b]")
 	return "\n".join(lines)
 
-const DRAFT_LINES = {"axe_up": "穿透 %s伤", "circle_up": "环绕 %s伤", "gun_up": "射击≥%s伤", "pickup_up": "拾取 %s", "speed_up": "移速 %s", "left_fist": "左侧 %s%%", "right_fist": "右侧 %s%%", "drone_up": "激光 %s伤", "molotov_up": "灼烧 %s/秒", "freeze_up": "冰冻 %s%%", "regen_up": "回复 %s生命", "lifesteal_up": "吸血 %s%%", "shield_up": "击杀+%s盾", "monster_necklace": "拾取回%s血", "lightning_ring": "雷击 %s伤", "critical_glasses": "暴击 %s%%", "banana_fan": "击退 %s伤", "black_hole": "聚怪 %s/秒", "poison_trail": "中毒 %s/秒", "bomb": "爆炸 %s伤", "wind_emblem": "风压 %s伤", "echo_ember": "回响 %s伤", "silver_knife": "飞刀 %s伤", "cross_blade": "回旋 %s伤", "holy_water": "净化 %s/秒", "thorn_whip": "横扫 %s伤", "ice_wave": "冰刃 %s伤", "draw_slash": "拔刀 %s伤", "blood_vortex": "血涡 %s伤", "ghost_dash": "鬼印 %s伤", "light_thorn": "鞭击 %s伤", "rune_bolt": "反弹 %s伤", "pulse_aura": "脉冲 %s伤"}
+const DRAFT_LINES = {"portal_gun":"传送 %s伤", "errand_box":"助手 %s伤", "micro_cell":"电弧 %s伤", "axe_up": "穿透 %s伤", "circle_up": "环绕 %s伤", "gun_up": "射击≥%s伤", "pickup_up": "拾取 %s", "speed_up": "移速 %s", "left_fist": "左侧 %s%%", "right_fist": "右侧 %s%%", "drone_up": "激光 %s伤", "molotov_up": "灼烧 %s/秒", "freeze_up": "冰冻 %s%%", "regen_up": "回复 %s生命", "lifesteal_up": "吸血 %s%%", "shield_up": "击杀+%s盾", "monster_necklace": "拾取回%s血", "lightning_ring": "雷击 %s伤", "critical_glasses": "暴击 %s%%", "banana_fan": "击退 %s伤", "black_hole": "聚怪 %s/秒", "poison_trail": "中毒 %s/秒", "bomb": "爆炸 %s伤", "wind_emblem": "风压 %s伤", "echo_ember": "回响 %s伤", "silver_knife": "飞刀 %s伤", "cross_blade": "回旋 %s伤", "holy_water": "净化 %s/秒", "thorn_whip": "横扫 %s伤", "ice_wave": "冰刃 %s伤", "draw_slash": "拔刀 %s伤", "blood_vortex": "血涡 %s伤", "ghost_dash": "鬼印 %s伤", "light_thorn": "鞭击 %s伤", "rune_bolt": "反弹 %s伤", "pulse_aura": "脉冲 %s伤"}
 
 static func draft_line(id: String, rows: Array) -> String:
 	if rows.is_empty(): return ""

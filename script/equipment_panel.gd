@@ -11,6 +11,7 @@ const LEVEL_COLOR: = preload("res://script/visual_style.gd").TEXT
 @onready var slot_list: GridContainer = $SlotList
 
 var _slots: Dictionary = {}
+var dimension_active := false
 var crimson_active := false
 var _arsenal_label: Label
 var _growth_label: Label
@@ -25,6 +26,9 @@ const EQUIP_DEFS: = {
 	"light_thorn": {"title": "光之荆棘", "icon": "res://rogge_art/icons/skills-equipment/light-thorn.png", "start_level": 0, "max_level": 5},
 	"ice_wave": {"title": "冰刃波", "icon": "res://rogge_art/icons/skills-equipment/ice-wave.png", "start_level": 0, "max_level": 5},
 	"ghost_dash": {"title": "鬼影步", "icon": "res://rogge_art/combat-fx/ghost-dash/icon.png", "start_level": 0, "max_level": 5},
+	"portal_gun": {"title": "传送枪", "icon": "res://rogge_art/combat-fx/dimension/portal_gun.png", "start_level": 0, "max_level": 5},
+	"errand_box": {"title": "Meeseeks 盒子", "icon": "res://rogge_art/combat-fx/dimension/errand_box.png", "start_level": 0, "max_level": 5},
+	"micro_cell": {"title": "微宇宙电池", "icon": "res://rogge_art/combat-fx/dimension/micro_cell.png", "start_level": 0, "max_level": 5},
 	"blood_vortex": {"title": "嗜魂封魔斩", "icon": "res://rogge_art/combat-fx/blood-vortex/icon.png", "start_level": 0, "max_level": 5},
 	"draw_slash": {"title": "拔刀斩", "icon": "res://rogge_art/combat-fx/draw-slash/icon.png", "start_level": 0, "max_level": 5},
 	"thorn_whip": {"title": "荆棘鞭", "icon": "res://rogge_art/icons/skills-equipment/A026.png", "start_level": 0, "max_level": 5},
@@ -295,6 +299,7 @@ func set_growth_status(owned: int, active: bool) -> void:
 	if was_visible != _growth_label.visible: _fit_equipment()
 
 func reset_combo_effects() -> void:
+	dimension_active = false
 	crimson_active = false
 	for slot in _slots.values():
 		var border: Control = slot.get("combo_border")
@@ -305,6 +310,7 @@ func reset_combo_effects() -> void:
 	set_process(false)
 
 func refresh_combo_borders() -> void:
+	dimension_active = COMBOS.owned_count(self, COMBOS.DIMENSION_MEMBERS) == COMBOS.DIMENSION_MEMBERS.size()
 	crimson_active = COMBOS.completes_crimson(self, "")
 	var growth := COMBOS.owned_count(self, COMBOS.GROWTH_MEMBERS) == COMBOS.GROWTH_MEMBERS.size()
 	var arsenal := COMBOS.owned_count(self, COMBOS.ARSENAL_MEMBERS) == COMBOS.ARSENAL_MEMBERS.size()
@@ -314,6 +320,7 @@ func refresh_combo_borders() -> void:
 		if not is_instance_valid(border): continue
 		var group := COMBOS.group_for(id)
 		var active := crimson_active if group == "crimson" else (growth if group == "growth" else arsenal)
+		if group == "dimension": active = dimension_active
 		border.configure(group, COMBOS.color_for(group), active)
 		if active: _active_combo_borders.append(border)
 	_apply_combo_phases()

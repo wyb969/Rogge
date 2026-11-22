@@ -27,7 +27,11 @@ static func _profile(g: Node, id: String, count: int, power: float, peak: float)
 	var stats: Dictionary
 	var first: Dictionary
 	var second: Dictionary
-	if id in ARCANE or id in RELICS:
+	if id in preload("res://script/dimension_lab.gd").IDS:
+		stats = g.dimension_lab.stats_for(id,count)
+		first = g.dimension_lab.stats_for(id,1)
+		second = g.dimension_lab.stats_for(id,2)
+	elif id in ARCANE or id in RELICS:
 		var multi: Node = g.arcane_weapons if id in ARCANE else g.relic_weapons
 		stats = multi.stats_for(id, count)
 		first = multi.stats_for(id, 1)
@@ -97,6 +101,9 @@ static func apply(g: Node, id: String, old_count: int, count: int, old_power: fl
 			p.shield = 0.0
 			p._sync_shield_visuals()
 		if id == "regen_up" and count == 0: p._regen_acc = 0.0
+		return
+	if id in preload("res://script/dimension_lab.gd").IDS:
+		g.dimension_lab.set_forged_stats(id,count,data)
 		return
 	if id in ARCANE or id in RELICS:
 		var multi: Node = g.arcane_weapons if id in ARCANE else g.relic_weapons

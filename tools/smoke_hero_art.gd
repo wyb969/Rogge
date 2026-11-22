@@ -82,10 +82,11 @@ func _run() -> void:
 			if draw.backup != "": items.append(draw.backup)
 			var growth: bool = machine.COMBOS.GROWTH_MEMBERS.all(func(id): return id in items)
 			var arsenal: bool = machine.COMBOS.ARSENAL_MEMBERS.all(func(id): return id in items)
+			var dimension: bool = machine.COMBOS.DIMENSION_MEMBERS.all(func(id): return id in items)
 			var crimson: bool = machine.COMBOS.CRIMSON_MEMBERS.all(func(id): return id in items)
-			check((bucket < 30) == (growth or arsenal or crimson), "actual full set at the 30/70 boundary")
+			check((bucket < 30) == (growth or arsenal or crimson or dimension), "actual full set at the 30/70 boundary")
 			check(machine.WEAPONS.any(func(id): return id in items), "every opening can attack")
-			if growth or arsenal or crimson: jackpots += 1
+			if growth or arsenal or crimson or dimension: jackpots += 1
 		check(jackpots == 30, "exactly 30 jackpot buckets")
 	var picker: Node = main.hero_picker
 	for index in 4:

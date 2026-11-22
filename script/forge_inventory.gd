@@ -191,6 +191,8 @@ func preview(uid: int, subs: Array) -> Dictionary:
 	var lines := PackedStringArray()
 	var crimson_before: bool = game.equipment_panel.crimson_active
 	var crimson_after := _set_active(kept,COMBOS.CRIMSON_MEMBERS)
+	if game.equipment_panel.dimension_active and not _set_active(kept,COMBOS.DIMENSION_MEMBERS):
+		out.warnings.append(L10n.text("跨维度外包将失效"))
 	if crimson_before and not crimson_after:
 		out.warnings.append(L10n.text("绯刃四式将失效"))
 		for member in COMBOS.CRIMSON_MEMBERS:

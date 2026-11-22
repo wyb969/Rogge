@@ -1,6 +1,7 @@
 shader_type canvas_item;
 render_mode unshaded;
 
+uniform bool dimension = false;
 uniform bool crimson = false;
 
 // A slow diagonal foil reflection. Only the machine and reel frames use it.
@@ -15,6 +16,9 @@ void fragment() {
 		float band = smoothstep(0.35, 0.96, glint);
 		spectrum = mix(vec3(0.53, 0.018, 0.10), vec3(1.0, 0.17, 0.26), glint);
 		spectrum = mix(spectrum, vec3(1.0, 0.78, 0.72), band * (0.35 + 0.60 * rim));
+	}
+	if (dimension) {
+		spectrum = mix(vec3(0.50, 0.42, 0.04), vec3(1.0, 0.953, 0.416), 0.45 + 0.55 * glint);
 	}
 	COLOR.rgb = mix(COLOR.rgb, spectrum, 0.14 + 0.23 * glint + 0.58 * rim);
 	COLOR.rgb += vec3(0.13 * glint * rim);

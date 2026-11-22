@@ -1716,3 +1716,23 @@ Lv %d,Lv %d,等级 %d
 绯刃四式：冰刃波、拔刀斩、鬼影步、嗜魂封魔斩。集齐后四技伤害与范围增加30%，冷却缩短30%。,"Equip Ice Blade Wave, Draw Slash, Phantom Step and Bloody Twister for +30% damage and reach and −30% cooldown on all four.",绯刃四式：冰刃波、拔刀斩、鬼影步、嗜魂封魔斩。集齐后四技伤害与范围增加30%，冷却缩短30%。
 绯刃四式将失效,Crimson Blades set bonus will be lost,绯刃四式将失效
 施放冷却,Cast cooldown,施放冷却
+传送枪,Portal Gun,传送枪
+Meeseeks 盒子,Meeseeks Box,Meeseeks 盒子
+微宇宙电池,Microverse Battery,微宇宙电池
+把靠近入口的怪从另一扇门弹出去。,Launch a nearby enemy through a pair of portals.,把靠近入口的怪从另一扇门弹出去。
+派出一名蓝色助手，追击标记的目标。,Dispatch a blue helper to chase a marked target.,派出一名蓝色助手，追击标记的目标。
+移动积攒电量，满电后向附近敌人放电。,Walk to charge the battery and zap nearby enemies.,移动积攒电量，满电后向附近敌人放电。
+普通怪穿过绿门后会被横向弹出，撞到同伴可追加伤害。首领和精英受到门的伤害并留在原地。升级提高伤害、开门频率和通行次数。,"Launch ordinary enemies out of the paired gate. Hitting a second enemy deals impact damage. Bosses and elites take gate damage in place. Upgrades improve damage, recharge and gate capacity.",普通怪穿过绿门后会被横向弹出，撞到同伴可追加伤害。首领和精英受到门的伤害并留在原地。升级提高伤害、开门频率和通行次数。
+助手认领一个目标，追上后挥拳并举起完工单。目标提前消失时可以改派。升级提高交单伤害并缩短派工间隔。,"A helper accepts a job, pursues the marked enemy, punches and raises a completed work order. It can take a new target if the first disappears. Upgrades improve damage and dispatch time.",助手认领一个目标，追上后挥拳并举起完工单。目标提前消失时可以改派。升级提高交单伤害并缩短派工间隔。
+按实际移动距离充电。单卡满电后自动释放电弧。升级缩短充电路程，提高电击伤害与跳数。,Actual movement charges the cell. On its own it discharges when full. Upgrades reduce the charging distance and increase shock damage and chain targets.,按实际移动距离充电。单卡满电后自动释放电弧。升级缩短充电路程，提高电击伤害与跳数。
+跨维度外包,Interdimensional Outsourcing,跨维度外包
+传送枪、Meeseeks 盒子、微宇宙电池各持有一张。满电时，下一名助手带电池穿门，在目标旁落地放出范围电击。,"Own Portal Gun, Meeseeks Box and Microverse Battery. At full charge, the next helper carries the cell through a portal and delivers an area shock at its target.",传送枪、Meeseeks 盒子、微宇宙电池各持有一张。满电时，下一名助手带电池穿门，在目标旁落地放出范围电击。
+满电派单 · 穿门投送 · 范围电击,Full charge · Portal delivery · Area shock,满电派单 · 穿门投送 · 范围电击
+跨维度外包 · 套装试抽,Outsourcing · Set preview,跨维度外包 · 套装试抽
+跨维度外包将失效,Interdimensional Outsourcing will deactivate,跨维度外包将失效
+充电路程,Charge distance,充电路程
+通行次数,Gate capacity,通行次数
+电弧目标,Arc targets,电弧目标
+传送 %s伤,Portal %s DMG,传送 %s伤
+助手 %s伤,Helper %s DMG,助手 %s伤
+电弧 %s伤,Zap %s DMG,电弧 %s伤

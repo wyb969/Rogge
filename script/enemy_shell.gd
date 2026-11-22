@@ -1095,3 +1095,14 @@ func clear_terrain_impulse() -> void:
 	terrain_impulse.clear()
 	if is_instance_valid(sprite_2d) and not _death_started: _apply_move_juice(0)
 	set_process(_hit_flash_left>0)
+
+func travel_through_portal(exit: Vector2, direction: Vector2) -> bool:
+	if _death_started or is_elite or has_method("configure_guardian") or has_method("vulnerable"): return false
+	if blade_ice != null or ghost_bound or blood_vortex_source != null: return false
+	var arrival := global_transform
+	arrival.origin = exit
+	if test_move(arrival,Vector2.ZERO,null,0.08,true): return false
+	global_position = exit
+	reset_physics_interpolation()
+	apply_terrain_impulse(direction*420)
+	return true

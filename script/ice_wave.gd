@@ -1,5 +1,7 @@
 extends Node2D
 
+const COMBOS := preload("res://script/equipment_combos.gd")
+
 const ICE := preload("res://script/blade_ice.gd")
 const ERUPTION := preload("res://rogge_art/combat-fx/ice-wave/eruption.png")
 const SHELL := preload("res://rogge_art/combat-fx/ice-wave/shell.png")
@@ -76,15 +78,16 @@ func reset() -> void:
 
 func cast() -> bool:
 	if _count > 0 or level == 0 or not game.variety._battle_active(): return false
+	var stats := COMBOS.combat_stats("ice_wave", _stats, game.equipment_panel.crimson_active)
 	_origin = game.player.global_position
-	var target := CombatTargets.nearest(_origin, float(_stats.range) ** 2)
+	var target := CombatTargets.nearest(_origin, float(stats.range) ** 2)
 	if not is_instance_valid(target) or not game.is_ancestor_of(target): return false
 	_heading = _origin.direction_to(target.global_position)
 	if _heading.is_zero_approx(): _heading = Vector2.RIGHT
-	_reach = _stats.range
-	_radius = _stats.radius
-	_damage = _stats.damage
-	_chance = _stats.freeze_chance
+	_reach = stats.range
+	_radius = stats.radius
+	_damage = stats.damage
+	_chance = stats.freeze_chance
 	_shape.radius = _radius
 	_count = ceili((_reach - 2 * _radius) / (1.40 * _radius)) + 1
 	_cast_index += 1
@@ -92,7 +95,7 @@ func cast() -> bool:
 	_contact_steps.fill(0)
 	_start = _clock
 	_hit.clear()
-	_cooldown = _stats.interval
+	_cooldown = stats.interval
 	return true
 
 func _birth(index: int) -> float:

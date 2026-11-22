@@ -52,7 +52,7 @@ func observed(id: String) -> Dictionary:
 			return {"基础伤害":stats.damage, "冲刺距离":stats.range, "冲刺冷却":stats.interval * p.cooldown_scale}
 		"blood_vortex":
 			var s: Dictionary = game.blood_vortex._stats
-			return {"单段伤害":s.damage,"终斩伤害":s.damage * game.blood_vortex.FINISH_MULTIPLIER,"触发间隔":s.interval,"持续时间":s.duration,"攻击段数":s.beats}
+			return {"作用距离":s.range,"施放冷却":s.recovery,"单段伤害":s.damage,"终斩伤害":s.damage * game.blood_vortex.FINISH_MULTIPLIER,"触发间隔":s.interval,"持续时间":s.duration,"攻击段数":s.beats}
 		"speed_up": return {"移速":p.effective_move_speed()}
 		"pickup_up": return {"拾取半径":p.pickup_range}
 		"axe_up": return {"基础伤害":game.hand_weapon.weapon_demage,"飞行速度":game.hand_weapon.max_speed}

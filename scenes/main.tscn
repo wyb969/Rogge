@@ -112,6 +112,10 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "鬼影步 · 穿阵"
 
+[node name="DebugCrimsonSetButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
+layout_mode = 2
+text = "绯刃四式 · 套装试抽"
+
 [node name="DebugBloodVortexButton" type="Button" parent="mainUI/Control/DebugCenter/VBoxContainer"]
 layout_mode = 2
 text = "嗜魂封魔斩 · 聚怪试斩"
@@ -301,6 +305,7 @@ autowrap_mode = 3
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugMinefieldButton" to="." method="_launch_run" binds= [&"minefield"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugLightThornButton" to="." method="_launch_run" binds= [&"light_thorn"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugGhostDashButton" to="." method="_launch_run" binds= [&"ghost_dash"]]
+[connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugCrimsonSetButton" to="." method="_on_crimson_practice"]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugBloodVortexButton" to="." method="_launch_run" binds= [&"blood_vortex"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugDrawSlashButton" to="." method="_launch_run" binds= [&"draw_slash"]]
 [connection signal="pressed" from="mainUI/Control/DebugCenter/VBoxContainer/DebugIceWaveButton" to="." method="_launch_run" binds= [&"ice_wave"]]

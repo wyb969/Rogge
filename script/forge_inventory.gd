@@ -130,8 +130,8 @@ func refill_practice() -> void:
 func card_preview(id: String, tier: int) -> String:
 	var old := _summary(id,cards)
 	var value := weight(tier)
-	var before := STATS.describe(game,id,old.n,old.power,old.peak)
-	var after := STATS.describe(game,id,old.n+1,old.power+value,maxf(value,old.peak))
+	var before := STATS.describe(game,id,old.n,old.power,old.peak,game.equipment_panel.crimson_active)
+	var after := STATS.describe(game,id,old.n+1,old.power+value,maxf(value,old.peak),COMBOS.completes_crimson(game.equipment_panel,id))
 	return before + " → " + after
 
 func _card(uid: int) -> Dictionary:
@@ -189,27 +189,33 @@ func preview(uid: int, subs: Array) -> Dictionary:
 		out.down = lerpf(7.0-subs.size(),2.0,furnace_gain)
 	out.stay = 100.0-out.up-out.down
 	var lines := PackedStringArray()
+	var crimson_before: bool = game.equipment_panel.crimson_active
+	var crimson_after := _set_active(kept,COMBOS.CRIMSON_MEMBERS)
+	if crimson_before and not crimson_after:
+		out.warnings.append(L10n.text("绯刃四式将失效"))
+		for member in COMBOS.CRIMSON_MEMBERS:
+			if member not in changed: changed.append(member)
 	for id: String in changed:
 		var before := _summary(id,cards)
 		var net := _summary(id,kept)
 		if id == main.id:
 			var next_power: float = net.power + weight(tier+1) - weight(tier)
-			var after := STATS.describe(game,id,net.n,next_power,maxf(net.peak,weight(tier+1)))
-			var original := STATS.describe(game,id,before.n,before.power,before.peak)
+			var after := STATS.describe(game,id,net.n,next_power,maxf(net.peak,weight(tier+1)),crimson_after)
+			var original := STATS.describe(game,id,before.n,before.power,before.peak,crimson_before)
 			lines.append("%s  %s → %s" % [_name(id),original,after])
 			if not subs.is_empty() or tier >= 2:
-				var hold := STATS.describe(game,id,net.n,net.power,net.peak)
+				var hold := STATS.describe(game,id,net.n,net.power,net.peak,crimson_after)
 				lines.append(L10n.text("保级：%s") % hold)
 			if tier >= 2:
 				var lower_peak := weight(tier-1)
 				for other in kept:
 					if other.id == id and other.uid != uid: lower_peak = maxf(lower_peak,weight(other.tier))
 				var lower_power: float = net.power-weight(tier)+weight(tier-1)
-				lines.append(L10n.text("降级：%s") % STATS.describe(game,id,net.n,lower_power,lower_peak))
+				lines.append(L10n.text("降级：%s") % STATS.describe(game,id,net.n,lower_power,lower_peak,crimson_after))
 		elif net.n == 0:
 			out.warnings.append(L10n.text("失去：%s") % _name(id))
 		else:
-			lines.append("%s  %s → %s" % [_name(id),STATS.describe(game,id,before.n,before.power,before.peak),STATS.describe(game,id,net.n,net.power,net.peak)])
+			lines.append("%s  %s → %s" % [_name(id),STATS.describe(game,id,before.n,before.power,before.peak,crimson_before),STATS.describe(game,id,net.n,net.power,net.peak,crimson_after)])
 	if _set_active(cards,COMBOS.GROWTH_MEMBERS) and not _set_active(kept,COMBOS.GROWTH_MEMBERS):
 		out.warnings.append(L10n.text("生机套装将失效"))
 	if _set_active(cards,COMBOS.ARSENAL_MEMBERS) and not _set_active(kept,COMBOS.ARSENAL_MEMBERS):

@@ -193,6 +193,10 @@ func _hero_chosen(index: int) -> void:
 	starter_lottery.open_for(HEROES.START_CARDS[hero_index])
 
 
+func _on_crimson_practice() -> void:
+	debug_page.hide()
+	starter_lottery.open_for(HEROES.START_CARDS[hero_index], true)
+
 func _on_starting_loadout_claimed(rolled: Dictionary) -> void:
 	await _launch_run(&"", rolled)
 

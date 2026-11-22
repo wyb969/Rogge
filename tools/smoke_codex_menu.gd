@@ -174,7 +174,7 @@ func run() -> void:
 	await main._on_game_end_ui_main_menu_pressed()
 	expect(not menu.active and not menu.codex.visible and paused,"return-home teardown cannot resume an old run")
 	store.set_language("en")
-	if failures.is_empty():print("CODEX MENU OK: %d checks; 53 entries, bilingual content, exact card sizing, pause ownership, Esc/settings/details, no rerolls, rest/trial lifecycle"%checks)
+	if failures.is_empty():print("CODEX MENU OK: %d checks; bilingual content, exact card sizing, pause ownership, Esc/settings/details, no rerolls, rest/trial lifecycle"%checks)
 	else:
 		for failure in failures:push_error(failure)
 	quit(0 if failures.is_empty() else 1)

@@ -11,6 +11,7 @@ var _starts := PackedVector2Array()
 var _ends := PackedVector2Array()
 var _distances := PackedFloat32Array()
 var _born := PackedFloat64Array()
+var width_scale := 1.0
 var _first := 0
 var _count := 0
 var _clock := 0.0
@@ -72,14 +73,14 @@ func _draw() -> void:
 func _draw_segment(index: int, progress: float) -> void:
 	var travel := _ends[index] - _starts[index]
 	var distance := travel.length()
-	var side := travel.orthogonal() / distance
+	var side := travel.orthogonal() * width_scale / distance
 	var phase := _distances[index] * 0.12
 	var next_phase := phase + distance * 0.12
 	var fade := 1.0 - smoothstep(0.12, 1.0, progress)
 	var rise := Vector2.UP * (4.0 + 6.0 * progress)
 	var a := _starts[index] + side * (2.4 * sin(phase)) + rise
 	var b := _ends[index] + side * (2.4 * sin(next_phase)) + rise
-	draw_line(a.round(), b.round(), Color(INK, fade * 0.72), 4.2 * fade + 0.5)
+	draw_line(a.round(), b.round(), Color(INK, fade * 0.72), (4.2 * fade + 0.5) * width_scale)
 	draw_line((a - side).round(), (b - side).round(), Color(PLUME, fade * 0.90), 1.6)
 	var strand := side * (4.0 + 3.0 * progress)
 	if sin(phase + 0.3) > -0.1:

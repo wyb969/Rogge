@@ -1710,3 +1710,9 @@ Lv %d,Lv %d,等级 %d
 血涡 %s伤,Vortex %s DMG,血涡 %s伤
 长螺旋沿剑锋吸聚敌人，最后一段重斩击飞。,Draw enemies along the helix and launch them with the final slash.,长螺旋沿剑锋吸聚敌人，最后一段重斩击飞。
 从剑端到涡口，整条螺旋都能吸附和命中敌人。一级每0.5秒一击，共6段，第6段为三倍伤害的击飞重斩。每次升级增加2段，提高伤害并缩短段间隔。首领遵守既有控制抗性。,"The whole helix pulls and hits enemies. Rank one hits six times at 0.5-second intervals. The last hit deals triple damage and launches targets. Each rank adds two hits, increases damage and shortens the interval. Boss control resistance applies.",从剑端到涡口，整条螺旋都能吸附和命中敌人。一级每0.5秒一击，共6段，第6段为三倍伤害的击飞重斩。每次升级增加2段，提高伤害并缩短段间隔。首领遵守既有控制抗性。
+绯刃四式,Crimson Blades,绯刃四式
+绯刃四式 · 套装试抽,Crimson Blades · Set preview,绯刃四式 · 套装试抽
+四技伤害 +30% · 冷却 −30% · 范围 +30%,Four skills: +30% damage · −30% cooldown · +30% reach,四技伤害 +30% · 冷却 −30% · 范围 +30%
+绯刃四式：冰刃波、拔刀斩、鬼影步、嗜魂封魔斩。集齐后四技伤害与范围增加30%，冷却缩短30%。,"Equip Ice Blade Wave, Draw Slash, Phantom Step and Bloody Twister for +30% damage and reach and −30% cooldown on all four.",绯刃四式：冰刃波、拔刀斩、鬼影步、嗜魂封魔斩。集齐后四技伤害与范围增加30%，冷却缩短30%。
+绯刃四式将失效,Crimson Blades set bonus will be lost,绯刃四式将失效
+施放冷却,Cast cooldown,施放冷却

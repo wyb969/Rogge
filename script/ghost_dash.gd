@@ -1,5 +1,7 @@
 extends Node2D
 
+const COMBOS := preload("res://script/equipment_combos.gd")
+
 const FX := preload("res://script/ghost_dash_fx.gd")
 const HOLD_TIME := 1.0
 # Half-width of the player's body, independent of the coin pickup radius.
@@ -10,6 +12,7 @@ var level := 0
 var _stats := stats_for(1)
 var marks := {}
 var _touched := {}
+var pass_distance := 0.0
 var _damage := 0.0
 var _shape := CapsuleShape2D.new()
 var _query := PhysicsShapeQueryParameters2D.new()
@@ -18,7 +21,7 @@ var _fx := FX.new()
 
 static func stats_for(rank: int) -> Dictionary:
 	var step := clampi(rank, 1, 5) - 1
-	return {"damage": 30.0 + 9.0 * step, "range": 132.0 + 18.0 * step, "interval": 2.70 - 0.30 * step}
+	return {"damage": 30.0 + 9.0 * step, "radius": PATH_RADIUS, "range": 132.0 + 18.0 * step, "interval": 2.70 - 0.30 * step}
 
 func _ready() -> void:
 	add_child(_fx)
@@ -34,12 +37,16 @@ func upgrade() -> void:
 
 func begin_pass() -> void:
 	_touched.clear()
-	_damage = _stats.damage
+	var stats := COMBOS.combat_stats("ghost_dash", _stats, game.equipment_panel.crimson_active)
+	pass_distance = stats.range
+	_damage = stats.damage
+	_shape.radius = stats.radius
+	_fx.width_scale = stats.radius / PATH_RADIUS
 
 func sweep(start: Vector2, finish: Vector2) -> void:
 	if level <= 0 or not game.variety._battle_active(): return
 	_fx.trail_segment(start, finish)
-	_shape.height = 2 * PATH_RADIUS + start.distance_to(finish)
+	_shape.height = 2 * _shape.radius + start.distance_to(finish)
 	_query.transform = Transform2D((finish - start).angle() - PI / 2, (start + finish) * 0.5)
 	var excluded: Array[RID] = []
 	var world := get_world_2d().direct_space_state

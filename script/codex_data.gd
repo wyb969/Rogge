@@ -324,6 +324,14 @@ const EXTRA = [
 		"frames": 1
 	},
 	{
+		"id": "combo_crimson",
+		"category": 4,
+		"title": "绯刃四式",
+		"icon": "equipment:blood_vortex",
+		"detail": "绯刃四式：冰刃波、拔刀斩、鬼影步、嗜魂封魔斩。集齐后四技伤害与范围增加30%，冷却缩短30%。",
+		"frames": 1
+	},
+	{
 		"id": "combo_arsenal",
 		"category": 4,
 		"title": "军械组合",

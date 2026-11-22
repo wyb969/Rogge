@@ -11,6 +11,7 @@ const LEVEL_COLOR: = preload("res://script/visual_style.gd").TEXT
 @onready var slot_list: GridContainer = $SlotList
 
 var _slots: Dictionary = {}
+var crimson_active := false
 var _arsenal_label: Label
 var _growth_label: Label
 const COMBOS := preload("res://script/equipment_combos.gd")
@@ -294,6 +295,7 @@ func set_growth_status(owned: int, active: bool) -> void:
 	if was_visible != _growth_label.visible: _fit_equipment()
 
 func reset_combo_effects() -> void:
+	crimson_active = false
 	for slot in _slots.values():
 		var border: Control = slot.get("combo_border")
 		if is_instance_valid(border): border.visible = false
@@ -303,6 +305,7 @@ func reset_combo_effects() -> void:
 	set_process(false)
 
 func refresh_combo_borders() -> void:
+	crimson_active = COMBOS.completes_crimson(self, "")
 	var growth := COMBOS.owned_count(self, COMBOS.GROWTH_MEMBERS) == COMBOS.GROWTH_MEMBERS.size()
 	var arsenal := COMBOS.owned_count(self, COMBOS.ARSENAL_MEMBERS) == COMBOS.ARSENAL_MEMBERS.size()
 	_active_combo_borders.clear()
@@ -310,7 +313,7 @@ func refresh_combo_borders() -> void:
 		var border: Control = _slots[id].get("combo_border")
 		if not is_instance_valid(border): continue
 		var group := COMBOS.group_for(id)
-		var active := growth if group == "growth" else arsenal
+		var active := crimson_active if group == "crimson" else (growth if group == "growth" else arsenal)
 		border.configure(group, COMBOS.color_for(group), active)
 		if active: _active_combo_borders.append(border)
 	_apply_combo_phases()

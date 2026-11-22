@@ -83,6 +83,9 @@ func _label(text_value: String, font_size: int, bold: bool = false) -> Label:
 	_box.add_child(label)
 	return label
 
+func reel_capacity() -> int:
+	return 3
+
 func _build_ui() -> void :
 	var dim: = ColorRect.new()
 	dim.color = Color(0.015, 0.02, 0.035, 0.92)
@@ -109,7 +112,7 @@ func _build_ui() -> void :
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 10)
 	_box.add_child(row)
-	for i in 3:
+	for i in reel_capacity():
 		var panel: = PanelContainer.new()
 		panel.add_theme_stylebox_override("panel", _style(Color(0.018, 0.025, 0.045), Color(0.32, 0.28, 0.2)))
 		row.add_child(panel)
@@ -222,6 +225,7 @@ func _process(delta: float) -> void :
 		_tick.pitch_scale = 0.9 + spin_time * 0.1
 		_tick.play()
 		for i in _reels.size():
+			if not _reel_panels[i].visible: continue
 			if spin_time < 1.65 + float(i) * 0.5:
 				_set_reel(i, _pool[randi() % _pool.size()])
 			else:

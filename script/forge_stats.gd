@@ -152,9 +152,9 @@ static func apply(g: Node, id: String, old_count: int, count: int, old_power: fl
 		"wind_emblem", "echo_ember":
 			g.variety.set_forged_stats(id, count, data)
 
-static func describe(g: Node, id: String, count: int, power: float, peak := -1.0) -> String:
+static func describe(g: Node, id: String, count: int, power: float, peak := -1.0, crimson := false) -> String:
 	if count <= 0: return "—"
-	var data := _profile(g, id, count, power, peak)
+	var data := preload("res://script/equipment_combos.gd").combat_stats(id,_profile(g,id,count,power,peak),crimson)
 	if data.has("lo"): return "%s %d–%d" % [L10n.text("基础伤害"), data.lo, data.hi]
 	if data.has("chance"):
 		return "%s %s%% · ×%s" % [L10n.text("暴击率"), CardNumbers.number(100.0 * data.chance),CardNumbers.number(data.crit)]

@@ -58,6 +58,7 @@ static func build(game: Node, id: String) -> Dictionary:
 	var rank: int = rank_for(game,id)
 	var next: int = rank + 1
 	var hint := ""
+	var crimson_after := id in COMBOS.CRIMSON_MEMBERS and COMBOS.completes_crimson(game.equipment_panel,id)
 	var growth_after: bool = true
 	for member in COMBOS.GROWTH_MEMBERS:
 		if game.equipment_panel.get_level(member) + (1 if member == id else 0) <= 0: growth_after = false
@@ -153,25 +154,28 @@ static func build(game: Node, id: String) -> Dictionary:
 				_row(rows,label,float(before[key]) if rank > 0 else 0,float(after[key]),"s" if key in ["duration","interval"] else "",key != "count")
 			hint = {"silver_knife":L10n.text("自动瞄准附近敌人穿透 · 每把对同一目标命中一次"),"cross_blade":L10n.text("自动瞄准 · 固定路径往返各命中一次"),"holy_water":L10n.text("敌人脚下净化区域 · 每0.5秒结算\n重叠区域不叠伤，不触发暴击和异常传播")}[id]+L10n.text("\n最高5级")
 		"ghost_dash":
-			var before := GHOST_DASH.stats_for(maxi(rank, 1))
-			var after := GHOST_DASH.stats_for(next)
+			var before := COMBOS.combat_stats(id,game.ghost_dash._stats,game.equipment_panel.crimson_active)
+			var after := COMBOS.combat_stats(id,GHOST_DASH.stats_for(next),crimson_after)
 			_row(rows,"基础伤害",before.damage if rank else 0,after.damage)
 			_row(rows,"冲刺距离",before.range if rank else game.player.DASH_SPEED * game.player.DASH_DURATION,after.range)
 			_row(rows,"冲刺冷却",game.player.dash_base_cooldown() * player.cooldown_scale,after.interval * player.cooldown_scale,"s")
 			hint = L10n.text("冲刺穿过敌人，定身一秒后造成伤害。")
 		"blood_vortex":
-			var before := BLOOD_VORTEX.stats_for(maxi(rank, 1))
-			var after := BLOOD_VORTEX.stats_for(next)
+			var before := COMBOS.combat_stats(id,game.blood_vortex._stats,game.equipment_panel.crimson_active)
+			var after := COMBOS.combat_stats(id,BLOOD_VORTEX.stats_for(next),crimson_after)
 			_row(rows,"单段伤害",before.damage if rank else 0,after.damage)
+			_row(rows,"作用距离",before.range if rank else 0,after.range)
+			_row(rows,"施放冷却",before.recovery if rank else 0,after.recovery,"s")
 			_row(rows,"终斩伤害",before.damage * BLOOD_VORTEX.FINISH_MULTIPLIER if rank else 0,after.damage * BLOOD_VORTEX.FINISH_MULTIPLIER)
 			_row(rows,"触发间隔",before.interval if rank else 0,after.interval,"s")
 			_row(rows,"持续时间",before.duration if rank else 0,after.duration,"s")
 			_row(rows,"攻击段数",before.beats if rank else 0,after.beats,"",false)
 			hint = L10n.text("长螺旋沿剑锋吸聚敌人，最后一段重斩击飞。")
 		"ice_wave":
-			var before := ICE_WAVE.stats_for(maxi(rank, 1))
-			var after := ICE_WAVE.stats_for(next)
+			var before := COMBOS.combat_stats(id,game.ice_wave._stats,game.equipment_panel.crimson_active)
+			var after := COMBOS.combat_stats(id,ICE_WAVE.stats_for(next),crimson_after)
 			_row(rows,"基础伤害",before.damage if rank else 0,after.damage)
+			_row(rows,"触发间隔",before.interval if rank else 0,after.interval,"s")
 			_row(rows,"冰冻几率",100*before.freeze_chance if rank else 0,100*after.freeze_chance,"%")
 			_row(rows,"作用距离",before.range if rank else 0,after.range)
 			_row(rows,"作用半径",before.radius if rank else 0,after.radius)
@@ -180,6 +184,9 @@ static func build(game: Node, id: String) -> Dictionary:
 			var source: Script = {"bomb":BOMB,"light_thorn":LIGHT_THORN,"draw_slash":DRAW_SLASH,"banana_fan":FAN,"black_hole":HOLE,"poison_trail":POISON,"lightning_ring":RING}.get(id,VARIETY)
 			var before: Dictionary = source.wind_stats(maxi(rank,1)) if id == "wind_emblem" else (source.echo_stats(maxi(rank,1)) if id == "echo_ember" else source.stats_for(maxi(rank,1)))
 			var after: Dictionary = source.wind_stats(next) if id == "wind_emblem" else (source.echo_stats(next) if id == "echo_ember" else source.stats_for(next))
+			if id == "draw_slash":
+				before = COMBOS.combat_stats(id,game.draw_slash._stats,game.equipment_panel.crimson_active)
+				after = COMBOS.combat_stats(id,after,crimson_after)
 			for key in ["damage","dps","radius","range","swing_time","interval","bolts","kills"]:
 				if not after.has(key): continue
 				var label: String = {"damage":"基础伤害","dps":"每秒伤害","radius":"作用半径","range":"作用距离","swing_time":"挥击用时","interval":"触发间隔","bolts":"闪电目标","kills":"所需击杀"}[key]

@@ -16,7 +16,7 @@ func claim_start(main: Node, perk: String, group: String = "", rerolls: int = 0)
 		machine.loadout = machine.draw_loadout(perk, 99)
 	elif group != "":
 		# Exercise both real jackpot definitions regardless of the random seed.
-		var members: Array = machine.COMBOS.GROWTH_MEMBERS if group == "growth" else machine.COMBOS.ARSENAL_MEMBERS
+		var members: Array = {"growth":machine.COMBOS.GROWTH_MEMBERS,"arsenal":machine.COMBOS.ARSENAL_MEMBERS,"crimson":machine.COMBOS.CRIMSON_MEMBERS}[group]
 		var backup := "gun_up" if group == "growth" and perk not in machine.WEAPONS else ""
 		machine.loadout = {"cards":members, "group":group, "backup":backup, "perk":perk}
 	check(machine._panel.material == null, "every new spin starts without foil")
@@ -52,10 +52,12 @@ func claim_start(main: Node, perk: String, group: String = "", rerolls: int = 0)
 			var final_draw: Dictionary = machine.loadout
 			machine._on_reroll_pressed()
 			check(is_same(machine.loadout, final_draw) and machine.rerolls_left == 0, "fourth reroll rejected")
-	for i in 3:
+	for i in machine.loadout.cards.size():
 		var id: String = machine.loadout.cards[i]
 		check(machine._reels[i].texture.resource_path == machine.EQUIPMENT[id].icon, "reel matches item")
 	check((machine._panel.material != null) == (machine.loadout.group != ""), "jackpot-only foil")
+	check(machine._reel_panels[3].visible == (machine.loadout.group == "crimson"),"fourth card shown only on crimson reveal")
+	if machine.loadout.group == "crimson": check(machine.foil.get_shader_parameter("crimson"),"crimson reveal uses red foil")
 	var rolled: Dictionary = machine.loadout
 	check(rolled.perk == perk, "chosen hero's perk retained")
 	machine._button.pressed.emit()
@@ -80,9 +82,10 @@ func _run() -> void:
 			if draw.backup != "": items.append(draw.backup)
 			var growth: bool = machine.COMBOS.GROWTH_MEMBERS.all(func(id): return id in items)
 			var arsenal: bool = machine.COMBOS.ARSENAL_MEMBERS.all(func(id): return id in items)
-			check((bucket < 30) == (growth or arsenal), "actual full set at the 30/70 boundary")
+			var crimson: bool = machine.COMBOS.CRIMSON_MEMBERS.all(func(id): return id in items)
+			check((bucket < 30) == (growth or arsenal or crimson), "actual full set at the 30/70 boundary")
 			check(machine.WEAPONS.any(func(id): return id in items), "every opening can attack")
-			if growth or arsenal: jackpots += 1
+			if growth or arsenal or crimson: jackpots += 1
 		check(jackpots == 30, "exactly 30 jackpot buckets")
 	var picker: Node = main.hero_picker
 	for index in 4:
@@ -102,7 +105,7 @@ func _run() -> void:
 		picker.cards[index].pressed.emit()
 		await process_frame
 		await process_frame
-		var rolled := await claim_start(main, ROSTER.START_CARDS[index], ["growth", "mixed", "arsenal", "mixed"][index], [0, 3, 0, 1][index])
+		var rolled := await claim_start(main, ROSTER.START_CARDS[index], ["growth", "mixed", "arsenal", "crimson"][index], [0, 3, 0, 0][index])
 		var g: Node = main.game
 		var expected: Array = rolled.cards.duplicate()
 		expected.append(rolled.perk)
@@ -141,7 +144,9 @@ func _run() -> void:
 	var game: Node = main.game
 	for id in game.equipment_panel.EQUIP_DEFS:
 		var path: String = game.equipment_panel.EQUIP_DEFS[id].icon
-		check(path.contains("/rogge_art/icons/") and load(path).get_size() == Vector2(32,32), "new icon " + id)
+		var combat_icon: bool = id in ["light_thorn", "ice_wave", "ghost_dash", "blood_vortex", "draw_slash"]
+		var side := 40 if combat_icon else 32
+		check(path.begins_with("res://rogge_art/") and load(path).get_size() == Vector2(side, side), "equipment icon " + id)
 	for spec in [["boss","lizard",1],["knight_boss","knight",2],["beast_boss","tide",3],["beast_boss","thunder",4],["wind_boss","wind-ranged",5],["wind_boss","wind-melee",5],["beast_boss","aegis",6],["treasure_guardian","guardian",3]]:
 		var actor: Node = load("res://scenes/%s.tscn" % spec[0]).instantiate()
 		if spec[1]=="guardian":

@@ -1,5 +1,7 @@
 extends Node2D
 
+const COMBOS := preload("res://script/equipment_combos.gd")
+
 const FX := preload("res://script/draw_slash_fx.gd")
 const SWISH := preload("res://rogge_art/combat-fx/draw-slash/draw.ogg")
 const PAGE_SIZE := 64
@@ -60,14 +62,15 @@ func _physics_process(delta: float) -> void:
 			_sound.play()
 			_strike(center)
 	elif _cooldown <= 0.0:
-		_shape.radius = _stats.radius
+		var stats := COMBOS.combat_stats("draw_slash", _stats, game.equipment_panel.crimson_active)
+		_shape.radius = stats.radius
 		_query.transform = Transform2D(0, center)
 		if get_world_2d().direct_space_state.intersect_shape(_query, 1).is_empty():
 			_cooldown = 0.15
 			return
-		_damage = _stats.damage
+		_damage = stats.damage
 		_windup = FX.IMPACT_TIME
-		_cooldown = _stats.interval
+		_cooldown = stats.interval
 		_fx.play(center, _shape.radius, -1.0 if game.player._facing_left else 1.0)
 
 func _strike(center: Vector2) -> void:

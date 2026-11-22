@@ -18,6 +18,9 @@ var previous_icons: Array[TextureRect] = []
 var roll_tweens: Array[Tween] = []
 var tier_labels: Array[Label] = []
 
+func reel_capacity() -> int:
+	return 4
+
 static func draw_loadout(perk: String, percentile: int) -> Dictionary:
 	var cards: Array[String] = []
 	var group := ""
@@ -25,14 +28,17 @@ static func draw_loadout(perk: String, percentile: int) -> Dictionary:
 	var weapons := WEAPONS.duplicate()
 	weapons.erase(perk)
 	if percentile < 30:
-		if randi_range(0, 1) == 0:
+		if percentile < 10:
 			group = "growth"
 			cards.assign(COMBOS.GROWTH_MEMBERS)
 			if perk not in WEAPONS:
 				backup = weapons.pick_random()
-		else:
+		elif percentile < 20:
 			group = "arsenal"
 			cards.assign(COMBOS.ARSENAL_MEMBERS)
+		else:
+			group = "crimson"
+			cards.assign(COMBOS.CRIMSON_MEMBERS)
 	else:
 		cards.append(weapons.pick_random())
 		var candidates := EQUIPMENT.keys()
@@ -41,6 +47,7 @@ static func draw_loadout(perk: String, percentile: int) -> Dictionary:
 			if id == perk or id in cards: continue
 			var owned := cards + [perk, id]
 			if COMBOS.GROWTH_MEMBERS.all(func(item): return item in owned): continue
+			if COMBOS.CRIMSON_MEMBERS.all(func(item): return item in owned): continue
 			if COMBOS.ARSENAL_MEMBERS.all(func(item): return item in owned): continue
 			cards.append(id)
 			if cards.size() == 3: break
@@ -102,22 +109,27 @@ func _fit() -> void:
 	super._fit()
 	for badge in tier_labels:
 		UiFonts.apply_to_label(badge, maxi(10, _detail.get_theme_font_size("font_size")-1), true)
+	if _reel_panels.size() == 4 and _reel_panels[3].visible:
+		var reel_size := minf(_reel_panels[0].custom_minimum_size.x, (_panel.custom_minimum_size.x - 70.0) / 4.0)
+		for panel in _reel_panels: panel.custom_minimum_size = Vector2.ONE * reel_size
 	if _reroll:
 		UiFonts.apply_to_button(_reroll, _button.get_theme_font_size("font_size"))
 		_reroll.custom_minimum_size.y = _button.custom_minimum_size.y
 
-func open_for(perk: String) -> void:
+func open_for(perk: String, crimson_practice := false) -> void:
 	rerolls_left = MAX_REROLLS
 	_reroll.hide()
 	claimed = false
-	_prepare_roll(perk)
+	_prepare_roll(perk, crimson_practice)
 	get_tree().paused = true
 	root_clear_movement()
 	show()
 	_button.grab_focus()
 
-func _prepare_roll(perk: String) -> void:
-	loadout = draw_loadout(perk, randi_range(0, 99))
+func _prepare_roll(perk: String, crimson_practice := false) -> void:
+	loadout = draw_loadout(perk, 20 if crimson_practice else randi_range(0, 99))
+	_reel_panels[3].hide()
+	_fit()
 	_reroll.disabled = true
 	_reroll.text = L10n.text("重摇（%d）") % rerolls_left
 	spinning = false
@@ -126,6 +138,7 @@ func _prepare_roll(perk: String) -> void:
 	_tick_left = 0.0
 	_burst.strength = 0
 	_panel.material = null
+	_title.remove_theme_color_override("font_color")
 	_box.get_child(0).text = L10n.text("出发前的补给")
 	_title.text = L10n.text("开局老虎机")
 	_result.text = L10n.text("转动三轴，领取开局装备")
@@ -180,7 +193,11 @@ func _reveal() -> void:
 	spinning = false
 	revealed = true
 	var names := PackedStringArray()
-	for i in _reels.size():
+	var crimson: bool = loadout.group == "crimson"
+	_reel_panels[3].visible = crimson
+	_fit()
+	for i in loadout.cards.size():
+		if crimson: _reel_panels[i].modulate = Color.WHITE
 		_stopped_reel(i)
 		names.append(item_name(loadout.cards[i]))
 		var tier := int(loadout.get("tiers", {}).get(loadout.cards[i], 0))
@@ -189,13 +206,18 @@ func _reveal() -> void:
 		tier_labels[i].show()
 	var jackpot: bool = loadout.group != ""
 	if jackpot:
+		foil.set_shader_parameter("crimson", crimson)
 		_panel.material = foil
 		for reel in _reel_panels: reel.material = foil
 	_title.text = L10n.text("开局装备已就绪")
 	if jackpot:
 		_title.text = L10n.text("生机套装！") if loadout.group == "growth" else L10n.text("军械套装！")
+	if crimson:
+		_title.text = L10n.text(COMBOS.CRIMSON_TITLE)
+		_title.add_theme_color_override("font_color", COMBOS.CRIMSON_COLOR.lightened(0.38))
 	_result.text = "  ·  ".join(names)
 	_detail.text = L10n.text("角色自带：%s") % item_name(loadout.perk)
+	if crimson: _detail.text += "\n" + L10n.text(COMBOS.CRIMSON_BONUS)
 	if loadout.backup != "":
 		_detail.text += "\n" + L10n.text("随行武器：%s") % (QUALITY.tier_name(loadout.get("tiers", {}).get(loadout.backup,0))+" · "+item_name(loadout.backup))
 	_reroll.show()

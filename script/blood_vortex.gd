@@ -1,5 +1,7 @@
 extends Node2D
 
+const COMBOS := preload("res://script/equipment_combos.gd")
+
 const FX := preload("res://script/blood_vortex_fx.gd")
 const PULSE := preload("res://rogge_art/combat-fx/blood-vortex/pulse.wav")
 const FINISH := preload("res://rogge_art/combat-fx/blood-vortex/finish.wav")
@@ -28,6 +30,9 @@ var _held := {}
 # Only blocked bodies enter this table. Deadlines use the paused cast clock.
 var _retry_at := {}
 var _generation := 0
+var _recovery := RECOVERY
+var _normal_funnel: ConvexPolygonShape2D
+var _large_funnel: ConvexPolygonShape2D
 var _query := PhysicsShapeQueryParameters2D.new()
 var _fx := FX.new()
 var _pulse_sound := AudioStreamPlayer.new()
@@ -38,7 +43,7 @@ static func stats_for(rank: int) -> Dictionary:
 	var step := clampi(rank, 1, 5) - 1
 	var beats := 6 + 2 * step
 	var interval := (50 - 3 * step) / 100.0
-	return {"damage": 12.0 + 3.0 * step, "beats": beats, "interval": interval, "duration": beats * interval}
+	return {"range": LENGTH, "radius": MOUTH_RADIUS, "recovery": RECOVERY, "damage": 12.0 + 3.0 * step, "beats": beats, "interval": interval, "duration": beats * interval}
 
 func _ready() -> void:
 	add_child(_fx)
@@ -48,12 +53,14 @@ func _ready() -> void:
 		add_child(player)
 		AudioManager.configure_sfx(player)
 		player.volume_db = -10.0
-	_query.shape = _funnel_shape()
+	_normal_funnel = _funnel_shape(1.0)
+	_large_funnel = _funnel_shape(COMBOS.CRIMSON_SIZE)
+	_query.shape = _normal_funnel
 	_query.collision_mask = 8
 	reset()
 
 # The axial profile matches the drawn helix, with an eight-pixel cap at either end.
-func _funnel_shape() -> ConvexPolygonShape2D:
+func _funnel_shape(factor := 1.0) -> ConvexPolygonShape2D:
 	var points := PackedVector2Array()
 	for offset: float in [0.0, 1.0, 3.0, 5.0, 8.0, LENGTH - 8.0, LENGTH - 5.0, LENGTH - 3.0, LENGTH - 1.0, LENGTH]:
 		var cap := minf(minf(offset, LENGTH - offset) / 8.0, 1.0)
@@ -61,6 +68,7 @@ func _funnel_shape() -> ConvexPolygonShape2D:
 		points.append(Vector2(offset - LENGTH * 0.5, width))
 		points.append(Vector2(offset - LENGTH * 0.5, -width))
 	var shape := ConvexPolygonShape2D.new()
+	for i in points.size(): points[i] *= factor
 	shape.set_point_cloud(points)
 	return shape
 
@@ -93,15 +101,18 @@ func _release_all() -> void:
 
 func cast() -> bool:
 	if level == 0 or _active or not game.variety._battle_active(): return false
+	var stats := COMBOS.combat_stats("blood_vortex", _stats, game.equipment_panel.crimson_active)
 	var origin: Vector2 = game.player.global_position
-	var target := CombatTargets.nearest(origin, LENGTH * LENGTH)
+	var target := CombatTargets.nearest(origin, float(stats.range) ** 2)
 	if not is_instance_valid(target) or not game.is_ancestor_of(target): return false
 	_heading = origin.direction_to(target.global_position)
 	if _heading.is_zero_approx(): _heading = game.player.last_move_direction.normalized()
 	if _heading.is_zero_approx(): _heading = Vector2.RIGHT
-	global_position = origin + _heading * (LENGTH * 0.5)
+	global_position = origin + _heading * (stats.range * 0.5)
+	_query.shape = _large_funnel if game.equipment_panel.crimson_active else _normal_funnel
 	_query.transform = Transform2D(_heading.angle(), global_position)
-	_damage = _stats.damage
+	_damage = stats.damage
+	_recovery = stats.recovery
 	_beats = int(_stats.beats)
 	_interval = _stats.interval
 	_duration = _stats.duration
@@ -109,7 +120,7 @@ func cast() -> bool:
 	_age = 0.0
 	_scan_left = 0.0
 	_active = true
-	_fx.begin(global_position, _heading, LENGTH, MOUTH_RADIUS)
+	_fx.begin(global_position, _heading, stats.range, stats.radius)
 	RunDiagnostics.mark_transition("blood_vortex_start")
 	return true
 
@@ -205,7 +216,7 @@ func _physics_process(delta: float) -> void:
 		_next_beat += 1
 		if final:
 			_active = false
-			_cooldown = RECOVERY
+			_cooldown = _recovery
 			_release_all()
 			_fx.finish()
 			if _pulse_sound.playing: _pulse_sound.stop()

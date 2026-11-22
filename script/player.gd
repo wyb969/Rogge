@@ -416,7 +416,8 @@ func apply_rest_move_speed(bonus: float) -> void :
 
 
 func dash_base_cooldown() -> float:
-	if is_instance_valid(ghost_dash) and ghost_dash.level > 0: return ghost_dash._stats.interval
+	if is_instance_valid(ghost_dash) and ghost_dash.level > 0:
+		return ghost_dash._stats.interval * (ghost_dash.COMBOS.CRIMSON_CD if ghost_dash.game.equipment_panel.crimson_active else 1.0)
 	return DASH_COOLDOWN
 
 func apply_rest_cooldown(scale: float) -> float:
@@ -659,7 +660,7 @@ func _start_dash(input_direction: Vector2) -> void :
 	if is_instance_valid(ghost_dash) and ghost_dash.level > 0:
 		ghost_dash.begin_pass()
 		_ghost_dash_left = DASH_DURATION
-		_ghost_dash_speed = float(ghost_dash._stats.range) / DASH_DURATION
+		_ghost_dash_speed = ghost_dash.pass_distance / DASH_DURATION
 		velocity = dash_direction * _ghost_dash_speed
 	else:
 		velocity = dash_direction * DASH_SPEED

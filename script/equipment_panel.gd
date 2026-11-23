@@ -191,7 +191,7 @@ func _fit_quality_equipment() -> void:
 	var factor := minf(1.0, budget / maxf(1.0, grid_size.y+status_rows*20))
 	var width := maxf(grid_size.x, 128.0 if status_rows else 0.0)
 	scale = Vector2.ONE * factor * ui
-	global_position = Vector2(vp.x-width*scale.x-8*ui, top*ui)
+	global_position = Vector2(8*ui, top*ui)
 	slot_list.position = Vector2(width-grid_size.x, 0)
 	slot_list.size = grid_size
 	_arsenal_label.position = Vector2(0, grid_size.y)
@@ -239,52 +239,20 @@ func refresh_quality(id: String) -> void:
 	var inventory: Variant = _quality_inventory()
 	if inventory == null: return
 	var slot: Dictionary = _slots[id]
-	if not slot.has("counters"):
-		_add_quality_counters(slot)
-	var counts: Array = inventory.counts(id)
-	var lines := PackedStringArray([L10n.text(EQUIP_DEFS[id].title)])
-	for tier in QUALITY.COLORS.size():
-		var number: Label = slot.counters[tier]
-		number.text = str(counts[tier])
-		var font := number.get_theme_font("font")
-		var width := font.get_string_size(number.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11).x
-		number.add_theme_font_size_override("font_size", mini(11, maxi(6, floori(11.0 * 16.0 / maxf(width, 1.0)))))
-		number.size = Vector2(18,18)
-		lines.append("%s × %d" % [QUALITY.tier_name(tier), counts[tier]])
-	var hint := COMBOS.hint_for(id)
-	if not hint.is_empty(): lines.append(hint)
-	slot.icon_wrap.tooltip_text = "\n".join(lines)
-
-func _add_quality_counters(slot: Dictionary) -> void:
 	slot.root.custom_minimum_size = QUALITY_FOOTPRINT
-	slot.level_label.hide()
-	slot.icon_wrap.position = Vector2(2, 1)
-	slot.icon_wrap.size = Vector2(26, 26)
-	slot.icon_wrap.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-	slot.icon.custom_minimum_size = Vector2(24, 24)
-	slot.icon.size = Vector2(24, 24)
-	slot.icon.position = Vector2(1, 1)
-	var counters: Array[Label] = []
-	for tier in QUALITY.COLORS.size():
-		var number := Label.new()
-		var style := StyleBoxFlat.new()
-		style.bg_color = QUALITY.COLORS[tier].darkened(0.69)
-		style.border_color = QUALITY.COLORS[tier]
-		style.set_border_width_all(1)
-		for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
-			style.set_content_margin(side, 0)
-		number.clip_text = true
-		number.add_theme_stylebox_override("normal", style)
-		number.add_theme_color_override("font_color", Color.WHITE)
-		number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		number.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		number.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		UiFonts.apply_to_label(number, 11, true)
-		number.position = Vector2(30+tier*20, 5)
-		number.size = Vector2(18, 18)
-		slot.root.add_child(number)
-		counters.append(number)
-	slot.counters = counters
+	slot.icon_wrap.position = Vector2(2,1)
+	slot.icon_wrap.size = Vector2(26,26)
+	slot.icon.custom_minimum_size = Vector2(24,24)
+	slot.icon.size = Vector2(24,24)
+	slot.icon.position = Vector2(1,1)
+	var level := get_level(id)
+	var label: Label = slot.level_label
+	label.position = Vector2(31,1)
+	label.size = QUALITY_FOOTPRINT - Vector2(32,2)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	label.text = "Lv.%d" % level
+	label.add_theme_color_override("font_color",QUALITY.COLORS[QUALITY.tier_for(level)])
+	slot.icon_wrap.tooltip_text = L10n.text(EQUIP_DEFS[id].title) + "  " + label.text + "\n" + COMBOS.hint_for(id)
 
 func get_level(upgrade_id: String) -> int:
 	if _slots.has(upgrade_id):

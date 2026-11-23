@@ -1,8 +1,19 @@
 extends RefCounted
-## Project a collection of physical cards onto the existing combat controllers.
-## Count controls targeting, timing and number of bodies. The strongest copy
-## supplies the original unlock value and each remaining copy its rank increment.
-## This keeps legacy first/rank-two tuning and never weakens a skill on acquisition.
+## One skill rank drives both the live controller and its forge preview.
+const AWAKEN := {
+	"pickup_up":"冲刺吸引附近的经验币。", "speed_up":"冲刺冷却缩短 25%。",
+	"regen_up":"生命低于一半时触发双重回复。", "shield_up":"护盾完全挡住攻击时立即刷新冲刺。",
+	"lifesteal_up":"生命低于一半时，吸血额外恢复已损生命的 2%。",
+	"monster_necklace":"拾取治疗球时立即刷新冲刺。", "critical_glasses":"每第五次直接暴击造成双倍暴击伤害。",
+	"left_fist":"左拳反侧攻击也获得四分之一拳伤加成。","right_fist":"右拳反侧攻击也获得四分之一拳伤加成。",
+	"freeze_up":"寒冰触发时完全定身。","ice_wave":"末峰击碎冰壳，十二级解锁碎冰溅射。",
+	"light_thorn":"鞭梢甩出范围鞭花，十二级解锁回抽二次命中。"
+}
+const ORANGE_ECHO := "冲刺时释放橙色震波，每项觉醒武器贡献自身等级两倍的伤害。"
+
+static func orange_text(id: String) -> String:
+	return AWAKEN.get(id, ORANGE_ECHO)
+
 const PASSIVES := {
 	"regen_up": "regen_level", "shield_up": "shield_level", "lifesteal_up": "lifesteal_level",
 	"monster_necklace": "monster_necklace_level", "critical_glasses": "critical_glasses_level",
@@ -43,7 +54,7 @@ static func _profile(g: Node, id: String, count: int, power: float, peak: float)
 		second = multi.stats_for(id, 2)
 	elif SINGLE_SPELLS.has(id):
 		var controller: Node = g.get(SINGLE_SPELLS[id])
-		stats = controller.stats_for(count)
+		stats = controller.stats_for(mini(count,12))
 		first = controller.stats_for(1)
 		second = controller.stats_for(2)
 	elif id == "wind_emblem" or id == "echo_ember":
@@ -54,6 +65,14 @@ static func _profile(g: Node, id: String, count: int, power: float, peak: float)
 	if not stats.is_empty():
 		var key := "dps" if stats.has("dps") else "damage"
 		stats[key] = weighted(first[key], second[key] - first[key], power, peak)
+		var milestone := mini(6, floori(count / 3.0))
+		for field in ["range","radius"]:
+			if stats.has(field) and id not in ["micro_cell","ice_wave","wind_emblem","echo_ember"]:
+				stats[field] *= 1.0 + 0.09 * milestone
+		if id == "ice_wave":
+			stats.freeze_chance = minf(0.8, float(stats.freeze_chance) + 0.02 * maxi(0,count-5))
+			stats.range += mini(4,maxi(0,count-5))*10
+			stats.radius += 2.0*milestone
 		if id == "lightning_ring": stats.bolts = mini(12, stats.bolts)
 		return stats
 	match id:
@@ -98,6 +117,13 @@ static func _profile(g: Node, id: String, count: int, power: float, peak: float)
 static func apply(g: Node, id: String, old_count: int, count: int, old_power: float, power: float, peak := -1.0) -> void:
 	var p: Node = g.player
 	var data := _profile(g, id, count, power, peak)
+	if AWAKEN.has(id):
+		if count >= 9: p.awakened[id] = true
+		else: p.awakened.erase(id)
+		if id == "critical_glasses" and count < 9: p.awakened_crits = 0
+	if not AWAKEN.has(id):
+		if count >= 9: p.orange_weapons[id] = count
+		else: p.orange_weapons.erase(id)
 	if PASSIVES.has(id):
 		p.set(PASSIVES[id],count)
 		if count > 0: p.forged_passives[id] = data

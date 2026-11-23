@@ -10,6 +10,7 @@ var _dragged := false
 const CARD_SIZE: = Vector2(190, 307.42)
 const QUALITY := preload("res://script/card_quality_style.gd")
 var stats_label: RichTextLabel
+var forge_draft := false
 var rarity_label: Label
 var rarity_color := GamePalette.PLAYER_DAMAGE_WHITE
 
@@ -70,12 +71,14 @@ func _configure_labels() -> void :
 
 func setup(data: Dictionary):
 	upgrade_id = data["id"]
+	forge_draft = data.has("tier")
 	var tier := int(data.get("tier", -1))
 	rarity_color = QUALITY.COLORS[clampi(tier, 0, 3)] if tier >= 0 else GamePalette.PLAYER_DAMAGE_WHITE
 	rarity_label.visible = tier >= 0
 	if tier >= 0:
 		rarity_label.text = QUALITY.tier_name(tier)
 		rarity_label.add_theme_color_override("font_color", rarity_color)
+	title_label.add_theme_color_override("font_color", rarity_color)
 	stats_label.add_theme_color_override("default_color", rarity_color)
 
 	title_label.tooltip_text = L10n.text(str(data.get("title", "")))
@@ -103,7 +106,7 @@ func set_display_size(dimensions: Vector2, ui: float, row_layout: bool) -> void:
 	var icon_size := (40.0 if narrow else 72.0)*ui
 	var title_height := (19.0 if narrow else 24.0)*ui
 	var stat_height := 22.0 * ui
-	if rarity_label.visible:
+	if forge_draft:
 		# The forge comparison can span multiple lines on a three-column phone draft.
 		var measure := UiFonts.ui_bold().get_multiline_string_size(stats_label.get_parsed_text(), HORIZONTAL_ALIGNMENT_CENTER, text_width, int((9 if narrow else 12) * ui))
 		stat_height = clampf(measure.y + 8 * ui, 30 * ui, 72 * ui)

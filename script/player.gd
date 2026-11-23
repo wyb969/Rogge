@@ -122,6 +122,9 @@ const SHIELD_IDLE_STEP: = 0.2
 const SHIELD_DECAY_BASE: = 4.0
 const SHIELD_DECAY_STEP: = 0.6
 const SHIELD_DECAY_MIN: = 1.5
+var orange_weapons := {}
+var awakened := {}
+var awakened_crits := 0
 var shield_level: int = 0
 var shield: float = 0.0
 var _shield_idle: float = 0.0
@@ -231,7 +234,11 @@ func add_critical_glasses_level() -> void:
 func roll_critical_multiplier(hit: Dictionary) -> float:
 	if forged_passives.has("critical_glasses"):
 		var stats: Dictionary = forged_passives.critical_glasses
-		return CRITICAL_GLASSES.roll_chance(stats.chance, stats.crit, hit, _critical_rng)
+		var mult := CRITICAL_GLASSES.roll_chance(stats.chance, stats.crit, hit, _critical_rng)
+		if mult > 1 and awakened.has("critical_glasses"):
+			awakened_crits = (awakened_crits + 1) % 5
+			if awakened_crits == 0: mult *= 2.0
+		return mult
 	return CRITICAL_GLASSES.roll_multiplier(critical_glasses_level, hit, _critical_rng)
 
 func reset_critical_glasses() -> void:
@@ -331,7 +338,7 @@ func _tick_regen(delta: float) -> void :
 	var ticks: = 0
 	while _regen_acc >= interval and ticks < 3 and player_health < max_player_health:
 		_regen_acc -= interval
-		heal(regen_amount())
+		heal(regen_amount() * (2 if awakened.has("regen_up") and player_health < max_player_health * 0.5 else 1))
 		ticks += 1
 
 
@@ -341,7 +348,8 @@ func notify_damage_dealt(dealt: float) -> void :
 		return
 	if forged_passives.has("lifesteal_up"):
 		var stats: Dictionary = forged_passives.lifesteal_up
-		heal(minf(stats.cap, stats.flat + dealt * stats.percent))
+		var bonus: float = (max_player_health-player_health)*0.02 if awakened.has("lifesteal_up") and player_health < max_player_health*0.5 else 0.0
+		heal(minf(stats.cap, stats.flat + dealt * stats.percent) + bonus)
 		return
 	var percent: = lifesteal_percent_for(lifesteal_level)
 	var cap: = lifesteal_cap_for(lifesteal_level)
@@ -416,9 +424,10 @@ func apply_rest_move_speed(bonus: float) -> void :
 
 
 func dash_base_cooldown() -> float:
+	var scale_factor := 0.75 if awakened.has("speed_up") else 1.0
 	if is_instance_valid(ghost_dash) and ghost_dash.level > 0:
-		return ghost_dash._stats.interval * (ghost_dash.COMBOS.CRIMSON_CD if ghost_dash.game.equipment_panel.crimson_active else 1.0)
-	return DASH_COOLDOWN
+		return scale_factor * ghost_dash._stats.interval * (ghost_dash.COMBOS.CRIMSON_CD if ghost_dash.game.equipment_panel.crimson_active else 1.0)
+	return DASH_COOLDOWN * scale_factor
 
 func apply_rest_cooldown(scale: float) -> float:
 	cooldown_scale = rest_cooldown_for(scale)
@@ -457,12 +466,16 @@ func side_multiplier_for(target_on_left: bool, left_level: int, right_level: int
 	if left_level > 0:
 		if target_on_left:
 			mult *= 1.0 + _fist_bonus("left_fist",left_level)
+		elif awakened.has("left_fist"):
+			mult *= 1.0 + 0.25 * _fist_bonus("left_fist",left_level)
 		elif not both:
 			mult *= 1.0 - get_fist_penalty(left_level)
 
 	if right_level > 0:
 		if not target_on_left:
 			mult *= 1.0 + _fist_bonus("right_fist",right_level)
+		elif awakened.has("right_fist"):
+			mult *= 1.0 + 0.25 * _fist_bonus("right_fist",right_level)
 		elif not both:
 			mult *= 1.0 - get_fist_penalty(right_level)
 
@@ -674,7 +687,23 @@ func _start_dash(input_direction: Vector2) -> void :
 	if feedback != null:
 		feedback.dash(global_position, dash_direction)
 		feedback.ghost(animated_sprite_2d)
+	if awakened.has("pickup_up"):
+		var game := get_parent()
+		for coin in game._xp_actors:
+			if is_instance_valid(coin) and not coin.start_pick and not coin.is_collecting and global_position.distance_squared_to(coin.global_position) <= 230.0*230.0:
+				coin.player_body = self
+				coin.start_pickup()
 	dash_started.emit(global_position)
+	if not orange_weapons.is_empty():
+		var game := get_parent()
+		if game.variety._battle_active():
+			var pulse_damage := 0
+			for rank: int in orange_weapons.values(): pulse_damage += 2 * rank
+			game.combat_feedback.orange_shockwave(global_position)
+			for actor in CombatTargets.in_radius(global_position, 80.0 * 80.0, game):
+				if not game.variety._battle_active(): break
+				if actor.has_method("vulnerable") and not actor.vulnerable(): continue
+				actor.apply_hit({"damage":pulse_damage,"source":self,"hitstop":false,"budget_impact":true,"from_status":true})
 
 func _sync_dash_hurt_area() -> void :
 	if hurt_area:
@@ -766,6 +795,7 @@ func receive_attack(amount: float, _source: Node = null) -> void :
 	var absorbed: = minf(shield, taken)
 	shield -= absorbed
 	var hp_loss: = taken - absorbed
+	if absorbed > 0 and hp_loss <= 0 and awakened.has("shield_up"): can_dash = true
 	var feedback: = JUICE.find(self)
 	if feedback != null:
 		var direction: = Vector2.ZERO

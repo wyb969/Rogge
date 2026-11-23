@@ -24,19 +24,27 @@ func _run() -> void:
 	game.hand_weapon.start_unequipped()
 	game.circle_weapon.start_unequipped()
 	for id: String in game.equipment_panel.EQUIP_DEFS:
-		var previous := 0.0
-		for power: float in [0.8, 1.2, 2.0, 4.0, 4.5]:
-			var old_count := 0 if previous == 0.0 else 1
-			stats.apply(game, id, old_count, 1, previous, power, power)
-			var summary: String = stats.describe(game, id, 1, power, power)
-			expect(summary != "—" and not summary.is_empty(), "%s lacks its power preview at %s" % [id, power])
-			previous = power
-		stats.apply(game, id, 1, 2, previous, previous + 0.8, previous)
-		stats.apply(game, id, 2, 1, previous + 0.8, 0.8, 0.8)
-		stats.apply(game, id, 1, 0, 0.8, 0.0, 0.0)
-		expect(stats.describe(game, id, 0, 0.0, 0.0) == "—", "last copy of %s still has a preview" % id)
-
+		var previous := 0
+		var inventory = game.forge
+		for rank: int in [1,2,3,6,8,9,12,21]:
+			stats.apply(game,id,previous,rank,inventory.power_for(previous),inventory.power_for(rank),1.0)
+			expect(stats.describe(game,id,rank,inventory.power_for(rank),1.0) != "—", "%s lacks preview at level %d" % [id,rank])
+			expect((game.player.awakened.has(id) or game.player.orange_weapons.has(id)) == (rank >= 9), "orange mechanic threshold for "+id)
+			previous = rank
+		stats.apply(game,id,previous,0,inventory.power_for(previous),0.0,0.0)
+		expect(not game.player.awakened.has(id) and not game.player.orange_weapons.has(id), "sacrifice removes orange mechanic for "+id)
 	var player: Node = game.player
+	var base_cd: float = player.dash_base_cooldown()
+	stats.apply(game,"speed_up",0,9,0.0,game.forge.power_for(9),1.0)
+	expect(is_equal_approx(player.dash_base_cooldown(),base_cd*0.75), "awakened movement changes the live dash cooldown")
+	stats.apply(game,"speed_up",9,0,game.forge.power_for(9),0,0)
+	expect(is_equal_approx(player.dash_base_cooldown(),base_cd), "sacrifice restores the original dash cooldown")
+	stats.apply(game,"critical_glasses",0,9,0,game.forge.power_for(9),1.0)
+	var normal_crit: float = player.forged_passives.critical_glasses.crit
+	for i in 5:
+		expect(player.roll_critical_multiplier({"damage":10,"from_status":true}) == 1.0, "periodic damage does not advance the fifth critical hit")
+		expect(is_equal_approx(player.roll_critical_multiplier({"damage":10}), normal_crit*(2 if i==4 else 1)), "every fifth direct critical hit doubles")
+	stats.apply(game,"critical_glasses",9,0,game.forge.power_for(9),0,0)
 	var speed: float = player.SPEED
 	var radius: float = player.pickup_range
 	stats.apply(game, "speed_up", 0, 1, 0.0, 0.8, 0.8)

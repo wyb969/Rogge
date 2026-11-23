@@ -53,7 +53,7 @@ func _run() -> void:
 	var main_uid: int = forge.cards.filter(func(c): return c.id == "draw_slash")[0].uid
 	var ghost_uid: int = forge.cards.filter(func(c): return c.id == "ghost_dash")[0].uid
 	var warning := L10n.text("绯刃四式将失效")
-	check(warning not in forge.preview(main_uid,[extra]).warnings, "sacrificing a duplicate preserves set")
+	check(panel.get_level("ice_wave") == 2 and warning in forge.preview(main_uid,[extra]).warnings, "the second draw raises the same skill and sacrificing it breaks the set")
 	check(warning in forge.preview(main_uid,[ghost_uid]).warnings, "last-copy sacrifice warns")
 	check(forge.attempt(main_uid,[ghost_uid]).ok and not panel.crimson_active, "sacrifice disables bonus")
 	g.blood_vortex.clear_combat_effects()
@@ -62,5 +62,5 @@ func _run() -> void:
 	check(panel.crimson_active, "recollecting the missing skill restores the set")
 	for id in members: check(panel.get_level(id) > 0, "complete inventory")
 	for e in errors: push_error(e)
-	if errors.is_empty(): print("CRIMSON SET OK: four live casts, red reveal, quality, duplicate and last-copy sacrifice, reactivation")
+	if errors.is_empty(): print("CRIMSON SET OK: four live casts, red reveal, skill ranks and whole-skill sacrifice, reactivation")
 	quit(0 if errors.is_empty() else 1)

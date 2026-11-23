@@ -88,6 +88,7 @@ func collect() -> float:
 	var feedback: = preload("res://script/combat_feedback.gd").find(self)
 	if feedback != null: feedback.pickup(global_position, true)
 	var gained: float = player.heal(heal_amount)
+	if player.awakened.has("monster_necklace"): player.can_dash = true
 	AudioManager.play_healing_pickup()
 	remove_from_group("healing_orb")
 	queue_free()

@@ -8,3 +8,6 @@ static func tier_name(tier: int) -> String:
 	if tier > 3:
 		return name + " +" + str(tier - 3)
 	return name
+
+static func tier_for(level: int) -> int:
+	return mini(3, floori(level / 3.0))

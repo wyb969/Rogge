@@ -146,6 +146,11 @@ func _ring(at: Vector2, tint: Color, radius: float, life: float) -> void :
 	ring.left = life
 	rings.append(ring)
 
+func orange_shockwave(at: Vector2) -> void:
+	if not is_processing(): return
+	_ring(at, Color("#ffaf52"), 80, 0.22)
+	if _admit(): _burst(at, Vector2.ZERO, Color("#ffd88a"), 5, 120)
+
 func spray(at: Vector2, direction: Vector2, tint: Color, count: int, speed: float) -> void :
 	if _admit(): _burst(at, direction, tint, count, speed)
 

@@ -356,14 +356,15 @@ func _launch_run(mode: StringName, opening: Dictionary = {}) -> void :
 	if mode == &"":
 		game._on_upgrade_selected(HEROES.START_CARDS[hero_index],0)
 		for id in opening.get("cards", []):
-			game._on_upgrade_selected(id, int(opening.get("tiers",{}).get(id,0)))
+			game._on_upgrade_selected(id)
 		if opening.get("backup", "") != "":
-			game._on_upgrade_selected(opening.backup,int(opening.get("tiers",{}).get(opening.backup,0)))
+			game._on_upgrade_selected(opening.backup)
 	match mode:
 		&"forge":
 			game.spawner.stop_run()
-			for entry in [["axe_up",2],["axe_up",0],["gun_up",1],["drone_up",0],["bomb",0],["speed_up",1],["regen_up",0],["pickup_up",0],["critical_glasses",3]]:
-				game._on_upgrade_selected(entry[0],entry[1])
+			var practice_levels := {"axe_up":3,"gun_up":1,"drone_up":1,"bomb":1,"speed_up":2,"regen_up":1,"pickup_up":1,"ice_wave":6,"critical_glasses":8}
+			for id: String in practice_levels:
+				for i in int(practice_levels[id]): game._on_upgrade_selected(id)
 			game.forge.materials = game.forge.furnace_cost()
 			game.forge.earn(180)
 			game.forge.seal_stage()

@@ -330,7 +330,7 @@ func available_upgrades() -> Array:
 	var game: = _get_game()
 	var result: Array = []
 	for entry in upgrade_pool:
-		if game == null or game.equipment_panel.get_level(str(entry.id)) < int(entry.get("max_level", 2147483647)): result.append(entry)
+		if game == null or game.forge.enabled or game.equipment_panel.get_level(str(entry.id)) < int(entry.get("max_level", 2147483647)): result.append(entry)
 	return result
 
 
@@ -342,7 +342,8 @@ func _build_card_data(data: Dictionary) -> Dictionary:
 		var tier: int = pending_quality[id]
 		result.tier = tier
 		result.title = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title))
-		result.short_desc = CodexData.quality_summary(id)
+		result.short_desc = CodexData.summary(id)
+		if game.equipment_panel.get_level(id) == 8: result.short_desc = CodexData.quality_summary(id)
 		result.draft_line = game.forge.card_preview(id, tier)
 		result.desc = result.draft_line
 		return result

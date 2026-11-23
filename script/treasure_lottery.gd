@@ -166,13 +166,10 @@ func _fit() -> void :
 
 func open_lottery(pool: Array, equipment: Control) -> void :
 	bonus_levels = bonus_for_roll(randi_range(0, 99))
-	_pool = pool.filter( func(card: Dictionary): return equipment.get_level(str(card.id)) < int(card.get("max_level", 2147483647)))
+	_pool = pool.duplicate()
 	if _pool.is_empty(): return
-	var eligible: = _pool.filter( func(card: Dictionary): return equipment.get_level(str(card.id)) + bonus_levels <= int(card.get("max_level", 2147483647)))
-	var choices: Array = eligible if not eligible.is_empty() else _pool
-	reward = choices[randi() % choices.size()].duplicate(true)
+	reward = _pool.pick_random().duplicate(true)
 	old_level = equipment.get_level(str(reward.id))
-	bonus_levels = mini(bonus_levels, int(reward.get("max_level", 2147483647)) - old_level)
 	spinning = false
 	revealed = false
 	claimed = false
@@ -245,7 +242,7 @@ func _reveal() -> void :
 	_burst.strength = bonus_levels
 	_title.text = ["", L10n.text("小小幸运"), L10n.text("幸运大奖"), L10n.text("超级大奖！")][bonus_levels]
 	var card_name: = L10n.text(str(reward.title)).replace(L10n.text(" +1 级"), "")
-	_result.text = L10n.text("%s  +%d 级") % [card_name, bonus_levels]
+	_result.text = L10n.text("%s ×%d（每张 +1 级）") % [card_name, bonus_levels]
 	_result.add_theme_color_override("font_color", Color(1.0, 0.78, 0.25))
 	_detail.text = L10n.text("Lv.%d  →  Lv.%d\n同一张卡连续升级 %d 次，领取后生效") % [old_level, old_level + bonus_levels, bonus_levels]
 	_button.text = L10n.text("领取奖励 · 继续战斗")
@@ -257,5 +254,5 @@ func _reveal() -> void :
 func refresh_language() -> void:
 	if not revealed or reward.is_empty(): return
 	var card_name:=L10n.text(str(reward.title)).replace(L10n.text(" +1 级"),"")
-	_result.text=L10n.text("%s  +%d 级")%[card_name,bonus_levels]
+	_result.text=L10n.text("%s ×%d（每张 +1 级）")%[card_name,bonus_levels]
 	_detail.text=L10n.text("Lv.%d  →  Lv.%d\n同一张卡连续升级 %d 次，领取后生效")%[old_level,old_level+bonus_levels,bonus_levels]

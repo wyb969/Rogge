@@ -30,6 +30,8 @@ var _cast_index := 0
 var _reach := 0.0
 var _radius := 0.0
 var _damage := 0.0
+var _finish_hits := {}
+var _splash_used := false
 var _chance := 0.0
 var _hit := {}
 var _shells := {}
@@ -65,6 +67,8 @@ func clear_combat_effects() -> void:
 		if is_instance_valid(actor): actor.blade_ice = null
 	_shells.clear()
 	_hit.clear()
+	_finish_hits.clear()
+	_splash_used = false
 	_bursts.clear()
 	_burst_slot = 0
 	_count = 0
@@ -95,6 +99,8 @@ func cast() -> bool:
 	_contact_steps.fill(0)
 	_start = _clock
 	_hit.clear()
+	_finish_hits.clear()
+	_splash_used = false
 	_cooldown = stats.interval
 	return true
 
@@ -125,7 +131,7 @@ func _plate_center(index: int, local_age: float) -> Vector2:
 	var side := _radius * (0.46 + 0.055 * (index % 3)) * _sway(index, local_age)
 	return _origin + _heading * along + _heading.orthogonal() * side
 
-func _erupt(start: Vector2, finish: Vector2) -> void:
+func _erupt(start: Vector2, finish: Vector2, finisher := false) -> void:
 	# Narrow ground sweep of the moving base, including the initial circular contact.
 	_shape.height = 2.0 * _radius + start.distance_to(finish)
 	var delta_pos := finish - start
@@ -139,12 +145,21 @@ func _erupt(start: Vector2, finish: Vector2) -> void:
 			excluded.append(contact.rid)
 			if not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_in_group("EnemyGroup"): continue
 			var id := actor.get_instance_id()
-			if _hit.has(id) or not game.is_ancestor_of(actor) or not actor.has_method("apply_hit"): continue
+			if _hit.has(id) and not (finisher and _shells.has(id) and not _finish_hits.has(id)): continue
+			if not game.is_ancestor_of(actor) or not actor.has_method("apply_hit"): continue
 			if actor.has_method("vulnerable") and not actor.vulnerable(): continue
 			_hit[id] = true
 			var had_shell := _shells.has(id)
+			if finisher: _finish_hits[id] = true
+			var point := actor.global_position
 			actor.apply_hit({"hitstop": false, "budget_impact": true, "damage": _damage, "direction": _heading, "source": self})
 			if _count == 0: return # A lethal hit can synchronously end the encounter.
+			if finisher and had_shell and level >= 12 and not _splash_used:
+				_splash_used = true
+				for other in CombatTargets.in_radius(point, _radius*_radius*4.0, game):
+					if other == actor or (other.has_method("vulnerable") and not other.vulnerable()): continue
+					other.apply_hit({"damage":_damage*0.55,"from_status":true,"source":self,"hitstop":false})
+					if _count == 0: return
 			if had_shell or not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_in_group("EnemyGroup"): continue
 			if actor.has_method("encase_in_blade_ice") and _rng.randf() < _chance:
 				_freeze(actor)
@@ -189,7 +204,7 @@ func _physics_process(delta: float) -> void:
 			while step <= LAST_CONTACT and local_age >= RISE_TIME + step * CONTACT_STEP:
 				var sample_age := RISE_TIME + step * CONTACT_STEP
 				var prior_age := maxf(RISE_TIME, sample_age - CONTACT_STEP)
-				_erupt(_plate_center(i, prior_age), _plate_center(i, sample_age))
+				_erupt(_plate_center(i, prior_age), _plate_center(i, sample_age), level >= 9 and i == _count-1)
 				if _count == 0: return
 				step += 1
 			_contact_steps[i] = step
@@ -224,8 +239,9 @@ func _draw() -> void:
 		var row := (floori(i * 0.5) + front + _cast_index) % 3
 		var lift := pressure * (0.33 if front else 0.18)
 		var recede := smoothstep(0.20, 0.41, age)
+		var crown := 1.30 if level >= 6 and i == _count-1 else 1.0
 		var width := _radius * (1.94 - 0.12 * pressure) * (1.0 - 0.20 * recede)
-		var height := _radius * (2.12 + 0.22 * row + lift) * (1.0 - 0.50 * recede)
+		var height := crown * _radius * (2.12 + 0.22 * row + lift) * (1.0 - 0.50 * recede)
 		# A tall point reacts slightly after its foot slips. This screen-space
 		# lean also reads when casting straight up or down the arena.
 		var tilt := 0.37 * _sway(i, maxf(age - 0.040, 0.0))

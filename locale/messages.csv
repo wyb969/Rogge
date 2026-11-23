@@ -1772,3 +1772,26 @@ Meeseeks 盒子,Meeseeks Box,Meeseeks 盒子
 附近闲置的经验金币会变成滚动弹珠，沿途造成伤害，落地后仍可拾取。没有金币时使用石子。升级提高直径与伤害。,Roll a nearby loose XP coin through enemies as a giant marble. The coin remains collectible. A pebble is used if no coin is available. Upgrades improve marble size and damage.,附近闲置的经验金币会变成滚动弹珠，沿途造成伤害，落地后仍可拾取。没有金币时使用石子。升级提高直径与伤害。
 弹珠 %s伤,Big %s DMG,弹珠 %s伤
 全中！,STRIKE!,全中！
+将失去最后一种攻击技能，仍可利用地形击杀敌人。,Your last attack skill will be consumed. Terrain can still kill enemies.,将失去最后一种攻击技能，仍可利用地形击杀敌人。
+额外 +1,Bonus +1,额外 +1
+损耗 1 级,Lose 1 level,损耗 1 级
+完整继承,Full transfer,完整继承
+等级不变,Level unchanged,等级不变
+领取六张白卡，各为对应技能增加一级。,Receive six white cards. Each adds one skill level.,领取六张白卡，各为对应技能增加一级。
+锻造预览,Forge preview,锻造预览
+装备评分 %d,Gear score %d,装备评分 %d
+副卡技能将全部消耗,Offering skills will be removed,副卡技能将全部消耗
+冲刺吸引附近的经验币。,Dash to pull nearby XP coins toward you.,冲刺吸引附近的经验币。
+冲刺冷却缩短 25%。,Dash cooldown is 25% shorter.,冲刺冷却缩短 25%。
+生命低于一半时触发双重回复。,Regenerate twice as much below half health.,生命低于一半时触发双重回复。
+护盾完全挡住攻击时立即刷新冲刺。,A fully shielded hit refreshes your dash.,护盾完全挡住攻击时立即刷新冲刺。
+生命低于一半时，吸血额外恢复已损生命的 2%。,"Below half health, life steal also restores 2% of missing health.",生命低于一半时，吸血额外恢复已损生命的 2%。
+拾取治疗球时立即刷新冲刺。,Healing orbs refresh your dash.,拾取治疗球时立即刷新冲刺。
+每第五次直接暴击造成双倍暴击伤害。,Every fifth direct critical strike deals double critical damage.,每第五次直接暴击造成双倍暴击伤害。
+左拳反侧攻击也获得四分之一拳伤加成。,Attacks on the opposite side gain a quarter of the left fist bonus.,左拳反侧攻击也获得四分之一拳伤加成。
+右拳反侧攻击也获得四分之一拳伤加成。,Attacks on the opposite side gain a quarter of the right fist bonus.,右拳反侧攻击也获得四分之一拳伤加成。
+寒冰触发时完全定身。,Frost roots its target in place.,寒冰触发时完全定身。
+末峰击碎冰壳，十二级解锁碎冰溅射。,The final peak shatters ice shells. Shards deal splash damage at Lv.12.,末峰击碎冰壳，十二级解锁碎冰溅射。
+鞭梢甩出范围鞭花，十二级解锁回抽二次命中。,The whip tip cracks in an area. The return swing can hit again at Lv.12.,鞭梢甩出范围鞭花，十二级解锁回抽二次命中。
+冲刺时释放橙色震波，每项觉醒武器贡献自身等级两倍的伤害。,Dashing releases a shockwave. Each contributing weapon adds twice its level in damage.,冲刺时释放橙色震波，每项觉醒武器贡献自身等级两倍的伤害。
+%s ×%d（每张 +1 级）,%s ×%d (+1 level each),%s ×%d（每张 +1 级）

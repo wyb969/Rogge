@@ -230,7 +230,7 @@ func _build() -> void:
 		var supply_rect := Rect2(128,3,150,42) if portrait else Rect2(445,3,154,42)
 		supply_button = _btn(board,supply_rect,L10n.text("+%d 金币 · +%d 卡") % [game.forge.PRACTICE_GOLD,game.forge.PRACTICE_CARDS.size()],_refill_practice)
 		UiFonts.apply_to_button(supply_button,15)
-		supply_button.tooltip_text = L10n.text("练习补给：青、紫、粉卡各两张，可重复领取。")
+		supply_button.tooltip_text = L10n.text("领取六张白卡，各为对应技能增加一级。")
 	var left := _panel(board, Rect2(10,85,376,166) if portrait else Rect2(12,54,457,198))
 	var art_width := 97 if portrait else 149
 	hearth = _image(left, Rect2(2,2,art_width,left.size.y-4), HEARTH)
@@ -242,7 +242,7 @@ func _build() -> void:
 	for i in 3:
 		_build_slot(left, Rect2(sx + i * sw, 15, sw-4, left.size.y-29), i)
 	var result := _panel(board, Rect2(10,258,376,166) if portrait else Rect2(478,54,410,198))
-	preview_heading = _label(result, Rect2(12,5,160,24), L10n.text("成功预览"), 15, MUTED)
+	preview_heading = _label(result, Rect2(12,5,160,24), L10n.text("锻造预览"), 15, MUTED)
 	result_plate = _panel(result,Rect2(12,34,82,112),DARK,EDGE)
 	result_foil = _foil(result_plate)
 	result_icon = _image(result, Rect2(11,36,48,48) if portrait else Rect2(13,37,58,58))
@@ -415,11 +415,7 @@ func _resolve(uid: int, offerings: Array) -> void:
 		message = L10n.text(str(result.get("reason","")))
 		_refresh(false)
 		return
-	var tier := _tier_name(result.tier)
-	match str(result.outcome):
-		"up": message = L10n.text("成功！主卡升至 %s。") % tier
-		"down": message = L10n.text("降级。主卡降至 %s。") % tier
-		_: message = L10n.text("保级。主卡仍为 %s。") % tier
+	message = "%s · Lv.%d" % [game.forge.outcome_label(result.outcome, not offerings.is_empty()), result.level]
 	sub_uids = [-1,-1]
 	has_forged = true
 	active_slot = 0
@@ -490,7 +486,7 @@ func _refresh(rebuild_deck: bool) -> void:
 			slot_contents[i].add_theme_color_override("font_color", MUTED)
 		else:
 			slot_icons[i].texture = load(EQUIP[assigned.id].icon)
-			slot_contents[i].text = _tier_name(assigned.tier) + " " + _title(assigned.id)
+			slot_contents[i].text = ("Lv.%d" % assigned.level) + " " + _title(assigned.id)
 			slot_contents[i].add_theme_color_override("font_color", _tier_color(assigned.tier))
 		if i > 0: slot_clear[i-1].visible = not assigned.is_empty()
 	var info: Dictionary = forge.preview(main_uid, _subs()) if not card.is_empty() else {}
@@ -529,13 +525,13 @@ func _fill_preview(card: Dictionary, info: Dictionary) -> void:
 		details_scroll.position.x = 12
 		details_scroll.size.x = pane_width-24
 	outcome_label.add_theme_color_override("font_color", MUTED)
-	preview_heading.text = L10n.text("锻造结果") if result_visible else L10n.text("成功预览")
+	preview_heading.text = L10n.text("锻造结果") if result_visible else L10n.text("锻造预览")
 	action_button.disabled = working or not info.get("valid", false)
 	action_button.text = L10n.text("开始锻造 · %d 金币") % int(info.get("cost",0)) if has_main else L10n.text("开始锻造")
 	if working: action_button.text = L10n.text("锻造中…")
 	if result_visible and has_main:
 		result_icon.texture = load(EQUIP[card.id].icon)
-		result_title.text = _tier_name(card.tier) + "   " + _title(card.id)
+		result_title.text = ("Lv.%d" % card.level) + "   " + _title(card.id)
 		result_title.add_theme_color_override("font_color",_tier_color(card.tier))
 		odds_label.text = ""
 		changes_label.text = message
@@ -552,25 +548,22 @@ func _fill_preview(card: Dictionary, info: Dictionary) -> void:
 		outcome_label.text = message
 		return
 	result_icon.texture = load(EQUIP[card.id].icon)
-	var next_tier: int = int(card.tier) + 1
-	result_title.text = _tier_name(card.tier) + " → " + _tier_name(next_tier) + "   " + _title(card.id)
-	result_title.add_theme_color_override("font_color", _tier_color(next_tier))
-	odds_label.text = L10n.text("升级 %.1f%%   保级 %.1f%%   降级 %.1f%%") % [info.get("up",0),info.get("stay",0),info.get("down",0)]
+	result_title.text = "%s   Lv.%d" % [_title(card.id),card.level]
+	result_title.add_theme_color_override("font_color",_tier_color(card.tier))
+	odds_label.text = "+1 %.1f%%   = %.1f%%   −1 %.1f%%" % [info.get("up",0),info.get("stay",0),info.get("down",0)]
 	changes_label.text = str(info.get("changes", ""))
 	changes_label.tooltip_text = changes_label.text
 	var reason := str(info.get("reason",""))
 	outcome_label.text = L10n.text(reason) if not reason.is_empty() else message
 	var warnings: PackedStringArray = info.get("warnings", PackedStringArray())
 	if reason.is_empty() and not warnings.is_empty():
-		outcome_label.text = " · ".join(warnings)
+		outcome_label.text = warnings[0]
 		outcome_label.add_theme_color_override("font_color", Color("#ffc390"))
 	if outcome_label.text.is_empty():
-		var offered := _subs().size()
-		if offered > 0:
-			outcome_label.text = L10n.text("消耗 %d 张副卡 · 评分 %d → %d") % [offered, info.get("score_before",0), info.get("score_after",0)]
-		else:
-			outcome_label.text = L10n.text("装备评分  %d → %d") % [info.get("score_before",0), info.get("score_after",0)]
-	outcome_label.tooltip_text = outcome_label.text
+		outcome_label.text = L10n.text("装备评分 %d") % info.get("score_before",0)
+		if not _subs().is_empty():
+			outcome_label.text += " · " + L10n.text("副卡技能将全部消耗")
+	outcome_label.tooltip_text = "\n".join(warnings) if not warnings.is_empty() else outcome_label.text
 
 func _build_deck() -> void:
 	inputs.clear_light()
@@ -586,7 +579,7 @@ func _build_deck() -> void:
 		var key := "%s/%d" % [card.id,card.tier]
 		if not by_kind.has(key):
 			by_kind[key] = groups.size()
-			groups.append({"id":card.id,"tier":card.tier,"uids":[]})
+			groups.append({"id":card.id,"tier":card.tier,"level":card.level,"uids":[]})
 		groups[int(by_kind[key])].uids.append(card.uid)
 	var count := groups.size()
 	var card_w := 94.0 if portrait else 102.0
@@ -603,13 +596,13 @@ func _build_deck() -> void:
 		button.mouse_filter = Control.MOUSE_FILTER_PASS
 		button.pivot_offset = Vector2(card_w*0.5,card_h)
 		button.rotation = deg_to_rad(t*4.5)
-		button.tooltip_text = _tier_name(group.tier)+" "+_title(group.id)
+		button.tooltip_text = ("Lv.%d" % group.level)+" "+_title(group.id)
 		# Keep the hit rectangle still while its visible face lifts toward the light.
 		var face := _panel(button,Rect2(Vector2.ZERO,button.size))
 		face.name = "CardFace"
 		face.pivot_offset = button.size * 0.5
 		if group.tier >= 2: _foil_tier(_foil(face),group.tier)
-		var top := _label(face, Rect2(5,1,card_w-10,22), _tier_name(group.tier), 13, _tier_color(group.tier), true)
+		var top := _label(face, Rect2(5,1,card_w-10,22), ("Lv.%d" % group.level), 13, _tier_color(group.tier), true)
 		top.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		if group.uids.size() > 1:
 			var copies := _label(face, Rect2(card_w-40,1,34,22), "×%d"%group.uids.size(), 13)

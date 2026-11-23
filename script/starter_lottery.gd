@@ -2,7 +2,6 @@ extends "res://script/treasure_lottery.gd"
 
 signal loadout_claimed(loadout: Dictionary)
 
-const QUALITY := preload("res://script/card_quality_style.gd")
 const MAX_REROLLS := 3
 const EQUIPMENT := preload("res://script/equipment_panel.gd").EQUIP_DEFS
 const COMBOS := preload("res://script/equipment_combos.gd")
@@ -63,13 +62,7 @@ static func draw_loadout(perk: String, percentile: float) -> Dictionary:
 			if COMBOS.ARSENAL_MEMBERS.all(func(item): return item in owned): continue
 			cards.append(id)
 			if cards.size() == 3: break
-	var tiers := {}
-	var awarded := cards.duplicate()
-	if not backup.is_empty(): awarded.append(backup)
-	for id in awarded:
-		var roll := randi_range(0, 99)
-		tiers[id] = 0 if roll < 80 else (1 if roll < 98 else 2)
-	return {"cards": cards, "group": group, "backup": backup, "perk": perk, "tiers": tiers}
+	return {"cards": cards, "group": group, "backup": backup, "perk": perk, "tiers": {}}
 
 func _ready() -> void:
 	super._ready()
@@ -213,9 +206,8 @@ func _reveal() -> void:
 		if crimson or dimension or loadout.group in ["dragon","pocket"]: _reel_panels[i].modulate = Color.WHITE
 		_stopped_reel(i)
 		names.append(item_name(loadout.cards[i]))
-		var tier := int(loadout.get("tiers", {}).get(loadout.cards[i], 0))
-		tier_labels[i].text = QUALITY.tier_name(tier)
-		tier_labels[i].add_theme_color_override("font_color", QUALITY.COLORS[tier])
+		tier_labels[i].text = "+1"
+		tier_labels[i].add_theme_color_override("font_color",Color.WHITE)
 		tier_labels[i].show()
 	var jackpot: bool = loadout.group != ""
 	if jackpot:
@@ -247,7 +239,7 @@ func _reveal() -> void:
 	if dimension: _detail.text += "\n" + L10n.text(COMBOS.DIMENSION_BONUS)
 	if crimson: _detail.text += "\n" + L10n.text(COMBOS.CRIMSON_BONUS)
 	if loadout.backup != "":
-		_detail.text += "\n" + L10n.text("随行武器：%s") % (QUALITY.tier_name(loadout.get("tiers", {}).get(loadout.backup,0))+" · "+item_name(loadout.backup))
+		_detail.text += "\n" + L10n.text("随行武器：%s") % (item_name(loadout.backup)+" +1")
 	_reroll.show()
 	_reroll.disabled = rerolls_left == 0
 	_button.text = L10n.text("确定并出发")

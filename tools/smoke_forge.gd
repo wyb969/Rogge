@@ -87,7 +87,7 @@ func verify_crafting() -> void:
 	var weapons: Array = []
 	for card: Dictionary in forge.cards:
 		if card.id in main.starter_lottery.WEAPONS or card.id in forge.OTHER_ATTACKS: weapons.append(card.uid)
-	expect(weapons.size() <= 2 and not forge.preview(speed.uid,weapons).valid, "sacrificing every attack is refused")
+	expect(weapons.size() <= 2 and forge.preview(speed.uid,weapons).valid and not forge.preview(speed.uid,weapons).warnings.is_empty(), "last attack can be sacrificed with an explicit warning")
 	forge.add_card("drone_up",0)
 	forge.add_card("gun_up",0)
 	forge.add_card("bomb",0)
@@ -105,7 +105,7 @@ func verify_crafting() -> void:
 	var two: Dictionary = forge.preview(speed.uid,[victim.uid,second.uid])
 	expect(zero.valid and one.valid and two.valid, "zero, one and two heterogeneous sacrifices are legal")
 	expect(zero.cost > one.cost and one.cost > two.cost, "each extra ingredient reduces coin cost")
-	expect(zero.up < one.up and one.up < two.up and one.down == 0, "extra ingredients raise success, low tiers are protected")
+	expect(zero.down == 0 and is_equal_approx(one.up,two.up) and is_equal_approx(one.down,30.0) and is_equal_approx(one.stay,40.0), "solo never drops and transfer rolls use 30/40/30")
 	expect(not forge.preview(speed.uid,[victim.uid,victim.uid]).valid, "same instance cannot fill both slots")
 	expect(not forge.preview(speed.uid,[victim.uid,second.uid,third.uid]).valid, "three material cards rejected")
 	var count: int = forge.cards.size()
@@ -118,32 +118,32 @@ func verify_crafting() -> void:
 	expect(forge.cards.size() == count-1 and card_by_uid(victim.uid).is_empty() and not card_by_uid(speed.uid).is_empty(), "only the sacrifice is removed")
 	expect(not game.arsenal_combo.unlocked and game.equipment_panel.get_level(victim_id)==0, "sacrificing a unique weapon removes its rank and shield set")
 	expect(not forge.attempt(speed.uid,[victim.uid]).ok and forge.wallet == balance-one.cost, "a repeated submission cannot reuse a spent card")
-	# Exercise the full risk table with actual attempts, not just simulated odds.
 	seed(969)
-	forge.add_card("axe_up",2)
-	var pink: Dictionary = find_card("axe_up",2)
-	var risk: Dictionary = forge.preview(pink.uid,[])
-	expect(risk.down > 0 and risk.up > risk.down and risk.stay > risk.up and risk.stay > 50, "pink is the first at-risk tier; staying dominates")
-	expect(risk.down + risk.up + risk.stay == 100, "all displayed outcome odds sum to 100")
-	var saw_drop := false
-	var saw_stay := false
-	var saw_rise := false
-	for draw in 600:
-		var tier: int = card_by_uid(pink.uid).tier
-		if tier < 2:
-			forge.add_card("axe_up",2)
-			pink = find_card("axe_up",2)
-			tier = 2
-		var trial: Dictionary = forge.attempt(pink.uid,[])
-		var final_tier: int = card_by_uid(pink.uid).tier
-		if not trial.ok or absi(final_tier-tier) > 1:
-			expect(false,"valid funded high-tier attempts resolve by at most one step")
-			break
-		saw_drop = saw_drop or final_tier == tier-1
-		saw_stay = saw_stay or final_tier == tier
-		saw_rise = saw_rise or final_tier == tier+1
-		if saw_drop and saw_stay and saw_rise: break
-	expect(saw_drop and saw_stay and saw_rise,"observed real success, hold and at most one-tier failure")
+	var seen := {}
+	for i in 60:
+		var sub: int = forge.add_card("bomb")
+		var rank: int = speed.level
+		var plan: Dictionary = forge.preview(speed.uid,[sub])
+		var trial: Dictionary = forge.attempt(speed.uid,[sub])
+		expect(trial.ok and speed.level == plan.levels[trial.outcome] and speed.level >= rank, "whole level transfer matches quote")
+		seen[trial.outcome] = true
+		if seen.size() == 3 and rank >= 12: break
+	expect(seen.size() == 3 and speed.level >= 12 and game.player.awakened.has("speed_up"), "all outcomes, orange awakening and levels beyond nine")
+	var solo_rank: int = speed.level
+	var solo: Dictionary = forge.attempt(speed.uid,[])
+	expect(solo.ok and speed.level in [solo_rank,solo_rank+1], "solo result holds or adds one")
+	# Spend the actual last weapon and carry the resulting build through the next stage.
+	var remaining: Array = []
+	for card in forge.cards:
+		if card.id in main.starter_lottery.WEAPONS or card.id in forge.OTHER_ATTACKS:
+			remaining.append(card.uid)
+	while remaining.size() > 2:
+		expect(forge.attempt(speed.uid,[remaining.pop_back()]).ok, "remove another weapon")
+	var last_plan: Dictionary = forge.preview(speed.uid,remaining)
+	expect(last_plan.valid and last_plan.warnings[0] == L10n.text("将失去最后一种攻击技能，仍可利用地形击杀敌人。"), "terrain warning has priority before committing")
+	expect(forge.attempt(speed.uid,remaining).ok, "last attacking skill sacrifice completes")
+	for card in forge.cards:
+		expect(card.id not in main.starter_lottery.WEAPONS and card.id not in forge.OTHER_ATTACKS, "all independent attack skills were removed")
 	forge.wallet = costless
 
 func _run() -> void:
@@ -159,8 +159,8 @@ func _run() -> void:
 	var materials_before: int = forge.materials
 	var coins_before: int = forge.wallet
 	var level_before: int = game.current_level
-	var count_before: int = forge.cards.size()
-	expect(find_card("pickup_up").tier == 0 and game.player.SPEED == 116, "innate perk is cyan and one cyan speed card really grants 16")
+	var count_before: int = forge._score(forge.cards)
+	expect(find_card("pickup_up").tier == 0 and game.player.SPEED == 120, "innate perk is cyan and level one speed card grants 20")
 	game.player.player_health = game.player.max_player_health * 0.5
 	var damaged_health: float = game.player.player_health
 	game.spawn_healing_orb(game.player.global_position+Vector2(-1600,0),5)
@@ -169,12 +169,12 @@ func _run() -> void:
 	expect(game.pause_menu.visible and game.current_level == level_before+1, "subthreshold boss cleanup grants exactly one real level and one draft")
 	expect(forge.wallet > coins_before and game.get_tree().get_nodes_in_group("xp_coin").is_empty(), "a distant drop is paid on boss death")
 	expect(get_nodes_in_group("healing_orb").is_empty() and game.player.player_health > damaged_health, "distant healing orbs are collected before the draft")
-	expect(forge.cards.size() == count_before, "a pending draft cannot silently add an extra card")
+	expect(forge._score(forge.cards) == count_before, "a pending draft cannot silently add an extra card")
 	if not game.pause_menu.visible:
 		_finish()
 		return
 	await pick_draft()
-	expect(forge.cards.size() == count_before+1 and game.forge_screen.visible and paused, "draft resolves into one forge visit")
+	expect(forge._score(forge.cards) == count_before+10 and game.forge_screen.visible and paused, "draft resolves into one forge visit")
 	if not game.forge_screen.visible:
 		_finish()
 		return

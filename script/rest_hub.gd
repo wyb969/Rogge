@@ -66,7 +66,7 @@ func _refresh_reward_numbers() -> void:
 			_:
 				text = L10n.text(str(game.equipment_panel.EQUIP_DEFS[id].title))
 				if game.forge.enabled:
-					text += " · " + QUALITY.tier_name(0) + "\n" + game.forge.card_preview(id,0)
+					text += " · " + "+1" + "\n" + game.forge.card_preview(id,0)
 				else:
 					text += "\n" + str(preload("res://script/card_preview.gd").build(game,id).rows[0].text)
 		button.set_meta("reward_label",text)

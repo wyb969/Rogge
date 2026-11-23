@@ -32,6 +32,8 @@ var _wave_width := 0.0
 var _wave_delay := 0.0
 var _wave_start := 0.0
 var _reach := 0.0
+var _snapped := false
+var _snap_at := Vector2.ZERO
 var _damage := 0.0
 var _rng := RandomNumberGenerator.new()
 var _angles := PackedFloat32Array()
@@ -127,6 +129,7 @@ func cast() -> bool:
 	_wave_start = _turn_time - _rng.randf_range(0.18, 0.27)
 	_duration = float(_stats.swing_time) * _rng.randf_range(0.96, 1.04)
 	_reach = float(_stats.range)
+	_snapped = false
 	_damage = float(_stats.damage)
 	_age = 0.0
 	active = true
@@ -202,6 +205,17 @@ func _physics_process(delta: float) -> void:
 	_advance(dt * 0.5, prior_anchor.lerp(anchor, 0.5))
 	for i in points.size(): _middle[i] = points[i]
 	_advance(dt * 0.5, anchor)
+	if level >= 9 and not _snapped and _age >= _turn_time * _duration:
+		_snapped = true
+		var tip := points[LINKS]
+		_snap_at = tip
+		for actor in CombatTargets.in_radius(tip, 24.0*24.0,game):
+			if actor.has_method("vulnerable") and not actor.vulnerable(): continue
+			actor.apply_hit({"damage":_damage*0.6,"direction":points[LINKS-1].direction_to(tip),"source":self,"hitstop":false,"budget_impact":true})
+			if not active: return
+		if level >= 12:
+			_struck.clear()
+			_hit_rids.clear()
 	var curved := false
 	for i in points.size():
 		if _middle[i].distance_squared_to((previous[i] + points[i]) * 0.5) > HALF_WIDTH * HALF_WIDTH:
@@ -264,6 +278,8 @@ func _hit_links(space: PhysicsDirectSpaceState2D, start: PackedVector2Array, fin
 			_query.exclude = excluded
 
 func _draw() -> void:
+	if active and _snapped and _age < _turn_time*_duration + 0.10:
+		draw_arc(to_local(_snap_at),24,0,TAU,12,Color("#ff8caa"),2)
 	if not active: return
 	draw_set_transform_matrix(global_transform.affine_inverse())
 	draw_polyline(previous, AFTERGLOW, 6.0)

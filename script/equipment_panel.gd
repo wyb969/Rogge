@@ -1,7 +1,9 @@
 extends Control
 
 const QUALITY := preload("res://script/card_quality_style.gd")
-const QUALITY_FOOTPRINT := Vector2(110, 28)
+const QUALITY_FOOTPRINT := Vector2(114, 32)
+const RANK_FONT_SIZE := 26
+const RANK_LEFT := 32.0
 const SLOT_SIZE: = Vector2(48, 48)
 const ICON_SIZE: = Vector2(36, 36)
 const UI_FONT_SIZE: = 16
@@ -161,13 +163,14 @@ func _fit_equipment() -> void :
 	var status_rows := int(_arsenal_label.visible) + int(_growth_label.visible)
 	var icon_height := rows * (SLOT_FOOTPRINT.y + 10.0)
 	var height: = icon_height + status_rows * 20.0 + (4.0 if status_rows > 0 else 0.0)
-	var budget: = maxf(180, vp.y - 240)
+	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var top := (preload("res://script/boss_hud_layout.gd").header_top(self)+154)*hud_ui
+	var budget := maxf(1.0, vp.y - top - 12 * hud_ui)
 	var factor: = minf(1.0, budget / maxf(height, 1))
 	var grid_width := SLOT_FOOTPRINT.x * slot_list.columns + 8.0 * (slot_list.columns - 1)
 	var width: = maxf(grid_width, 128.0 if status_rows > 0 else 0.0)
 	scale = Vector2.ONE * factor
-	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
-	global_position = Vector2(vp.x - width * factor - 18, (preload("res://script/boss_hud_layout.gd").header_top(self)+154)*hud_ui)
+	global_position = Vector2(vp.x - width * factor - 18, top)
 	slot_list.position.x = width - grid_width
 	slot_list.size = Vector2(grid_width, icon_height)
 	_arsenal_label.position = Vector2(0, icon_height + 4)
@@ -191,9 +194,12 @@ func _fit_quality_equipment() -> void:
 	var factor := minf(1.0, budget / maxf(1.0, grid_size.y+status_rows*20))
 	var width := maxf(grid_size.x, 128.0 if status_rows else 0.0)
 	scale = Vector2.ONE * factor * ui
-	global_position = Vector2(8*ui, top*ui)
+	global_position = Vector2(vp.x - width * scale.x - 8*ui, top*ui)
 	slot_list.position = Vector2(width-grid_size.x, 0)
 	slot_list.size = grid_size
+	for caption: Label in [_arsenal_label, _growth_label]:
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		caption.size.x = width
 	_arsenal_label.position = Vector2(0, grid_size.y)
 	_growth_label.position = Vector2(0, grid_size.y+(20 if _arsenal_label.visible else 0))
 
@@ -222,9 +228,14 @@ func apply_upgrade(upgrade_id: String) -> void :
 
 func set_card_count(id: String, count: int) -> void:
 	if not EQUIP_DEFS.has(id): return
+	var previous := get_level(id)
+	if count == previous: return
 	if count > 0:
+		_kill_slot_tween(id)
 		_add_or_set_level(id, count, false)
 		refresh_quality(id)
+		if count > previous:
+			_play_rank_hop(id)
 	elif _slots.has(id):
 		_kill_slot_tween(id)
 		var slot: Control = _slots[id].root
@@ -240,19 +251,41 @@ func refresh_quality(id: String) -> void:
 	if inventory == null: return
 	var slot: Dictionary = _slots[id]
 	slot.root.custom_minimum_size = QUALITY_FOOTPRINT
-	slot.icon_wrap.position = Vector2(2,1)
+	slot.icon_wrap.position = Vector2(2,3)
 	slot.icon_wrap.size = Vector2(26,26)
 	slot.icon.custom_minimum_size = Vector2(24,24)
 	slot.icon.size = Vector2(24,24)
 	slot.icon.position = Vector2(1,1)
 	var level := get_level(id)
 	var label: Label = slot.level_label
-	label.position = Vector2(31,1)
-	label.size = QUALITY_FOOTPRINT - Vector2(32,2)
+	var digits := "+%d" % level
+	var font := label.get_theme_font("font")
+	var available := QUALITY_FOOTPRINT.x - RANK_LEFT - 2
+	var natural_width := font.get_string_size(digits, HORIZONTAL_ALIGNMENT_LEFT, -1, RANK_FONT_SIZE).x
+	var font_size := mini(RANK_FONT_SIZE, floori(RANK_FONT_SIZE * available / maxf(natural_width, 1.0)))
+	label.text = digits
+	label.add_theme_font_size_override("font_size", font_size)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	label.text = "Lv.%d" % level
+	label.size = Vector2(available, QUALITY_FOOTPRINT.y)
+	if slot.juice_tween == null or not slot.juice_tween.is_running():
+		label.position = Vector2(RANK_LEFT, roundf((QUALITY_FOOTPRINT.y - label.size.y) * 0.5))
+		label.scale = Vector2.ONE
+	label.pivot_offset = Vector2(0, label.size.y * 0.75)
 	label.add_theme_color_override("font_color",QUALITY.COLORS[QUALITY.tier_for(level)])
 	slot.icon_wrap.tooltip_text = L10n.text(EQUIP_DEFS[id].title) + "  " + label.text + "\n" + COMBOS.hint_for(id)
+
+# Run after play resumes so the draft or forge overlay cannot swallow the hop.
+func _play_rank_hop(id: String) -> void:
+	var label: Label = _slots[id].level_label
+	var rest_y := label.position.y
+	var tween := label.create_tween().set_pause_mode(Tween.TWEEN_PAUSE_STOP)
+	_slots[id].juice_tween = tween
+	tween.tween_property(label, "scale", Vector2(1.05, 0.84), 0.05)
+	tween.tween_property(label, "position:y", rest_y - 7.0, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(label, "scale", Vector2(0.95, 1.12), 0.08)
+	tween.tween_property(label, "position:y", rest_y, 0.10).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.parallel().tween_property(label, "scale", Vector2(1.05, 0.90), 0.10)
+	tween.tween_property(label, "scale", Vector2.ONE, 0.13).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func get_level(upgrade_id: String) -> int:
 	if _slots.has(upgrade_id):

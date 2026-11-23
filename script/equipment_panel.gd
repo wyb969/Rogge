@@ -2,7 +2,8 @@ extends Control
 
 const QUALITY := preload("res://script/card_quality_style.gd")
 const QUALITY_FOOTPRINT := Vector2(114, 32)
-const RANK_FONT_SIZE := 26
+const RANK_FONT_SIZE := 16
+const RANK_FRAME := preload("res://resource/hud_rank_frame.tres")
 const RANK_LEFT := 32.0
 const SLOT_SIZE: = Vector2(48, 48)
 const ICON_SIZE: = Vector2(36, 36)
@@ -259,18 +260,24 @@ func refresh_quality(id: String) -> void:
 	var level := get_level(id)
 	var label: Label = slot.level_label
 	var digits := "+%d" % level
-	var font := label.get_theme_font("font")
-	var available := QUALITY_FOOTPRINT.x - RANK_LEFT - 2
+	var font := UiFonts.ui()
+	label.add_theme_font_override("font", font)
+	label.add_theme_constant_override("outline_size", 1)
+	label.add_theme_stylebox_override("normal", RANK_FRAME)
+	var padding := RANK_FRAME.get_minimum_size().x
+	var available := QUALITY_FOOTPRINT.x - RANK_LEFT - 2 - padding
 	var natural_width := font.get_string_size(digits, HORIZONTAL_ALIGNMENT_LEFT, -1, RANK_FONT_SIZE).x
 	var font_size := mini(RANK_FONT_SIZE, floori(RANK_FONT_SIZE * available / maxf(natural_width, 1.0)))
 	label.text = digits
 	label.add_theme_font_size_override("font_size", font_size)
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	label.size = Vector2(available, QUALITY_FOOTPRINT.y)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var text_width := font.get_string_size(digits, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	var frame_size: Vector2 = slot.icon_wrap.size
+	label.size = Vector2(maxf(frame_size.x, ceilf(text_width) + padding), frame_size.y)
 	if slot.juice_tween == null or not slot.juice_tween.is_running():
 		label.position = Vector2(RANK_LEFT, roundf((QUALITY_FOOTPRINT.y - label.size.y) * 0.5))
 		label.scale = Vector2.ONE
-	label.pivot_offset = Vector2(0, label.size.y * 0.75)
+	label.pivot_offset = Vector2(label.size.x * 0.5, label.size.y * 0.75)
 	label.add_theme_color_override("font_color",QUALITY.COLORS[QUALITY.tier_for(level)])
 	slot.icon_wrap.tooltip_text = L10n.text(EQUIP_DEFS[id].title) + "  " + label.text + "\n" + COMBOS.hint_for(id)
 

@@ -48,6 +48,9 @@ func _check_rank_hud(game: Node) -> void:
 		game._on_upgrade_selected(id)
 	var label: Label = panel._slots.gun_up.level_label
 	await create_timer(0.5).timeout
+	var icon_frame: Control = panel._slots.gun_up.icon_wrap
+	_expect(label.get_theme_font("font") == UiFonts.ui() and label.get_theme_constant("outline_size") == 1, "thin pixel figures")
+	_expect(label.size.y == icon_frame.size.y and absf(label.size.x - icon_frame.size.x) <= 6, "single-digit frame matches the icon")
 	var rest := label.position
 	for size in [Vector2i(390,844),Vector2i(320,568),Vector2i(844,390),Vector2i(900,600)]:
 		root.size = size

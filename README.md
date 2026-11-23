@@ -4,13 +4,13 @@
 
 ### 冲进怪潮，把每次升级变成新的连锁反应。
 
-**像素生存 · 28 张装备卡 · 六关 Boss · 随机天气与地形 · 中英双语**
+**像素生存 · 技能锻造与橙色觉醒 · 六关 Boss · 随机天气与地形 · 中英双语**
 
 [![浏览器试玩](https://img.shields.io/badge/立即试玩-itch.io-FA5C5C?style=for-the-badge&logo=itchdotio&logoColor=white)](https://ybwangrogger.itch.io/rogue-white)
 [![Godot](https://img.shields.io/badge/Godot-4.7-478CBF?style=for-the-badge&logo=godotengine&logoColor=white)](https://godotengine.org/)
-[![装备卡片](https://img.shields.io/badge/装备卡片-28_种-59C9A5?style=for-the-badge)](#装备图鉴)
+[![装备卡片](https://img.shields.io/badge/装备成长-锻造与觉醒-59C9A5?style=for-the-badge)](#装备图鉴)
 
-[开始一局](https://ybwangrogger.itch.io/rogue-white) · [装备图鉴](#装备图鉴) · [彩墨冲浪](#彩墨冲浪) · [新怪物与攻击方式](#新怪物与攻击方式) · [四神兽与祝福](#四神兽与祝福) · [运行项目](#运行项目)
+[开始一局](https://ybwangrogger.itch.io/rogue-white) · [技能等级与锻造](#技能等级与锻造) · [装备图鉴](#装备图鉴) · [彩墨冲浪](#彩墨冲浪) · [新怪物与攻击方式](#新怪物与攻击方式) · [四神兽与祝福](#四神兽与祝福) · [运行项目](#运行项目)
 
 <img src="docs/screenshots/bosses-20261119/tide-charge.png" alt="第三关潮汐巨象锁定冲锋方向，红色预警穿过玩家所在的位置" width="1066">
 
@@ -20,7 +20,7 @@
 
 ---
 
-**当前主分支构建：`20261119-103149`** · [浏览器试玩](https://ybwangrogger.itch.io/rogue-white) · [下载 Web 包与验证日志（需登录 GitHub）](https://github.com/wyb969/PixelFishing/actions/runs/44447222306/artifacts/14494321532)
+**当前游戏版本 `20261123-174515`** · [在 itch.io 开始一局](https://ybwangrogger.itch.io/rogue-white)
 
 开局可以从游方客、风信使、机修师和星灯学徒中选一位。他们分别从拾取范围、移动速度、无人机或符文弹起步。六关各有自己的怪物主题，八套 Boss 动作换上精细像素图，保留各自的原色和原有战斗体型。
 
@@ -29,6 +29,21 @@
 ![第五关的远程和近战风首领从两侧夹击玩家](docs/screenshots/bosses-20261119/wind-pair.png)
 
 本版还修复了力量试炼目标的显示，并将部分怪物生成准备分摊到不同帧，减少开场和怪物密集时的集中开销。
+
+## 技能等级与锻造
+
+升级时三选一。第一次选中白卡就获得这项技能，再选同名卡就升一级。战斗中看右侧装备图标旁的 **+数字** 即可读出当前等级。数字升级时会跳起回弹，左侧神兽图标可点击释放。
+
+| 技能等级 | 等级颜色 | 成长变化 |
+| --- | --- | --- |
+| 1–2 | 青 | 获得技能，同名卡继续升级 |
+| 3–5 | 紫 | 3 级时主属性获得额外成长 |
+| 6–8 | 粉 | 6 级时主属性再次获得额外成长 |
+| 9 级及以上 | 橙 | 开启觉醒，每逢 3 的倍数继续强化 |
+
+光之荆棘在 9 级会用鞭梢打出范围攻击，12 级能回抽再打一次。冰刃波在 9 级可用末峰击碎冰壳，12 级追加碎冰溅射。
+
+关后可以把一项主技能和最多两项副技能放入锻炉。一级炉空锻有 30% 概率让主技能升一级，其余结果保持原级。有副技能时，先将主副技能等级相加，再以 30%、40%、30% 的概率得到总和加一、总和或总和减一。例如 +4 和 +3 合锻，结果是 +8、+7 或 +6。副技能会整项消耗。即使选中最后一项独立攻击技能，也可以在看过提示后继续，用地形击杀敌人。
 
 ## 一局里会发生什么？
 
@@ -89,33 +104,33 @@
 
 ## 装备图鉴
 
-28 种装备与成长卡可以交叉搭配。斧头、书本提供开局火力，其余能力在升级过程中逐步加入。
+开局装备由抽取结果决定，升级时可以补齐套装，也可以集中强化一项技能。下表列出部分装备和它们在战斗中的作用。
 
 | 类型 | 装备 | 打法与作用 |
 | --- | --- | --- |
-| <img src="assest/sprites/thorn_whip.svg" width="28" alt="荆棘鞭"> 近身横扫 | **荆棘鞭** | 自动朝附近敌人挥出120°扇形攻击；升级增加伤害、范围与频率，最高5级。 |
-| <img src="assest/sprites/rune_bolt.svg" width="28" alt="符文飞弹"> 反弹穿透 | **符文飞弹** | 符文在施放位置周围反弹并穿透怪群；升级增加伤害、活动范围、数量和频率，最高5级。 |
-| <img src="assest/sprites/pulse_aura.svg" width="28" alt="脉冲法阵"> 贴身防护 | **脉冲法阵** | 周期攻击身边敌人；升级增加伤害、半径和频率，最高5级。 |
-| <img src="assest/sprites/silver_knife.svg" width="28" alt="银翼飞刀"> 定向穿透 | **银翼飞刀** | 自动瞄准附近敌人发射穿透飞刀；升级提高伤害、数量、距离和频率，最高5级。 |
-| <img src="assest/sprites/cross_blade.svg" width="28" alt="回旋十字刃"> 往返清怪 | **回旋十字刃** | 自动瞄准近敌，沿固定路径往返各命中一次；升级提高伤害、射程和频率，最高5级。 |
-| <img src="assest/sprites/holy_water.svg" width="28" alt="净化圣水"> 区域伤害 | **净化圣水** | 在敌人脚下留下3秒净化区域；每0.5秒伤害，重叠不叠加。升级提高秒伤、半径和频率，最高5级。 |
+| <img src="assest/sprites/thorn_whip.svg" width="28" alt="荆棘鞭"> 近身横扫 | **荆棘鞭** | 自动朝附近敌人挥出120°扇形攻击；升级增加伤害、范围与频率。 |
+| <img src="assest/sprites/rune_bolt.svg" width="28" alt="符文飞弹"> 反弹穿透 | **符文飞弹** | 符文在施放位置周围反弹并穿透怪群；升级增加伤害、活动范围、数量和频率。 |
+| <img src="assest/sprites/pulse_aura.svg" width="28" alt="脉冲法阵"> 贴身防护 | **脉冲法阵** | 周期攻击身边敌人；升级增加伤害、半径和频率。 |
+| <img src="assest/sprites/silver_knife.svg" width="28" alt="银翼飞刀"> 定向穿透 | **银翼飞刀** | 自动瞄准附近敌人发射穿透飞刀；升级提高伤害、数量、距离和频率。 |
+| <img src="assest/sprites/cross_blade.svg" width="28" alt="回旋十字刃"> 往返清怪 | **回旋十字刃** | 自动瞄准近敌，沿固定路径往返各命中一次；升级提高伤害、射程和频率。 |
+| <img src="assest/sprites/holy_water.svg" width="28" alt="净化圣水"> 区域伤害 | **净化圣水** | 在敌人脚下留下3秒净化区域；每0.5秒伤害，重叠不叠加。升级提高秒伤、半径和频率。 |
 | <img src="assest/sprites/axe.png" width="28" alt="斧头"> 飞行武器 | **斧头** | 飞出后回收，沿途打击敌人；升级强化伤害与攻击能力。 |
 | <img src="assest/sprites/book.png" width="28" alt="书本"> 环绕防线 | **书本** | 围绕玩家攻击，最多 12 本；到达数量上限后继续强化伤害。 |
 | <img src="assest/sprites/drone.svg" width="28" alt="无人机"> 自动火力 | **枪支、无人机** | 自动射击与短时激光，持续压制靠近的敌人。 |
-| <img src="assest/sprites/bomb.svg" width="28" alt="炸弹"> 爆破击退 | **炸弹** | 周期投掷炸弹，爆炸造成范围伤害并击飞小怪；升级提高伤害与范围，缩短冷却，最高 5 级。 |
+| <img src="assest/sprites/bomb.svg" width="28" alt="炸弹"> 爆破击退 | **炸弹** | 周期投掷炸弹，爆炸造成范围伤害并击飞小怪；升级提高伤害与范围，缩短冷却。 |
 | <img src="assest/sprites/lightning_ring.svg" width="28" alt="闪电戒指"> 范围雷击 | **闪电戒指** | 周期雷击周围目标；升级提高伤害、雷击数量与范围。 |
 | <img src="assest/sprites/molotov.svg" width="28" alt="汽油瓶"> 点燃与控制 | **汽油瓶、寒冰** | 汽油瓶引燃群怪并传播灼烧；寒冰提供控制与冻伤增伤。 |
-| <img src="assest/sprites/poison_trail.svg" width="28" alt="剧毒踪迹"> 移动毒场 | **剧毒踪迹** | 移动时身后留下毒雾，持续伤害其中的敌人；最高 5 级解锁减速。 |
-| <img src="assest/sprites/banana_fan.svg" width="28" alt="芭蕉扇"> 定向击退 | **芭蕉扇** | 吹出气流并击退小怪，对已有灼烧/中毒额外结算一跳，并以深红/深紫身体变色提示；初始间隔 3 秒，每级冷却×0.7，最高 5 级。 |
-| <img src="assest/sprites/black_hole.svg" width="28" alt="黑洞"> 引力聚怪 | **黑洞** | 周期召唤持续 3 秒的小黑洞，聚拢敌人并每秒伤害；升级缩短冷却、扩大范围并提高伤害，最高 5 级。 |
-| <img src="assest/sprites/critical_glasses.svg" width="28" alt="暴击眼镜"> 暴击强化 | **暴击眼镜** | 每级增加 20% 直接攻击暴击率，最高 5 级；暴击伤害为 150%，满级提高到 200%，以更大的金色伤害字标记。 |
+| <img src="assest/sprites/poison_trail.svg" width="28" alt="剧毒踪迹"> 移动毒场 | **剧毒踪迹** | 移动时身后留下毒雾，持续伤害其中的敌人，成长后可使目标减速。 |
+| <img src="assest/sprites/banana_fan.svg" width="28" alt="芭蕉扇"> 定向击退 | **芭蕉扇** | 吹出气流并击退小怪，对已有灼烧/中毒额外结算一跳，并以深红/深紫身体变色提示；初始间隔 3 秒，每级冷却×0.7。 |
+| <img src="assest/sprites/black_hole.svg" width="28" alt="黑洞"> 引力聚怪 | **黑洞** | 周期召唤持续 3 秒的小黑洞，聚拢敌人并每秒伤害；升级缩短冷却、扩大范围并提高伤害。 |
+| <img src="assest/sprites/critical_glasses.svg" width="28" alt="暴击眼镜"> 暴击强化 | **暴击眼镜** | 提高直接攻击暴击率，金色伤害数字标记暴击。 |
 | <img src="assest/sprites/wind_emblem.svg" width="28" alt="踏风徽记"> 触发连锁 | **踏风徽记、回响火种** | 冲刺结束释放风压；累计击杀后，在最后一次击杀处引爆回响。 |
 | <img src="assest/sprites/monster_necklace.png" width="28" alt="怪物项链"> 生存续航 | **怪物项链、回复、吸血、玉佩** | 击杀掉落回血球、周期回复、伤害吸血，以及击杀补充护盾。 |
 | <img src="assest/sprites/fist_left.svg" width="28" alt="方向伤害"> 方向与成长 | **左拳、右拳、拾取、移速** | 强化对应方向的伤害，扩大拾取范围，或提高移动速度。 |
 
 ### 试试这些搭配
 
-集齐军械或生机三件套，还会激活同步流光边框与组合效果。
+集齐对应装备即可激活套装效果。下表列出军械、生机两套组合和几种可混搭的打法。
 
 | 构筑方向 | 核心组合 | 体验重点 |
 | --- | --- | --- |

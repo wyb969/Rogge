@@ -1,0 +1,33 @@
+{
+  "version": "20261123-174515",
+  "source": "78284dea41dce26762d80cbbdcbb7f14a39dc501",
+  "build": 2476539,
+  "previous": 2436615,
+  "publish": "https://github.com/wyb969/PixelFishing/actions/runs/45157690801",
+  "verify": "https://github.com/wyb969/PixelFishing/actions/runs/45158330770",
+  "packed_suites": 44,
+  "physical_phone": false,
+  "browser_playthrough": false,
+  "live": {
+    "page": "https://ybwangrogger.itch.io/rogue-white",
+    "embed": "https://html.itch.zone/html/20115514-2476539/index.html?v=1795430569",
+    "files": {
+      "index.html": {
+        "bytes": 5524,
+        "sha256": "d534a0ea56090b63ced17f56b98838c20c5e32839123f8a3d3efd365cf4cfbd1"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "68586d6daafc93c6e697b3fb258976874aa7459b8931165ebb1dc3c9614cc42c"
+      },
+      "index.wasm": {
+        "bytes": 39509339,
+        "sha256": "7eda98958eb09135a1acb54a4323a00b1a55af1997f15fa1cdc2b93e3df46656"
+      },
+      "index.pck": {
+        "bytes": 30892556,
+        "sha256": "0211c1d4cd5cee3390ddb8268dfd09eb8988f7f1a32e8fb1b83f05151bf4b3b8"
+      }
+    }
+  }
+}

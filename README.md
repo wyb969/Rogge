@@ -20,7 +20,7 @@
 
 ---
 
-**当前游戏版本 `20261123-174515`** · [在 itch.io 开始一局](https://ybwangrogger.itch.io/rogue-white)
+**当前游戏版本 `20261123-174515`** · [在 itch.io 开始一局](https://ybwangrogger.itch.io/rogue-white) · [下载本版 Web 包与验证日志（需登录 GitHub）](https://github.com/wyb969/PixelFishing/actions/runs/45157690801/artifacts/14808972927)
 
 开局可以从游方客、风信使、机修师和星灯学徒中选一位。他们分别从拾取范围、移动速度、无人机或符文弹起步。六关各有自己的怪物主题，八套 Boss 动作换上精细像素图，保留各自的原色和原有战斗体型。
 

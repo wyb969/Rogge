@@ -1,4 +1,11 @@
 # ROGGE 开发交接
+## 20261123-174515 主分支与 itch 发布
+
+本版发布源码为 `78284dea41dce26762d80cbbdcbb7f14a39dc501`。Godot 4.7 匹配模板重新导出，44 组 Web PCK 回归通过，包含图鉴、锻造、右侧装备等级和八组武器与套装检查。图鉴覆盖中英双语与菜单恢复，单独复验 880 项。
+
+itch 原有 html 通道（upload 20115514）已从 build 2436615 更新到 2476539。已核对公开试玩页 iframe，下载实际 JS、WASM 和 PCK，三者的字节数与 SHA-256 均符合 CI 清单。本次未做物理手机操作测试。
+
+[发布工作流](https://github.com/wyb969/PixelFishing/actions/runs/45157690801) · [通道核验](https://github.com/wyb969/PixelFishing/actions/runs/45158330770) · [线上文件核验记录](validation/itch-skill-forge-20261123-174515.json)
 
 ## 20261123-174515 战斗 HUD 两侧对齐
 

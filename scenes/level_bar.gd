@@ -1,4 +1,6 @@
 extends Node2D
+
+const HUD_LAYOUT := preload("res://script/boss_hud_layout.gd")
 var level: int = 0
 var coin_number: int = 0
 var level_need_coin_number: int = 6
@@ -26,10 +28,10 @@ func _ready() -> void :
 	_fit_hud()
 
 func _fit_hud() -> void:
-	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var ui: float=HUD_LAYOUT.display_scale(self)
 	var row: HBoxContainer=$UI/HBoxContainer
-	var top: float=preload("res://script/boss_hud_layout.gd").header_top(self)
-	row.position=Vector2(12*ui,(top+40)*ui)
+	var top: float=HUD_LAYOUT.header_top(self)
+	row.position=Vector2(HUD_LAYOUT.SIDE_MARGIN*ui,(top+40)*ui)
 	row.size=Vector2(276*ui,30*ui)
 	row.add_theme_constant_override("separation",int(8*ui))
 	label.custom_minimum_size=Vector2(68*ui,30*ui)

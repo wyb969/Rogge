@@ -1,4 +1,8 @@
 extends RefCounted
+
+const SIDE_MARGIN := 12.0
+const STATUS_ROW_HEIGHT := 26.0
+const SIDE_COLUMN_OFFSET := 148.0
 # Screen-space HUD, independent of card containers and world-camera zoom.
 static func fit(panel: Control, bar: ProgressBar, title: Label, action: Label=null, slot: int=0) -> float:
 	var viewport:=panel.get_viewport()

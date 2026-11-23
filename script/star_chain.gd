@@ -1,4 +1,6 @@
 extends Node2D
+
+const HUD_LAYOUT := preload("res://script/boss_hud_layout.gd")
 # An optional movement reward, independent of weapons, damage and card balance.
 const ENEMY := preload("res://script/enemy_shell.gd")
 const REQUIRED := 18
@@ -52,7 +54,8 @@ func _ready() -> void:
 	_hud.layer = 52
 	add_child(_hud)
 	_label = Label.new()
-	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.add_theme_color_override("font_color", GamePalette.PLAYER_CYAN)
 	_label.add_theme_color_override("font_outline_color", GamePalette.BLACK)
@@ -76,10 +79,10 @@ func _ready() -> void:
 
 func _fit() -> void:
 	var vp := get_viewport().get_visible_rect().size
-	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var ui: float=HUD_LAYOUT.display_scale(self)
 	UiFonts.apply_to_label(_label, int(12 * ui), true)
-	_label.position = Vector2(vp.x-64*ui,(preload("res://script/boss_hud_layout.gd").header_top(self)+80)*ui)
-	_label.size = Vector2(48*ui,20*ui)
+	_label.position = Vector2(vp.x-(HUD_LAYOUT.SIDE_MARGIN+48)*ui,(HUD_LAYOUT.header_top(self)+80)*ui)
+	_label.size = Vector2(48*ui,HUD_LAYOUT.STATUS_ROW_HEIGHT*ui)
 	_label.pivot_offset = _label.size * 0.5
 	var width := minf(vp.x * 0.4, 200 * ui)
 	_bar.position = Vector2((vp.x - width) * 0.5, 198 * ui)

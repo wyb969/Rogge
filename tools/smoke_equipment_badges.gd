@@ -60,7 +60,17 @@ func _check_rank_hud(game: Node) -> void:
 		var bounds := Rect2(Vector2.ZERO,root.get_visible_rect().size)
 		var badge: Rect2 = panel._slots.gun_up.root.get_global_rect()
 		_expect(bounds.encloses(badge) and badge.get_center().x > bounds.size.x * 0.5, "right-side badges fit " + str(size))
-		_expect(absf(panel.slot_list.get_global_rect().end.x - (bounds.end.x - 8 * preload("res://script/boss_hud_layout.gd").display_scale(panel))) < 2, "grid follows the right margin")
+		var left: float = game.spawner._stage_label.get_global_rect().position.x
+		var right: float = bounds.end.x - left
+		var powers: Control = game.beast_powers._column
+		var first_icon: Control = panel._slots.axe_up.icon_wrap
+		_expect(absf(powers.position.x-left)<2 and absf(powers.position.y-first_icon.global_position.y)<2, "first left and right icons share a row")
+		var timer: Control = game.spawner.get_node("UI/HBoxContainer/Second")
+		_expect(absf(game.level_manager.label.get_global_rect().position.x-left)<2 and absf(game.weather._caption.position.x-left)<2, "left text shares its outer edge")
+		_expect(absf(timer.get_global_rect().end.x-right)<2 and absf(timer.get_global_rect().get_center().y-game.spawner._stage_label.get_global_rect().get_center().y)<2, "visible clock digits align with the stage row")
+		for item: Control in [label,panel._growth_label,panel._arsenal_label,game.star_chain._label,game.trials._clock]:
+			_expect(absf(item.get_global_rect().end.x-right)<2, "painted right edge matches left margin: "+str(item.name))
+		_expect(absf(label.get_global_rect().get_center().y-icon_frame.get_global_rect().get_center().y)<1, "rank and icon centers match")
 	paused = true
 	game._on_upgrade_selected("gun_up")
 	await create_timer(0.18).timeout
@@ -80,5 +90,8 @@ func _check_rank_hud(game: Node) -> void:
 		var width := label.get_theme_font("font").get_string_size(label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,label.get_theme_font_size("font_size")).x
 		_expect(label.text == "+%d" % level and label.get_theme_color("font_color") == panel.QUALITY.COLORS[panel.QUALITY.tier_for(level)], "rank text and color")
 		_expect(width <= panel.QUALITY_FOOTPRINT.x-panel.RANK_LEFT and (level>99 or label.get_theme_font_size("font_size")==panel.RANK_FONT_SIZE), "normal ranks match icon scale and long ranks fit")
+	var other: Label = panel._slots.axe_up.level_label
+	_expect(label.size.x == other.size.x and absf(label.global_position.x-other.global_position.x)<1, "mixed digit counts share the same column")
 	panel.set_card_count("gun_up",0)
+	_expect(other.size.x <= 32, "remaining short ranks reclaim space")
 	_expect(not panel._slots.has("gun_up"), "sacrifice removes the animating slot")

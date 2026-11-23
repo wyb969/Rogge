@@ -1,5 +1,7 @@
 extends Node
 
+const HUD_LAYOUT := preload("res://script/boss_hud_layout.gd")
+
 signal completed(kind: String, passed: bool, settle: bool)
 const ENEMY: = preload("res://scenes/trial_enemy.tscn")
 const HORDE := preload("res://script/wooden_trial.gd")
@@ -225,7 +227,8 @@ func _build_ui() -> void :
 	_hud.layer = 45
 	add_child(_hud)
 	_clock = Label.new()
-	_clock.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_clock.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_clock.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_clock.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.03))
 	_clock.add_theme_constant_override("outline_size", 5)
 	UiFonts.apply_to_label(_clock, 24, true)
@@ -323,9 +326,9 @@ func _fit() -> void :
 	for button in _actions.get_children():
 		button.custom_minimum_size.y = 48 * scale_ui
 		UiFonts.apply_to_button(button, int(17 * scale_ui))
-	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
-	_clock.position = Vector2(vp.x-64*hud_ui,(preload("res://script/boss_hud_layout.gd").header_top(self)+80)*hud_ui)
-	_clock.size = Vector2(48*hud_ui,20*hud_ui)
+	var hud_ui: float=HUD_LAYOUT.display_scale(self)
+	_clock.position = Vector2(vp.x-(HUD_LAYOUT.SIDE_MARGIN+48)*hud_ui,(HUD_LAYOUT.header_top(self)+80)*hud_ui)
+	_clock.size = Vector2(48*hud_ui,HUD_LAYOUT.STATUS_ROW_HEIGHT*hud_ui)
 	UiFonts.apply_to_label(_clock,int(14*hud_ui),true)
 
 func refresh_language() -> void:

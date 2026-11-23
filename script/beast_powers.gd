@@ -1,5 +1,7 @@
 extends Node2D
 
+const HUD_LAYOUT := preload("res://script/boss_hud_layout.gd")
+
 const IDS: = ["tide", "thunder", "gale", "aegis"]
 const TITLES: = ["潮汐复苏", "雷霆裁决", "苍风牵引", "玄岩壁垒"]
 const COLORS: = [GamePalette.SKILL_TIDE, GamePalette.SKILL_THUNDER, GamePalette.SKILL_GALE, GamePalette.SKILL_AEGIS]
@@ -211,7 +213,8 @@ func _layout() -> void :
 		return
 	var vp: = get_viewport().get_visible_rect().size
 	var scale_ui: = maxf(1, vp.x / 450) if vp.y > vp.x else 1.0
-	_column.position = Vector2(12, 120) * scale_ui
+	var hud_ui := HUD_LAYOUT.display_scale(self)
+	_column.position = Vector2(HUD_LAYOUT.SIDE_MARGIN, HUD_LAYOUT.header_top(self) + HUD_LAYOUT.SIDE_COLUMN_OFFSET) * hud_ui
 	_column.add_theme_constant_override("separation", int(6 * scale_ui))
 	for index in _buttons:
 		var button: Button = _buttons[index]
@@ -220,7 +223,7 @@ func _layout() -> void :
 		button.add_theme_constant_override("icon_max_width", int(36 * scale_ui))
 	_column.set_deferred("size", Vector2(48 * scale_ui, maxf(0, _buttons.size() * 54 - 6) * scale_ui))
 	finish_button.size = Vector2(145, 40) * scale_ui
-	finish_button.position = Vector2(14, vp.y - 58 * scale_ui)
+	finish_button.position = Vector2(HUD_LAYOUT.SIDE_MARGIN * hud_ui, vp.y - 58 * scale_ui)
 	UiFonts.apply_to_button(finish_button, int(15 * scale_ui))
 	_notice.position = Vector2(vp.x * 0.2, 94 * scale_ui)
 	_notice.size = Vector2(vp.x * 0.6, 50 * scale_ui)

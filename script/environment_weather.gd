@@ -1,5 +1,7 @@
 extends Node
 
+const HUD_LAYOUT := preload("res://script/boss_hud_layout.gd")
+
 
 enum Hazard {MINES, ELECTRIC, SPIKES}
 const HAZARD_NAMES := ["地雷", "电网", "尖刺"]
@@ -369,10 +371,10 @@ func owns_pointer(point: Vector2) -> bool:
 func _fit() -> void :
 	var vp: = get_viewport().get_visible_rect().size
 	var scale: = 2.0 if vp.y > vp.x else 1.0
-	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var hud_ui: float=HUD_LAYOUT.display_scale(self)
 	UiFonts.apply_to_label(_caption, int(16*hud_ui))
-	_caption.position = Vector2(12*hud_ui,(preload("res://script/boss_hud_layout.gd").header_top(self)+80)*hud_ui)
-	_caption.size = Vector2(vp.x-88*hud_ui,26*hud_ui)
+	_caption.position = Vector2(HUD_LAYOUT.SIDE_MARGIN*hud_ui,(HUD_LAYOUT.header_top(self)+80)*hud_ui)
+	_caption.size = Vector2(vp.x-88*hud_ui,HUD_LAYOUT.STATUS_ROW_HEIGHT*hud_ui)
 	_caption.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
 	_caption.clip_text=true

@@ -1,5 +1,7 @@
 extends Control
 
+const HUD_LAYOUT := preload("res://script/boss_hud_layout.gd")
+
 const QUALITY := preload("res://script/card_quality_style.gd")
 const QUALITY_FOOTPRINT := Vector2(114, 32)
 const RANK_FONT_SIZE := 16
@@ -164,8 +166,8 @@ func _fit_equipment() -> void :
 	var status_rows := int(_arsenal_label.visible) + int(_growth_label.visible)
 	var icon_height := rows * (SLOT_FOOTPRINT.y + 10.0)
 	var height: = icon_height + status_rows * 20.0 + (4.0 if status_rows > 0 else 0.0)
-	var hud_ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
-	var top := (preload("res://script/boss_hud_layout.gd").header_top(self)+154)*hud_ui
+	var hud_ui: float=HUD_LAYOUT.display_scale(self)
+	var top := (HUD_LAYOUT.header_top(self)+154)*hud_ui
 	var budget := maxf(1.0, vp.y - top - 12 * hud_ui)
 	var factor: = minf(1.0, budget / maxf(height, 1))
 	var grid_width := SLOT_FOOTPRINT.x * slot_list.columns + 8.0 * (slot_list.columns - 1)
@@ -179,30 +181,39 @@ func _fit_equipment() -> void :
 
 func _fit_quality_equipment() -> void:
 	var vp := get_viewport_rect().size
-	var hud := preload("res://script/boss_hud_layout.gd")
-	var ui: float = hud.display_scale(self)
-	var top: float = hud.header_top(self) + 148
+	var ui: float = HUD_LAYOUT.display_scale(self)
+	var top: float = HUD_LAYOUT.header_top(self) + HUD_LAYOUT.SIDE_COLUMN_OFFSET
 	var budget := maxf(90, vp.y/ui - top - 18)
 	var status_rows := int(_arsenal_label.visible) + int(_growth_label.visible)
 	var spacing := 3
 	var rows_fit := maxi(1, floori((budget - status_rows*20) / (QUALITY_FOOTPRINT.y + spacing)))
-	var max_columns := clampi(floori(vp.x/ui * 0.55 / QUALITY_FOOTPRINT.x), 2, 3)
+	# Align the painted edges, including short ranks beside multi-digit ranks.
+	var rank_width := 26.0
+	for slot: Dictionary in _slots.values():
+		rank_width = maxf(rank_width, ceilf(slot.level_label.get_minimum_size().x))
+	var cell_width := RANK_LEFT + rank_width
+	for slot: Dictionary in _slots.values():
+		slot.root.custom_minimum_size = Vector2(cell_width, QUALITY_FOOTPRINT.y)
+		slot.level_label.size.x = rank_width
+		slot.level_label.pivot_offset.x = rank_width * 0.5
+	var max_columns := clampi(floori(vp.x/ui * 0.55 / cell_width), 2, 3)
 	slot_list.columns = clampi(ceili(float(_slots.size()) / rows_fit), 1, max_columns)
 	slot_list.add_theme_constant_override("h_separation", spacing)
 	slot_list.add_theme_constant_override("v_separation", spacing)
 	var rows := ceili(float(_slots.size()) / slot_list.columns)
-	var grid_size := Vector2(slot_list.columns * (QUALITY_FOOTPRINT.x+spacing)-spacing, rows * (QUALITY_FOOTPRINT.y+spacing))
+	var grid_size := Vector2(slot_list.columns * (cell_width+spacing)-spacing, rows * (QUALITY_FOOTPRINT.y+spacing))
 	var factor := minf(1.0, budget / maxf(1.0, grid_size.y+status_rows*20))
 	var width := maxf(grid_size.x, 128.0 if status_rows else 0.0)
 	scale = Vector2.ONE * factor * ui
-	global_position = Vector2(vp.x - width * scale.x - 8*ui, top*ui)
+	global_position = Vector2(vp.x - width * scale.x - HUD_LAYOUT.SIDE_MARGIN*ui, top*ui - 3*scale.y)
 	slot_list.position = Vector2(width-grid_size.x, 0)
 	slot_list.size = grid_size
 	for caption: Label in [_arsenal_label, _growth_label]:
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		caption.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 		caption.size.x = width
-	_arsenal_label.position = Vector2(0, grid_size.y)
-	_growth_label.position = Vector2(0, grid_size.y+(20 if _arsenal_label.visible else 0))
+	_arsenal_label.position = Vector2(width-_arsenal_label.size.x, grid_size.y)
+	_growth_label.position = Vector2(width-_growth_label.size.x, grid_size.y+(20 if _arsenal_label.visible else 0))
 
 func reset_equipment(classic_weapons := true) -> void :
 	reset_combo_effects()
@@ -234,7 +245,9 @@ func set_card_count(id: String, count: int) -> void:
 	if count > 0:
 		_kill_slot_tween(id)
 		_add_or_set_level(id, count, false)
-		refresh_quality(id)
+		if previous > 0:
+			refresh_quality(id)
+			_fit_quality_equipment()
 		if count > previous:
 			_play_rank_hop(id)
 	elif _slots.has(id):
@@ -545,3 +558,4 @@ func refresh_language() -> void:
 			continue
 		var hint:=COMBOS.hint_for(id)
 		_slots[id].icon_wrap.tooltip_text=L10n.text(EQUIP_DEFS[id].title)+("\n"+hint if not hint.is_empty() else "")
+	if _quality_inventory() != null: _fit_quality_equipment()

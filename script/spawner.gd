@@ -1,5 +1,7 @@
 extends Node2D
 
+const HUD_LAYOUT := preload("res://script/boss_hud_layout.gd")
+
 @export var player: CharacterBody2D
 @export var enemy: PackedScene
 @export var enemy_array: Array[EnemyData]
@@ -108,7 +110,7 @@ func _ready() -> void :
 	_ensure_stage_theme()
 	var clock: HBoxContainer = $UI/HBoxContainer
 	clock.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	clock.alignment = BoxContainer.ALIGNMENT_CENTER
+	clock.alignment = BoxContainer.ALIGNMENT_END
 	clock.draw.connect(func(): clock.draw_style_box(preload("res://script/painted_ui.gd").TIDE, Rect2(Vector2.ZERO, clock.size)))
 	_ensure_stage_label()
 	_apply_spawn_pressure()
@@ -601,21 +603,23 @@ func _ensure_stage_label() -> void :
 	_refresh_stage_label()
 
 func _fit_stage_label() -> void:
-	var ui: float=preload("res://script/boss_hud_layout.gd").display_scale(self)
+	var ui: float=HUD_LAYOUT.display_scale(self)
 	var vp:=get_viewport().get_visible_rect().size
 	_stage_label.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	var top: float=preload("res://script/boss_hud_layout.gd").header_top(self)
-	_stage_label.position=Vector2(12*ui,top*ui)
-	_stage_label.size=Vector2(180*ui,30*ui)
+	var top: float=HUD_LAYOUT.header_top(self)
+	_stage_label.position=Vector2(HUD_LAYOUT.SIDE_MARGIN*ui,top*ui)
+	_stage_label.scale = Vector2.ONE * ui
+	_stage_label.size=Vector2(180,30)
 	_stage_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
 	_stage_label.clip_text=true
-	UiFonts.apply_to_label(_stage_label,int(16*ui),true)
+	UiFonts.apply_to_label(_stage_label,16,true)
 	var clock: HBoxContainer=$UI/HBoxContainer
-	clock.position=Vector2(vp.x-108*ui,(top if vp.x/ui<600 else top+40)*ui)
-	clock.size=Vector2(96*ui,30*ui)
+	clock.scale = Vector2.ONE * ui
+	clock.position=Vector2(vp.x-(HUD_LAYOUT.SIDE_MARGIN+96)*ui,top*ui)
+	clock.size=Vector2(96,30)
 	clock.add_theme_constant_override("separation",0)
 	for child in clock.get_children():
-		if child is Label: UiFonts.apply_to_label(child,int(16*ui),true)
+		if child is Label: UiFonts.apply_to_label(child,16,true)
 
 func _refresh_stage_label() -> void :
 	if _stage_label == null or not is_instance_valid(_stage_label):
